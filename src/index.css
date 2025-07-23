@@ -1,0 +1,35 @@
+/* @import url("https://fonts.googleapis.com/css2?family=Bitcount+Grid+Double:wght@100..900&display=swap"); */
+@font-face {
+  font-family: "Humane-Regular";
+  src: url("./assets/Humane-Regular.otf") format("truetype");
+  font-weight: 400 900;
+  font-style: normal;
+  font-display: swap;
+}
+
+@import "tailwindcss";
+@import "tailwind-scrollbar-hide/v4";
+body {
+  background-color: #121212;
+  scroll-behavior: smooth;
+}
+
+@keyframes glow {
+  0% {
+    filter: blur(100px) brightness(1);
+    opacity: 0.8;
+  }
+  100% {
+    filter: blur(100px) brightness(1.3);
+    opacity: 1;
+  }
+}
+
+@keyframes pulse {
+  0%, 100% {
+    box-shadow: 0 0 10px #fff, 0 0 20px #4f46e5, 0 0 30px #06b6d4;
+  }
+  50% {
+    box-shadow: 0 0 15px #fff, 0 0 30px #4f46e5, 0 0 40px #06b6d4;
+  }
+}
