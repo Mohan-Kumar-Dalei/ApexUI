@@ -187,7 +187,7 @@ const Navbar = () => {
                     />
                     <NavLink to="#" className="text-lg sm:text-xl text-gray-400 hover:text-pink-500"><i className="fab fa-instagram"></i></NavLink>
                     <NavLink to="#" className="text-lg sm:text-xl text-gray-400 hover:text-blue-400"><i className="fab fa-twitter"></i></NavLink>
-                    <NavLink to="#" className="text-lg sm:text-xl text-gray-400 hover:text-gray-300"><i className="fab fa-github"></i></NavLink>
+                    <NavLink to="https://github.com/Mohan-Kumar-Dalei/ApexUI" target='_blank' className="text-lg sm:text-xl text-gray-400 hover:text-gray-300"><i className="fab fa-github"></i></NavLink>
                     {/* Hamburger/Cross Icon for mobile/tablet */}
                     <button
                         className="lg:hidden flex items-center px-3 py-2 border rounded text-gray-400 border-gray-600 ml-2 transition-transform duration-300 focus:outline-none ease-in-out cursor-pointer"

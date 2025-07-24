@@ -255,9 +255,14 @@ export default function TextCtaFooterModern() {
                                 ❤️
                             </a>
                         </p>
-                        <button className="bg-white text-black px-4 py-2 rounded-md hover:bg-gray-200 font-medium">
+                        <a
+                            href="https://github.com/Mohan-Kumar-Dalei/ApexUI"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="bg-white text-black px-4 py-2 rounded-md hover:bg-gray-200 font-medium inline-flex items-center"
+                        >
                             ⭐ Star on <FontAwesomeIcon icon={faGithub} className="ml-1" />
-                        </button>
+                        </a>
                         <div className="flex justify-center gap-6">
                             <p className="text-purple-400">Feedback on</p>
                             <a href="#" className="hover:text-purple-400">
@@ -270,8 +275,8 @@ export default function TextCtaFooterModern() {
                         <div className="grid grid-cols-2 gap-10 mt-8 text-sm">
                             <div className="space-y-1">
                                 <p className="font-semibold text-white">Resources</p>
-                                <a href="#" className="text-white/60 hover:underline block">Documentation</a>
-                                <a href="#" className="text-white/60 hover:underline block">Components</a>
+                                <NavLink to="components/docs/getting-started/introduction" className="text-white/60 hover:underline block">Documentation</NavLink>
+                                <NavLink to="components/glass-navbar" className="text-white/60 hover:underline block">Components</NavLink>
                             </div>
                             <div className="space-y-1">
                                 <p className="font-semibold text-white">Legal</p>
