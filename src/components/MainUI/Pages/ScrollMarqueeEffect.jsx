@@ -10,7 +10,7 @@ import {
 } from '@fortawesome/free-solid-svg-icons';
 import { useState } from 'react';
 import { CopyBlock, dracula } from 'react-code-blocks';
-import ScrollMarquee from '../ApexUI-Kit/ScrollMarquee/ScrollMarquee';
+import ScrollMarquee from '../ApexUI-Kit/ScrollMarquee/ScrollMarquee.jsx';
 import { useRef } from 'react';
 const scrollMarqueeProps = [
     { prop: 'items', type: 'array', def: `["Apex UI", "Apex UI"]`, desc: 'Array of strings to display as marquee lines.' },
@@ -195,7 +195,7 @@ export default function App(): JSX.Element {
                                 {/* Scrollable section 2 */}
                                 <div className="w-full h-[200vh] max-md:h-[100vh]  flex flex-col items-center justify-around ">
                                     <p className='text-7xl font-semibold text-white/30 max-md:text-4xl'
-                                        style={{fontFamily:'helvetica, sans-serif'}}
+                                        style={{ fontFamily: 'helvetica, sans-serif' }}
                                     >Scroll DOWN</p>
                                     <div className=" w-full">
 

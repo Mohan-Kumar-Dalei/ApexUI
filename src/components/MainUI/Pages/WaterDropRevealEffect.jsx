@@ -8,7 +8,7 @@ import {
     faChevronDown,
 } from '@fortawesome/free-solid-svg-icons';
 import { useState } from 'react';
-import WaterDropReavel from '../ApexUI-Kit/WaterDropReveal/WaterDropReveal';
+import WaterDropReavel from '../ApexUI-Kit/WaterDropReveal/WaterDropReveal.jsx';
 import { CopyBlock, dracula } from 'react-code-blocks';
 
 function PropsShowMoreBtn({ showAll, setShowAll, propCount }) {

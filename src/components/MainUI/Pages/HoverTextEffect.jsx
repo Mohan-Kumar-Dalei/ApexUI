@@ -10,7 +10,7 @@ import {
 } from '@fortawesome/free-solid-svg-icons';
 import { useState } from 'react';
 import { CopyBlock, dracula } from 'react-code-blocks';
-import HoverText from '../ApexUI-kit/HoverText/HoverText'; 
+import HoverText from '../ApexUI-Kit/HoverText/HoverText.jsx';
 
 const hoverTextProps = [
     { prop: 'text', type: 'string', def: '"Hover Me"', desc: 'Text to display with hover effect.' },

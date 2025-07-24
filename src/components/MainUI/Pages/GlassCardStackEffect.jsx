@@ -8,7 +8,7 @@ import {
     faChevronDown,
 } from '@fortawesome/free-solid-svg-icons';
 import { useState } from 'react';
-import GlassCardStack from '../ApexUI-Kit/GlassCardStack/GlassCardStack';
+import GlassCardStack from '../ApexUI-Kit/GlassCardStack/GlassCardStack.jsx';
 import { CopyBlock, dracula } from 'react-code-blocks';
 
 function PropsShowMoreBtn({ showAll, setShowAll, propCount }) {

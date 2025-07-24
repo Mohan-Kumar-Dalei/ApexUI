@@ -9,7 +9,7 @@ import {
 } from '@fortawesome/free-solid-svg-icons';
 import { useState } from 'react';
 import { CopyBlock, dracula } from 'react-code-blocks';
-import RainBackground from '../ApexUI-Kit/RainBackground/RainBackground';
+import RainBackground from '../ApexUI-Kit/RainBackground/RainBackground.jsx';
 
 const rainBgProps = [
     { prop: 'dropCount', type: 'number', def: '100', desc: 'Number of rain drops' },

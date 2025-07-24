@@ -9,7 +9,7 @@ import {
     faChevronDown,
 } from '@fortawesome/free-solid-svg-icons';
 import { useState } from 'react';
-import HyperCard from '../ApexUI-Kit/HyperCard/HyperCard';
+import HyperCard from '../ApexUI-Kit/HyperCard/HyperCard.jsx';
 import { CopyBlock, dracula } from 'react-code-blocks';
 
 // Show more/less logic for props table: show 8, expand for rest

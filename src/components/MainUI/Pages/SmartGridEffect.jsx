@@ -11,7 +11,7 @@ import { Settings, Wifi, Rocket, HardDrive, Lock, Sparkles } from "lucide-react"
 import { NavLink } from 'react-router-dom';
 import { useState } from 'react';
 import { CopyBlock, dracula } from 'react-code-blocks';
-import SmartGridCard from '../ApexUI-Kit/SmartGridCard/SmartGridCard';
+import SmartGridCard from '../ApexUI-Kit/SmartGridCard/SmartGridCard.jsx';
 
 const SmartGridEffect = () => {
     const [selectedLang, setSelectedLang] = useState('jsx');

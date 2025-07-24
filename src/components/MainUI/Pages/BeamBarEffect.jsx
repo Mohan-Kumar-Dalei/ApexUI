@@ -8,7 +8,7 @@ import {
     faChevronDown,
 } from '@fortawesome/free-solid-svg-icons';
 import { useState } from 'react';
-import BeamBar from '../ApexUI-Kit/BeamBar/BeamBar';
+import BeamBar from '../ApexUI-Kit/BeamBar/BeamBar.jsx';
 import { CopyBlock,  dracula } from 'react-code-blocks';
 
 function PropsShowMoreBtn({ showAll, setShowAll, propCount }) {

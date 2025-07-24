@@ -10,7 +10,7 @@ import {
 } from '@fortawesome/free-solid-svg-icons';
 import { useState } from 'react';
 import { CopyBlock, dracula } from 'react-code-blocks';
-import GlareCard from '../ApexUI-Kit/GlareCard/GlareCard';
+import GlareCard from '../ApexUI-Kit/GlareCard/GlareCard.jsx';
 
 // --- Update this array with your latest GlareCard props ---
 const glareCardProps = [

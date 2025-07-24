@@ -8,7 +8,7 @@ import {
     faChevronDown,
 } from '@fortawesome/free-solid-svg-icons';
 import { useState } from 'react';
-import ToolTip from '../ApexUI-Kit/ToolTip/ToolTip';
+import ToolTip from '../ApexUI-Kit/ToolTip/ToolTip.jsx';
 import { CopyBlock, dracula } from 'react-code-blocks';
 
 function PropsShowMoreBtn({ showAll, setShowAll, propCount }) {

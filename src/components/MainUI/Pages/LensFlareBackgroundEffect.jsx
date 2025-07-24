@@ -8,7 +8,7 @@ import {
     faChevronDown,
 } from '@fortawesome/free-solid-svg-icons';
 import { useState } from 'react';
-import LensFlareBackground from '../ApexUI-Kit/LensFlareBackground/LensFlareBackground';
+import LensFlareBackground from '../ApexUI-Kit/LensFlareBackground/LensFlareBackground.jsx';
 import { CopyBlock, dracula } from 'react-code-blocks';
 
 function PropsShowMoreBtn({ showAll, setShowAll, propCount }) {

@@ -10,7 +10,7 @@ import {
 } from '@fortawesome/free-solid-svg-icons';
 import { useState } from 'react';
 import { CopyBlock, dracula } from 'react-code-blocks';
-import GlassNavbar from '../ApexUI-Kit/GlassNavbar/GlassNavBar';
+import GlassNavbar from '../ApexUI-Kit/GlassNavbar/GlassNavBar.jsx';
 
 
 // Props data array for easy filtering/mapping

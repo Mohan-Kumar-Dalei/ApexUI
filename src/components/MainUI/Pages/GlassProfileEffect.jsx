@@ -8,7 +8,7 @@ import {
     faChevronDown,
 } from '@fortawesome/free-solid-svg-icons';
 import { useState } from 'react';
-import GlassProfile from '../ApexUI-Kit/GlassProfile/GlassProfile';
+import GlassProfile from '../ApexUI-Kit/GlassProfile/GlassProfile.jsx';
 import { CopyBlock, dracula } from 'react-code-blocks';
 
 function PropsShowMoreBtn({ showAll, setShowAll, propCount }) {

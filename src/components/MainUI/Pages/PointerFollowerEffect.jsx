@@ -8,7 +8,7 @@ import {
     faChevronDown,
 } from '@fortawesome/free-solid-svg-icons';
 import { useState } from 'react';
-import PointerFollower from '../ApexUI-Kit/PointerFollower/PointerFollower';
+import PointerFollower from '../ApexUI-Kit/PointerFollower/PointerFollower.jsx';
 import { CopyBlock, dracula } from 'react-code-blocks';
 
 function PropsShowMoreBtn({ showAll, setShowAll, propCount }) {
