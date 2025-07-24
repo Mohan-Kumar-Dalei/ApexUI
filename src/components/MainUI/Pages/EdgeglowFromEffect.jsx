@@ -2,7 +2,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCube, faCodeBranch, faTerminal, faTableList, faPuzzlePiece, faChevronDown, faChevronUp } from '@fortawesome/free-solid-svg-icons';
 import { useState } from 'react';
 import { CopyBlock, dracula } from 'react-code-blocks';
-import EdgeGlowForm from '../ApexUI-kit/EdgeGlowForm/EdgeGlowFrom';
+import EdgeGlowForm from '../ApexUI-Kit/EdgeGlowForm/EdgeGlowFrom';
 const glassFormProps = [
     { prop: 'GlowColor', type: 'string', def: '"violet"', desc: 'Color of the moving radial background glow (follows mouse).' },
     { prop: 'borderGlowColor', type: 'string', def: '"#a78bfa88"', desc: 'Color of the animated top/bottom input border glow.' },
