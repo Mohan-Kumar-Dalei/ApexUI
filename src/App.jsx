@@ -6,7 +6,6 @@ const App = () => {
       <div className='body h-screen w-screen border-box'>
         <AppRouter />
       </div>
-
     </>
   );
 };

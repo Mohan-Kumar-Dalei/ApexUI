@@ -5,11 +5,16 @@ import './index.css'
 import './components/css/style.css'
 import App from './App.jsx'
 import SidebarProvider from '../src/router/context/SidebarProvider.jsx';
+import { Toaster } from 'sonner';
 
 createRoot(document.getElementById('root')).render(
   <>
     <BrowserRouter>
       <SidebarProvider>
+        <Toaster
+          richColors
+          closeButton
+        />
         <App />
       </SidebarProvider>
     </BrowserRouter>

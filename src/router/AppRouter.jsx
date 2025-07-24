@@ -16,7 +16,6 @@ export default function AppRouter() {
         <Routes>
             <Route path="/" element={
                 <>
-                    <Navbar />
                     <Hero />
                 </>
             } />

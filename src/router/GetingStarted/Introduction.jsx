@@ -21,7 +21,7 @@ const ApexIntro = () => {
     const iconRefs = useRef([]);
 
     const handleCopy = () => {
-        navigator.clipboard.writeText("npx apex-ui add hyper-card");
+        navigator.clipboard.writeText("npm i apex-ui-kit && npx apex-ui-kit add hyper-card");
         setCopied(true);
         setTimeout(() => setCopied(false), 2000);
     };
@@ -100,7 +100,7 @@ const ApexIntro = () => {
                             <p className="text-sm text-white/60 mb-2"># Run the CLI command</p>
                             <div className="flex items-center justify-between bg-[#0d0d0f] rounded-lg px-4 py-2 text-purple-400 font-mono text-sm">
                                 <SyntaxHighlighter language="bash" style={atomDark} customStyle={{ background: 'transparent', fontSize: '1em', margin: 0, padding: 0, color: '#a855f7' }}>
-                                    {`npx apex-ui@latest add hyper-card`}
+                                    {`npm i apex-ui-kit && npx apex-ui-kit add hyper-card`}
                                 </SyntaxHighlighter>
                                 <button onClick={handleCopy} className="text-white hover:text-purple-300 transition" title="Copy command">
                                     <Copy size={16} />
@@ -122,7 +122,7 @@ const ApexIntro = () => {
                         <FontAwesomeIcon icon={faGem} className="text-purple-400" /> Why Choose ApexUI?
                     </h3>
                     <ul className="list-disc pl-5 text-white/80 space-y-4">
-                        <li><strong>One-Line Integration:</strong> Instantly add any animated component with a single CLI command like <code>npx apex-ui add hyper-card</code>. No manual setup — just plug and play.</li>
+                        <li><strong>One-Line Integration:</strong> Instantly add any animated component with a single CLI command like <code>npx apex-ui-kit add hyper-card</code>. No manual setup — just plug and play.</li>
                         <li><strong>Production-Ready by Default:</strong> All ApexUI components are responsive, clean, and performant — built with Tailwind CSS, GSAP, and Framer Motion.</li>
                         <li><strong>Developer-First Design:</strong> Reusable, accessible, and easy to integrate into any React/Vite project.</li>
                         <li><strong>Zero Config Hassle:</strong> Dependencies like <code>gsap</code>, <code>framer-motion</code>, and <code>react-icons</code> are auto-installed — no conflicts, no setup stress.</li>
@@ -156,15 +156,16 @@ const ApexIntro = () => {
                         <CopyBlock
 
 
-                            text={`import HyperCard from './ApexUI/HyperCard';
+                            text={`import HyperCard from './ApexUI-Kit/HyperCard';
 
-export default function HomePage() {
+const App = () => {
   return (
     <div>
       <HyperCard />
     </div>
   );
-}`}
+};
+export default App;`}
                             language="jsx"
                             showLineNumbers={false}
                             theme={dracula}

@@ -1,13 +1,11 @@
 /* eslint-disable no-unused-vars */
-import React, { useEffect,useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import MessageBar from './MessageBar';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { NavLink } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import SearchComponent from './Search';
-import { useNavigate } from 'react-router-dom';
-// Custom hook for GSAP/LocomotiveScroll integration for MessageBar
 function useGsapLocoMessageBar(messageBarRef) {
     React.useEffect(() => {
         let lastY = 0;
@@ -66,10 +64,8 @@ function useGsapLocoMessageBar(messageBarRef) {
 
 gsap.registerPlugin(ScrollTrigger);
 
-// Custom hook for GSAP/LocomotiveScroll integration
 function useGsapLocoNavbar(navbarRef) {
     useEffect(() => {
-        // console.log('[GSAP Navbar] useGsapLocoNavbar mounted');
         let lastY = 0;
         let ticking = false;
         let ran = false;
@@ -77,20 +73,16 @@ function useGsapLocoNavbar(navbarRef) {
             let currY;
             if (window.locoScroll && window.locoScroll.scroll) {
                 currY = window.locoScroll.scroll.instance.scroll.y;
-                // console.log('[GSAP Navbar] LocomotiveScroll scroll event:', currY);
             } else {
                 currY = window.scrollY;
-                // console.log('[GSAP Navbar] Window scroll event:', currY);
             }
             if (!ticking) {
                 window.requestAnimationFrame(() => {
                     if (navbarRef.current) {
                         if (currY > lastY && currY > 50) {
                             gsap.to(navbarRef.current, { y: '-150%', duration: 0.4, ease: 'power2.out' });
-                            // console.log('Navbar hidden (GSAP)');
                         } else {
                             gsap.to(navbarRef.current, { y: '0%', duration: 0.4, ease: 'power2.out' });
-                            // console.log('Navbar shown (GSAP)');
                         }
                     }
                     lastY = currY;
@@ -99,10 +91,8 @@ function useGsapLocoNavbar(navbarRef) {
                 ticking = true;
             }
         }
-        // Wait for LocomotiveScroll to be ready, fallback to window scroll
         function bindScroll() {
             if (window.locoScroll && window.locoScroll.on) {
-                // console.log('[GSAP Navbar] Binding LocomotiveScroll event');
                 window.locoScroll.on('scroll', handleScroll);
             } else {
                 console.log('[GSAP Navbar] Binding window scroll event');
@@ -116,9 +106,7 @@ function useGsapLocoNavbar(navbarRef) {
                 window.removeEventListener('scroll', handleScroll);
             }
         }
-        // Try to bind immediately
         bindScroll();
-        // Fallback: rebind after 1s in case LocomotiveScroll loads late
         const fallback = setTimeout(() => {
             if (!ran && window.locoScroll && window.locoScroll.on) {
                 unbindScroll();
@@ -126,7 +114,6 @@ function useGsapLocoNavbar(navbarRef) {
                 ran = true;
             }
         }, 1000);
-        // Cleanup listeners on unmount
         return () => {
             unbindScroll();
             clearTimeout(fallback);
@@ -135,22 +122,16 @@ function useGsapLocoNavbar(navbarRef) {
 }
 
 const Navbar = () => {
-    // Search overlay state
     const [showSearch, setShowSearch] = useState(false);
-    // Import useNavigate from react-router-dom
-    // Ref for GSAP animation
     const navbarRef = React.useRef(null);
     const messageBarRef = React.useRef(null);
     useGsapLocoNavbar(navbarRef);
     useGsapLocoMessageBar(messageBarRef);
 
-    // Mobile sidebar state
     const [showSidebar, setShowSidebar] = useState(false);
 
-    // Animate hamburger/cross icon
     const [isMenuOpen, setIsMenuOpen] = useState(false);
 
-    // Lock scroll when sidebar open
     React.useEffect(() => {
         if (showSidebar) {
             document.body.style.overflow = 'hidden';
@@ -159,7 +140,6 @@ const Navbar = () => {
         }
     }, [showSidebar]);
 
-    // Sidebar menu data (same as AsideBar)
     const menuLinks = [
         { to: 'components/docs/getting-started/introduction', label: 'Getting Started' },
         { to: 'components/docs/getting-started/installation/react-setup', label: 'Documentation' },
@@ -168,21 +148,11 @@ const Navbar = () => {
         { to: '#', label: 'GitHub', icon: 'github' },
     ];
 
-    // FontAwesome icons
-    // Import at top: import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-    // import { faBars, faTimes } from '@fortawesome/free-solid-svg-icons';
-    // import { faInstagram, faTwitter, faGithub } from '@fortawesome/free-brands-svg-icons';
-
-    // Framer Motion for animation
-    // Already imported at the top
-
-    // Handle hamburger/cross icon toggle
     function handleMenuToggle() {
         setShowSidebar((prev) => !prev);
         setIsMenuOpen((prev) => !prev);
     }
 
-    // Close sidebar on overlay click
     function handleOverlayClick(e) {
         if (e.target.id === 'sidebar-overlay') {
             setShowSidebar(false);
@@ -198,14 +168,17 @@ const Navbar = () => {
                 {/* Left: Logo + Version */}
                 <NavLink to="/" className="flex items-center gap-2 group">
                     <span className="text-xl sm:text-2xl font-bold text-white group-hover:text-purple-400 transition duration-300">Apex UI</span>
-                    <span className="text-[10px] sm:text-xs bg-purple-800 text-white  px-2 py-0.5 rounded-full">v1.0.0-beta</span>
+                    <span className="text-[10px] sm:text-xs bg-purple-800 text-white  px-2 py-0.5 rounded-full">v1.0.4-beta</span>
                 </NavLink>
                 {/* Right: Links + Search + Icons (all in one line, responsive) */}
                 <div className="flex items-center gap-2 sm:gap-4 w-auto justify-end">
                     <NavLink to="/components/docs/getting-started/installation/react-setup" className="shine text-xs sm:text-sm font-medium hidden lg:inline">Installation</NavLink>
                     <NavLink to="/components/docs/getting-started/introduction" className="shine text-xs sm:text-sm font-medium hidden lg:inline">Documentation</NavLink>
 
+                    <label htmlFor="search" className="sr-only">Search</label>
                     <input
+                        id='search'
+                        name='search'
                         type="text"
                         placeholder="Search..."
                         className="px-2 sm:px-3 py-1 text-xs sm:text-sm rounded-md bg-white text-black dark:bg-gray-800 border border-gray-600 focus:outline-none focus:ring-2 focus:ring-purple-500 dark:text-white placeholder-gray-400 w-24 sm:w-auto hidden md:inline"

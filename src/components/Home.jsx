@@ -44,7 +44,7 @@ const Home = () => {
     const showRightPanel = typeof window !== 'undefined' ? window.innerWidth >= 1280 : true;
 
     const handleCopy = () => {
-        navigator.clipboard.writeText("npx apex-ui@latest init");
+        navigator.clipboard.writeText("npm i apex-ui-kit");
         setCopied(true);
         setTimeout(() => setCopied(false), 1500);
     };
@@ -120,16 +120,16 @@ const Home = () => {
                     </motion.h1>
                     <motion.p className="text-sm sm:text-base text-gray-400 max-w-xl font-light" initial={{ opacity: 0, filter: 'blur(8px)' }} animate={{ opacity: 1, filter: 'blur(0px)' }} transition={{ duration: 0.9, ease: 'easeInOut', delay: 0.5 }}>
                         Apex UI is a modern, flexible UI library.<br />
-                        <span className="text-purple-400 font-semibold">Copy-paste ready for React, HTML + Tailwind, <span style={{ color: '#a855f7' }}>and CLI!</span></span><br />
+                        <span className="text-purple-400 font-semibold">Copy-paste ready for React + Tailwind, And CLI!</span><br />
                         <span className="block mt-1">Find unique text, button, and card effects for your projects. Just copy and enjoy stunning UI—no hassle.</span>
                     </motion.p>
                     <div className="flex flex-col sm:flex-row items-center gap-4 pt-4">
-                        <NavLink to="/components/docs/getting-started/introduction" className="relative overflow-hidden px-6 py-3 rounded-lg border border-purple-400/60 text-white bg-black/20 group shadow-sm hover:shadow-purple-400/20 duration-300">
+                        <NavLink to="/components/docs/getting-started/introduction" className="relative overflow-hidden px-6 py-3 rounded-lg border border-purple-400/60 text-white bg-[#1A1027] group shadow-sm hover:shadow-purple-400/20 duration-300">
                             <span className="relative z-10">Get Started</span>
                             <span className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-all duration-500 rounded-lg" style={{ background: "radial-gradient(circle at bottom, purple, transparent 69%)", mixBlendMode: "screen" }} />
                         </NavLink>
-                        <div className="flex items-center gap-3 bg-[#1a1027] text-white font-mono text-xs px-4 py-3 rounded-xl border border-[#a855f7] tracking-wide shadow-sm">
-                            <span className="truncate">npx apex-ui@latest init</span>
+                        <div className="flex items-center gap-3 bg-[#1a1027] text-white font-mono text-sm px-4 py-3 rounded-xl border border-[#a855f7] tracking-wide shadow-sm">
+                            <span className="truncate">npm i apex-ui-kit</span>
                             <button onClick={handleCopy} className="p-1 rounded-full hover:bg-[#a855f7]">
                                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                                     <rect x="9" y="9" width="13" height="13" rx="2" ry="2" />

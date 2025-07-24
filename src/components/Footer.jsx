@@ -20,7 +20,7 @@ export default function TextCtaFooterModern() {
     const handleCopy = async (e) => {
         e.preventDefault();
         try {
-            await navigator.clipboard.writeText("npx apex-ui@latest init");
+            await navigator.clipboard.writeText("npm i apex-ui-kit");
             setCopied(true);
             setTimeout(() => setCopied(false), 1500);
         } catch (err) {
@@ -151,12 +151,12 @@ export default function TextCtaFooterModern() {
                         <div className="max-md:space-y-6 lg:flex flex-col lg:items-start lg:justify-around">
                             {/* Get Started button and CLI block */}
                             <div className="flex flex-col items-center gap-4 pt-4">
-                                <NavLink to='components/getting-started' className="relative overflow-hidden w-auto sm:w-auto text-left sm:text-center px-6 sm:px-10 py-3 sm:py-3 rounded-xl border-2 border-purple-400/60 text-white bg-black/20 group shadow-lg  duration-300 text-base sm:text-xl font-bold self-start">
+                                <NavLink to='/components/docs/getting-started/introduction' className="relative overflow-hidden w-auto sm:w-auto text-left sm:text-center px-6 sm:px-10 py-3 sm:py-3 rounded-xl border-2 border-purple-400/60 text-white bg-black/20 group shadow-lg  duration-300 text-base sm:text-xl font-bold self-start">
                                     <span className="relative z-10">Get Started</span>
                                     <span className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-all duration-300 rounded-xl" style={{ background: "radial-gradient(circle at bottom, purple, transparent 69%)", mixBlendMode: "screen" }} />
                                 </NavLink>
-                                <div className="flex items-center  bg-[#1a1027] text-white font-mono text-base px-6 py-4 rounded-xl border border-[#a855f7] tracking-wide shadow-sm mt-2 self-start lg:self-start">
-                                    <span className="truncate">npx apex-ui@latest init</span>
+                                <div className="flex items-center  bg-[#1a1027] text-white gap-3 font-mono text-base px-6 py-4 rounded-xl border border-[#a855f7] tracking-wide shadow-sm mt-2 self-start lg:self-start">
+                                    <span className="truncate">npm i apex-ui-kit</span>
                                     <button type="button" onClick={handleCopy} className="p-1 rounded-full hover:bg-[#a855f7]">
                                         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                                             <rect x="9" y="9" width="13" height="13" rx="2" ry="2" />

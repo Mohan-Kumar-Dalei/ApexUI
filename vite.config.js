@@ -5,10 +5,8 @@ import tailwindcss from '@tailwindcss/vite'
 // https://vite.dev/config/
 export default defineConfig({
   plugins: [react(), tailwindcss()],
-  // server: {
-  //   allowedHosts: ['xxx.ngrok-free.app', '049a4ccc8a5d.ngrok-free.app'],
-  //   hmr: {
-  //     clientPort: 443, // Or 80 for HTTP
-  //   },
-  // },
+  // No vite.svg reference here, but if your code or index.html references /vite.svg, either remove it from index.html or add a placeholder vite.svg in public/
+  server: {
+    port: 5174
+  }
 })

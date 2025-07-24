@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import React, { useState, useEffect } from 'react';
 import { NavLink } from 'react-router-dom';
 import MessageBar from '../../components/MessageBar';
@@ -25,7 +26,7 @@ export default function GetNav({ onSidebarToggle, sidebarOpen }) {
                 {/* Left: Logo + Version */}
                 <NavLink to="/" className="flex items-center gap-2 group">
                     <span className="text-xl sm:text-2xl font-bold text-white group-hover:text-purple-400 transition duration-300">Apex UI</span>
-                    <span className="text-[10px] sm:text-xs bg-purple-800 text-white  px-2 py-0.5 rounded-full">v1.0.0-beta</span>
+                    <span className="text-[10px] sm:text-xs bg-purple-800 text-white  px-2 py-0.5 rounded-full">v1.0.4-beta</span>
                 </NavLink>
                 {/* Right: Links + Search + Icons (all in one line, responsive) */}
                 <div className="flex items-center gap-2 sm:gap-4 w-auto justify-end">

@@ -27,7 +27,7 @@ const ApexUICLISetup = () => {
                         This initializes Apex UI in your project, generating the <code>src/ApexUI</code> folder automatically.
                     </p>
                     <CopyBlock
-                        text={`npx apex-ui@latest init`}
+                        text={`npm i apex-ui-kit`}
                         language="bash"
                         theme={dracula}
                         showLineNumbers={false}
@@ -44,7 +44,7 @@ const ApexUICLISetup = () => {
                         This command adds the animated <code>HyperCard</code> component to <code>src/ApexUI/</code>.
                     </p>
                     <CopyBlock
-                        text={`npx apex-ui add hyper-card`}
+                        text={`npx i apex-ui-kit add hyper-card`}
                         language="bash"
                         theme={dracula}
                         showLineNumbers={false}
@@ -61,15 +61,16 @@ const ApexUICLISetup = () => {
                         Once added, you can instantly use your component like any other React import.
                     </p>
                     <CopyBlock
-                        text={`import HyperCard from './ApexUI/HyperCard';
+                        text={`import HyperCard from './ApexUI-Kit/HyperCard/HyperCard.jsx';
 
-export default function App() {
+const App = () => {
   return (
     <main className="min-h-screen bg-black text-white flex items-center justify-center">
       <HyperCard />
     </main>
   );
-}`}
+};
+export default App;`}
                         language="jsx"
                         theme={dracula}
                         showLineNumbers={false}

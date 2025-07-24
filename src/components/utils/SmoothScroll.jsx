@@ -20,7 +20,6 @@ const SmoothScroll = ({ children }) => {
             smooth: true,
             tablet: { smooth: false },
             smartphone: { smooth: false },
-            getDirection: true,
             lerp: 0.1
         });
         // Make LocomotiveScroll globally available for GSAP/ScrollTrigger integration

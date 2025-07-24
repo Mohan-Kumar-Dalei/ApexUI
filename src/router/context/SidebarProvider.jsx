@@ -6,21 +6,21 @@ import Introduction from '../GetingStarted/Introduction.jsx';
 import ReactSetup from '../GetingStarted/Installation/ReactViteSetup.jsx';
 import Tailwind from '../GetingStarted/Installation/TailwindSetup.jsx';
 import ApexUICLI from '../GetingStarted/Installation/ApexUICLISetup.jsx';
-import GlassNavbarEffect from '../../components/MainUI/ApexUI/GlassNavbar/GlassNavbarEffect.jsx';
-import ScrollMarquee from '../../components/MainUI/ApexUI/ScrollMarquee/ScrollMarqueeEffect.jsx';
-import EdgeglowFromEffect from '../../components/MainUI/ApexUI/EdgeGlowForm/EdgeglowFromEffect.jsx';
-import GlassFormEffect from '../../components/MainUI/ApexUI/GlassCardStack/GlassCardStackEffect.jsx';
-import GlassProfileEffect from '../../components/MainUI/ApexUI/GlassProfile/GlassProfileEffect.jsx';
-import GlareCardEffect from '../../components/MainUI/ApexUI/GlareCard/GlareCardEffect.jsx';
-import HoverTextEffect from '../../components/MainUI/ApexUI/HoverText/HoverTextEffect.jsx';
-import SmartGridEffect from '../../components/MainUI/ApexUI/SmartGridCard/SmartGridEffect.jsx';
-import HyperCardEffect from '../../components/MainUI/ApexUI/HyperCard/HyperCardEffect.jsx';
-import RainBackgroundEffect from '../../components/MainUI/ApexUI/RainBackground/RainBackgroundEffect';
-import ToolTipEffect from '../../components/MainUI/ApexUI/ToolTip/ToolTipEffect.jsx';
-import WaterDropRevealEffect from '../../components/MainUI/ApexUI/WaterDropReavel/WaterDropReavelEffect.jsx';
-import PointerFollowerEffect from '../../components/MainUI/ApexUI/PointerFollower/PointerFollowerEffect.jsx';
-import BeamBarEffect from '../../components/MainUI/ApexUI/BeamBar.jsx/BeamBarEffect.jsx';
-import LensFlareBackgroundEffect from '../../components/MainUI/ApexUI/LensFlareBackground/LensFlareBackgroundEffect.jsx';
+import GlassNavbarEffect from '../../components/MainUI/Pages/GlassNavbarEffect.jsx';
+import ScrollMarquee from '../../components/MainUI/Pages/ScrollMarqueeEffect.jsx';
+import EdgeglowFromEffect from '../../components/MainUI/Pages/EdgeglowFromEffect.jsx';
+import GlassCardStack from '../../components/MainUI/Pages/GlassCardStackEffect';
+import GlassProfileEffect from '../../components/MainUI/Pages/GlassProfileEffect.jsx';
+import GlareCardEffect from '../../components/MainUI/Pages/GlareCardeffect.jsx';
+import HoverTextEffect from '../../components/MainUI/Pages/HoverTextEffect.jsx';
+import SmartGridEffect from '../../components/MainUI/Pages/SmartGridEffect.jsx';
+import HyperCardEffect from '../../components/MainUI/Pages/HyperCardEffect.jsx';
+import RainBackgroundEffect from '../../components/MainUI/Pages/RainBackgroundEffect.jsx';
+import ToolTipEffect from '../../components/MainUI/Pages/ToolTipEffect.jsx';
+import WaterDropRevealEffect from '../../components/MainUI/Pages/WaterDropRevealEffect.jsx';
+import PointerFollowerEffect from '../../components/MainUI/Pages/PointerFollowerEffect.jsx';
+import BeamBarEffect from '../../components/MainUI/Pages/BeamBarEffect.jsx';
+import LensFlareBackgroundEffect from '../../components/MainUI/Pages/LensFlareBackgroundEffect.jsx';
 
 
 const SidebarProvider = (props) => {
@@ -50,7 +50,7 @@ const SidebarProvider = (props) => {
             content: [
                 { name: 'GlassNavbar', path: '/components/glass-navbar', component: GlassNavbarEffect },
                 { name: 'EdgeGlowForm', path: '/components/edge-glow-form', component: EdgeglowFromEffect },
-                { name: 'Glass Card Stack', path: '/components/glass-card-stack', component: GlassFormEffect },
+                { name: 'Glass Card Stack', path: '/components/glass-card-stack', component: GlassCardStack },
                 { name: 'GlassProfile', path: '/components/glass-profile', component: GlassProfileEffect },
                 { name: 'Glare Card', path: '/components/glare-card', component: GlareCardEffect },
                 { name: 'Tool Tip', path: '/components/tool-tip', component: ToolTipEffect },

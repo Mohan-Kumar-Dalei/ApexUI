@@ -1,4 +1,4 @@
-
+import React from 'react';
 import ScrollReveal from './ui/ScrollReavel/ScrollReveal';
 
 const ModernCharReveal = () => {

@@ -2,9 +2,9 @@
 import React, { useEffect } from "react";
 import gsap from "gsap";
 import { NavLink } from "react-router-dom";
-import HoverText from "./MainUI/ApexUI/HoverText/HoverText.jsx";
-import GlassCardStack from "./MainUI/ApexUI/GlassCardStack/GlassCardStack.jsx";
-import GlassProfile from "./MainUI/ApexUI/GlassProfile/GlassProfile.jsx";
+import HoverText from "./MainUI/ApexUI-Kit/HoverText/HoverText.jsx";
+import GlassCardStack from "./MainUI/ApexUI-Kit/GlassCardStack/GlassCardStack.jsx";
+import GlassProfile from "./MainUI/ApexUI-Kit/GlassProfile/GlassProfile.jsx";
 
 const ComponentShowcase = () => {
     useEffect(() => {

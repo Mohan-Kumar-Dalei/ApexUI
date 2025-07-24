@@ -1,6 +1,6 @@
 import React from 'react'
 import { useState, } from 'react';
-import ScrollMarquee from './MainUI/ApexUI/ScrollMarquee/ScrollMarquee.jsx'
+import ScrollMarquee from './MainUI/ApexUI-Kit/ScrollMarquee/ScrollMarquee.jsx'
 import RainBackground from './ui/rain-background/RainBackground.jsx'
 import SmartGrid from './ui/SmartGrid/SmartGrid.jsx';
 import { Settings, Wifi, Rocket, HardDrive, Lock, Sparkles } from "lucide-react";
