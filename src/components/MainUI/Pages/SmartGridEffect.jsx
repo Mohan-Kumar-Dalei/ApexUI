@@ -108,7 +108,7 @@ export default function App(): JSX.Element {
                         </h4>
                         <div className="bg-[#181824]/50 border border-purple-800 text-green-400 px-4 py-3 font-mono rounded-md relative shadow-md scrollbar-hide">
                             <CopyBlock
-                                text={`npm i apex-ui-kit && npx apex-ui-kit add smart-grid`}
+                                text={`npm i apex-ui-kit && npx apex-ui-kit add smart-grid-card`}
                                 language="bash"
                                 showLineNumbers={false}
                                 theme={dracula}

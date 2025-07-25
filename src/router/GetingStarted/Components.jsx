@@ -94,7 +94,7 @@ export default function Components() {
                                 Select a component from the sidebar to view it.
                             </div>
                         )}
-                        <div className='flex justify-end max-md:mb-10'>
+                        <div className='flex justify-center max-md:mb-10'>
                             {(() => {
                                 // Only show button for Introduction, React Setup, Tailwind Setup (not ApexUI or others)
                                 const flat = allLinks;

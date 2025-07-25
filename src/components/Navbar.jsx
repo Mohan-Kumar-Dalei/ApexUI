@@ -143,9 +143,9 @@ const Navbar = () => {
     const menuLinks = [
         { to: 'components/docs/getting-started/introduction', label: 'Getting Started' },
         { to: 'components/docs/getting-started/installation/react-setup', label: 'Documentation' },
-        { to: '#', label: 'Instagram', icon: 'instagram' },
-        { to: '#', label: 'Twitter', icon: 'twitter' },
-        { to: '#', label: 'GitHub', icon: 'github' },
+        { to: 'https://www.instagram.com/_.apexui._/', label: 'Instagram', icon: 'instagram' },
+        { to: 'https://www.linkedin.com/in/mohan-kumar-dalei/', label: 'LinkedIn', icon: 'linkedin' },
+        { to: 'https://github.com/Mohan-Kumar-Dalei/ApexUI', label: 'GitHub', icon: 'github' },
     ];
 
     function handleMenuToggle() {
@@ -167,7 +167,7 @@ const Navbar = () => {
             <nav ref={navbarRef} className="w-full flex flex-row items-center justify-between px-2 sm:px-6 py-5 sm:py-6 bg-slate-950 text-white border-b border-gray-600 z-[900] fixed top-8 sm:top-8 left-0" style={{ boxShadow: '0 2px 16px 0 #0001' }}>
                 {/* Left: Logo + Version */}
                 <NavLink to="/" className="flex items-center gap-2 group">
-                    <span className="text-xl sm:text-2xl font-bold text-white group-hover:text-purple-400 transition duration-300">Apex UI</span>
+                    <span className="text-xl sm:text-2xl font-bold text-white group-hover:text-purple-400 transition duration-300">ApexUI</span>
                     <span className="text-[10px] sm:text-xs bg-purple-800 text-white  px-2 py-0.5 rounded-full">v1.0.4-beta</span>
                 </NavLink>
                 {/* Right: Links + Search + Icons (all in one line, responsive) */}
@@ -185,8 +185,8 @@ const Navbar = () => {
                         onClick={() => setShowSearch(true)}
                         readOnly
                     />
-                    <NavLink to="#" className="text-lg sm:text-xl text-gray-400 hover:text-pink-500"><i className="fab fa-instagram"></i></NavLink>
-                    <NavLink to="#" className="text-lg sm:text-xl text-gray-400 hover:text-blue-400"><i className="fab fa-twitter"></i></NavLink>
+                    <NavLink to="https://www.linkedin.com/in/mohan-kumar-dalei/" target='_blank' className="text-lg sm:text-xl text-gray-400 hover:text-blue-500"><i className="fab fa-linkedin"></i></NavLink>
+                    <NavLink to="https://www.instagram.com/_.apexui._/" target='_blank' className="text-lg sm:text-xl text-gray-400 hover:text-pink-400"><i className="fab fa-instagram"></i></NavLink>
                     <NavLink to="https://github.com/Mohan-Kumar-Dalei/ApexUI" target='_blank' className="text-lg sm:text-xl text-gray-400 hover:text-gray-300"><i className="fab fa-github"></i></NavLink>
                     {/* Hamburger/Cross Icon for mobile/tablet */}
                     <button

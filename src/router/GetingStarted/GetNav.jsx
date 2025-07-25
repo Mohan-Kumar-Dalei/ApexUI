@@ -39,8 +39,8 @@ export default function GetNav({ onSidebarToggle, sidebarOpen }) {
                         onClick={() => setShowSearch(true)}
                         readOnly
                     />
-                    <NavLink to="#" className="text-lg sm:text-xl text-gray-400 hover:text-pink-500"><i className="fab fa-instagram"></i></NavLink>
-                    <NavLink to="#" className="text-lg sm:text-xl text-gray-400 hover:text-blue-400"><i className="fab fa-twitter"></i></NavLink>
+                    <NavLink to="https://www.linkedin.com/in/mohan-kumar-dalei/" target='_blank' className="text-lg sm:text-xl text-gray-400 hover:text-blue-500"><i className="fab fa-linkedin"></i></NavLink>
+                    <NavLink to="https://www.instagram.com/_.apexui._/" target='_blank' className="text-lg sm:text-xl text-gray-400 hover:text-pink-400"><i className="fab fa-instagram"></i></NavLink>
                     <NavLink to="https://github.com/Mohan-Kumar-Dalei/ApexUI" target='_blank' className="text-lg sm:text-xl text-gray-400 hover:text-gray-300"><i className="fab fa-github"></i></NavLink>
                     {/* Hamburger/Cross Icon for mobile/tablet */}
                     <button

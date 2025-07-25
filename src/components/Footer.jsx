@@ -7,10 +7,10 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
     faGithub,
     faInstagram,
-    faXTwitter,
 } from "@fortawesome/free-brands-svg-icons";
 import { textSlideGsap } from "./ui/TextSlide/textSlideGsap";
 import { NavLink } from "react-router-dom";
+import { faLinkedin } from "@fortawesome/free-brands-svg-icons/faLinkedin";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -251,7 +251,7 @@ export default function TextCtaFooterModern() {
                     <div className="max-w-6xl mx-auto text-center space-y-6 ">
                         <p className="text-sm text-white/60">
                             Created by
-                            <a href="#" className="text-red-500 px-1 hover:underline">
+                            <a href="https://www.linkedin.com/in/mohan-kumar-dalei/" className="text-red-500 px-1 hover:underline">
                                 ❤️
                             </a>
                         </p>
@@ -263,12 +263,12 @@ export default function TextCtaFooterModern() {
                         >
                             ⭐ Star on <FontAwesomeIcon icon={faGithub} className="ml-1" />
                         </a>
-                        <div className="flex justify-center gap-6">
+                        <div className="flex justify-center gap-3">
                             <p className="text-purple-400">Feedback on</p>
-                            <a href="#" className="hover:text-purple-400">
-                                <FontAwesomeIcon icon={faXTwitter} className="w-5 h-5" />
+                            <a href="https://www.linkedin.com/in/mohan-kumar-dalei/" className="hover:text-blue-400">
+                                <FontAwesomeIcon icon={faLinkedin} className="w-5 h-5" />
                             </a>
-                            <a href="#" className="hover:text-pink-400">
+                            <a href="https://www.instagram.com/_.apexui._/" className="hover:text-pink-400">
                                 <FontAwesomeIcon icon={faInstagram} className="w-5 h-5" />
                             </a>
                         </div>
@@ -280,8 +280,8 @@ export default function TextCtaFooterModern() {
                             </div>
                             <div className="space-y-1">
                                 <p className="font-semibold text-white">Legal</p>
-                                <a href="#" className="text-white/60 hover:underline block">Privacy Policy</a>
-                                <a href="#" className="text-white/60 hover:underline block">Terms & Conditions</a>
+                                <a href="https://apex-ui.notion.site/ApexUI-Privacy-Policy-23bcc7626dfc80aaad60f1033802579a" target="_blank" className="text-white/60 hover:underline block">Privacy Policy</a>
+                                <a href="https://apex-ui.notion.site/ApexUI-Terms-Conditions-23bcc7626dfc805c9271f18b9b7af916" target="_blank" className="text-white/60 hover:underline block">Terms & Conditions</a>
                             </div>
                         </div>
                         <div className="flex justify-between items-center text-xs text-white/40 pt-6 border-t border-white/10 mt-10">
