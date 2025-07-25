@@ -1,12 +1,69 @@
-# React + Vite
+![ApexUI Banner](./src/assets/ApexUI-Beta.png)
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+# 🔥 ApexUI – The Ultimate Modern UI Toolkit for React
 
-Currently, two official plugins are available:
+Blazing-fast, beautifully animated, and developer-first React UI library built with Tailwind CSS, GSAP, and Framer Motion.  
+**Perfect for modern apps, portfolios, dashboards, and high-performance UIs.**
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+---
 
-## Expanding the ESLint configuration
+## 🚀 Installation
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+```bash
+npm install apex-ui-kit
+```
+
+## 🛠️ Add Components via CLI
+
+ApexUI comes with a handy CLI to add components directly to your project.
+
+```bash
+npx apex-ui-kit add hyper-card
+```
+
+## ✨ Usage Example
+
+```jsx
+import HyperCard from "./ApexUI-Kit/HyperCard/HyperCard.jsx";
+// Or if you have CLI setup, you can import directly from the installed path
+
+const App = () => {
+  return (
+    <div>
+      <HyperCard
+        starColor="#9f7aea"
+        glow={true}
+        beamCount={10}
+        starCount={250}
+      />
+    </div>
+  );
+};
+
+export default App;
+```
+
+## 📦 Features
+
+- Modern, animated, and customizable React components
+- Built with Tailwind CSS, GSAP, Framer Motion, Three.js, and more
+- CLI for easy component scaffolding
+- Perfect for dashboards, portfolios, SaaS, and creative projects
+
+## 📚 Documentation
+
+- [Full Documentation](https://apex-ui.in/components/docs/getting-started/installation/react-setup)
+- [Component Gallery](https://apex-ui.in/components/glass-navbar)
+
+## 🤝 Contributing
+
+Pull requests and suggestions are welcome!  
+For major changes, please open an issue first to discuss what you would like to change.
+
+## 📄 License
+
+MIT
+
+---
+
+**Made with ❤️ by ApexUI**
