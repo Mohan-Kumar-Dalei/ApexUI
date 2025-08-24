@@ -1,4 +1,4 @@
-![ApexUI Banner](./src/assets/ApexUI-Beta.png)
+![ApexUI Banner](./public/assets/ApexUI-Beta.png)
 
 # 🔥 ApexUI – The Ultimate Modern UI Toolkit for React
 
