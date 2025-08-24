@@ -88,8 +88,8 @@ const Footer = () => {
                 </div>
 
                 
-                <div className="mt-20 cursor-default">
-                    <FadedBigText style={{fontFamily: "Righteous, sans-serif"}}>
+                <div className="mt-20 cursor-default whitespace-nowrap">
+                    <FadedBigText style={{fontFamily: "Righteous, sans-serif", whiteSpace: "nowrap"}}>
                         APEX UI
                     </FadedBigText>
                 </div>
