@@ -123,27 +123,27 @@ export default function ModernLoader({ onFinish }) {
             `}</style>
 
             {/* Corner Elements */}
-            <div ref={statusRef} className="absolute top-4 left-4">
+            <div ref={statusRef} className="absolute top-4 left-4 opacity-0">
                 <span className="text-green-400">[OK]</span> System Status: Nominal
             </div>
-            <div ref={versionRef} className="absolute top-4 right-4">
+            <div ref={versionRef} className="absolute top-4 right-4 opacity-0">
                 Version: 2.0.4
             </div>
 
             {/* Main Center Content */}
             <div className="w-full h-full flex flex-col items-center justify-center">
                 <h1 ref={helloRef} className="text-8xl md:text-[25rem] font-bold text-white tracking-wider flex" style={{ fontFamily: "Righteous, sans-serif" }}>
-                    <span className="inline-block">A</span>
-                    <span className="inline-block">P</span>
-                    <span className="inline-block">E</span>
-                    <span className="inline-block">X</span>
-                    <span className="inline-block">U</span>
-                    <span className="inline-block">I</span>
+                    <span className="inline-block opacity-0">A</span>
+                    <span className="inline-block opacity-0">P</span>
+                    <span className="inline-block opacity-0">E</span>
+                    <span className="inline-block opacity-0">X</span>
+                    <span className="inline-block opacity-0">U</span>
+                    <span className="inline-block opacity-0">I</span>
                 </h1>
             </div>
 
             {/* Animated Rolling Counter (Bottom Left) */}
-            <div ref={counterContainerRef} className="absolute bottom-4 left-4 flex items-center gap-2 text-3xl text-slate-400">
+            <div ref={counterContainerRef} className="absolute bottom-4 left-4 flex items-center gap-2 text-3xl text-slate-400 opacity-0">
                 <div className="counter">
                     <div ref={counter1Ref} className="counter-1 digit">
                         <div className="num">0</div>
@@ -161,7 +161,7 @@ export default function ModernLoader({ onFinish }) {
             </div>
 
             {/* Progress Bar (Bottom Right) */}
-            <div ref={progressContainerRef} className="absolute bottom-6 right-4 w-48">
+            <div ref={progressContainerRef} className="absolute bottom-6 right-4 w-48 opacity-0">
                 <div className="w-full bg-slate-800 h-1.5 rounded-full">
                     <div ref={progressBarRef} className="w-0 h-1.5 bg-lime-400 rounded-full"></div>
                 </div>
