@@ -5,7 +5,7 @@ import { NavLink } from 'react-router-dom';
 import styled from "styled-components";
 import FeedBack from '../../components/FeedBack.jsx';
 import SidebarContext from '../context/SidebarContext.jsx';
-import NavBar from '../../components/NavBar.jsx';
+import NavBar from '../../components/Navbar.jsx';
 import AsideBar from './AsideBar.jsx';
 import Footer from './ComponentFooter.jsx';
 import AllComponents from './AllComponents.jsx'
