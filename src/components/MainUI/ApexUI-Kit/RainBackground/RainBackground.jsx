@@ -1,6 +1,6 @@
 import React, { useEffect, useRef } from 'react';
 import gsap from 'gsap';
-function createRainEffectWithCollision(container, dropCount = 36, dropColor, collisionColor, dropGradient, collisionGradient) {
+function createRainEffectWithCollision(container, dropCount = 0, dropColor, collisionColor, dropGradient, collisionGradient) {
     if (!container) return;
     for (let i = 0; i < dropCount; i++) {
         const drop = document.createElement('div');
@@ -11,7 +11,7 @@ function createRainEffectWithCollision(container, dropCount = 36, dropColor, col
         drop.style.width = '2px';
         drop.style.height = Math.random() * 32 + 16 + 'px';
         drop.style.background = dropGradient ? dropGradient : `linear-gradient(to bottom, ${dropColor} 60%, ${collisionColor} 100%)`;
-        drop.style.opacity = Math.random() * 0.3 + 0.15;
+        drop.style.opacity = Math.random() * 0.3 + 0.3;
         drop.style.borderRadius = '1px';
         drop.style.zIndex = 1;
         container.appendChild(drop);
@@ -23,10 +23,9 @@ function animateRainDropWithCollision(drop, container, collisionColor, dropGradi
     const duration = Math.random() * 1.2 + 0.8;
     gsap.fromTo(drop, {
         y: 0,
-        opacity: drop.style.opacity
     }, {
         y: container.offsetHeight + 40,
-        opacity: 0.05,
+
         duration,
         ease: 'power1.in',
         onUpdate: function () {
@@ -46,7 +45,7 @@ function animateRainDropWithCollision(drop, container, collisionColor, dropGradi
         onComplete: () => {
             drop.style.left = Math.random() * 98 + '%';
             drop.style.height = Math.random() * 32 + 16 + 'px';
-            drop.style.opacity = Math.random() * 0.3 + 0.15;
+            drop.style.opacity = Math.random() * 0.3 + 0.3;
             drop.style.background = dropGradient ? dropGradient : `linear-gradient(to bottom, ${dropColor} 60%, ${collisionColor} 100%)`;
             gsap.set(drop, { y: 0, opacity: drop.style.opacity });
             animateRainDropWithCollision(drop, container, collisionColor, dropGradient, collisionGradient, dropColor);
@@ -80,7 +79,7 @@ function createRainCollisionExplosion(x, y, container, collisionColor = '#e0e7ff
         explosion.appendChild(span);
         const dx = Math.floor(Math.random() * 16 - 8);
         const dy = Math.floor(Math.random() * -10 - 2);
-        gsap.fromTo(span, { x: 0, y: 0, opacity: 1 }, {
+        gsap.fromTo(span, { x: 0, y: 0 }, {
             x: dx,
             y: dy,
             opacity: 0,

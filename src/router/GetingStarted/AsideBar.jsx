@@ -1,21 +1,32 @@
 /* eslint-disable no-unused-vars */
 import React, { useContext, useState, useEffect, useRef } from 'react';
+import SidebarBadge from '../../components/SidebarBadge.jsx';
 import { NavLink } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
-import gsap from 'gsap';
-import ScrollTrigger from 'gsap/ScrollTrigger';
 import SidebarContext from '../context/SidebarContext.jsx';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import {
-    faCode,
-    faLightbulb,
-    faPuzzlePiece,
-    faChevronDown,
-    faPalette,
-    faMagicWandSparkles,
-} from '@fortawesome/free-solid-svg-icons';
 
-gsap.registerPlugin(ScrollTrigger);
+
+
+// --- Naye SVG Icons ---
+const IconGettingStarted = () => (
+    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="m12 14-4-4 4-4" /><path d="M3.34 19a10 10 0 1 1 17.32-9" /></svg>
+);
+const IconInstallation = () => (
+    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="16 18 22 12 16 6" /><polyline points="8 6 2 12 8 18" /></svg>
+);
+const IconComponents = () => (
+    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="3" width="7" height="7" /><rect x="14" y="3" width="7" height="7" /><rect x="14" y="14" width="7" height="7" /><rect x="3" y="14" width="7" height="7" /></svg>
+);
+const IconUI = () => (
+    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="m12 3-1.41 1.41L3 12l7.59 7.59L12 21l9-9Z" /><path d="M3 12h18" /></svg>
+);
+const IconDefault = () => (
+    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z" /><polyline points="14 2 14 8 20 8" /></svg>
+);
+const ChevronIcon = () => (
+    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
+);
+
 
 export default function AsideBar({ isMobile = false, onClose }) {
     const sidebarRef = useRef(null);
@@ -23,6 +34,10 @@ export default function AsideBar({ isMobile = false, onClose }) {
 
     useEffect(() => {
         const styleElement = document.createElement('style');
+        styleElement.innerHTML = `
+            .scrollbar-hide::-webkit-scrollbar { display: none; }
+            .scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
+        `;
         document.head.appendChild(styleElement);
         return () => {
             document.head.removeChild(styleElement);
@@ -38,123 +53,145 @@ export default function AsideBar({ isMobile = false, onClose }) {
     };
 
     const { data } = useContext(SidebarContext);
-    const [collapsedSections, setCollapsedSections] = useState({});
+    const [collapsedSections, setCollapsedSections] = useState(() => {
+        if (!data) return {};
+        const obj = {};
+        data.forEach(section => {
+            obj[section.key] = true;
+        });
+        return obj;
+    });
 
     const toggleCollapse = (key) => {
         setCollapsedSections((prev) => ({
             ...prev,
             [key]: !prev[key],
         }));
-
-        gsap.to(`#chevron-${key}`, {
-            rotate: collapsedSections[key] ? 0 : 180,
-            duration: 0.2,
-        });
     };
 
     const getSectionIcon = (key) => {
         switch (key) {
             case 'gettingstarted':
-                return <FontAwesomeIcon icon={faLightbulb} className="text-lg text-yellow-500" />;
+                return <IconGettingStarted />;
             case 'installation':
-                return <FontAwesomeIcon icon={faCode} className="text-lg text-green-500" />;
+                return <IconInstallation />;
             case 'components':
-                return <FontAwesomeIcon icon={faPuzzlePiece} className="text-lg text-purple-500" />;
+                return <IconComponents />;
             case 'ui':
-                return <FontAwesomeIcon icon={faMagicWandSparkles} className="text-lg text-blue-500" />;
+                return <IconUI />;
             default:
-                return <FontAwesomeIcon icon={faPalette} className="text-lg text-pink-500" />;
+                return <IconDefault />;
         }
     };
 
     const SidebarContent = (
         <aside
             ref={sidebarRef}
-            className="relative h-full min-h-0 w-full bg-[#1a1528] max-md:bg-[#111316] text-white flex flex-col px-4 border-r border-white/10 backdrop-blur-xl shadow-[0_0_15px_rgba(138,43,226,0.2)] rounded-r-2xl"
+            className={`relative h-full w-full min-h-0 lg:w-[20vw] overflow-hidden bg-[var(--nav-sidebar-bg)] text-[var(--nav-sidebar-text)] flex flex-col px-3 border-r border-[var(--color-border)]`}
         >
             <div
                 ref={contentRef}
-                className="w-full h-full min-h-0 overflow-y-auto scrollbar-hide pt-16"
+                className={`w-full h-full min-h-0 overflow-y-auto overflow-x-hidden scrollbar-hide pt-8 ${isMobile ? 'mt-26' : 'mt-0'}`}
             >
-                {data.map((section) => (
+                {data.map((section, sectionIndex) => (
                     <motion.div
                         key={section.key}
-                        className="lg:mb-6 mb-2 transform lg:hover:translate-x-1 transition-transform duration-300 "
+                        className="mb-4"
                         initial={{ opacity: 0, y: 20 }}
                         animate={{ opacity: 1, y: 0 }}
-                        transition={{ duration: 0.6 }}
+                        transition={{ duration: 0.5, delay: sectionIndex * 0.1 }}
                     >
-                        <div
-                            className="flex items-center justify-between cursor-pointer mb-3 lg:mb-1  rounded-xl transition-all duration-200 group"
+                        <button
+                            className="flex items-center justify-between w-full cursor-pointer p-3 rounded-lg transition-colors duration-200 hover:bg-[var(--nav-sidebar-hover)]/50"
                             onClick={() => toggleCollapse(section.key)}
                         >
-                            <div className="flex items-center gap-2">
-                                <motion.div
-                                    id={`icon-${section.key}`}
-                                    className="text-lg p-2 rounded-lg"
-                                    whileTap={{ scale: 0.95 }}
-                                    whileHover={{ scale: 1.05 }}
-                                >
+                            <div className="flex items-center gap-3">
+                                <div className="text-[var(--nav-sidebar-icon)]">
                                     {getSectionIcon(section.key)}
-                                </motion.div>
-                                <span className="font-semibold text-[16px] tracking-wide text-white transition-all duration-200">
+                                </div>
+                                <span className="font-semibold text-base tracking-wide text-[var(--nav-sidebar-text)]">
                                     {section.title}
                                 </span>
                             </div>
                             <motion.div
-                                id={`chevron-${section.key}`}
-                                animate={{ rotate: !collapsedSections[section.key] ? 0 : -90 }}
-                                transition={{ duration: 0.25 }}
-                                className="text-white transition-colors duration-200 p-1.5 rounded-md"
+                                animate={{ rotate: collapsedSections[section.key] ? 0 : 180 }}
+                                transition={{ duration: 0.3 }}
+                                className="text-[var(--nav-sidebar-text)]"
                             >
-                                <FontAwesomeIcon icon={faChevronDown} size="xs" />
+                                <ChevronIcon />
                             </motion.div>
-                        </div>
+                        </button>
 
                         <AnimatePresence>
-                            {!collapsedSections[section.key] && (
+                            {collapsedSections[section.key] && (
                                 <motion.div
                                     initial={{ opacity: 0, height: 0 }}
                                     animate={{ opacity: 1, height: 'auto' }}
                                     exit={{ opacity: 0, height: 0 }}
-                                    transition={{ duration: 0.2 }}
-                                    className="ml-3 pl-3 relative flex flex-col gap-2 font-semibold before:content-[''] before:absolute before:left-0 before:top-0 before:h-full before:w-[2px] before:bg-purple-600 before:rounded-full after:content-[''] after:absolute after:left-[-3px] after:top-0 after:w-[8px] after:h-[8px] after:bg-purple-600 after:rounded-full"
+                                    transition={{ duration: 0.3, ease: "easeInOut" }}
+                                    className="ml-5 pl-1 border-l-2 border-[var(--nav-sidebar-border)] relative whitespace-nowrap"
+                                    onMouseMove={e => {
+                                        const container = e.currentTarget;
+                                        const rect = container.getBoundingClientRect();
+                                        const y = e.clientY - rect.top;
+                                        if (container.beamRef) {
+                                            container.beamRef.style.top = `${y - 8}px`;
+                                        }
+                                    }}
+                                    onScroll={e => {
+                                        const container = e.currentTarget;
+                                        // Find the first active link
+                                        const active = container.querySelector('.velocity-link-active');
+                                        if (active && container.beamRef) {
+                                            const rect = container.getBoundingClientRect();
+                                            const activeRect = active.getBoundingClientRect();
+                                            const y = activeRect.top - rect.top;
+                                            container.beamRef.style.top = `${y}px`;
+                                        }
+                                    }}
+                                    ref={el => {
+                                        if (el) el.beamRef = el.querySelector('.velocity-beam');
+                                    }}
                                 >
+                                    {/* Velocity Beam Effect */}
+                                    <motion.div
+                                        className="velocity-beam absolute -left-[1.5px] w-[2px] h-4 rounded-full bg-[var(--nav-sidebar-beam)] shadow-lg pointer-events-none z-10"
+                                        initial={{ opacity: 0, y: 0 }}
+                                        animate={{ opacity: 1 }}
+                                        style={{ top: 0 }}
+                                    />
                                     {section.content.map((item, idx) => (
                                         <motion.div
                                             key={item.name || idx}
-                                            initial={{ x: -20, opacity: 0 }}
+                                            initial={{ x: -15, opacity: 0 }}
                                             animate={{ x: 0, opacity: 1 }}
-                                            transition={{ delay: idx * 0.1 }}
-                                            className="transform hover:translate-x-1 transition-all duration-200 relative"
+                                            transition={{ delay: idx * 0.05 }}
+                                            className="my-1"
                                         >
                                             {item.children ? (
-                                                <div className="mb-0">
-                                                    <div className="font-medium text-md text-white mb-2 uppercase tracking-wider transition-colors duration-200 bg-white/5 p-2 rounded-lg">
+                                                <div className="mt-2">
+                                                    <div className="font-medium text-sm text-[var(--nav-sidebar-text)] mb-2 uppercase tracking-wider p-2">
                                                         {item.name || ''}
                                                     </div>
-                                                    <div className="flex flex-col">
+                                                    <div className="flex flex-col pl-3 border-l border-[var(--nav-sidebar-border)]">
                                                         {item.children.map((child, childIdx) => (
                                                             <motion.div
                                                                 key={child.name}
                                                                 initial={{ x: -10, opacity: 0 }}
                                                                 animate={{ x: 0, opacity: 1 }}
                                                                 transition={{ delay: childIdx * 0.05 }}
-                                                                className="transform hover:translate-x-1 transition-all duration-200 py-1"
                                                             >
                                                                 <NavLink
                                                                     to={child.path}
                                                                     className={({ isActive }) =>
-                                                                        `text-[14px] transition-all duration-200 ${isActive
-                                                                            ? 'bg-purple-600 text-white font-bold rounded-lg'
-                                                                            : 'text-gray-400 hover:text-white hover:bg-white/5 rounded-lg'
+                                                                        `block text-sm transition-all duration-200 rounded-md ${isActive
+                                                                            ? ' text-[var(--nav-sidebar-active-text)] font-semibold velocity-link-active'
+                                                                            : 'text-[var(--nav-sidebar-active-text)] hover:text-[var(--nav-sidebar-hover)] hover:bg-[var(--nav-sidebar-hover)]/50'
                                                                         }`
                                                                     }
                                                                     onClick={handleNavClick}
                                                                 >
-                                                                    <span className="px-3 py-1.5 block transition-all duration-200">
-                                                                        {child.name}
-                                                                    </span>
+                                                                    <span className="px-3 py-2 block">{child.name}</span>
                                                                 </NavLink>
                                                             </motion.div>
                                                         ))}
@@ -164,15 +201,16 @@ export default function AsideBar({ isMobile = false, onClose }) {
                                                 <NavLink
                                                     to={item.path}
                                                     className={({ isActive }) =>
-                                                        `text-[14px] transition-all duration-200 ${isActive
-                                                            ? 'bg-pink-600 text-white font-bold rounded-lg'
-                                                            : 'text-gray-400 hover:text-white hover:bg-white/5 rounded-lg'
+                                                        `block text-sm transition-all duration-200 font-medium ${isActive
+                                                            ? ' text-[var(--nav-sidebar-active-text)] font-semibold velocity-link-active translate-x-1'
+                                                            : 'text-[var(--nav-sidebar-text)] hover:text-[var(--nav-sidebar-hover-text)] hover:translate-x-1 transition-all duration-75 ease-in-out'
                                                         }`
                                                     }
                                                     onClick={handleNavClick}
                                                 >
-                                                    <span className="px-3 py-1.5 block transition-all duration-200">
+                                                    <span className="px-3 py-2 flex items-center gap-2">
                                                         {item.name}
+                                                        {item.badge && <SidebarBadge>{item.badge}</SidebarBadge>}
                                                     </span>
                                                 </NavLink>
                                             )}
@@ -188,115 +226,6 @@ export default function AsideBar({ isMobile = false, onClose }) {
     );
 
     if (!isMobile) return SidebarContent;
-    // Mobile: more offset and left-aligned heading
-    return (
-        <div className="fixed inset-y-0 left-0 z-50 w-64 bg-[#1a1528] border-r border-white/10 shadow-[0_0_25px_rgba(138,43,226,0.3)] backdrop-blur-xl lg:hidden h-full min-h-0 flex flex-col overflow-y-auto scrollbar-hide px-4 pt-32">
-            <div className="w-full h-full min-h-0 ">
-                {data.map((section) => (
-                    <motion.div
-                        key={section.key}
-                        className="mb-2 transform transition-transform duration-300"
-                        initial={{ opacity: 0, y: 20 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{ duration: 0.6 }}
-                    >
-                        <div
-                            className="flex items-center justify-between cursor-pointer mb-3 rounded-xl transition-all duration-200 group"
-                            onClick={() => toggleCollapse(section.key)}
-                        >
-                            <motion.div
-                                id={`icon-${section.key}`}
-                                className="text-lg p-2 rounded-lg"
-                                whileTap={{ scale: 0.95 }}
-                                whileHover={{ scale: 1.05 }}
-                            >
-                                {getSectionIcon(section.key)}
-                            </motion.div>
-                            <span className="font-semibold text-[16px] tracking-wide text-white transition-all duration-200 text-left w-full">
-                                {section.title}
-                            </span>
-                            <motion.div
-                                id={`chevron-${section.key}`}
-                                animate={{ rotate: !collapsedSections[section.key] ? 0 : -90 }}
-                                transition={{ duration: 0.25 }}
-                                className="text-white transition-colors duration-200 p-1.5 rounded-md"
-                            >
-                                <FontAwesomeIcon icon={faChevronDown} size="xs" />
-                            </motion.div>
-                        </div>
-                        <AnimatePresence>
-                            {!collapsedSections[section.key] && (
-                                <motion.div
-                                    initial={{ opacity: 0, height: 0 }}
-                                    animate={{ opacity: 1, height: 'auto' }}
-                                    exit={{ opacity: 0, height: 0 }}
-                                    transition={{ duration: 0.2 }}
-                                    className="ml-3 pl-3 relative flex flex-col gap-2 font-semibold before:content-[''] before:absolute before:left-0 before:top-0 before:h-full before:w-[2px] before:bg-purple-600 before:rounded-full after:content-[''] after:absolute after:left-[-3px] after:top-0 after:w-[8px] after:h-[8px] after:bg-purple-600 after:rounded-full"
-                                >
-                                    {section.content.map((item, idx) => (
-                                        <motion.div
-                                            key={item.name || idx}
-                                            initial={{ x: -20, opacity: 0 }}
-                                            animate={{ x: 0, opacity: 1 }}
-                                            transition={{ delay: idx * 0.1 }}
-                                            className="transform hover:translate-x-1 transition-all duration-200 relative"
-                                        >
-                                            {item.children ? (
-                                                <div className="mb-0">
-                                                    <div className="font-medium text-md text-white mb-2 uppercase tracking-wider transition-colors duration-200 bg-white/5 p-2 rounded-lg">
-                                                        {item.name || ''}
-                                                    </div>
-                                                    <div className="flex flex-col">
-                                                        {item.children.map((child, childIdx) => (
-                                                            <motion.div
-                                                                key={child.name}
-                                                                initial={{ x: -10, opacity: 0 }}
-                                                                animate={{ x: 0, opacity: 1 }}
-                                                                transition={{ delay: childIdx * 0.05 }}
-                                                                className="transform hover:translate-x-1 transition-all duration-200 py-1"
-                                                            >
-                                                                <NavLink
-                                                                    to={child.path}
-                                                                    className={({ isActive }) =>
-                                                                        `text-[14px] transition-all duration-200 ${isActive
-                                                                            ? 'bg-purple-600 text-white font-bold rounded-lg'
-                                                                            : 'text-gray-400 hover:text-white hover:bg-white/5 rounded-lg'
-                                                                        }`
-                                                                    }
-                                                                    onClick={handleNavClick}
-                                                                >
-                                                                    <span className="px-3 py-1.5 block transition-all duration-200">
-                                                                        {child.name}
-                                                                    </span>
-                                                                </NavLink>
-                                                            </motion.div>
-                                                        ))}
-                                                    </div>
-                                                </div>
-                                            ) : (
-                                                <NavLink
-                                                    to={item.path}
-                                                    className={({ isActive }) =>
-                                                        `text-[14px] transition-all duration-200 ${isActive
-                                                            ? 'bg-pink-600 text-white font-bold rounded-lg'
-                                                            : 'text-gray-400 hover:text-white hover:bg-white/5 rounded-lg'
-                                                        }`
-                                                    }
-                                                    onClick={handleNavClick}
-                                                >
-                                                    <span className="px-3 py-1.5 block transition-all duration-200">
-                                                        {item.name}
-                                                    </span>
-                                                </NavLink>
-                                            )}
-                                        </motion.div>
-                                    ))}
-                                </motion.div>
-                            )}
-                        </AnimatePresence>
-                    </motion.div>
-                ))}
-            </div>
-        </div>
-    );
+
+    return SidebarContent;
 }

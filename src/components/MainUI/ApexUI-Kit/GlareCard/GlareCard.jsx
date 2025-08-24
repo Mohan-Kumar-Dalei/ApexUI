@@ -5,8 +5,7 @@ function cn(...classes) {
 }
 import React, { useRef } from "react";
 import { motion, useMotionValue, useSpring, useMotionTemplate } from "framer-motion";
-import bgHexa from '../../../../assets/bg-hexa.jpg';
-
+import bgHexa from '/assets/bg-hexa.jpg'
 export default function GlareCardDemo() {
     return (
         <GlareCard className="flex flex-col items-center justify-center bg-gradient-to-br from-gray-900 via-slate-800 to-[#181825] p-8 border border-slate-800 shadow-2xl relative overflow-hidden group group-hover:scale-100 transition-transform duration-300 ease-in-out">

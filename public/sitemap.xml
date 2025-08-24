@@ -1,8 +1,60 @@
-<!-- public/sitemap.xml -->
+<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+
+  <!-- Home Page -->
   <url>
     <loc>https://apex-ui.in/</loc>
-    <changefreq>monthly</changefreq>
-    <priority>1.0</priority>
+    <lastmod>2025-08-24</lastmod>
+    <priority>1.00</priority>
+    <changefreq>daily</changefreq>
   </url>
+
+  <!-- Docs: React + Vite Setup -->
+  <url>
+    <loc>https://apex-ui.in/components/docs/getting-started/installation/react-setup</loc>
+    <lastmod>2025-08-01</lastmod>
+    <priority>0.85</priority>
+    <changefreq>yearly</changefreq>
+  </url>
+
+  <!-- Docs: Tailwind Setup -->
+  <url>
+    <loc>https://apex-ui.in/components/docs/getting-started/installation/tailwind-setup</loc>
+    <lastmod>2025-08-01</lastmod>
+    <priority>0.85</priority>
+    <changefreq>yearly</changefreq>
+  </url>
+
+  <!-- Docs: ApexUI CLI -->
+  <url>
+    <loc>https://apex-ui.in/components/docs/getting-started/installation/apexui-cli</loc>
+    <lastmod>2025-08-01</lastmod>
+    <priority>0.85</priority>
+    <changefreq>yearly</changefreq>
+  </url>
+
+  <!-- Component: Carousel -->
+  <url>
+    <loc>https://apex-ui.in/components/carousel</loc>
+    <lastmod>2025-08-10</lastmod>
+    <priority>0.75</priority>
+    <changefreq>monthly</changefreq>
+  </url>
+
+  <!-- Component: Luminous Particle Ocean -->
+  <url>
+    <loc>https://apex-ui.in/components/luminous-particle-ocean</loc>
+    <lastmod>2025-08-10</lastmod>
+    <priority>0.70</priority>
+    <changefreq>monthly</changefreq>
+  </url>
+
+  <!-- More Components -->
+  <url>
+    <loc>https://apex-ui.in/components</loc>
+    <lastmod>2025-08-15</lastmod>
+    <priority>0.80</priority>
+    <changefreq>weekly</changefreq>
+  </url>
+
 </urlset>

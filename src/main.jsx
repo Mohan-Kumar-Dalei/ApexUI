@@ -6,17 +6,17 @@ import './components/css/style.css'
 import App from './App.jsx'
 import SidebarProvider from '../src/router/context/SidebarProvider.jsx';
 import { Toaster } from 'sonner';
-
+import './components/MainUI/ApexUI-Kit/ThemeToggle/ThemeToggle.css'
 createRoot(document.getElementById('root')).render(
   <>
     <BrowserRouter>
-      <SidebarProvider>
-        <Toaster
-          richColors
-          closeButton
-        />
-        <App />
-      </SidebarProvider>
+        <SidebarProvider>
+          <Toaster
+            richColors
+            closeButton
+          />
+          <App />
+        </SidebarProvider>
     </BrowserRouter>
   </>
 )

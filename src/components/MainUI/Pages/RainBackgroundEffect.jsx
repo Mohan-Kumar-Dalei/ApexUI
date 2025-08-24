@@ -1,287 +1,307 @@
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+/* eslint-disable no-unused-vars */
+import { useState, useEffect, useRef } from 'react';
+import gsap from 'gsap';
+// Change: FontAwesome is replaced with Lucide Icons for consistency
 import {
-    faCube,
-    faCodeBranch,
-    faTerminal,
-    faTableList,
-    faPuzzlePiece,
-    faChevronDown,
-} from '@fortawesome/free-solid-svg-icons';
-import { useState } from 'react';
-import { CopyBlock, dracula } from 'react-code-blocks';
+    GitFork,
+    Code,
+    Terminal,
+    List,
+    Puzzle,
+    ChevronDown,
+    Package,
+    CloudRain, // Icon for this component
+    Copy
+} from 'lucide-react';
+import { motion } from 'framer-motion';
+import { CopyBlock, irBlack } from 'react-code-blocks';
 import RainBackground from '../ApexUI-Kit/RainBackground/RainBackground.jsx';
 
-const rainBgProps = [
-    { prop: 'dropCount', type: 'number', def: '100', desc: 'Number of rain drops' },
-    { prop: 'dropColor', type: 'string', def: '"#7c3aed"', desc: 'Color of the rain drops' },
-    { prop: 'speed', type: 'number', def: '1.5', desc: 'Speed of the rain animation' },
-    { prop: 'blur', type: 'boolean', def: 'true', desc: 'Enable blur effect on drops' },
-    { prop: 'background', type: 'string', def: '"#181824"', desc: 'Background color behind the rain' },
-    { prop: 'children', type: 'ReactNode', def: 'null', desc: 'Content to render over the rain' },
-    { prop: 'dropGradient', type: 'string', def: 'undefined', desc: 'CSS gradient for rain drops (e.g. "linear-gradient(to bottom, #00f2fe, #4facfe)")' },
-    { prop: 'collisionGradient', type: 'string', def: 'undefined', desc: 'CSS gradient for collision/explosion (e.g. "linear-gradient(90deg, #43e97b 0%, #38f9d7 100%)")' },
-];
+
+// Minimal CopyButton for code blocks (TailwindSetup style)
+const CopyButton = ({ text }) => {
+    const [copied, setCopied] = useState(false);
+    const handleCopy = () => {
+        navigator.clipboard.writeText(text);
+        setCopied(true);
+        setTimeout(() => setCopied(false), 1200);
+    };
+    return (
+        <div className="absolute top-2 right-2 z-20 flex flex-col items-center">
+            <button
+                onClick={handleCopy}
+                className="p-2 rounded-md bg-black text-[var(--color-pages-side-active-text)] transition-all duration-200"
+                aria-label={copied ? 'Copied!' : 'Copy code'}
+            >
+                <Copy className="w-4 h-4" />
+            </button>
+            {copied && (
+                <span
+                    className="pointer-events-none select-none absolute -top-8 right-1/2 translate-x-1/2 px-3 py-1 rounded-md bg-white text-xs font-semibold text-black border border-gray-200"
+                    style={{
+                        minWidth: '60px',
+                        textAlign: 'center',
+                        zIndex: 30,
+                    }}
+                >
+                    Copied!
+                    <span className="absolute left-1/2 -translate-x-1/2 top-full w-2 h-2 bg-white border-l border-b border-gray-200 rotate-45" style={{ marginTop: '-2px' }}></span>
+                </span>
+            )}
+        </div>
+    );
+};
+
+// Consistent "Show More" button
+function PropsShowMoreBtn({ showAll, setShowAll, propCount }) {
+    if (propCount <= 5) return null;
+    return (
+        <button
+            className="text-sm font-medium text-[var(--color-pages-side-active-text)] hover:text-[var(--color-pages-side-active-hover)]"
+            onClick={() => setShowAll((v) => !v)}
+        >
+            {showAll ? 'Show Less' : `Show ${propCount - 5} More`}
+        </button>
+    );
+}
+
+// Consistent PropsTable
+function PropsTable({ showAll, setShowAll }) {
+    const allProps = [
+        { prop: 'dropCount', type: 'number', def: '100', desc: 'Number of rain drops' },
+        { prop: 'dropColor', type: 'string', def: '"#7c3aed"', desc: 'Color of the rain drops' },
+        { prop: 'speed', type: 'number', def: '1.5', desc: 'Speed of the rain animation' },
+        { prop: 'blur', type: 'boolean', def: 'true', desc: 'Enable blur effect on drops' },
+        { prop: 'background', type: 'string', def: '"#181824"', desc: 'Background color behind the rain' },
+        { prop: 'children', type: 'ReactNode', def: 'null', desc: 'Content to render over the rain' },
+        { prop: 'dropGradient', type: 'string', def: 'undefined', desc: 'CSS gradient for rain drops' },
+        { prop: 'collisionGradient', type: 'string', def: 'undefined', desc: 'CSS gradient for collision/explosion' },
+    ];
+    const displayProps = showAll ? allProps : allProps.slice(0, 5);
+
+    return (
+        <div className="overflow-x-auto">
+            <div className="flex justify-end mb-4">
+                <PropsShowMoreBtn showAll={showAll} setShowAll={setShowAll} propCount={allProps.length} />
+            </div>
+            <table className="min-w-full text-sm">
+                <thead className="text-xs text-[var(--color-pages-props-text)] uppercase">
+                    <tr>
+                        <th className="pb-3 text-left font-semibold">Prop</th>
+                        <th className="pb-3 text-left font-semibold">Type</th>
+                        <th className="pb-3 text-left font-semibold">Default</th>
+                        <th className="pb-3 text-left font-semibold">Description</th>
+                    </tr>
+                </thead>
+                <tbody className="divide-y divide-[var(--color-pages-divider)]">
+                    {displayProps.map((row) => (
+                        <tr key={row.prop}>
+                            <td className="py-4 pr-4 whitespace-nowrap font-mono text-[var(--color-pages-side-active-text)]">{row.prop}</td>
+                            <td className="py-4 pr-4 whitespace-nowrap font-mono text-[var(--color-pages-side-active-text2)]">{row.type}</td>
+                            <td className="py-4 pr-4 whitespace-nowrap font-mono text-[var(--color-pages-side-active-text3)]">{row.def}</td>
+                            <td className="py-4 text-[var(--color-pages-props-text)]">{row.desc}</td>
+                        </tr>
+                    ))}
+                </tbody>
+            </table>
+        </div>
+    );
+}
+
+// Consistent DependenciesList
+function DependenciesList() {
+    const dependencies = [
+        { name: 'React', desc: 'Modern React library for UI building' },
+        { name: 'GSAP', desc: 'A powerful animation library' },
+        { name: 'TailwindCSS', desc: 'Utility-first CSS framework for rapid styling' },
+    ];
+    return (
+        <ul className="space-y-4">
+            {dependencies.map(dep => (
+                <li key={dep.name} className="flex items-center gap-4 p-4 bg-[var(--color-pages-bg)] border border-[var(--color-pages-border)] rounded-lg">
+                    <Package className="text-[var(--color-pages-side-active-text)] w-6 h-6 flex-shrink-0" />
+                    <div>
+                        <code className="font-semibold text-[var(--color-pages-props-text2)]">{dep.name}</code>
+                        <p className="text-sm text-[var(--color-pages-props-text3)]">{dep.desc}</p>
+                    </div>
+                </li>
+            ))}
+        </ul>
+    );
+}
+
+
+// --- MAIN COMPONENT (Updated with Tabbed Interface and CSS Variables) ---
 
 const RainBackgroundEffect = () => {
-    const [selectedLang, setSelectedLang] = useState('jsx');
-    const [dropdownOpen, setDropdownOpen] = useState(false);
+    const [activeTab, setActiveTab] = useState('preview');
+    const selectedLang = 'jsx';
     const [showAllProps, setShowAllProps] = useState(false);
     const [showDemo, setShowDemo] = useState(true);
+    const contentRef = useRef(null);
 
-    const codeSnippets = {
-        jsx: `import RainBackground from './ApexUI-Kit/RainBackground/RainBackground.jsx';
+    const tabs = [
+        { id: 'preview', label: 'Preview', icon: GitFork },
+        { id: 'usage', label: 'Usage', icon: Code },
+        { id: 'installation', label: 'Installation', icon: Terminal },
+    ];
+
+    const codeSnippets = 
+       `import RainBackground from './ApexUI-Kit/RainBackground/RainBackground.jsx';
 
 const App = () => {
   return (
-     <RainBackground
-       dropGradient="linear-gradient(to bottom, #00f2fe, #4facfe)"
-        collisionGradient="linear-gradient(90deg, #43e97b 0%, #38f9d7 100%)"
-      />
+    <RainBackground
+      dropGradient="linear-gradient(to bottom, #00f2fe, #4facfe)"
+      collisionGradient="linear-gradient(90deg, #43e97b 0%, #38f9d7 100%)"
+    />
   );
 };
-export default App;
-`,
-        tsx: `import RainBackground from './ApexUI-Kit/RainBackground/RainBackground.jsx';
+export default App;`
+    let copyText = 'npm i apex-ui-kit && npx apex-ui-kit add rain-background'
 
-export default function App(): JSX.Element {
-  return (
-    <RainBackground
-       dropGradient="linear-gradient(to bottom, #00f2fe, #4facfe)"
-        collisionGradient="linear-gradient(90deg, #43e97b 0%, #38f9d7 100%)"
-      />
-  );
-}`
-    };
-
-    const languageOptions = [
-        { label: 'JSX', value: 'jsx' },
-        { label: 'TSX', value: 'tsx' }
-    ];
+    useEffect(() => {
+        if (contentRef.current) {
+            gsap.fromTo(contentRef.current,
+                { opacity: 0, y: 10 },
+                { opacity: 1, y: 0, duration: 0.3, ease: 'power2.out' }
+            );
+        }
+    }, [activeTab]);
 
     return (
-        <>
-            {/* 📍 Rain Background Showcase - HyperCard Style */}
-            <section className=" py-20 pb-20  text-[wheat]">
-                <div className="max-w-6xl mx-auto flex flex-col gap-10 items-center">
-                    {/* Title */}
-                    <h2 className="text-3xl font-bold flex items-center gap-3 w-full max-w-5xl">
-                        <FontAwesomeIcon icon={faCube} className="text-purple-400 text-3xl" />
-                        Rain Background Effect
-                    </h2>
+        <div className="text-[var(--color-pages-props-text2)] min-h-screen">
+            <div className="max-w-5xl mx-auto py-16 sm:py-24">
 
-                    {/* Install Instructions */}
-                    <div className="w-full max-w-5xl mb-2">
-                        <h4 className="text-lg font-semibold flex items-center gap-2 mb-2">
-                            <FontAwesomeIcon icon={faTerminal} className="text-purple-400" />
-                            Installation Command
-                        </h4>
-                        <div className="bg-[#181824]/50 border border-purple-800 text-green-400 px-4 py-3 font-mono rounded-md relative shadow-md scrollbar-hide">
-                            <CopyBlock
-                                text={`npm i apex-ui-kit && npx apex-ui-kit add rain-background`}
-                                language="bash"
-                                showLineNumbers={false}
-                                theme={dracula}
-                                codeBlock
-                            />
-                        </div>
+                <header className="text-center mb-12 space-y-4">
+                    <h1 className="whitespace-nowrap text-5xl sm:text-6xl font-extrabold tracking-tight bg-gradient-to-r from-[var(--color-pages-props-heading-text)] to-[var(--color-pages-props-heading-text2)] bg-clip-text text-transparent flex items-center justify-center gap-4 py-4">
+                        <CloudRain /> Rain Background
+                    </h1>
+                    <p className="text-base sm:text-lg text-[var(--color-pages-props-sub-text)] max-w-2xl mx-auto">
+                        A beautiful, animated rain effect for your backgrounds with collision detection.
+                    </p>
+                </header>
+
+                <div className="w-full bg-[var(--color-pages-bg)] border border-[var(--color-pages-border)] rounded-lg shadow-2xl overflow-hidden">
+                    <div className="border-b border-[var(--color-pages-divider)]">
+                        <nav className="flex space-x-1 sm:space-x-2 px-2 sm:px-4" aria-label="Tabs">
+                            {tabs.map((tab) => (
+                                <button
+                                    key={tab.id}
+                                    onClick={() => setActiveTab(tab.id)}
+                                    className={`relative group font-medium text-sm py-4 px-2 sm:px-3 focus:outline-none transition-colors w-full md:w-auto ${activeTab === tab.id
+                                        ? 'text-[var(--color-pages-side-active-text)]'
+                                        : 'text-[var(--color-pages-props-text)] hover:text-[var(--color-pages-side-hover)]'
+                                        }`}
+                                >
+                                    <tab.icon className="inline-block w-4 h-4 mr-2" />
+                                    <span>{tab.label}</span>
+                                    {activeTab === tab.id && (
+                                        <span className="absolute bottom-0 left-0 w-full h-0.5 bg-[var(--color-pages-side-active-text)] rounded-full"></span>
+                                    )}
+                                </button>
+                            ))}
+                        </nav>
                     </div>
 
-                    {/* Component Preview Heading OUTSIDE the box */}
-                    <div className="w-full py-20 max-w-5xl flex flex-col items-start">
-                        <h4 className="text-lg font-semibold flex items-center gap-2 mb-4">
-                            <FontAwesomeIcon icon={faCodeBranch} className="text-purple-400" />
-                            Component Preview
-                        </h4>
-                        <div className="w-full max-w-5xl rounded-md border border-purple-800 bg-gray-900/70 backdrop-blur-md shadow-2xl flex flex-col items-center mx-auto">
-                            {/* Rain effect styled as preview box, label overlays rain */}
-                            <div className="w-full h-[70vh] max-md:h-92 relative flex items-center justify-center rounded-lg border border-purple-700/40 bg-black/20 shadow-lg overflow-hidden">
-                                <div className="absolute inset-0 flex flex-col items-center justify-center z-10">
-                                    {/* Demo UI for large screens, Recent text for mobile */}
-                                    <div className="w-full flex flex-col items-center">
-                                        <div className="hidden md:flex flex-col items-center w-full">
-                                            {/* Demo UI only if showDemo is true */}
-                                            {showDemo && (
-                                                <>
-                                                    {/* Demo Navbar */}
-                                                    <nav className="w-full max-w-xl flex items-center justify-between px-6 py-3 rounded-full bg-[#232345]/80 shadow-lg mb-4 -translate-y-16">
-                                                        <span className="font-bold text-xl text-white">DemoNav</span>
-                                                        <div className="flex gap-4">
-                                                            <button className="text-purple-300 hover:text-white font-medium transition">Home</button>
-                                                            <button className="text-purple-300 hover:text-white font-medium transition">Docs</button>
-                                                            <button className="text-purple-300 hover:text-white font-medium transition">About</button>
-                                                        </div>
-                                                    </nav>
-
-                                                    {/* Title & Subtitle */}
-                                                    <h2 className="text-5xl font-extrabold mb-1 text-white drop-shadow-lg">Rain Effect Demo</h2>
-                                                    <p className="text-white/80 text-center text-lg mb-4">Beautiful animated rain background for your <span className="text-purple-400 font-bold">UI</span></p>
-                                                    {/* Two Demo Buttons */}
-                                                    <div className="flex gap-4 mb-4">
-                                                        <button className="px-5 py-2 rounded-xl bg-[#232345] text-purple-300 font-semibold shadow hover:bg-purple-700 hover:text-white transition">Try Now</button>
-                                                        <button className="px-5 py-2 rounded-xl bg-purple-400 text-white font-semibold shadow hover:bg-purple-600 transition">Learn More</button>
-                                                    </div>
-                                                </>
-                                            )}
-                                            {/* Fixed square demo toggle bottom right */}
-                                            <div className="fixed bottom-6 right-6 z-50">
-                                                {/* Toggle button styled like a switch, with square inside */}
-                                                <div className="flex flex-col items-center">
-                                                    <span className="text-white text-xs mb-1">Demo</span>
-                                                    <button
-                                                        aria-label="Toggle Demo"
-                                                        onClick={() => setShowDemo(v => !v)}
-                                                        className={`w-14 h-8 flex items-center rounded-md border-2 border-purple-500 bg-[#232345] relative transition-all duration-300 focus:outline-none ${showDemo ? 'bg-purple-600 border-purple-600' : 'bg-[#232345] border-purple-500'}`}
-                                                    >
-                                                        <span
-                                                            className={`absolute left-1  w-6 h-6 ${showDemo ? 'translate-x-6' : ''} transition-transform duration-300 bg-white border border-purple-400 shadow rounded-sm`}
-                                                            style={{ display: 'inline-block' }}
-                                                        ></span>
-                                                    </button>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        {/* Mobile: Only show Recent text */}
-                                        <div className="md:hidden flex flex-col items-center justify-center w-full h-full">
-                                            <h2 className="text-2xl font-extrabold mb-1 text-white drop-shadow-lg">Rain Effect Demo</h2>
-                                            <p className="text-white/80 text-center text-lg mb-4">Beautiful animated rain background for your <span className="text-purple-400 font-bold">UI</span></p>
-                                        </div>
-                                    </div>
-                                </div>
+                    <div ref={contentRef} className="p-4 sm:p-6">
+                        {activeTab === 'preview' && (
+                            <div className="w-full h-[60vh] bg-black/30 rounded-md relative overflow-hidden">
                                 <RainBackground
-                                    dropGradient="linear-gradient(to bottom, #00f2fe, #4facfe)"
-                                    collisionGradient="linear-gradient(90deg, #43e97b 0%, #38f9d7 100%)"
+                                    dropGradient="linear-gradient(to bottom, #ec003f, #51a2ff)"
+                                    collisionGradient="linear-gradient(90deg, #ec003f 0%, #51a2ff 100%)"
+                                    dropCount={5}
                                 />
-                            </div>
-                        </div>
-
-                        {/* Usage Example (with icon heading) */}
-                        <div className="mt-28 w-5xl max-md:w-full  ">
-                            <div className="mb-3 flex justify-between">
-                                <h4 className="text-lg font-semibold flex items-center gap-2 mb-2">
-                                    <FontAwesomeIcon icon={faCodeBranch} className="text-purple-400" />
-                                    Usage Example
-                                </h4>
-                                <div className="relative w-32">
-                                    <button
-                                        className="w-full bg-[#181824] border border-purple-700/40 text-white px-4 py-2 rounded-md flex items-center justify-between focus:outline-none hover:bg-purple-800/30 transition"
-                                        onClick={() => setDropdownOpen((open) => !open)}
-                                    >
-                                        <span>{languageOptions.find(opt => opt.value === selectedLang).label}</span>
-                                        <FontAwesomeIcon icon={faChevronDown} className="ml-2 text-white/60" />
-                                    </button>
-                                    {dropdownOpen && (
-                                        <div className="absolute z-10 mt-2 w-full bg-[#181824] border border-purple-700/40 rounded shadow-lg">
-                                            {languageOptions.map((option) => (
-                                                <div
-                                                    key={option.value}
-                                                    onClick={() => {
-                                                        setSelectedLang(option.value);
-                                                        setDropdownOpen(false);
-                                                    }}
-                                                    className={`px-4 py-2 cursor-pointer hover:bg-purple-700/30 text-white ${selectedLang === option.value ? 'bg-purple-700/40' : ''}`}
-                                                >
-                                                    {option.label}
-                                                </div>
-                                            ))}
+                                {/* Demo Content Overlay */}
+                                <div className="absolute inset-0 flex flex-col items-center justify-center z-10 p-4 transition-opacity duration-500" style={{ opacity: showDemo ? 1 : 0, pointerEvents: showDemo ? 'auto' : 'none' }}>
+                                    <nav className="w-full max-w-md flex items-center justify-between px-6 py-3 rounded-full bg-black/20 backdrop-blur-sm border border-white/10 shadow-lg mb-8">
+                                        <span className="font-bold text-lg text-white">Demo Nav</span>
+                                        <div className="flex gap-4">
+                                            <a href="#" className="text-white/70 hover:text-white font-medium transition">Home</a>
+                                            <a href="#" className="text-white/70 hover:text-white font-medium transition">About</a>
                                         </div>
-                                    )}
+                                    </nav>
+                                    <h2 className="text-4xl md:text-5xl font-extrabold mb-2 text-white text-center drop-shadow-lg">Rain Effect Demo</h2>
+                                    <p className="text-white/80 text-center text-lg max-w-md">A beautiful animated background for your UI.</p>
+                                </div>
+
+                                {/* Animated Toggle Button */}
+                                <div className="absolute bottom-4 right-4 z-20 flex flex-col items-center">
+                                    <span className="text-white text-xs mb-1 drop-shadow-md">Demo UI</span>
+                                    <button
+                                        aria-label="Toggle Demo UI"
+                                        onClick={() => setShowDemo(v => !v)}
+                                        className={`w-14 h-8 flex items-center px-1 rounded-md border-2 transition-colors duration-300 focus:outline-none ${showDemo ? 'justify-end bg-[var(--color-pages-side-active-text)] border-[var(--color-pages-side-active-hover)]' : 'justify-start bg-black/30 border-[var(--color-pages-divider)]'}`}
+                                    >
+                                        <motion.div
+                                            className="w-6 h-6 bg-white rounded-sm shadow-lg"
+                                            layout
+                                            transition={{ type: "spring", stiffness: 700, damping: 30 }}
+                                        />
+                                    </button>
                                 </div>
                             </div>
-                            <div className="bg-[#0e0e10]/20 p-4 rounded-md text-sm font-mono relative border border-purple-600/50 shadow-lg overflow-x-auto">
+                        )}
+                        {activeTab === 'usage' && (
+                            <div>
+                                <div className="mt-2 relative">
+                                    <CopyBlock
+                                        text={codeSnippets}
+                                        language={selectedLang}
+                                        theme={irBlack}
+                                        codeBlock
+                                        showLineNumbers={false}
+                                        customStyle={{
+                                            overflowX: 'auto',
+                                            background: 'black'
+                                        }}
+                                    />
+                                    <CopyButton text={codeSnippets} />
+                                </div>
+                            </div>
+                        )}
+                        {activeTab === 'installation' && (
+                            <div className="relative mt-2">
                                 <CopyBlock
-                                    text={codeSnippets[selectedLang]}
-                                    language={selectedLang}
-                                    theme={dracula}
+                                    text={copyText}
+                                    language="bash"
+                                    theme={irBlack}
                                     codeBlock
                                     showLineNumbers={false}
+                                    customStyle={{
+                                        overflowX: 'auto',
+                                        background: 'black'
+                                    }}
                                 />
+                                <CopyButton text={copyText} />
                             </div>
-                        </div>
-                    </div>
-
-
-
-                    {/* Props Section (with show more/less) */}
-                    <section className="max-w-5xl mx-auto mt-12 mb-8 w-full max-sm:w-full max-sm:px-0">
-                        <div className="rounded-md border-2 border-dashed border-purple-600/50 shadow-xl p-6 bg-black/20 backdrop-blur-md">
-                            <div className="flex items-center justify-between gap-4 mb-4">
-                                <div className="flex items-center gap-2">
-                                    <FontAwesomeIcon icon={faTableList} className="text-purple-400 text-xl" />
-                                    <h4 className="text-xl font-bold text-white">Props</h4>
-                                </div>
-                                {rainBgProps.length > 5 && (
-                                    <button
-                                        className="px-3 py-1 rounded-md border border-purple-600/40 bg-purple-900/20 text-purple-200 text-xs hover:bg-purple-800/40 transition"
-                                        onClick={() => setShowAllProps((v) => !v)}
-                                    >
-                                        {showAllProps ? 'Show Less' : `Show ${rainBgProps.length - 5} More`}
-                                    </button>
-                                )}
-                            </div>
-                            <div className="overflow-x-auto rounded-md border border-purple-600/50 shadow-xl scrollbar-hide">
-                                <table className="min-w-full text-sm text-white table-auto ">
-                                    <thead className="bg-purple-800/80 text-white uppercase text-xs tracking-wider">
-                                        <tr>
-                                            <th className="px-4 py-3 text-left">Prop</th>
-                                            <th className="px-4 py-3 text-left">Type</th>
-                                            <th className="px-4 py-3 text-left">Default</th>
-                                            <th className="px-4 py-3 text-left">Description</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody className="divide-y divide-purple-600/20">
-                                        {(showAllProps ? rainBgProps : rainBgProps.slice(0, 5)).map((row) => (
-                                            <tr key={row.prop} className="hover:bg-purple-800/10 transition">
-                                                <td className="px-4 py-3 whitespace-nowrap font-medium text-purple-300">{row.prop}</td>
-                                                <td className="px-4 py-3 text-indigo-300">{row.type}</td>
-                                                <td className="px-4 py-3 text-emerald-400">{row.def}</td>
-                                                <td className="px-4 py-3 text-white/80">{row.desc}</td>
-                                            </tr>
-                                        ))}
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
-                    </section>
-
-                    {/* Dependencies Section */}
-                    <div className="w-full max-w-5xl rounded-md border border-purple-800 bg-black/20 backdrop-blur-md shadow-2xl p-6 mb-8">
-                        <h4 className="text-xl font-bold flex items-center gap-2 mb-4">
-                            <FontAwesomeIcon icon={faPuzzlePiece} className="text-purple-400 text-xl" />
-                            Dependencies
-                        </h4>
-                        <ul className="text-base text-white/90 list-none pl-0 space-y-3">
-                            <li className="flex items-center gap-3">
-                                <span className="bg-blue-900/60 p-2 rounded-full flex items-center justify-center">
-                                    <span className="inline-block w-2 h-2 bg-blue-400 rounded-full mr-2"></span>
-                                </span>
-                                <span>
-                                    <code className="text-blue-300 font-semibold">React</code>
-                                    <span className="ml-2 text-white/70">Modern React library for UI building</span>
-                                </span>
-                            </li>
-                            <li className="flex items-center gap-3">
-                                <span className="bg-purple-900/60 p-2 rounded-full flex items-center justify-center">
-                                    <span className="inline-block w-2 h-2 bg-purple-400 rounded-full mr-2"></span>
-                                </span>
-                                <span>
-                                    <code className="text-purple-300 font-semibold">TailwindCSS</code>
-                                    <span className="ml-2 text-white/70">Utility-first CSS framework for rapid styling</span>
-                                </span>
-                            </li>
-                            <li className="flex items-center gap-3">
-                                <span className="bg-green-900/60 p-2 rounded-full flex items-center justify-center">
-                                    <span className="inline-block w-2 h-2 bg-green-400 rounded-full mr-2"></span>
-                                </span>
-                                <span>
-                                    <code className="text-green-300 font-semibold">GSAP</code>
-                                    <span className="ml-2 text-white/70">A powerful animation library</span>
-                                </span>
-                            </li>
-                        </ul>
+                        )}
                     </div>
                 </div>
-            </section>
-        </>
+
+                <div className="mt-8 grid grid-cols-1 md:grid-cols-2 gap-8">
+                    <div className="bg-[var(--color-pages-bg)] border border-[var(--color-pages-border)] rounded-lg p-6">
+                        <h3 className="flex items-center gap-3 font-semibold text-lg text-[var(--color-pages-side-active-text6)]">
+                            <List className="w-5 h-5 text-[var(--color-pages-side-active-text)]" />
+                            Props
+                        </h3>
+                        <div className="mt-4">
+                            <PropsTable showAll={showAllProps} setShowAll={setShowAllProps} />
+                        </div>
+                    </div>
+                    <div className="bg-[var(--color-pages-bg)] border border-[var(--color-pages-border)] rounded-lg p-6">
+                        <h3 className="flex items-center gap-3 font-semibold text-lg text-[var(--color-pages-side-active-text6)]">
+                            <Puzzle className="w-5 h-5 text-[var(--color-pages-side-active-text)]" />
+                            Dependencies
+                        </h3>
+                        <div className="mt-4">
+                            <DependenciesList />
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
     );
 };
 

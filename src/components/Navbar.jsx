@@ -1,284 +1,127 @@
 /* eslint-disable no-unused-vars */
-import React, { useEffect, useState } from 'react';
-import MessageBar from './MessageBar';
-import gsap from 'gsap';
-import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import React, { useState, useEffect } from 'react';
 import { NavLink } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
-import SearchComponent from './Search';
-function useGsapLocoMessageBar(messageBarRef) {
-    React.useEffect(() => {
-        let lastY = 0;
-        let ticking = false;
-        let ran = false;
-        function handleScroll(e) {
-            let currY;
-            if (window.locoScroll && window.locoScroll.scroll) {
-                currY = window.locoScroll.scroll.instance.scroll.y;
-            } else {
-                currY = window.scrollY;
-            }
-            if (!ticking) {
-                window.requestAnimationFrame(() => {
-                    if (messageBarRef.current) {
-                        if (currY > lastY && currY > 50) {
-                            gsap.to(messageBarRef.current, { y: '-150%', duration: 0.4, ease: 'power2.out' });
-                        } else {
-                            gsap.to(messageBarRef.current, { y: '0%', duration: 0.4, ease: 'power2.out' });
-                        }
-                    }
-                    lastY = currY;
-                    ticking = false;
-                });
-                ticking = true;
-            }
-        }
-        function bindScroll() {
-            if (window.locoScroll && window.locoScroll.on) {
-                window.locoScroll.on('scroll', handleScroll);
-            } else {
-                window.addEventListener('scroll', handleScroll);
-            }
-        }
-        function unbindScroll() {
-            if (window.locoScroll && window.locoScroll.off) {
-                window.locoScroll.off('scroll', handleScroll);
-            } else {
-                window.removeEventListener('scroll', handleScroll);
-            }
-        }
-        bindScroll();
-        const fallback = setTimeout(() => {
-            if (!ran && window.locoScroll && window.locoScroll.on) {
-                unbindScroll();
-                bindScroll();
-                ran = true;
-            }
-        }, 1000);
-        return () => {
-            unbindScroll();
-            clearTimeout(fallback);
-        };
-    }, [messageBarRef]);
-}
+import MessageBar from './MessageBar.jsx';
+import SearchComponent from './Search.jsx';
+import ThemeToggle from './MainUI/ApexUI-Kit/ThemeToggle/ThemeToggle.jsx';
+import AsideBar from '../router/GetingStarted/AsideBar.jsx';
 
-gsap.registerPlugin(ScrollTrigger);
+const AnimatedHamburgerIcon = ({ isOpen, ...props }) => {
+    const topVariants = {
+        closed: { rotate: 0, translateY: 0 },
+        open: { rotate: 45, translateY: 6 }
+    };
+    const middleVariants = {
+        closed: { opacity: 1 },
+        open: { opacity: 0 }
+    };
+    const bottomVariants = {
+        closed: { rotate: 0, translateY: 0 },
+        open: { rotate: -45, translateY: -6 }
+    };
 
-function useGsapLocoNavbar(navbarRef) {
-    useEffect(() => {
-        let lastY = 0;
-        let ticking = false;
-        let ran = false;
-        function handleScroll(e) {
-            let currY;
-            if (window.locoScroll && window.locoScroll.scroll) {
-                currY = window.locoScroll.scroll.instance.scroll.y;
-            } else {
-                currY = window.scrollY;
-            }
-            if (!ticking) {
-                window.requestAnimationFrame(() => {
-                    if (navbarRef.current) {
-                        if (currY > lastY && currY > 50) {
-                            gsap.to(navbarRef.current, { y: '-150%', duration: 0.4, ease: 'power2.out' });
-                        } else {
-                            gsap.to(navbarRef.current, { y: '0%', duration: 0.4, ease: 'power2.out' });
-                        }
-                    }
-                    lastY = currY;
-                    ticking = false;
-                });
-                ticking = true;
-            }
-        }
-        function bindScroll() {
-            if (window.locoScroll && window.locoScroll.on) {
-                window.locoScroll.on('scroll', handleScroll);
-            } else {
-                console.log('[GSAP Navbar] Binding window scroll event');
-                window.addEventListener('scroll', handleScroll);
-            }
-        }
-        function unbindScroll() {
-            if (window.locoScroll && window.locoScroll.off) {
-                window.locoScroll.off('scroll', handleScroll);
-            } else {
-                window.removeEventListener('scroll', handleScroll);
-            }
-        }
-        bindScroll();
-        const fallback = setTimeout(() => {
-            if (!ran && window.locoScroll && window.locoScroll.on) {
-                unbindScroll();
-                bindScroll();
-                ran = true;
-            }
-        }, 1000);
-        return () => {
-            unbindScroll();
-            clearTimeout(fallback);
-        };
-    }, [navbarRef]);
-}
+    return (
+        <motion.svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" {...props} animate={isOpen ? "open" : "closed"}>
+            <motion.line x1="4" y1="6" x2="20" y2="6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" variants={topVariants} />
+            <motion.line x1="4" y1="12" x2="20" y2="12" stroke="currentColor" strokeWidth="2" strokeLinecap="round" variants={middleVariants} />
+            <motion.line x1="4" y1="18" x2="20" y2="18" stroke="currentColor" strokeWidth="2" strokeLinecap="round" variants={bottomVariants} />
+        </motion.svg>
+    );
+};
 
-const Navbar = () => {
-    const [showSearch, setShowSearch] = useState(false);
-    const navbarRef = React.useRef(null);
-    const messageBarRef = React.useRef(null);
-    useGsapLocoNavbar(navbarRef);
-    useGsapLocoMessageBar(messageBarRef);
 
-    const [showSidebar, setShowSidebar] = useState(false);
 
+
+export default function GetNav() {
+    // Mobile sidebar state
     const [isMenuOpen, setIsMenuOpen] = useState(false);
+    const [showSearch, setShowSearch] = useState(false);
 
-    React.useEffect(() => {
-        if (showSidebar) {
-            document.body.style.overflow = 'hidden';
-        } else {
-            document.body.style.overflow = '';
-        }
-    }, [showSidebar]);
+    // Sidebar open/close handlers
+    const handleMenuToggle = () => setIsMenuOpen((prev) => !prev);
+    const handleSidebarClose = () => setIsMenuOpen(false);
 
-    const menuLinks = [
-        { to: 'components/docs/getting-started/introduction', label: 'Getting Started' },
-        { to: 'components/docs/getting-started/installation/react-setup', label: 'Documentation' },
-        { to: 'https://www.instagram.com/_.apexui._/', label: 'Instagram', icon: 'instagram' },
-        { to: 'https://www.linkedin.com/in/mohan-kumar-dalei/', label: 'LinkedIn', icon: 'linkedin' },
-        { to: 'https://github.com/Mohan-Kumar-Dalei/ApexUI', label: 'GitHub', icon: 'github' },
-    ];
-
-    function handleMenuToggle() {
-        setShowSidebar((prev) => !prev);
-        setIsMenuOpen((prev) => !prev);
-    }
-
-    function handleOverlayClick(e) {
-        if (e.target.id === 'sidebar-overlay') {
-            setShowSidebar(false);
-            setIsMenuOpen(false);
-        }
-    }
     return (
         <>
-            <div ref={messageBarRef} style={{ zIndex: 1000, position: 'fixed', top: 0, left: 0, width: '100%' }}>
+            <div style={{ zIndex: 1003, position: 'fixed', top: 0, left: 0, width: '100%' }}>
                 <MessageBar />
             </div>
-            <nav ref={navbarRef} className="w-full flex flex-row items-center justify-between px-2 sm:px-6 py-5 sm:py-6 bg-slate-950 text-white border-b border-gray-600 z-[900] fixed top-8 sm:top-8 left-0" style={{ boxShadow: '0 2px 16px 0 #0001' }}>
-                {/* Left: Logo + Version */}
-                <NavLink to="/" className="flex items-center gap-2 group">
-                    <span className="text-xl sm:text-2xl font-bold text-white group-hover:text-purple-400 transition duration-300">ApexUI</span>
-                    <span className="text-[10px] sm:text-xs bg-purple-800 text-white  px-2 py-0.5 rounded-full">v1.0.4-beta</span>
-                </NavLink>
-                {/* Right: Links + Search + Icons (all in one line, responsive) */}
-                <div className="flex items-center gap-2 sm:gap-4 w-auto justify-end">
-                    <NavLink to="/components/docs/getting-started/installation/react-setup" className="shine text-xs sm:text-sm font-medium hidden lg:inline">Installation</NavLink>
-                    <NavLink to="/components/docs/getting-started/introduction" className="shine text-xs sm:text-sm font-medium hidden lg:inline">Documentation</NavLink>
+            <nav className="w-full flex flex-row items-center justify-between px-4 sm:px-6 py-4 bg-[var(--hero-nav-bg)]/50 backdrop-blur-2xl text-[var(--hero-nav-text)] border-b border-[var(--color-border)] z-[1003] fixed top-10 left-0" style={{ boxShadow: '0 2px 16px 0 #0001' }}>
+                {/* Left Side */}
+                <div className="flex items-center gap-6">
+                    <NavLink to="/" className="flex items-center gap-2 group">
+                        <h1 className="text-xl sm:text-3xl font-semibold text-[var(--hero-nav-text)] group-hover:text-[var(--hero-nav-hover)] transition duration-300" style={{ fontFamily: "Righteous, sans-serif" }}>Apex<span className="text-lime-400">UI</span></h1>
+                        <span className="text-[10px] sm:text-xs bg-[var(--hero-nav-badge)] text-[var(--hero-nav-badge-text)] px-2 py-0.5 rounded-full">v2.0.4</span>
+                    </NavLink>
+                    <div className="w-px h-6 bg-[var(--color-divider)] hidden lg:inline" />
+                    <div className="hidden lg:flex items-center gap-4">
+                        <a href="https://www.npmjs.com/package/apex-ui-kit" target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 text-[var(--hero-nav-text2)] hover:text-[var(--hero-nav-hover)] transition-colors">
+                            <i className="fab fa-npm text-2xl"></i>
+                            <span className="text-sm font-medium">NPM</span>
+                        </a>
+                    </div>
+                </div>
 
-                    <label htmlFor="search" className="sr-only">Search</label>
-                    <input
-                        id='search'
-                        name='search'
-                        type="text"
-                        placeholder="Search..."
-                        className="px-2 sm:px-3 py-1 text-xs sm:text-sm rounded-md bg-white text-black dark:bg-gray-800 border border-gray-600 focus:outline-none focus:ring-2 focus:ring-purple-500 dark:text-white placeholder-gray-400 w-24 sm:w-auto hidden md:inline"
-                        onClick={() => setShowSearch(true)}
-                        readOnly
-                    />
-                    <NavLink to="https://www.linkedin.com/in/mohan-kumar-dalei/" target='_blank' className="text-lg sm:text-xl text-gray-400 hover:text-blue-500"><i className="fab fa-linkedin"></i></NavLink>
-                    <NavLink to="https://www.instagram.com/_.apexui._/" target='_blank' className="text-lg sm:text-xl text-gray-400 hover:text-pink-400"><i className="fab fa-instagram"></i></NavLink>
-                    <NavLink to="https://github.com/Mohan-Kumar-Dalei/ApexUI" target='_blank' className="text-lg sm:text-xl text-gray-400 hover:text-gray-300"><i className="fab fa-github"></i></NavLink>
-                    {/* Hamburger/Cross Icon for mobile/tablet */}
-                    <button
-                        className="lg:hidden flex items-center px-3 py-2 border rounded text-gray-400 border-gray-600 ml-2 transition-transform duration-300 focus:outline-none ease-in-out cursor-pointer"
-                        aria-label={showSidebar ? 'Close Menu' : 'Open Menu'}
-                        onClick={handleMenuToggle}
-                    >
-                        {/* Animate icon with Framer Motion */}
-                        {isMenuOpen ? (
-                            <i className="fas fa-times text-2xl transition-transform duration-300" />
-                        ) : (
-                            <i className="fas fa-bars text-2xl transition-transform duration-300" />
-                        )}
+                {/* Right Side */}
+                <div className="flex items-center gap-4">
+                    <div className="hidden lg:flex items-center gap-4">
+                        <NavLink to="/components" className="text-sm font-medium text-gray-400 hover:text-[var(--color-hover-text)] transition-colors">Components</NavLink>
+                        <NavLink to="/components/docs/getting-started/installation/react-setup" className="text-sm font-medium text-gray-400 hover:text-[var(--color-hover-text)] transition-colors">Installation</NavLink>
+                        <NavLink to="/components/docs/getting-started/introduction" className="text-sm font-medium text-gray-400 hover:text-[var(--color-hover-text)] transition-colors">Documentation</NavLink>
+                        <div className="w-px h-6 bg-gray-700" />
+                        <button onClick={() => setShowSearch(true)} aria-label="Search" className="text-gray-400 hover:text-[var(--color-hover-text)] transition-colors">
+                            <i className="fas fa-search text-lg"></i>
+                        </button>
+                        <NavLink to="https://github.com/Mohan-Kumar-Dalei/ApexUI" target='_blank' className="text-lg text-gray-400 hover:text-white"><i className="fab fa-github"></i></NavLink>
+                        <NavLink to="https://www.linkedin.com/in/mohan-kumar-dalei/" target='_blank' className="text-lg text-gray-400 hover:text-blue-500"><i className="fab fa-linkedin"></i></NavLink>
+                        <NavLink to="https://www.instagram.com/_.apexui._/" target='_blank' className="text-lg text-gray-400 hover:text-pink-400"><i className="fab fa-instagram"></i></NavLink>
+                    </div>
+
+                    <button className="lg:hidden p-2" aria-label={isMenuOpen ? 'Close Menu' : 'Open Menu'} onClick={handleMenuToggle}>
+                        <AnimatedHamburgerIcon isOpen={isMenuOpen} />
                     </button>
+                    <ThemeToggle
+                        LightTheme='light'
+                        animation='circle-right'
+                        duration='1s'
+                        ease="var(--vt-ease)"
+                        className='text-gray-400 hover:text-[var(--color-hover-text)]'
+
+                    />
                 </div>
             </nav>
-            {/* Mobile/Tablet Sidebar Drawer & Overlay (Framer Motion + blurred overlay) */}
+
+            {/* Mobile sidebar overlay */}
             <AnimatePresence>
-                {showSidebar && (
-                    <motion.div
-                        id="sidebar-overlay"
-                        className="fixed inset-0 z-[999] flex "
-                        style={{
-                            background: 'rgba(30, 30, 30, 0.25)',
-                            backdropFilter: 'blur(12px)',
-                            WebkitBackdropFilter: 'blur(12px)',
-                            transition: 'background 0.3s',
-                        }}
-                        initial={{ opacity: 0 }}
-                        animate={{ opacity: 1 }}
-                        exit={{ opacity: 0 }}
-                        onClick={handleOverlayClick}
-                    >
-                        <motion.aside
-                            className="w-[80vw] max-w-xs h-full bg-[#1A1528] text-white shadow-2xl p-6 flex flex-col gap-6 pt-16"
-                            initial={{ x: '-100%', opacity: 0 }}
-                            animate={{ x: 0, opacity: 1 }}
-                            exit={{ x: '-100%', opacity: 0 }}
-                            transition={{ type: 'spring', stiffness: 400, damping: 32 }}
-                        >
-                            <div className="flex items-center justify-between mb-4">
-                                <span className="text-xl font-bold">Menu</span>
-                                <button
-                                    aria-label="Close Menu"
-                                    className="text-gray-400 hover:text-white text-2xl"
-                                    onClick={handleMenuToggle}
-                                >
-                                    <i className="fas fa-times" />
-                                </button>
-                            </div>
-                            <nav className="flex flex-col gap-4">
-                                {menuLinks.map((link, idx) => (
-                                    <NavLink
-                                        key={link.label}
-                                        to={link.to}
-                                        className="text-base font-medium py-2 px-3 rounded hover:bg-gray-800 transition-colors flex items-center gap-2"
-                                        onClick={() => setShowSidebar(false)}
-                                    >
-                                        {link.icon && (
-                                            <i className={`fab fa-${link.icon} text-lg`} />
-                                        )}
-                                        {link.label}
-                                    </NavLink>
-                                ))}
-                            </nav>
-                        </motion.aside>
-                    </motion.div>
+                {isMenuOpen && (
+                    <div className="fixed inset-0 z-[1001] flex lg:hidden">
+                        <AsideBar isMobile={true} onClose={handleSidebarClose} />
+                        <div className="flex-1 bg-black/40" onClick={handleSidebarClose} />
+                    </div>
                 )}
+            </AnimatePresence>
+
+            {/* Search modal */}
+            <AnimatePresence>
                 {showSearch && (
                     <motion.div
-                        className="fixed inset-0 z-[1000] flex items-center justify-center  backdrop-blur-xl"
-                        initial={{ opacity: 0 }}
-                        animate={{ opacity: 1 }}
-                        exit={{ opacity: 0 }}
+                        className="fixed inset-0 z-[1100] flex items-center justify-center backdrop-blur-xl bg-black/50"
+                        initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
+                        onClick={(e) => { if (e.target === e.currentTarget) setShowSearch(false) }}
                     >
                         <div className="absolute top-4 right-4">
-                            <button
-                                aria-label="Close Search"
-                                className="text-white text-3xl  p-2 "
-                                onClick={() => setShowSearch(false)}
-                            >
+                            <button aria-label="Close Search" className="text-white text-3xl p-2" onClick={() => setShowSearch(false)}>
                                 <i className="fas fa-times" />
                             </button>
                         </div>
-                        <div className="w-full h-full flex items-center justify-center">
-                            <SearchComponent />
-                        </div>
+                        <motion.div initial={{ scale: 0.95, y: -20 }} animate={{ scale: 1, y: 0 }} exit={{ scale: 0.95, y: -20 }}>
+                            <SearchComponent onSelect={() => setShowSearch(false)} />
+                        </motion.div>
                     </motion.div>
                 )}
             </AnimatePresence>
         </>
     );
-};
+}
 
-export default Navbar;

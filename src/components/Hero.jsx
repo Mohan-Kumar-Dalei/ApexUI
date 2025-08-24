@@ -2,19 +2,20 @@ import React, { useState, useEffect } from 'react';
 import Home from './Home.jsx';
 import FeaturesCard from './FeaturesCard';
 import ComponentShowcase from './ComponentShowcase';
-import ModernCharReveal from './ModernCharReveal';
+import FocusRevealText from './FocusRevealText.jsx';
 import SpecialEffectsSection from './SpecialEffectsSection';
 import SmoothScroll from '../components/utils/SmoothScroll.jsx';
 import Footer from './Footer.jsx';
 import Top from './Top.jsx';
 import Loading from './Loading.jsx';
 import Navbar from './Navbar.jsx';
+
 const Hero = () => {
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
         setLoading(true);
-        const timer = setTimeout(() => setLoading(false), 700);
+        const timer = setTimeout(() => setLoading(false), 5700);
         return () => clearTimeout(timer);
     }, []);
 
@@ -29,12 +30,12 @@ const Hero = () => {
         <>
             <Navbar />
             <SmoothScroll>
-                <div data-barba="container" data-barba-namespace="home" className="w-full min-h-screen relative bg-slate-900">
+                <div className="w-full min-h-screen relative">
                     <div className="scroll-content min-h-screen">
                         <Home />
                         <FeaturesCard />
                         <ComponentShowcase />
-                        <ModernCharReveal />
+                        <FocusRevealText />
                         <SpecialEffectsSection />
                         <Footer />
                     </div>

@@ -1,36 +1,12 @@
 import React, { useRef, useEffect, useState } from "react";
 
 const people = [
-    {
-        name: "Arjun Sharma",
-        job: "Frontend Dev",
-        img: "https://randomuser.me/api/portraits/men/75.jpg",
-    },
-    {
-        name: "Priya Mehra",
-        job: "Product Designer",
-        img: "https://randomuser.me/api/portraits/women/65.jpg",
-    },
-    {
-        name: "Rahul Verma",
-        job: "Backend Engineer",
-        img: "https://randomuser.me/api/portraits/men/64.jpg",
-    },
-    {
-        name: "Neha Kapoor",
-        job: "AI Researcher",
-        img: "https://randomuser.me/api/portraits/women/68.jpg",
-    },
-    {
-        name: "Kunal Joshi",
-        job: "DevOps Expert",
-        img: "https://randomuser.me/api/portraits/men/77.jpg",
-    },
-    {
-        name: "Ankita Rao",
-        job: "UI Specialist",
-        img: "https://randomuser.me/api/portraits/women/66.jpg",
-    },
+    { id: 1, name: "Captain America", job: "Leader of the Avengers", img: "/assets/captainamerica.png" },
+    { id: 2, name: "Doctor Strange", job: "Sorcerer Supreme", img: "/assets/doctorStrange.png" },
+    { id: 3, name: "Iron Man", job: "Leader Of Stark Industries", img: "/assets/ironman.png" },
+    { id: 4, name: "HULK", job: "Scientist", img: "/assets/hulk.png" },
+    { id: 5, name: "Spider-Man", job: "Friendly Neighborhood Spider-Man", img: "/assets/spiderman.png" },
+    { id: 6, name: "Thanos", job: "The Mad Titan", img: "/assets/thanos.png" },
 ];
 
 const PointerFollower = ({ cursorColor = "#fff", interval = 3000, badgeColor = "#fff", badgeTextColor = "#212121" }) => {
@@ -80,8 +56,8 @@ const PointerFollower = ({ cursorColor = "#fff", interval = 3000, badgeColor = "
     const person = people[activeIndex]; // ✅ SYNCED HERE
 
     return (
-        <div className="relative w-full h-screen flex items-center justify-center">
-            <div ref={containerRef} className="relative w-72 h-72 cursor-none">
+        <div className="relative w-full h-fit flex items-center justify-center">
+            <div ref={containerRef} className="absolute flex items-center justify-center w-64  h-66 cursor-none">
                 {/* 🔁 Image stack with auto fade */}
                 {people.map((p, i) => (
                     <img

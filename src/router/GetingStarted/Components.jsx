@@ -1,25 +1,90 @@
 import React, { useContext, useState, useEffect, useRef } from 'react';
-import FeedBack from '../../components/FeedBack.jsx';
 import { useLocation } from 'react-router-dom';
 import { gsap } from 'gsap';
-import SidebarContext from '../context/SidebarContext.jsx';
-import GetNav from './GetNav.jsx';
-import AsideBar from './AsideBar.jsx';
 import { NavLink } from 'react-router-dom';
+import styled from "styled-components";
+import FeedBack from '../../components/FeedBack.jsx';
+import SidebarContext from '../context/SidebarContext.jsx';
+import NavBar from '../../components/NavBar.jsx';
+import AsideBar from './AsideBar.jsx';
+import Footer from './ComponentFooter.jsx';
+import AllComponents from './AllComponents.jsx'
+
+
+// --- Naya Animated Button ---
+const StyledNextButton = styled(NavLink)`
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.75rem 1.5rem;
+    border: 2px solid var(--color-logo); /* Lime-400 */
+    color: var(--color-logo);
+    background-color: transparent;
+    border-radius: 0.5rem;
+    font-weight: 600;
+    text-decoration: none;
+    overflow: hidden;
+    transition: color 0.4s ease-in-out;
+
+    .text {
+        position: relative;
+        z-index: 2;
+    }
+
+    .icon {
+        position: relative;
+        z-index: 2;
+        transition: transform 0.3s ease;
+    }
+
+    &::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: #a3e635;
+        transform: scaleX(0);
+        transform-origin: left;
+        transition: transform 0.4s ease-in-out;
+        z-index: 1;
+    }
+
+    &:hover {
+        color: #111827;
+    }
+
+    &:hover .icon {
+        transform: translateX(4px);
+    }
+
+    &:hover::before {
+        transform: scaleX(1);
+    }
+`;
+
+const NextButton = ({ to, children }) => (
+    <StyledNextButton to={to}>
+        <span className="text">{children}</span>
+        <svg className="icon w-5 h-5" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
+        </svg>
+    </StyledNextButton>
+);
 
 
 export default function Components() {
-    const { data: summaryData } = useContext(SidebarContext);
+    const { data: summaryData } = useContext(SidebarContext) || { data: [] };
     const location = useLocation();
     const [sidebarOpen, setSidebarOpen] = useState(false);
     const bgRef = useRef(null);
-    // (Removed framer-motion spring wheel smooth scroll effect)
+    const mainContentRef = useRef(null);
 
-    // Sidebar open/close handlers
     const handleSidebarToggle = () => setSidebarOpen((prev) => !prev);
     const handleSidebarClose = () => setSidebarOpen(false);
 
-    // Animate blurred circles on mount
     useEffect(() => {
         const circles = bgRef.current?.querySelectorAll('.circle');
         if (circles) {
@@ -36,16 +101,35 @@ export default function Components() {
         }
     }, []);
 
+
+    // Animation for the inner content + scroll reset
+    useEffect(() => {
+        // Reset scroll on component change
+        if (mainContentRef.current) {
+            mainContentRef.current.scrollTop = 0;
+        }
+        const componentContainer = mainContentRef.current?.querySelector('.component-container');
+        if (componentContainer) {
+            gsap.fromTo(componentContainer,
+                { opacity: 0, y: 30 },
+                { opacity: 1, y: 0, duration: 0.6, ease: 'power3.out', delay: 0.2 }
+            );
+        }
+    }, [location.pathname]);
+
     const flattenLinks = (data) => {
+        if (!data) return [];
         let links = [];
         data.forEach((section) => {
-            section.content.forEach((item) => {
-                if (item.children) {
-                    item.children.forEach((child) => links.push(child));
-                } else {
-                    links.push(item);
-                }
-            });
+            if (section.content) {
+                section.content.forEach((item) => {
+                    if (item.children) {
+                        item.children.forEach((child) => links.push(child));
+                    } else {
+                        links.push(item);
+                    }
+                });
+            }
         });
         return links;
     };
@@ -56,95 +140,79 @@ export default function Components() {
 
     return (
         <>
-            <div className="w-screen h-screen flex flex-col text-white max-md:bg-[#1A1528] relative overflow-hidden ">
-                {/* Modern Blurred Animated Background */}
+            <div className="w-screen h-screen flex flex-col text-[var(--color-text)] bg-[var(--color-bg)] relative">
                 <div ref={bgRef} className="absolute inset-0 -z-10 overflow-hidden pointer-events-none">
-                    {/* Two blurred floating circles */}
-                    <div className="circle absolute w-[28rem] h-[28rem] bg-purple-900 rounded-full blur-[120px] opacity-70 left-1/4 top-1/4 -translate-y-1/2 hidden sm:block" />
-                    <div className="circle absolute w-[28rem] h-[28rem] bg-pink-900 rounded-full blur-[120px] opacity-60 left-3/4 top-1/3 -translate-y-1/2 hidden sm:block" />
-                    {/* Subtle overlay for extra depth */}
-                    <div className="absolute inset-0  z-0" />
+                    <div className="circle absolute w-[28rem] h-[28rem] bg-lime-500/10 rounded-full blur-[120px] left-1/4 top-1/4 -translate-y-1/2" />
+                    <div className="circle absolute w-[28rem] h-[28rem] bg-sky-500/10 rounded-full blur-[120px] left-3/4 top-1/3 -translate-y-1/2" />
                 </div>
 
-                <GetNav onSidebarToggle={handleSidebarToggle} sidebarOpen={sidebarOpen} />
+                <header className="h-20 flex-shrink-0 border-b border-[var(--color-border)] px-6">
+                    <NavBar onSidebarToggle={handleSidebarToggle} sidebarOpen={sidebarOpen} />
+                </header>
 
-                <div className="flex flex-1 overflow-hidden outline-8 mt-20">
-                    {/* Sidebar Desktop */}
-                    <div className="hidden lg:block ">
+                <div className="flex flex-1 overflow-hidden">
+                    <aside className="hidden lg:block w-64 border-r border-[var(--color-border)] z-[999]">
                         <AsideBar />
-                    </div>
+                    </aside>
 
-                    {/* Sidebar Mobile Drawer */}
                     {sidebarOpen && (
                         <div className="fixed inset-0 z-40 flex lg:hidden">
                             <AsideBar isMobile={true} onClose={handleSidebarClose} />
-                            <div className="flex-1 backdrop-blur-2xl" onClick={handleSidebarClose} />
+                            <div className="flex-1 bg-[var(--color-bg)] backdrop-blur-sm" onClick={handleSidebarClose} />
                         </div>
                     )}
 
-
-                    {/* Main content with normal scroll */}
-                    <div
-                        className="flex-1  overflow-y-scroll scrollbar-hide  p-6  bg-gray-900/20 backdrop-blur-2xl"
-                    >
-                        {ComponentToRender ? (
-                            <ComponentToRender />
-                        ) : (
-                            <div className="text-white/60 text-center mt-12">
-                                Select a component from the sidebar to view it.
+                    <main ref={mainContentRef} className="flex-1 overflow-y-scroll scrollbar-hide lg:ml-20" style={{ scrollBehavior: 'smooth' }}>
+                        <div className="min-h-full flex flex-col items-center justify-center p-8 rounded-2xl relative">
+                            <div className="component-container flex-grow w-full z-10 relative">
+                                {/* Animated background shapes: all sides (like Home section), now inside preview container */}
+                                <div className="absolute -top-20 -left-20 w-80 h-80 bg-lime-400/5 rounded-full animate-pulse-slow pointer-events-none z-0" />
+                                <div className="absolute top-1/4 right-0 w-96 h-96 bg-emerald-500/10 rounded-full blur-[120px] animate-spin-slow pointer-events-none z-0" />
+                                <div className="absolute bottom-10 left-1/3 w-40 h-40 bg-sky-500/5 rounded-full animate-pulse-slow pointer-events-none z-0" />
+                                <div className="absolute -bottom-20 right-1/4 w-72 h-40 bg-teal-500/5 rounded-lg animate-spin-slow-reverse pointer-events-none z-0" />
+                                {ComponentToRender ? (
+                                    <ComponentToRender />
+                                ) : (
+                                    
+                                        <AllComponents />
+                                    
+                                )}
                             </div>
-                        )}
-                        <div className='flex justify-center max-md:mb-10'>
-                            {(() => {
-                                // Only show button for Introduction, React Setup, Tailwind Setup (not ApexUI or others)
-                                const flat = allLinks;
-                                // Define the relevant section paths (update as per your sidebar data)
-                                const relevantPaths = [
-                                    '/components/docs/getting-started/introduction',
-                                    '/components/docs/getting-started/installation/react-setup',
-                                    '/components/docs/getting-started/installation/tailwind-setup',
-                                    '/components/docs/getting-started/installation/apexui-cli',
-                                    '/components/glass-navbar',
-                                ];
-                                const currentIdx = flat.findIndex(link => link.path === location.pathname);
-                                const next = flat[currentIdx + 1];
-                                // Only show if current is in relevantPaths
-                                const showBtn = relevantPaths.includes(location.pathname);
-                                // Button label is always next section name
-                                let btnLabel = '';
-                                if (next) {
-                                    btnLabel = next.name || next.title || 'Next';
-                                } else {
-                                    btnLabel = '';
-                                }
-                                // Button disabled if next is not in relevantPaths (i.e., last relevant section)
-                                const isLast = !next || !relevantPaths.includes(next?.path);
-                                const nextPath = next && relevantPaths.includes(next.path) ? next.path : '';
-                                return showBtn && btnLabel && !isLast ? (
-                                    <NavLink
-                                        to={nextPath}
-                                        className={`relative overflow-hidden px-6 py-3 rounded-lg border border-purple-400/60 text-white bg-black/20 group shadow-sm hover:shadow-purple-400/20 duration-300 flex items-center gap-3 mt-4 font-semibold ${isLast ? 'opacity-60 pointer-events-none cursor-not-allowed' : ''}`}
-                                        tabIndex={0}
-                                        aria-hidden={isLast}
-                                    >
-                                        <span className="relative z-10">{btnLabel}</span>
-                                        <span className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-all duration-500 rounded-lg" style={{ background: "radial-gradient(circle at bottom, purple, transparent 69%)", mixBlendMode: "screen" }} />
-                                        {/* Animated Arrow Icon */}
-                                        <span className="relative z-10 flex items-center ml-2">
-                                            <svg className="w-5 h-5 text-purple-300 group-hover:translate-x-2 transition-transform duration-300" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-                                                <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
-                                            </svg>
-                                        </span>
-                                    </NavLink>
-                                ) : null;
-                            })()}
+
+                            <div className='mt-8 z-10'>
+                                {(() => {
+                                    const flat = allLinks;
+                                    const relevantPaths = [
+                                        '/components/docs/getting-started/introduction',
+                                        '/components/docs/getting-started/installation/react-setup',
+                                        '/components/docs/getting-started/installation/tailwind-setup',
+                                        '/components/docs/getting-started/installation/apexui-cli',
+                                        '/components/avatar',
+                                    ];
+                                    const currentIdx = flat.findIndex(link => link.path === location.pathname);
+                                    const next = flat[currentIdx + 1];
+                                    const showBtn = relevantPaths.includes(location.pathname);
+                                    let btnLabel = next ? (next.name || next.title || 'Next') : '';
+                                    const isLast = !next || !relevantPaths.includes(next?.path);
+                                    const nextPath = next && relevantPaths.includes(next.path) ? next.path : '';
+
+                                    return showBtn && btnLabel && !isLast ? (
+                                        <NextButton to={nextPath}>
+                                            {btnLabel}
+                                        </NextButton>
+                                    ) : null;
+                                })()}
+                            </div>
                         </div>
-                    </div>
+                        <Footer />
+                    </main>
 
                 </div>
-                {/* Feedback floating button (bottom right) */}
+
             </div>
+
             <FeedBack />
+
         </>
     );
 }

@@ -1,146 +1,149 @@
-// TailwindViteSetup.jsx (Plugin-based Tailwind CSS Setup)
-import { CopyBlock, dracula } from "react-code-blocks";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+// TailwindViteSetup.jsx
+import { CopyBlock, irBlack,} from 'react-code-blocks';
+import { useState } from 'react';
+import { Copy, Check } from 'lucide-react';
 import {
-    faTerminal,
-    faCheckCircle,
-    faFileCode,
-    faPlay,
-    faFolderOpen,
-} from "@fortawesome/free-solid-svg-icons";
+    Terminal,
+    FileCode,
+    Play,
+    Wind,
+    PackagePlus,
+    Settings2,
+} from 'lucide-react';
 
 const TailwindViteSetup = () => {
+    // Custom CopyButton for code blocks
+    const CopyButton = ({ text }) => {
+        const [copied, setCopied] = useState(false);
+        const handleCopy = () => {
+            navigator.clipboard.writeText(text);
+            setCopied(true);
+            setTimeout(() => setCopied(false), 1200);
+        };
+        return (
+            <div className="absolute top-2 right-2 z-20 flex flex-col items-center">
+                <button
+                    onClick={handleCopy}
+                    className="p-2 rounded-md bg-black text-[var(--color-pages-side-active-text)] transition-all duration-200"
+                    aria-label={copied ? 'Copied!' : 'Copy code'}
+                >
+                    <Copy className="w-4 h-4" />
+                </button>
+                {copied && (
+                    <span
+                        className="pointer-events-none select-none absolute -top-8 right-1/2 translate-x-1/2 px-3 py-1 rounded-md bg-white text-xs font-semibold text-black border border-gray-200"
+                        style={{
+                            minWidth: '60px',
+                            textAlign: 'center',
+                            zIndex: 30,
+                        }}
+                    >
+                        Copied!
+                        <span className="absolute left-1/2 -translate-x-1/2 top-full w-2 h-2 bg-white border-l border-b border-gray-200 rotate-45" style={{ marginTop: '-2px' }}></span>
+                    </span>
+                )}
+            </div>
+        );
+    };
+    const steps = [
+        {
+            // Responsive icon sizing
+            icon: <PackagePlus className="w-5 h-5 sm:w-6 sm:h-6 text-[var(--color-pages-side-active-text)]" />,
+            title: "Install Tailwind CSS & Dependencies",
+            description: "Install Tailwind CSS, PostCSS, and Autoprefixer, then generate your configuration files.",
+            code: `npm install tailwindcss @tailwindcss/vite`,
+            lang: 'bash'
+        },
+        {
+            // Responsive icon sizing
+            icon: <Settings2 className="w-5 h-5 sm:w-6 sm:h-6 text-[var(--color-pages-side-active-text)]" />,
+            title: "Configure Template Paths",
+            description: "Add the paths to all of your template files in your `tailwind.config.js` file.",
+            code: `import { defineConfig } from 'vite';
+import tailwindcss from '@tailwindcss/vite';
+
+export default defineConfig({
+  plugins: [
+    tailwindcss(),
+  ],
+});`,
+            lang: 'javascript'
+        },
+        {
+            // Responsive icon sizing
+            icon: <FileCode className="w-5 h-5 sm:w-6 sm:h-6 text-[var(--color-pages-side-active-text)]" />,
+            title: "Add Tailwind Directives to CSS",
+            description: "Add the @tailwind directives for each of Tailwind’s layers to your main CSS file.",
+            code: `@import "tailwindcss";`,
+            lang: 'css'
+        },
+        {
+            // Responsive icon sizing
+            icon: <Play className="w-5 h-5 sm:w-6 sm:h-6 text-[var(--color-pages-side-active-text)]" />,
+            title: "Start the Build Process",
+            description: "Run your build process with npm run dev to start using Tailwind classes in your project.",
+            code: `npm run dev`,
+            lang: 'bash'
+        }
+    ];
+
     return (
-        <section className="py-20 sm:px-8 lg:px-16 text-[wheat]">
-            <div className="max-w-5xl mx-auto space-y-12">
-                <h2 className="text-3xl font-bold flex items-center gap-3">
-                    <FontAwesomeIcon icon={faTerminal} className="text-purple-400" />
-                    Install Tailwind CSS with Vite (Plugin Method)
-                </h2>
+        <section className="py-16 sm:py-24">
+            <div className="max-w-4xl mx-auto sm:px-6">
+                {/* Header with responsive text sizes and margin */}
+                <header className="text-center mb-12 sm:mb-16">
+                    <h1 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight bg-gradient-to-r from-[var(--color-pages-props-heading-text)] to-[var(--color-pages-props-heading-text2)] bg-clip-text text-transparent flex items-center justify-center gap-3 sm:gap-4">
+                        <Wind className="w-8 h-8 sm:w-auto" /> Tailwind CSS + Vite
+                    </h1>
+                    <p className="mt-4 text-base sm:text-lg text-[var(--color-pages-props-sub-text)] max-w-2xl mx-auto">
+                        Follow this guide to integrate the powerful utility-first CSS framework, Tailwind CSS, into your Vite project.
+                    </p>
+                </header>
 
-                {/* Step 1: Create Project */}
-                <div className="space-y-2">
-                    <h4 className="text-lg font-semibold flex items-center gap-2">
-                        <FontAwesomeIcon icon={faFolderOpen} className="text-purple-400" />
-                        Step 1: Create Your Vite Project
-                    </h4>
-                    <p className="text-sm text-white/60 ml-1">
-                        This command initializes a new Vite project and navigates into the
-                        folder.
-                    </p>
-                    <CopyBlock
-                        text={`npm create vite@latest my-project\ncd my-project`}
-                        language="bash"
-                        theme={dracula}
-                        showLineNumbers={false}
-                        codeBlock
-                    />
+                <div className="relative">
+                    {/* Vertical Timeline Line - position adjusted for smaller icon size on mobile */}
+                    <div className="absolute left-3 sm:left-9 top-0 h-full w-0.5 bg-[var(--color-pages-divider)] -translate-x-1/2" aria-hidden="true"></div>
 
-                </div>
-
-                {/* Step 2: Install Tailwind CSS */}
-                <div className="space-y-2">
-                    <h4 className="text-lg font-semibold flex items-center gap-2">
-                        <FontAwesomeIcon icon={faCheckCircle} className="text-purple-400" />
-                        Step 2: Install Tailwind + Vite Plugin
-                    </h4>
-                    <p className="text-sm text-white/60 ml-1">
-                        Installs Tailwind and its official Vite plugin
-                        automatically.
-                    </p>
-                    <CopyBlock
-                        text={`npm install tailwindcss @tailwindcss/vite`}
-                        language="bash"
-                        theme={dracula}
-                        showLineNumbers={false}
-                        codeBlock
-                    />
-                </div>
-                {/* Step 3: Configure Plugin */}
-                <div className="space-y-2">
-                    <h4 className="text-lg font-semibold flex items-center gap-2">
-                        <FontAwesomeIcon icon={faFileCode} className="text-purple-400" />
-                        Step 3: Add Tailwind Plugin in vite.config.js
-                    </h4>
-                    <p className="text-sm text-white/60 ml-1">
-                        Registers the Tailwind plugin inside your Vite config.
-                    </p>
-                    <CopyBlock
-                        text={`import { defineConfig } from 'vite';\nimport tailwindcss from '@tailwindcss/vite';\n\nexport default defineConfig({\n  plugins: [\n    tailwindcss(),\n  ],\n});`}
-                        language="javascript"
-                        theme={dracula}
-                        showLineNumbers={false}
-                        codeBlock
-                    />
-                </div>
-                {/* Step 4: Import Tailwind */}
-                <div className="space-y-2">
-                    <h4 className="text-lg font-semibold flex items-center gap-2">
-                        <FontAwesomeIcon icon={faFileCode} className="text-purple-400" />
-                        Step 4: Import Tailwind in your index.css File
-                    </h4>
-                    <p className="text-sm text-white/60 ml-1">
-                        Enables Tailwind's base styles, component layers, and utility
-                        classes.
-                    </p>
-                    <CopyBlock
-                        text={`@import "tailwindcss";`}
-                        language="css"
-                        theme={dracula}
-                        showLineNumbers={false}
-                        codeBlock
-                    />
-                </div>
-                {/* Step 5: Start Dev Server */}
-                <div className="space-y-2">
-                    <h4 className="text-lg font-semibold flex items-center gap-2">
-                        <FontAwesomeIcon icon={faPlay} className="text-purple-400" />
-                        Step 5: Start Development Server
-                    </h4>
-                    <p className="text-sm text-white/60 ml-1">
-                        Runs your Vite dev server with hot reload enabled.
-                    </p>
-                    <CopyBlock
-                        text={`npm run dev`}
-                        language="bash"
-                        theme={dracula}
-                        showLineNumbers={false}
-                        codeBlock
-                    />
-                </div>
-                {/* Step 6: Use Tailwind */}
-                <div className="space-y-2">
-                    <h4 className="text-lg font-semibold flex items-center gap-2">
-                        <FontAwesomeIcon icon={faFileCode} className="text-purple-400" />
-                        Step 6: Use Tailwind Classes
-                    </h4>
-                    <p className="text-sm text-white/60 ml-1">
-                        Now you can use Tailwind utility classes in your HTML or JSX.
-                    </p>
-                    <CopyBlock
-                        text={`<!doctype html>
-<html>
-  <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link href="/src/style.css" rel="stylesheet">
-  </head>
-  <body>
-    <h1 class="text-3xl font-bold underline">
-      Apex UI
-    </h1>
-  </body>
-</html>`}
-                        language="html"
-                        theme={dracula}
-                        showLineNumbers={false}
-                        codeBlock
-                    />
+                    {/* Responsive spacing between timeline items */}
+                    <div className="space-y-10 sm:space-y-12">
+                        {steps.map((step, index) => (
+                            <div key={index} className="relative flex items-start">
+                                {/* Timeline Icon - smaller on mobile */}
+                                <div className="-ml-3 sm:-ml-0 flex-shrink-0 w-12 h-12 sm:w-18 sm:h-18 bg-[var(--color-pages-bg)] rounded-full border-2 border-[var(--color-pages-divider)] flex items-center justify-center z-10">
+                                    {step.icon}
+                                </div>
+                                {/* Content container with responsive margin */}
+                                <div className="ml-4 sm:ml-6 flex-1 pt-1 max-md:overflow-hidden scrollbar-hide">
+                                    {/* Step Title - smaller font on mobile */}
+                                    <h3 className="text-lg sm:text-xl font-bold text-[var(--color-pages-side-active-text4)]">
+                                        Step {index + 1}: {step.title}
+                                    </h3>
+                                    <p className="mt-2 text-base text-[var(--color-pages-props-text)]">
+                                        {step.description}
+                                    </p>
+                                    <div className="mt-4 relative">
+                                        <CopyBlock
+                                            text={step.code}
+                                            language={step.lang}
+                                            theme={irBlack}
+                                            showLineNumbers={false}
+                                            codeBlock
+                                            customStyle={{
+                                                overflowX: 'auto',
+                                                background: 'black'
+                                            }}
+                                        />
+                                        <CopyButton text={step.code} />
+                                    </div>
+                                </div>
+                            </div>
+                        ))}
+                    </div>
                 </div>
 
-                <p className="text-white/70 pt-6">
-                    ✅ All set! Tailwind v4.1 is now integrated into your Vite setup using
-                    the plugin approach — no postcss.config needed.
+                {/* Responsive top padding for the final message */}
+                <p className="text-center text-[var(--color-pages-props-text)] pt-12 sm:pt-16">
+                    🎉 All set! You can now start using Tailwind's utility classes to style your content.
                 </p>
             </div>
         </section>

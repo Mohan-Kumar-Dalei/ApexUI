@@ -2,60 +2,11 @@
 import React, { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { FaExternalLinkAlt, FaGithub, FaRegImage } from "react-icons/fa";
-
-// Default card data (if no props.cards provided)
-const defaultCards = [
-    {
-        title: "ApexUI Glass Card Stack",
-        subtitle: "Modern glassmorphic stack with animation",
-        desc: "Beautiful glassmorphic UI. Pause on hover, auto-cycling.",
-        color: "from-blue-500/60 to-blue-300/30",
-        image: "https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?auto=format&fit=crop&w=300&q=80",
-        link: "https://github.com/sheryians/apexui",
-        github: "https://github.com/sheryians/apexui",
-    },
-    {
-        title: "React Modern Card",
-        subtitle: "Responsive, animated, and clean",
-        desc: "Modern, responsive, and animated. Stacked with smooth transitions.",
-        color: "from-pink-500/60 to-pink-300/30",
-        image: "https://images.unsplash.com/photo-1519125323398-675f0ddb6308?auto=format&fit=crop&w=300&q=80",
-        link: "https://react.dev/",
-        github: "https://github.com/facebook/react",
-    },
-    {
-        title: "UI Stack Demo",
-        subtitle: "Stacked cards with effects",
-        desc: "Stacked with smooth transitions. Glassmorphic and beautiful.",
-        color: "from-green-500/60 to-green-300/30",
-        image: "https://images.unsplash.com/photo-1465101046530-73398c7f28ca?auto=format&fit=crop&w=300&q=80",
-        link: "https://ui.sheryians.com/",
-        github: "https://github.com/sheryians/ui-demo",
-    },
-    {
-        title: "Pause & Cycle",
-        subtitle: "Auto-cycling, pause on hover",
-        desc: "Pause on hover, auto-cycling. Try it now!",
-        color: "from-yellow-500/60 to-yellow-300/30",
-        image: "https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=300&q=80",
-        link: "https://github.com/sheryians",
-        github: "https://github.com/sheryians",
-    },
-];
-
-const CARD_STACK_OFFSET = 32; // px offset for stacked cards
-const CARD_SCALE_STEP = 0.08; // scale difference between stacked cards
-const AUTO_CYCLE_INTERVAL = 5000; // ms
-
-/**
- * GlassCardStack
- * @param {Object} props
- * @param {Array} props.cards - Array of card objects (title, subtitle, desc, color, image, link, github)
- * @param {boolean} [props.autoCycle=true] - Enable/disable auto cycling
- * @param {number} [props.cycleInterval=5000] - Interval in ms for auto cycling
- */
+const CARD_STACK_OFFSET = 32; 
+const CARD_SCALE_STEP = 0.08; 
+const AUTO_CYCLE_INTERVAL = 5000;
 export default function GlassCardStack({
-    cards = defaultCards,
+    cards = [],
     autoCycle = true,
     cycleInterval = AUTO_CYCLE_INTERVAL,
 }) {

@@ -2,7 +2,7 @@ import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-route
 import React, { useEffect } from 'react';
 import Hero from '../components/Hero.jsx';
 import Components from './GetingStarted/Components.jsx';
-import Navbar from '../components/Navbar';
+import TemplateSoon from "../components/TemplatesSoon.jsx"
 export default function AppRouter() {
     const location = useLocation();
     const prevPathRef = React.useRef(location.pathname);
@@ -19,6 +19,8 @@ export default function AppRouter() {
                     <Hero />
                 </>
             } />
+            <Route path="/components" element={<Components />} />
+            <Route path="/templates-soon" element={<TemplateSoon />} />
             <Route path="/components/:section" element={<Components />} />
             <Route path="/components/docs/getting-started/:section" element={<Components />} />
             <Route path="/components/docs/getting-started/installation/:section" element={<Components />} />

@@ -1,8 +1,60 @@
-/* eslint-disable no-unused-vars */
 import React, { useState, useMemo, useContext, useRef, useEffect } from "react";
 import { useNavigate } from 'react-router-dom';
-import SidebarContext from '../router/context/SidebarContext';
 import gsap from "gsap";
+import SidebarContext from '../router/context/SidebarContext';
+// --- Dummy Sidebar Context (for demonstration) ---
+
+// --- Naya Search Result Item Component ---
+const SearchResultItem = ({ item, onSelect, navigate }) => {
+    const itemRef = useRef(null);
+
+    // Spotlight hover effect
+    useEffect(() => {
+        const el = itemRef.current;
+        if (!el) return;
+
+        const onMouseMove = (e) => {
+            const rect = el.getBoundingClientRect();
+            const x = e.clientX - rect.left;
+            const y = e.clientY - rect.top;
+            el.style.setProperty('--mouse-x', `${x}px`);
+            el.style.setProperty('--mouse-y', `${y}px`);
+        };
+
+        el.addEventListener('mousemove', onMouseMove);
+        return () => el.removeEventListener('mousemove', onMouseMove);
+    }, []);
+
+    return (
+        <li
+            ref={itemRef}
+            key={item.path}
+            className="group relative cursor-pointer p-4 text-gray-300 font-medium rounded-lg transition-colors duration-200 overflow-hidden"
+            style={{ opacity: 0, transform: 'translateY(30px)' }}
+            onClick={() => {
+                if (item.path) {
+                    navigate(item.path);
+                    if (typeof onSelect === 'function') onSelect();
+                }
+            }}
+        >
+            {/* Spotlight element */}
+            <div
+                className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none"
+                style={{
+                    background: `radial-gradient(300px circle at var(--mouse-x) var(--mouse-y), rgba(163, 230, 53, 0.15), transparent 80%)`,
+                }}
+            />
+            <span className="relative flex items-center gap-3">
+                <span className="w-2 h-2 rounded-full bg-gray-700 group-hover:bg-lime-400 transition-colors duration-300" />
+                <span className="relative text-lg tracking-wide group-hover:text-white transition-colors duration-300">
+                    {item.name}
+                </span>
+            </span>
+        </li>
+    );
+};
+
 
 export default function SearchComponent({ onSelect }) {
     const navigate = useNavigate();
@@ -18,101 +70,73 @@ export default function SearchComponent({ onSelect }) {
     }, [sidebarData]);
 
     const filteredItems = useMemo(() => {
+        if (!query) return allItems;
         return allItems.filter((item) =>
             item.name && item.name.toLowerCase().includes(query.toLowerCase())
         );
     }, [query, allItems]);
 
-    // GSAP reveal on scroll for each list item
     const listRef = useRef(null);
     const panelRef = useRef(null);
+
     useEffect(() => {
         if (!listRef.current) return;
         const items = Array.from(listRef.current.children);
-        gsap.set(items, { opacity: 0, y: 40 });
-        let observer;
-        if ('IntersectionObserver' in window) {
-            observer = new window.IntersectionObserver((entries) => {
-                entries.forEach(entry => {
-                    if (entry.isIntersecting) {
-                        gsap.to(entry.target, {
-                            opacity: 1,
-                            y: 0,
-                            duration: 0.5,
-                            ease: "power2.out"
-                        });
-                    } else {
-                        gsap.to(entry.target, {
-                            opacity: 0,
-                            y: 40,
-                            duration: 0.4,
-                            ease: "power2.in"
-                        });
-                    }
-                });
-            }, { root: panelRef.current, threshold: 0.1 });
-            items.forEach(item => observer.observe(item));
-        } else {
-            // fallback: animate all
-            gsap.to(items, {
-                opacity: 1,
-                y: 0,
-                stagger: 0.08,
-                duration: 0.5,
-                ease: "power2.out"
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    gsap.to(entry.target, {
+                        opacity: 1,
+                        y: 0,
+                        duration: 0.5,
+                        ease: "power2.out"
+                    });
+                }
             });
-        }
+        }, { root: panelRef.current, threshold: 0.1 });
+
+        items.forEach(item => observer.observe(item));
+
         return () => {
             if (observer) observer.disconnect();
         };
-    }, [filteredItems.length, query]);
+    }, [filteredItems]);
+
 
     return (
-        <div className="w-full max-w-2xl mx-auto p-0 md:p-2 bg-slate-950 rounded-3xl shadow-2xl border border-purple-800 relative overflow-hidden">
-            <div className="flex items-center gap-3 px-6 pt-7 pb-3">
-                <span className="text-purple-800 text-3xl">
-                    <svg width="28" height="28" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="13" cy="13" r="10" /><line x1="25" y1="25" x2="18.65" y2="18.65" /></svg>
+        <div className="w-full max-w-2xl mx-auto bg-gray-950 rounded-2xl shadow-2xl border border-gray-800 relative overflow-hidden z-[1004]">
+            <div className="flex items-center gap-4 px-6 pt-6 pb-4 border-b border-gray-800">
+                <span className="text-lime-400">
+                    <svg width="24" height="24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="11" cy="11" r="8" /><line x1="21" y1="21" x2="16.65" y2="16.65" /></svg>
                 </span>
                 <input
                     type="text"
                     placeholder="Search components..."
                     value={query}
                     onChange={(e) => setQuery(e.target.value)}
-                    className="w-full px-5 py-4 rounded-xl bg-slate-900 placeholder:text-purple-800 text-purple-100 focus:outline-none focus:ring-2 focus:ring-purple-800 border border-purple-800 text-lg transition-all duration-300 shadow-md"
+                    className="w-full bg-transparent placeholder:text-gray-600 text-gray-100 focus:outline-none text-lg"
+                    autoFocus
                 />
             </div>
-            <div ref={panelRef} className="max-h-96 overflow-y-auto rounded-b-3xl border-t border-purple-800 bg-slate-950 shadow-inner custom-scrollbar transition-all duration-300 px-2 pb-2">
-                <ul ref={listRef} className="divide-y divide-purple-800">
-                    {(filteredItems.length > 0 ? filteredItems : allItems).map((item, index) => (
-                        <li
+            <div ref={panelRef} className="max-h-96 overflow-y-auto custom-scrollbar">
+                <ul ref={listRef} className="p-4 space-y-1">
+                    {filteredItems.length > 0 ? filteredItems.map((item) => (
+                        <SearchResultItem
                             key={item.path}
-                            className="cursor-pointer px-6 py-4 hover:bg-purple-800/30 transition-colors duration-200 text-purple-100 font-semibold rounded-xl my-2 shadow-lg border border-transparent hover:border-purple-800/60 backdrop-blur-sm"
-                            style={{ opacity: 0, transform: 'translateY(40px)' }}
-                            onClick={() => {
-                                if (item.path) {
-                                    navigate(item.path);
-                                    if (typeof onSelect === 'function') onSelect();
-                                }
-                            }}
-                        >
-                            <span className="flex items-center gap-3">
-                                <span className="w-2 h-2 rounded-full bg-purple-800 inline-block" />
-                                <span className="relative text-lg tracking-wide drop-shadow-md">
-                                    {item.name}
-                                </span>
-                            </span>
-                        </li>
-                    ))}
+                            item={item}
+                            onSelect={onSelect}
+                            navigate={navigate}
+                        />
+                    )) : (
+                        <li className="px-4 py-8 text-center text-gray-500">No components found.</li>
+                    )}
                 </ul>
             </div>
             <style>{`
-                .custom-scrollbar::-webkit-scrollbar {
-                    width: 8px;
-                }
-                .custom-scrollbar::-webkit-scrollbar-thumb {
-                    background: #6d28d9;
-                    border-radius: 8px;
-                }
+                .custom-scrollbar::-webkit-scrollbar { width: 6px; }
+                .custom-scrollbar::-webkit-scrollbar-thumb { background: #374151; border-radius: 6px; }
+                .custom-scrollbar::-webkit-scrollbar-track { background: transparent; }
             `}</style>
         </div>
     );

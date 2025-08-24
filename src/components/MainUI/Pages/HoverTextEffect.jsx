@@ -1,44 +1,100 @@
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { useState, useEffect, useRef } from 'react';
+import gsap from 'gsap';
+// Change: FontAwesome is replaced with Lucide Icons for consistency
 import {
-    faCube,
-    faCodeBranch,
-    faTerminal,
-    faTableList,
-    faPuzzlePiece,
-    faChevronDown,
-    faChevronUp,
-} from '@fortawesome/free-solid-svg-icons';
-import { useState } from 'react';
-import { CopyBlock, dracula } from 'react-code-blocks';
+    GitFork,
+    Code,
+    Terminal,
+    List,
+    Puzzle,
+    ChevronDown,
+    Package,
+    MousePointerClick, // Icon for this component
+} from 'lucide-react';
+import { CopyBlock, irBlack } from 'react-code-blocks';
+import { Copy } from 'lucide-react';
+// Minimal CopyButton for code blocks (TailwindSetup style)
+const CopyButton = ({ text }) => {
+    const [copied, setCopied] = useState(false);
+    const handleCopy = () => {
+        navigator.clipboard.writeText(text);
+        setCopied(true);
+        setTimeout(() => setCopied(false), 1200);
+    };
+    return (
+        <div className="absolute top-2 right-2 z-20 flex flex-col items-center">
+            <button
+                onClick={handleCopy}
+                className="p-2 rounded-md bg-black text-[var(--color-pages-side-active-text)] transition-all duration-200"
+                aria-label={copied ? 'Copied!' : 'Copy code'}
+            >
+                <Copy className="w-4 h-4" />
+            </button>
+            {copied && (
+                <span
+                    className="pointer-events-none select-none absolute -top-8 right-1/2 translate-x-1/2 px-3 py-1 rounded-md bg-white text-xs font-semibold text-black border border-gray-200"
+                    style={{
+                        minWidth: '60px',
+                        textAlign: 'center',
+                        zIndex: 30,
+                    }}
+                >
+                    Copied!
+                    <span className="absolute left-1/2 -translate-x-1/2 top-full w-2 h-2 bg-white border-l border-b border-gray-200 rotate-45" style={{ marginTop: '-2px' }}></span>
+                </span>
+            )}
+        </div>
+    );
+};
 import HoverText from '../ApexUI-Kit/HoverText/HoverText.jsx';
 
-const hoverTextProps = [
-    { prop: 'text', type: 'string', def: '"Hover Me"', desc: 'Text to display with hover effect.' },
-    { prop: 'effect', type: 'string', def: '"defaultReveal"', desc: 'Animation effect. Options: "defaultReveal", "magnetic", "wave", "rubber", "jump", "rotate", "party".' },
-    { prop: 'effectColor', type: 'string', def: '"#C27AFF"', desc: 'Color of the hover effect.' },
-    { prop: 'fontSize', type: 'string/number', def: '"2rem"', desc: 'Font size of the text.' },
-];
+// --- SUB-COMPONENTS (Updated with CSS Variables and new design) ---
 
-function PropsTable({ showAll, propsList }) {
-    const displayProps = showAll ? propsList : propsList.slice(0, 5);
+// Consistent "Show More" button
+function PropsShowMoreBtn({ showAll, setShowAll, propCount }) {
+    // Logic: Show button only when props are more than 5
+    if (propCount <= 5) return null;
     return (
-        <div className="overflow-x-auto rounded-md border border-purple-600/50 shadow-xl scrollbar-hide">
-            <table className="min-w-full text-sm text-white table-auto ">
-                <thead className="bg-purple-800/80 text-white uppercase text-xs tracking-wider">
+        <button
+            className="text-sm font-medium text-[var(--color-pages-side-active-text)] hover:text-[var(--color-pages-side-active-hover)]"
+            onClick={() => setShowAll((v) => !v)}
+        >
+            {showAll ? 'Show Less' : `Show ${propCount - 5} More`}
+        </button>
+    );
+}
+
+// Consistent PropsTable
+function PropsTable({ showAll, setShowAll }) {
+    const allProps = [
+        { prop: 'text', type: 'string', def: '"Hover Me"', desc: 'Text to display with hover effect.' },
+        { prop: 'effect', type: 'string', def: '"defaultReveal"', desc: 'Animation effect. Options: "defaultReveal", "magnetic", "wave", "rubber", "jump", "rotate", "party".' },
+        { prop: 'effectColor', type: 'string', def: '"#C27AFF"', desc: 'Color of the hover effect.' },
+        { prop: 'fontSize', type: 'string/number', def: '"2rem"', desc: 'Font size of the text.' },
+    ];
+    const displayProps = showAll ? allProps : allProps.slice(0, 5);
+
+    return (
+        <div className="overflow-x-auto scrollbar-hide">
+            <div className="flex justify-end mb-4">
+                <PropsShowMoreBtn showAll={showAll} setShowAll={setShowAll} propCount={allProps.length} />
+            </div>
+            <table className="min-w-full text-sm">
+                <thead className="text-xs text-[var(--color-pages-props-text)] uppercase">
                     <tr>
-                        <th className="px-4 py-3 text-left">Prop</th>
-                        <th className="px-4 py-3 text-left">Type</th>
-                        <th className="px-4 py-3 text-left">Default</th>
-                        <th className="px-4 py-3 text-left">Description</th>
+                        <th className="pb-3 text-left font-semibold">Prop</th>
+                        <th className="pb-3 text-left font-semibold">Type</th>
+                        <th className="pb-3 text-left font-semibold">Default</th>
+                        <th className="pb-3 text-left font-semibold">Description</th>
                     </tr>
                 </thead>
-                <tbody className="divide-y divide-purple-600/20">
+                <tbody className="divide-y divide-[var(--color-pages-divider)]">
                     {displayProps.map((row) => (
-                        <tr key={row.prop} className="hover:bg-purple-800/10 transition">
-                            <td className="px-4 py-3 whitespace-nowrap font-medium text-purple-300">{row.prop}</td>
-                            <td className="px-4 py-3 text-indigo-300">{row.type}</td>
-                            <td className="px-4 py-3 text-emerald-400">{row.def}</td>
-                            <td className="px-4 py-3 text-white/80">{row.desc}</td>
+                        <tr key={row.prop}>
+                            <td className="py-4 pr-4 whitespace-nowrap font-mono text-[var(--color-pages-side-active-text)]">{row.prop}</td>
+                            <td className="py-4 pr-4 whitespace-nowrap font-mono text-[var(--color-pages-side-active-text2)]">{row.type}</td>
+                            <td className="py-4 pr-4 whitespace-nowrap font-mono text-[var(--color-pages-side-active-text3)]">{row.def}</td>
+                            <td className="py-4 text-[var(--color-pages-props-text)]">{row.desc}</td>
                         </tr>
                     ))}
                 </tbody>
@@ -47,222 +103,206 @@ function PropsTable({ showAll, propsList }) {
     );
 }
 
-function PropsCollapseBtn({ showAll, setShowAll, propCount }) {
-    if (propCount <= 5) return null;
+// Consistent DependenciesList
+function DependenciesList() {
+    const dependencies = [
+        { name: 'React', desc: 'Modern React library for UI building' },
+        { name: 'GSAP', desc: 'Animation library for smooth effects' },
+        { name: 'TailwindCSS', desc: 'Utility-first CSS framework for rapid styling' },
+    ];
     return (
-        <button
-            className="px-3 py-1 rounded-md border border-purple-600/40 bg-purple-900/20 text-purple-200 text-xs hover:bg-purple-800/40 transition flex items-center gap-2"
-            onClick={() => setShowAll((v) => !v)}
-        >
-            {showAll ? <FontAwesomeIcon icon={faChevronUp} /> : <FontAwesomeIcon icon={faChevronDown} />}
-            {showAll ? 'Show Less' : `Show ${propCount - 5} More`}
-        </button>
+        <ul className="space-y-4">
+            {dependencies.map(dep => (
+                <li key={dep.name} className="flex items-center gap-4 p-4 bg-[var(--color-pages-bg)] border border-[var(--color-pages-border)] rounded-lg">
+                    <Package className="text-[var(--color-pages-side-active-text)] w-6 h-6 flex-shrink-0" />
+                    <div>
+                        <code className="font-semibold text-[var(--color-pages-props-text2)]">{dep.name}</code>
+                        <p className="text-sm text-[var(--color-pages-props-text3)]">{dep.desc}</p>
+                    </div>
+                </li>
+            ))}
+        </ul>
     );
 }
 
-function PropsAndDepsSections() {
-    const [showAllProps, setShowAllProps] = useState(false);
-    const propCount = hoverTextProps.length;
-    return (
-        <div className="w-full max-w-5xl mx-auto">
-            {/* Props Table Section */}
-            <section className="mt-12 mb-8 px-0 w-full">
-                <div className="rounded-md border-2 border-dashed border-purple-600/50 shadow-xl p-6 bg-black/20 backdrop-blur-md">
-                    <div className="flex items-center gap-4 mb-4 justify-between">
-                        <div className='flex items-center gap-4'>
-                            <FontAwesomeIcon icon={faTableList} className="text-purple-400 text-xl" />
-                            <h4 className="text-xl font-bold text-white">Props</h4>
-                        </div>
-                        <PropsCollapseBtn showAll={showAllProps} setShowAll={setShowAllProps} propCount={propCount} />
-                    </div>
-                    <PropsTable showAll={showAllProps} propsList={hoverTextProps} />
-                </div>
-            </section>
-            {/* Dependencies Section */}
-            <div className="rounded-md border border-purple-800 bg-black/20 backdrop-blur-md shadow-2xl p-6 mb-8">
-                <h4 className="text-xl font-bold flex items-center gap-2 mb-4">
-                    <FontAwesomeIcon icon={faPuzzlePiece} className="text-purple-400 text-xl" />
-                    Dependencies
-                </h4>
-                <ul className="text-base text-white/90 list-none pl-0 space-y-3">
-                    <li className="flex items-center gap-3">
-                        <span className="bg-blue-900/60 p-2 rounded-full flex items-center justify-center">
-                            <span className="inline-block w-2 h-2 bg-blue-400 rounded-full mr-2"></span>
-                        </span>
-                        <span>
-                            <code className="text-blue-400 font-semibold">React</code>
-                            <span className="ml-2 text-white/70">Modern React library for UI building</span>
-                        </span>
-                    </li>
-                    <li className="flex items-center gap-3">
-                        <span className="bg-purple-900/60 p-2 rounded-full flex items-center justify-center">
-                            <span className="inline-block w-2 h-2 bg-purple-400 rounded-full mr-2"></span>
-                        </span>
-                        <span>
-                            <code className="text-purple-400 font-semibold">Tailwindcss</code>
-                            <span className="ml-2 text-white/70">Utility-first CSS framework for rapid styling</span>
-                        </span>
-                    </li>
-                    <li className="flex items-center gap-3">
-                        <span className="bg-green-900/60 p-2 rounded-full flex items-center justify-center">
-                            <span className="inline-block w-2 h-2 bg-green-400 rounded-full mr-2"></span>
-                        </span>
-                        <span>
-                            <code className="text-green-400 font-semibold">GSAP</code>
-                            <span className="ml-2 text-white/70">Animation library for smooth effects</span>
-                        </span>
-                    </li>
-                </ul>
-            </div>
-        </div>
-    );
-}
+
+// --- MAIN COMPONENT (Updated with Tabbed Interface and CSS Variables) ---
 
 const HoverTextEffect = () => {
-    const [selectedEffect, setSelectedEffect] = useState('defaultReveal'); // Dropdown for effect selection
-    const [effectColor, setEffectColor] = useState('#C27AFF');
-    const [selectedLang, setSelectedLang] = useState('jsx');
-    const [dropdownOpen, setDropdownOpen] = useState(false);
-    const codeSnippets = {
-        jsx: `import HoverText from './ApexUI-Kit/HoverText/HoverText.jsx';
+    const [activeTab, setActiveTab] = useState('preview');
+    const selectedLang = 'jsx'
+    const [showAllProps, setShowAllProps] = useState(false);
+    const contentRef = useRef(null);
+
+    // Live prop states
+    const [selectedEffect, setSelectedEffect] = useState('defaultReveal');
+    const [effectColor, setEffectColor] = useState('#9ae600');
+
+
+    const tabs = [
+        { id: 'preview', label: 'Preview', icon: GitFork },
+        { id: 'usage', label: 'Usage', icon: Code },
+        { id: 'installation', label: 'Installation', icon: Terminal },
+    ];
+
+    const codeSnippets = 
+      `import HoverText from './ApexUI-Kit/HoverText/HoverText.jsx';
 
 const App = () => {
   return (
-    <HoverText text="Hover Me!" effectColor="#C27AFF" />
+    <HoverText 
+      text="Hover Me!" 
+      effect="defaultReveal"
+      effectColor="#C27AFF" 
+    />
   );
 }
 
-export default App;
-`,
-        tsx: `import HoverText from './ApexUI-Kit/HoverText/HoverText.jsx';
+export default App;`
+let copyText = `npm i apex-ui-kit && npx apex-ui-kit add hover-text`;
 
-export default function App(): JSX.Element {
-  return (
-    <HoverText text="Hover Me!" effectColor="#C27AFF" fontSize="2rem" />
-  );
-}`
-    };
-
-    const languageOptions = [
-        { label: 'JSX', value: 'jsx' },
-        { label: 'TSX', value: 'tsx' }
-    ];
+    useEffect(() => {
+        if (contentRef.current) {
+            gsap.fromTo(contentRef.current,
+                { opacity: 0, y: 10 },
+                { opacity: 1, y: 0, duration: 0.3, ease: 'power2.out' }
+            );
+        }
+    }, [activeTab]);
 
     return (
-        <div className="w-full max-w-5xl mx-auto  ">
-            <section className="py-20 pb-20  text-[wheat] w-full">
-                <div className="flex flex-col gap-10 items-center w-full">
-                    <h2 className="text-3xl font-bold flex items-center gap-3 w-full">
-                        <FontAwesomeIcon icon={faCube} className="text-purple-400 text-3xl" />
-                        Hover Text Effect
-                    </h2>
+        <div className="text-[var(--color-pages-props-text2)] min-h-screen">
+            <div className="max-w-5xl mx-auto py-16 sm:py-24">
 
-                    <div className="w-full mb-2">
-                        <h4 className="text-lg font-semibold flex items-center gap-2 mb-2">
-                            <FontAwesomeIcon icon={faTerminal} className="text-purple-400" />
-                            Installation Command
-                        </h4>
-                        <div className="bg-[#181824]/50 border border-purple-800 text-green-400 px-4 py-3 font-mono rounded-md relative shadow-md scrollbar-hide">
-                            <CopyBlock
-                                text={`npm i apex-ui-kit && npx apex-ui-kit add hover-text`}
-                                language="bash"
-                                showLineNumbers={false}
-                                theme={dracula}
-                                codeBlock
-                            />
-                        </div>
-                    </div>
+                <header className="text-center mb-12 space-y-4">
+                    <h1 className="text-5xl sm:text-6xl font-extrabold tracking-tight bg-gradient-to-r from-[var(--color-pages-props-heading-text)] to-[var(--color-pages-props-heading-text2)] bg-clip-text text-transparent flex items-center justify-center gap-4">
+                        <MousePointerClick /> Hover Text Effect
+                    </h1>
+                    <p className="text-base sm:text-lg text-[var(--color-pages-props-sub-text)] max-w-2xl mx-auto">
+                        A collection of engaging and interactive text hover effects to bring your UI to life.
+                    </p>
+                </header>
 
-                    {/* Component Preview with Effect Dropdown */}
-                    <div className="w-full py-20 flex flex-col items-start gap-8 ">
-                        <h4 className="text-lg font-semibold flex items-center gap-2 ">
-                            <FontAwesomeIcon icon={faCodeBranch} className="text-purple-400" />
-                            Component Preview
-                        </h4>
-                        <div className="flex flex-col h-[50vh]  w-full gap-6 items-start">
-                            {/* Preview area */}
-                            <div className="flex-1 w-full h-[60vh] max-md:h-[20vh] rounded-md border border-purple-800 bg-black/20 backdrop-blur-md shadow-2xl px-3 py-3 flex flex-col gap-6 mx-auto overflow-hidden items-center justify-center">
-                                <HoverText text="Hover Me!" effectColor={effectColor} effect={selectedEffect} />
-                            </div>
-                            {/* Dropdown and color picker */}
-                            <div className="flex flex-row gap-4 items-end min-w-[180px]">
-                                <div className="flex flex-col gap-2">
-                                    <label className="text-sm font-semibold mb-1">Choose Effect</label>
-                                    <select
-                                        className="bg-[#181824] border border-purple-700/40 text-white px-3 py-2 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-600/40"
-                                        value={selectedEffect}
-                                        onChange={e => setSelectedEffect(e.target.value)}
-                                    >
-                                        <option value="defaultReveal">Default Reveal</option>
-                                        <option value="magnetic">Magnetic</option>
-                                        <option value="wave">Wave</option>
-                                        <option value="rubber">Rubber</option>
-                                        <option value="jump">Jump</option>
-                                        <option value="rotate">Rotate</option>
-                                        <option value="party">Party</option>
-                                    </select>
-                                </div>
-                                <div className="flex flex-col gap-2 items-center">
-                                    <label className="text-sm font-semibold mb-1">Effect Color</label>
-                                    <input
-                                        type="color"
-                                        value={effectColor}
-                                        onChange={e => setEffectColor(e.target.value)}
-                                        className="w-10 h-10 border-2 border-purple-700 rounded-md cursor-pointer bg-transparent p-0"
-                                        title="Pick effect color"
-                                    />
-                                </div>
-                            </div>
-
-                        </div>
-                    </div>
-
-                    {/* Usage Example */}
-                    <div className="mt-8 w-full">
-                        <div className="mb-3 flex justify-between">
-                            <h4 className="text-lg font-semibold flex items-center gap-2 mb-2">
-                                <FontAwesomeIcon icon={faCodeBranch} className="text-purple-400" />
-                                Usage Example
-                            </h4>
-                            <div className="relative w-32">
+                <div className="w-full bg-[var(--color-pages-bg)] border border-[var(--color-pages-border)] rounded-lg shadow-2xl overflow-hidden">
+                    <div className="border-b border-[var(--color-pages-divider)]">
+                        <nav className="flex space-x-1 sm:space-x-2 px-2 sm:px-4" aria-label="Tabs">
+                            {tabs.map((tab) => (
                                 <button
-                                    className="w-full bg-[#181824] border border-purple-700/40 text-white px-4 py-2 rounded-md flex items-center justify-between focus:outline-none hover:bg-purple-800/30 transition"
-                                    onClick={() => setDropdownOpen((open) => !open)}
+                                    key={tab.id}
+                                    onClick={() => setActiveTab(tab.id)}
+                                    className={`relative group font-medium text-sm py-4 px-2 sm:px-3 focus:outline-none transition-colors w-full md:w-auto ${activeTab === tab.id
+                                            ? 'text-[var(--color-pages-side-active-text)]'
+                                            : 'text-[var(--color-pages-props-text)] hover:text-[var(--color-pages-side-hover)]'
+                                        }`}
                                 >
-                                    <span>{languageOptions.find(opt => opt.value === selectedLang).label}</span>
-                                    <FontAwesomeIcon icon={faChevronDown} className="ml-2 text-white/60" />
+                                    <tab.icon className="inline-block w-4 h-4 mr-2" />
+                                    <span>{tab.label}</span>
+                                    {activeTab === tab.id && (
+                                        <span className="absolute bottom-0 left-0 w-full h-0.5 bg-[var(--color-pages-side-active-text)] rounded-full"></span>
+                                    )}
                                 </button>
-                                {dropdownOpen && (
-                                    <div className="absolute z-10 mt-2 w-full bg-[#181824] border border-purple-700/40 rounded shadow-lg">
-                                        {languageOptions.map((option) => (
-                                            <div
-                                                key={option.value}
-                                                onClick={() => {
-                                                    setSelectedLang(option.value);
-                                                    setDropdownOpen(false);
-                                                }}
-                                                className={`px-4 py-2 cursor-pointer hover:bg-purple-700/30 text-white ${selectedLang === option.value ? 'bg-purple-700/40' : ''}`}
-                                            >
-                                                {option.label}
-                                            </div>
-                                        ))}
-                                    </div>
-                                )}
-                            </div>
-                        </div>
-                        <div className="bg-[#0e0e10]/20 p-4 rounded-md text-sm font-mono relative border border-purple-600/50 shadow-lg overflow-x-auto">
-                            <CopyBlock
-                                text={codeSnippets[selectedLang]}
-                                language={selectedLang}
-                                theme={dracula}
-                                codeBlock
-                            />
-                        </div>
+                            ))}
+                        </nav>
                     </div>
 
-                    <PropsAndDepsSections />
+                    <div ref={contentRef} className="p-4 sm:p-6">
+                        {activeTab === 'preview' && (
+                            <div>
+                                <div className="w-full min-h-[40vh] bg-black/30 rounded-md flex items-center justify-center p-4">
+                                    <HoverText text="Hover Me!" effectColor={effectColor} effect={selectedEffect} />
+                                </div>
+                                {/* --- Live Controls --- */}
+                                <div className="mt-6 p-4 bg-[var(--color-pages-border)]/50 border border-[var(--color-pages-border)] rounded-lg">
+                                    <div className="flex flex-wrap gap-6 items-center justify-center">
+                                        <div className="flex items-center gap-2">
+                                            <label className="text-sm text-[var(--color-pages-props-text)] font-medium">Effect</label>
+                                            <select
+                                                value={selectedEffect}
+                                                onChange={e => setSelectedEffect(e.target.value)}
+                                                className="bg-[var(--color-pages-border)] border border-[var(--color-pages-border)] rounded px-3 py-1.5 text-sm text-[var(--color-pages-side-text2)] focus:outline-none focus:ring-2 focus:ring-[var(--color-pages-side-active-text)]"
+                                            >
+                                                <option value="defaultReveal">Default Reveal</option>
+                                                <option value="magnetic">Magnetic</option>
+                                                <option value="wave">Wave</option>
+                                                <option value="rubber">Rubber</option>
+                                                <option value="jump">Jump</option>
+                                                <option value="rotate">Rotate</option>
+                                                <option value="party">Party</option>
+                                            </select>
+                                        </div>
+                                        <div className="flex items-center gap-2">
+                                            <label className="text-sm text-[var(--color-pages-props-text)] font-medium">Color</label>
+                                            <input
+                                                type="color"
+                                                value={effectColor}
+                                                onChange={e => setEffectColor(e.target.value)}
+                                                className="w-8 h-8 bg-transparent rounded border-none cursor-pointer"
+                                                title="Pick effect color"
+                                            />
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        )}
+                        {activeTab === 'usage' && (
+                            <div>
+                                <div className="mt-2 relative">
+                                    <CopyBlock
+                                        text={codeSnippets}
+                                        language={selectedLang}
+                                        theme={irBlack}
+                                        codeBlock
+                                        showLineNumbers={false}
+                                        customStyle={{
+                                            overflowX: 'auto',
+                                            background: 'black'
+                                        }}
+                                    />
+                                    <CopyButton text={codeSnippets} />
+                                </div>
+                            </div>
+                        )}
+                        {activeTab === 'installation' && (
+                            <div className="relative mt-2">
+                                <CopyBlock
+                                    text={copyText}
+                                    language="bash"
+                                    theme={irBlack}
+                                    codeBlock
+                                    showLineNumbers={false}
+                                    customStyle={{
+                                        overflowX: 'auto',
+                                        background: 'black'
+                                    }}
+                                />
+                                <CopyButton text={copyText} />
+                            </div>
+                        )}
+                    </div>
                 </div>
-            </section>
+
+                <div className="mt-8 grid grid-cols-1 md:grid-cols-2 gap-8">
+                    <div className="bg-[var(--color-pages-bg)] border border-[var(--color-pages-border)] rounded-lg p-6">
+                        <h3 className="flex items-center gap-3 font-semibold text-lg text-[var(--color-pages-side-active-text6)]">
+                            <List className="w-5 h-5 text-[var(--color-pages-side-active-text)]" />
+                            Props
+                        </h3>
+                        <div className="mt-4">
+                            <PropsTable showAll={showAllProps} setShowAll={setShowAllProps} />
+                        </div>
+                    </div>
+                    <div className="bg-[var(--color-pages-bg)] border border-[var(--color-pages-border)] rounded-lg p-6">
+                        <h3 className="flex items-center gap-3 font-semibold text-lg text-[var(--color-pages-side-active-text6)]">
+                            <Puzzle className="w-5 h-5 text-[var(--color-pages-side-active-text)]" />
+                            Dependencies
+                        </h3>
+                        <div className="mt-4">
+                            <DependenciesList />
+                        </div>
+                    </div>
+                </div>
+
+            </div>
         </div>
     );
 };
