@@ -52,7 +52,7 @@ export default function GetNav() {
                 <div className="flex items-center gap-6">
                     <NavLink to="/" className="flex items-center gap-2 group">
                         <h1 className="text-xl sm:text-3xl font-semibold text-[var(--hero-nav-text)] group-hover:text-[var(--hero-nav-hover)] transition duration-300" style={{ fontFamily: "Righteous, sans-serif" }}>Apex<span className="text-lime-400">UI</span></h1>
-                        <span className="text-[10px] sm:text-xs bg-[var(--hero-nav-badge)] text-[var(--hero-nav-badge-text)] px-2 py-0.5 rounded-full">v2.0.4</span>
+                        <span className="text-[10px] sm:text-xs bg-[var(--hero-nav-badge)] text-[var(--hero-nav-badge-text)] px-2 py-0.5 rounded-full">v2.0.5</span>
                     </NavLink>
                     <div className="w-px h-6 bg-[var(--color-divider)] hidden lg:inline" />
                     <div className="hidden lg:flex items-center gap-4">
