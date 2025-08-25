@@ -145,7 +145,7 @@ const WaitingButton = () => {
 
 // --- ✨ Combined Animated Headline Component ---
 const AnimatedHeadline = () => {
-    const title = "ApexUI Library";
+    const title = `Swift UI Setup`;
     const words = title.split(" ");
     const letterCount = title.replace(" ", "").length;
 
@@ -200,7 +200,7 @@ const AnimatedHeadline = () => {
                     <React.Fragment key={wordIndex}>
                         <span className="flex overflow-hidden">
                             {word.split("").map((char, charIndex) => {
-                                const isUILetter = (word === "ApexUI" && (char === "U" || char === "I"));
+                                const isUILetter = (word === "UI" && (char === "U" || char === "I"));
                                 return (
                                     <motion.span
                                         key={charIndex}
@@ -212,7 +212,7 @@ const AnimatedHeadline = () => {
                                 );
                             })}
                         </span>
-                        {wordIndex < words.length - 1 && <span className="w-4 md:w-6"></span>}
+                        {wordIndex < words.length - 1 && <span className="w-2 md:w-3"></span>}
                     </React.Fragment>
                 ))}
             </motion.h1>
@@ -221,7 +221,7 @@ const AnimatedHeadline = () => {
             <motion.svg
                 aria-hidden="true"
                 viewBox="0 0 340 22"
-                className="absolute left-0 -bottom-5 w-full lg:w-[85%] h-auto"
+                className="absolute left-0 -bottom-5 w-full lg:w-[80%] h-auto"
                 preserveAspectRatio="none"
                 initial="hidden"
                 animate="visible"

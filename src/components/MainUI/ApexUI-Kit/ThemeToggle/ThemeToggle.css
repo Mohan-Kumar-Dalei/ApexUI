@@ -95,6 +95,8 @@
   --color-template-border: #fdc700;
   --color-template-text: #fdc700;
   --color-scan: #460809;
+  --selection-bg: #460809;
+  --selection-text: #fdc700;
 
   /* Hero Component */
   --right-color-bg: #e5c287;
@@ -246,6 +248,8 @@
   --color-btn-hover-text: #d9f99d;
   --color-stroke-color: #9ae600;
   --color-scan: #9ae600;
+  --selection-bg: #9ae600;
+  --selection-text: #1e2939;
   /* Hero Component */
   --color-stroke-color: #9ae600;
   --color-template: #101828;
