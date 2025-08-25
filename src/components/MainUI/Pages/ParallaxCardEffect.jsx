@@ -113,7 +113,7 @@ const ParallaxCardEffect = () => {
         { id: 'installation', label: 'Installation', icon: Terminal },
     ];
 
-    const usageCodeText = `import { ParallaxCard } from './ApexUI-Kit/ParallaxCard/ParallaxCard';
+    const usageCodeText = `import ParallaxCard from './ApexUI-Kit/ParallaxCard/ParallaxCard';
 const App = () => (
         let CardData = [
 

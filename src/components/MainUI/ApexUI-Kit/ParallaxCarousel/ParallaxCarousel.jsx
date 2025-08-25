@@ -76,28 +76,40 @@ const CarouselCard = ({ slide, isCenter }) => {
 const ParallaxCarousel = ({ slides }) => {
     const [activeIndex, setActiveIndex] = useState(0);
     const [isHovered, setIsHovered] = useState(false);
+    const animatingRef = useRef(false);
+    const animTimeoutRef = useRef(null);
 
+    const NAV_ANIM_MS = 600; // match motion timing roughly
     const handleNext = () => {
+        if (animatingRef.current) return;
+        animatingRef.current = true;
+        clearTimeout(animTimeoutRef.current);
         setActiveIndex((prevIndex) => (prevIndex + 1) % slides.length);
+        animTimeoutRef.current = setTimeout(() => {
+            animatingRef.current = false;
+        }, NAV_ANIM_MS);
     };
 
     const handlePrev = () => {
+        if (animatingRef.current) return;
+        animatingRef.current = true;
+        clearTimeout(animTimeoutRef.current);
         setActiveIndex((prevIndex) => (prevIndex - 1 + slides.length) % slides.length);
+        animTimeoutRef.current = setTimeout(() => {
+            animatingRef.current = false;
+        }, NAV_ANIM_MS);
     };
 
-    // Automatic sliding ke liye
+    // Automatic sliding: use a stable interval that doesn't recreate on every index change.
     useEffect(() => {
-        // Agar hovered hai to interval start hi mat karo
-        if (isHovered) {
-            return;
-        }
+        if (isHovered) return; // pause when hovered
 
-        const interval = setInterval(() => {
-            handleNext();
-        }, 4000); // Har 4 second mein slide change hoga
+        const iv = setInterval(() => {
+            setActiveIndex((prevIndex) => (prevIndex + 1) % slides.length);
+        }, 4000);
 
-        return () => clearInterval(interval); // Cleanup
-    }, [activeIndex, isHovered]); // isHovered state change hone par effect ko firse chalayega
+        return () => clearInterval(iv);
+    }, [isHovered, slides.length]);
 
     return (
         <div
@@ -125,13 +137,13 @@ const ParallaxCarousel = ({ slides }) => {
                             key={index}
                             className={`absolute w-full h-[340px] portrait:w-full portrait:h-[480px] top-0 left-0 portrait:left-0 portrait:top-0 ${positionOffset === 0 ? '' : ' pointer-events-none'} md:w-[50%] md:h-[400px] md:top-[50px] md:left-1/2 lg:-translate-x-1/2`}
                             initial={false}
-                            style={{ transformStyle: 'preserve-3d' }}
+                            style={{ transformStyle: 'preserve-3d', willChange: 'transform, opacity' }}
                             animate={{
                                 transform: `translateX(${positionOffset * 50}%) translateZ(${-Math.abs(positionOffset) * 250}px) scale(${1 - Math.abs(positionOffset) * 0.15})`,
                                 opacity: isVisible ? (1 - Math.abs(positionOffset) * 0.45) : 0,
                                 zIndex: slides.length - Math.abs(positionOffset),
                             }}
-                            transition={{ type: 'spring', stiffness: 290, damping: 30 }}
+                            transition={{ type: 'spring', stiffness: 160, damping: 22 }}
                         >
                             <CarouselCard slide={slide} isCenter={positionOffset === 0} />
                         </motion.div>

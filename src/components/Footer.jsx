@@ -114,23 +114,32 @@ const Footer = () => {
             setTimeout(() => setCopied(false), 1200);
         };
         return (
-            <div className=" top-2 right-2 z-20 flex flex-col items-center">
+            <div className="relative z-20 flex flex-col items-center justify-center">
                 <button
                     onClick={handleCopy}
-                    className="p-2 rounded-md text-[var(--color-pages-side-active-text)] transition-all duration-200"
+                    className="p-2 rounded-md text-[var(--color-pages-side-active-text)] transition-all duration-200 relative"
                     aria-label={copied ? 'Copied!' : 'Copy code'}
                 >
                     <Copy className="w-4 h-4" />
+                    {copied && (
+                        <span
+                            className="absolute left-1/2 -translate-x-1/2 bottom-full mb-2 px-3 py-1 rounded-md bg-white text-xs font-semibold text-black border border-gray-200 whitespace-nowrap flex items-center justify-center animate-fade-in-up"
+                            style={{ minWidth: '60px', textAlign: 'center', zIndex: 30 }}
+                        >
+                            Copied!
+                            <span className="absolute left-1/2 -translate-x-1/2 top-full w-2 h-2 bg-white border border-gray-200 rotate-45" style={{ marginTop: '-4px' }}></span>
+                        </span>
+                    )}
                 </button>
-                {copied && (
-                    <span
-                        className="pointer-events-none select-none absolute lg:-top-8 lg:right-[28.4rem] right-42 top-8 translate-x-1/2 px-3 py-1 rounded-md bg-white text-xs font-semibold text-black border border-gray-200"
-                        style={{ minWidth: '60px', textAlign: 'center', zIndex: 30 }}
-                    >
-                        Copied!
-                        <span className="absolute left-1/2 -translate-x-1/2 top-full w-2 h-2 bg-white border-l border-b border-gray-200 rotate-45" style={{ marginTop: '-2px' }}></span>
-                    </span>
-                )}
+                <style>{`
+                    @keyframes fadeInUp {
+                        0% { opacity: 0; transform: translateY(8px) scale(0.95); }
+                        100% { opacity: 1; transform: translateY(0) scale(1); }
+                    }
+                    .animate-fade-in-up {
+                        animation: fadeInUp 0.25s cubic-bezier(.4,0,.2,1);
+                    }
+                `}</style>
             </div>
         );
     };
@@ -217,8 +226,8 @@ const Footer = () => {
                 <div className="footer-content-block grid grid-cols-2 md:grid-cols-3 gap-8 text-left mb-16 max-w-4xl mx-auto">
                     <div className="space-y-4">
                         <p className="font-semibold text-[var(--color-footer-sub-color)]">Resources</p>
-                        <NavLink to="components/docs/getting-started/introduction" className="text-[var(--color-footer-sub-text)] hover:text-[var(--color-footer-hover-text2)] hover:underline block transition-colors">Documentation</NavLink>
-                        <NavLink to="components/glass-navbar" className="text-[var(--color-footer-sub-text)] hover:text-[var(--color-footer-hover-text2)] hover:underline block transition-colors">Components</NavLink>
+                        <NavLink to="/components/docs/getting-started/introduction" className="text-[var(--color-footer-sub-text)] hover:text-[var(--color-footer-hover-text2)] hover:underline block transition-colors">Documentation</NavLink>
+                        <NavLink to="/components" className="text-[var(--color-footer-sub-text)] hover:text-[var(--color-footer-hover-text2)] hover:underline block transition-colors">Components</NavLink>
                     </div>
                     <div className="space-y-4">
                         <p className="font-semibold text-[var(--color-footer-text-color)]">Legal</p>

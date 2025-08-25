@@ -6,25 +6,24 @@ const GitHubIcon = () => (<svg width="24" height="24" fill="none" stroke="curren
 const LinkedInIcon = () => (<svg width="24" height="24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" viewBox="0 0 24 24"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z" /><rect x="2" y="9" width="4" height="12" /><circle cx="4" cy="4" r="2" /></svg>);
 const TwitterIcon = () => (<BsTwitterX size={24} />);
 const InstagramIcon = () => (<svg width="24" height="24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" viewBox="0 0 24 24"><rect x="2" y="2" width="20" height="20" rx="5" ry="5" /><path d="M16 11.37A4 4 0 1112.63 8 4 4 0 0116 11.37z" /><line x1="17.5" y1="6.5" x2="17.5" y2="6.5" /></svg>);
-const ParallaxProfileCard = ({ profile }) => {
-    const defaultProfile = {
-        avatarUrl: "/assets/spiderman.png",
-        name: "Spider Man",
-        username: "spider_man",
-        dob: "10-08-2001",
-        title: "PhotoGrapher",
-        status: "Available for Hire",
-        socialLinks: {
-            github: "https://github.com/",
-            linkedin: "https://www.linkedin.com/",
-            twitter: "https://twitter.com/",
-            instagram: "https://www.instagram.com/",
-        },
-        // Button actions
-        onHireClick: () => alert("Hire Me button clicked!"),
-        onCvClick: () => alert("CV button clicked!"),
-    };
+const defaultProfile = {
+    avatarUrl: "/assets/spiderman.png",
+    name: "Spider Man",
+    username: "spider_man",
+    dob: "10-08-2001",
+    title: "PhotoGrapher",
+    status: "Available for Hire",
+    socialLinks: {
+        github: "https://github.com/",
+        linkedin: "https://www.linkedin.com/",
+        twitter: "https://twitter.com/",
+        instagram: "https://www.instagram.com/",
+    },
+    onHireClick: () => alert("Hire Me button clicked!"),
+    onCvClick: () => alert("CV button clicked!"),
+};
 
+const ParallaxProfileCard = ({ profile }) => {
     const {
         avatarUrl, name, username, dob, title, status, socialLinks, onHireClick, onCvClick
     } = profile || defaultProfile;
@@ -104,4 +103,16 @@ const ParallaxProfileCard = ({ profile }) => {
     );
 };
 
-export default ParallaxProfileCard;
+const ParallaxProfile = ({ profiles = [defaultProfile], className = '' }) => {
+    const safe = Array.isArray(profiles) && profiles.length > 0 ? profiles : [defaultProfile];
+    return (
+        <div className={`flex flex-wrap gap-6 justify-center ${className}`}>
+            {safe.map((p, i) => (
+                <ParallaxProfileCard key={p.id || p.username || i} profile={p} />
+            ))}
+        </div>
+    );
+};
+
+export { ParallaxProfileCard };
+export default ParallaxProfile;

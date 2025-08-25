@@ -133,7 +133,7 @@ const ThemeToggleEffect = () => {
         { animation: 'gif', theme: 'light', link: 'https://media.tenor.com/6fO1ClbWx6YAAAAi/raamking.gif' },
     ]
 
-    const usageCodeText = `import { ThemeToggle } from './ApexUI-Kit/ThemeToggle/ThemeToggle';
+    const usageCodeText = `import ThemeToggle from './ApexUI-Kit/ThemeToggle/ThemeToggle';
 
 const App = () => {
 return (

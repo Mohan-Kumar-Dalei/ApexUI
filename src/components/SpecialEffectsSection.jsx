@@ -9,6 +9,7 @@ import { motion } from "framer-motion";
 import RainBackground from './MainUI/ApexUI-Kit/RainBackground/RainBackground.jsx';
 import ScrollMarquee from './MainUI/ApexUI-Kit/ScrollMarquee/ScrollMarquee.jsx';
 import SmartGrid from './MainUI/ApexUI-Kit/SmartGridCard/SmartGridCard.jsx';
+import SmokeBackground from './MainUI/ApexUI-Kit/SmokeBackground/SmokeBackground.jsx'
 // GSAP plugins ko register karna
 gsap.registerPlugin(TextPlugin);
 
@@ -147,8 +148,8 @@ const RainDemoContent = ({ isVisible }) => (
             </div>
         </div>
         <div className="text-center">
-            <h3 className="text-3xl font-bold text-white">Interactive Rains</h3>
-            <div className="flex gap-4 mt-4">
+            <h3 className="text-3xl font-bold text-white">Smoke Background Demo</h3>
+            <div className="flex gap-4 mt-4 items-center justify-center">
                 <button className="px-4 py-2 bg-[var(--color-SpecialComponent-btn-Demo-bg)] text-[var(--color-SpecialComponent-btn-Demo-text)] rounded-lg font-semibold">Get Started</button>
                 <button className="px-4 py-2 bg-gray-700/80 text-white rounded-lg font-semibold">Learn More</button>
             </div>
@@ -187,12 +188,10 @@ const SpecialEffectsSection = () => {
 
     const showcaseItems = [
         {
-            title: "Background Rain",
-            description: "Modern animated rain with collision & explosion, built with pure HTML and GSAP.",
-            component: <RainBackground dropGradient="linear-gradient(to bottom, #FF6868 0%, #344CB7 100%)" dropCount={4}
-                collisionGradient={"linear-gradient(to bottom, #FF6868 0%, #344CB7 100%)"}
-            />,
-            link: "/components/rain-background"
+            title: "Smoke Background",
+            description: "A mesmerizing smoke effect that adds depth to your UI.",
+            component: <SmokeBackground />,
+            link: "/components/smoke-background"
         },
         {
             title: "Infinity Marquee",
@@ -307,7 +306,7 @@ const SpecialEffectsSection = () => {
                         </div>
                     </div>
                     {/* Right Panel */}
-                    <div className="relative flex-grow h-[700px] w-full lg:max-w-[62vw]">
+                    <div className="relative flex-grow h-[700px] w-full lg:max-w-[59vw] overflow-hidden">
                         <div className=" absolute inset-0  rounded-md transition-all duration-500" />
                         <div className="h-full rounded-lg overflow-hidden" style={{ clipPath: 'polygon(50px 0, 100% 0, 100% calc(100% - 50px), calc(100% - 50px) 100%, 0 100%, 0 50px)' }}>
                             <AnimatedGridPanel>

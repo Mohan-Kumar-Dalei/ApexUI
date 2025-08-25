@@ -1,6 +1,6 @@
 import React, { useRef, useEffect, useState } from "react";
 
-const people = [
+const defaultPeople = [
     { id: 1, name: "Captain America", job: "Leader of the Avengers", img: "/assets/captainamerica.png" },
     { id: 2, name: "Doctor Strange", job: "Sorcerer Supreme", img: "/assets/doctorStrange.png" },
     { id: 3, name: "Iron Man", job: "Leader Of Stark Industries", img: "/assets/ironman.png" },
@@ -9,7 +9,13 @@ const people = [
     { id: 6, name: "Thanos", job: "The Mad Titan", img: "/assets/thanos.png" },
 ];
 
-const PointerFollower = ({ cursorColor = "#fff", interval = 3000, badgeColor = "#fff", badgeTextColor = "#212121" }) => {
+const PointerFollower = ({
+    cursorColor = "#fff",
+    interval = 3000,
+    badgeColor = "#fff",
+    badgeTextColor = "#212121",
+    people = defaultPeople,
+}) => {
     const containerRef = useRef(null);
     const [pos, setPos] = useState({ x: 0, y: 0 });
     const [hovered, setHovered] = useState(false);
@@ -20,11 +26,14 @@ const PointerFollower = ({ cursorColor = "#fff", interval = 3000, badgeColor = "
         if (hovered) return;
 
         const autoInterval = setInterval(() => {
-            setActiveIndex((prev) => (prev + 1) % people.length);
+            setActiveIndex((prev) => {
+                if (!people || people.length === 0) return 0;
+                return (prev + 1) % people.length;
+            });
         }, interval);
 
         return () => clearInterval(autoInterval);
-    }, [hovered, interval]);
+    }, [hovered, interval, people]);
 
     // 🖱️ Mouse tracking
     useEffect(() => {
@@ -53,13 +62,24 @@ const PointerFollower = ({ cursorColor = "#fff", interval = 3000, badgeColor = "
         };
     }, []);
 
-    const person = people[activeIndex]; // ✅ SYNCED HERE
+    // Guard against empty people array
+    const safePeople = Array.isArray(people) && people.length > 0 ? people : defaultPeople;
+    const person = safePeople[activeIndex % safePeople.length]; // ✅ SYNCED HERE
+
+    // If the provided people list changes, ensure activeIndex is valid
+    useEffect(() => {
+        if (!Array.isArray(people) || people.length === 0) {
+            setActiveIndex(0);
+            return;
+        }
+        setActiveIndex((idx) => idx % people.length);
+    }, [people]);
 
     return (
         <div className="relative w-full h-fit flex items-center justify-center">
             <div ref={containerRef} className="absolute flex items-center justify-center w-64  h-66 cursor-none">
                 {/* 🔁 Image stack with auto fade */}
-                {people.map((p, i) => (
+                {safePeople.map((p, i) => (
                     <img
                         key={i}
                         src={p.img}
@@ -67,7 +87,7 @@ const PointerFollower = ({ cursorColor = "#fff", interval = 3000, badgeColor = "
                         className={`absolute w-full h-full object-cover rounded-xl transition-opacity duration-1000 ease-in-out border border-white/10`}
                         style={{
                             transform: `translate(${i * -2}px, ${i * -2}px)`,
-                            zIndex: people.length - i,
+                            zIndex: safePeople.length - i,
                             opacity: activeIndex === i ? 1 : 0,
                         }}
                     />

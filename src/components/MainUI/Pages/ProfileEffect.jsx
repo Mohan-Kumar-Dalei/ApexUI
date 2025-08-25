@@ -8,7 +8,6 @@ import {
     List,
     Puzzle,
     Package,
-    UserSquare, // Icon for profile components
     Copy
 } from 'lucide-react';
 

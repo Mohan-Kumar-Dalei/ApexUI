@@ -14,6 +14,8 @@ import HoverText from "./MainUI/ApexUI-Kit/HoverText/HoverText.jsx";
 import GlassCardStack from "./MainUI/ApexUI-Kit/GlassCardStack/GlassCardStack.jsx";
 import Profile from "./MainUI/ApexUI-Kit/FlipProfile/FlipProfile.jsx";
 import Navbar from "./MainUI/ApexUI-Kit/NavMenu/NavMenu.jsx";
+import Carousel from './MainUI/ApexUI-Kit/ParallaxCarousel/ParallaxCarousel.jsx'
+import ParallaxProfileCard from './MainUI/ApexUI-Kit/ParallaxProfile/ParallaxProfile.jsx';
 const Cards = [
     {
         title: "ApexUI Glass Card Stack",
@@ -104,7 +106,66 @@ const AnimatedShapes = () => {
         </motion.div>
     );
 };
-
+const slides = [
+    {
+        imageUrl: '/assets/ironman.png',
+        pngUrl: '/assets/png/iron-man.png',
+        title: 'Iron Man',
+        subtitle: "Gain insights that matter.",
+        text: "Track your performance with our advanced analytics dashboard. Understand your users and make data-driven decisions.",
+    },
+    {
+        imageUrl: '/assets/spiderman.png',
+        title: 'Spider Man',
+        pngUrl: '/assets/png/spider-man.png',
+        subtitle: "Swing into action.",
+        text: "Join Spider Man in an adventure through the city. Experience the thrill of web-slinging and crime-fighting."
+    },
+    {
+        imageUrl: '/assets/captainamerica.png',
+        title: 'Captain America',
+        pngUrl: '/assets/png/captain-america.png',
+        subtitle: "Stand tall and fight.",
+        text: "Join Captain America in the battle for justice. Experience the thrill of being a hero."
+    },
+    {
+        imageUrl: '/assets/hulk.png',
+        title: 'Hulk',
+        pngUrl: '/assets/png/hulk.png',
+        subtitle: "Unleash the beast within.",
+        text: "Join Hulk in a journey of strength and resilience. Experience the thrill of being the strongest Avenger."
+    },
+    {
+        imageUrl: '/assets/doctorStrange.png',
+        title: 'Doctor Strange',
+        pngUrl: '/assets/png/doctor-strange.png',
+        subtitle: "Master of the mystic arts.",
+        text: "Join Doctor Strange in a journey through the multiverse. Experience the thrill of bending reality."
+    },
+    {
+        imageUrl: '/assets/thanos.png',
+        title: 'Thanos',
+        pngUrl: '/assets/png/thanos.png',
+        subtitle: "The Mad Titan.",
+        text: "Join Thanos in his quest for the Infinity Stones. Experience the thrill of ultimate power."
+    },
+]
+const profile = [
+    {
+        name: "Spider Man",
+        status: "Available for Hire",
+        avatarUrl: "/assets/spiderman.png",
+        username: "spider_man",
+        title: "Photographer",
+        bgColor: "#1a1a2e",
+        socials: {
+            github: "https://github.com/",
+            linkedin: "https://www.linkedin.com/",
+            twitter: "https://twitter.com/",
+            instagram: "https://www.instagram.com/",
+        }
+    },
+]
 
 // --- Main Component ---
 const ComponentShowcase = () => {
@@ -115,10 +176,10 @@ const ComponentShowcase = () => {
     const tabsRef = useRef(null);
 
     const showcaseItems = [
-        { name: "Navbar", component: <Navbar indicatorAnimation="spring" /> },
+        { name: "Carousel", component: <Carousel slides={slides} /> },
         { name: "Hover Text", component: <HoverText text="Hover Me!" /> },
         { name: "Card Stack", component: <GlassCardStack cards={Cards} /> },
-        { name: "Profile Card", component: <Profile /> },
+        { name: "Profile Card", component: <ParallaxProfileCard profile={profile}/> },
     ];
 
     // Tab indicator animation
@@ -201,7 +262,7 @@ const ComponentShowcase = () => {
                     </div>
 
                     {/* Right Display Panel */}
-                    <div className="relative w-full h-[600px]  lg:w-3/4 group">
+                    <div className="relative w-full h-[600px]  lg:w-3/4">
                         <div className="absolute inset-0" />
                         <div className="w-full h-full rounded-md overflow-hidden">
                             <AnimatedGridPanel style={{ clipPath: 'polygon(50px 0, 100% 0, 100% calc(100% - 50px), calc(100% - 50px) 100%, 0 100%, 0 50px)' }}>

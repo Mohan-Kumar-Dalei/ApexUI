@@ -120,7 +120,7 @@ const TestimonialsEffect = () => {
         { id: 'installation', label: 'Installation', icon: Terminal },
     ];
 
-    const usageCodeText = `import { Testimonials } from './ApexUI-Kit/Testimonials/Testimonials.jsx';
+    const usageCodeText = `import Testimonials from './ApexUI-Kit/Testimonials/Testimonials.jsx';
 
 const App = () => (
         const testimonialData = [

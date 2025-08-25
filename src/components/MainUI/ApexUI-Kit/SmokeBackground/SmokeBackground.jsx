@@ -87,19 +87,21 @@ void main() {
 
 
 export const SmokeBackground = ({
-    color = "#ffffff",
+    color = "#00c950",
     speed = 1,
     direction = "forward",
     scale = 1,
     opacity = 1,
     mouseInteractive = true,
     className = "",
+    maxWidth = 'max-w-6xl',
 }) => {
     const containerRef = useRef(null);
     const mousePos = useRef({ x: 0, y: 0 });
 
     useEffect(() => {
-        if (!containerRef.current) return;
+        const mountNode = containerRef.current;
+        if (!mountNode) return;
 
         const useCustomColor = color ? 1.0 : 0.0;
         const customColorRgb = color ? hexToRgb(color) : [1, 1, 1];
@@ -118,7 +120,7 @@ export const SmokeBackground = ({
         canvas.style.display = "block";
         canvas.style.width = "100%";
         canvas.style.height = "100%";
-        containerRef.current.appendChild(canvas);
+        mountNode.appendChild(canvas);
 
         const geometry = new Triangle(gl);
 
@@ -151,7 +153,7 @@ export const SmokeBackground = ({
             mouseNeedsUpdate = true;
         };
         if (mouseInteractive) {
-            containerRef.current.addEventListener("mousemove", handleMouseMove);
+            mountNode.addEventListener("mousemove", handleMouseMove);
         }
 
         const setSize = () => {
@@ -167,7 +169,7 @@ export const SmokeBackground = ({
         const ro = new ResizeObserver(() => {
             requestAnimationFrame(setSize);
         });
-        ro.observe(containerRef.current);
+        ro.observe(mountNode);
         setSize();
 
         let raf = 0;
@@ -196,20 +198,21 @@ export const SmokeBackground = ({
         return () => {
             cancelAnimationFrame(raf);
             ro.disconnect();
-            if (mouseInteractive && containerRef.current) {
-                containerRef.current.removeEventListener("mousemove", handleMouseMove);
+            if (mouseInteractive && mountNode) {
+                mountNode.removeEventListener("mousemove", handleMouseMove);
             }
             try {
-                containerRef.current?.removeChild(canvas);
+                mountNode.removeChild(canvas);
             } catch (error) { console.error("Error removing canvas:", error); }
         };
     }, [color, speed, direction, scale, opacity, mouseInteractive, className]);
 
     return (
-        <div
-            ref={containerRef}
-            className={`w-screen lg:h-full h-[80vh] overflow-hidden relative ${className}`}
-        />
+        <div className={`w-full ${className}`}>
+            <div className={`mx-auto w-full ${maxWidth} h-[60vh] lg:h-[90vh] overflow-hidden relative`}>
+                <div ref={containerRef} className="absolute inset-0 w-full h-full" />
+            </div>
+        </div>
     );
 };
 

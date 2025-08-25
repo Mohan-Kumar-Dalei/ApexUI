@@ -265,7 +265,7 @@ const PlasmaBackgroundEffect = () => {
                 { name: 'OGL', desc: 'A powerful 3D library for creating immersive graphics.' },
             ],
             usageCode: `
-import KineticThreadsBackground From './ApexUI-Kit/SmokeBackground/SmokeBackground.jsx'
+import SmokeBackground From './ApexUI-Kit/SmokeBackground/SmokeBackground.jsx'
 
 const App = () => (
   <div className="relative w-full h-screen">
@@ -273,7 +273,7 @@ const App = () => (
      color="#00aaff"
      speed={0.3}
      scale={1.2}
-     direction='funny'
+     direction='funny, forward, backward'
      mouseInteractive={true}
      />
   </div>

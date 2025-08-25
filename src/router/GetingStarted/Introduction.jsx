@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 // ApexIntro.jsx
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -15,7 +16,39 @@ import {
     Palette,
     Layers
 } from "lucide-react";
-import ApexUIImage from "/assets/ApexUI-Beta.png"; // Make sure this path is correct
+import ApexUIImage from "/assets/ApexUI-Logo.png"; // Make sure this path is correct
+
+// Lightweight LazyImage with blur-up placeholder
+const LazyImage = ({ src, alt, wrapperClassName = '', imgClassName = '' }) => {
+    const [loaded, setLoaded] = useState(false);
+    return (
+        <div className={`${wrapperClassName} relative overflow-hidden`}>
+            {/* placeholder background while image loads */}
+            <div
+                aria-hidden
+                className={`absolute inset-0 transition-opacity duration-700 ${loaded ? 'opacity-0' : 'opacity-100'}`}
+                style={{
+                    background: 'linear-gradient(135deg, rgba(15,23,42,0.85), rgba(30,41,59,0.75))'
+                }}
+            />
+            <img
+                src={src}
+                alt={alt}
+                loading="lazy"
+                decoding="async"
+                fetchPriority="auto"
+                onLoad={() => setLoaded(true)}
+                className={`${imgClassName} w-full h-auto object-cover block`}
+                style={{
+                    filter: loaded ? 'none' : 'blur(18px)',
+                    transform: loaded ? 'none' : 'scale(1.03)',
+                    transition: 'filter 700ms ease, transform 700ms ease, opacity 300ms ease',
+                    opacity: loaded ? 1 : 0.98
+                }}
+            />
+        </div>
+    );
+};
 
 // --- Accordion Component for FAQ ---
 const AccordionItem = ({ item, index, expanded, onToggle }) => {
@@ -121,8 +154,8 @@ const ApexIntro = () => {
                         </div>
                     </div>
                     <div className="relative">
-                        <div className="w-full rounded-lg overflow-hidden shadow-2xl border border-[var(--color-pages-border)] bg-[var(--color-pages-bg)]">
-                            <img src={ApexUIImage} alt="Apex UI Screenshot" className="w-full h-auto object-cover" />
+                        <div className="w-full rounded-4xl overflow-hidden shadow-2xl border border-[var(--color-pages-border)] bg-[var(--color-pages-bg)]">
+                            <LazyImage src={ApexUIImage} alt="Apex UI Logo" wrapperClassName="w-full" imgClassName="w-full" />
                         </div>
                     </div>
                 </div>

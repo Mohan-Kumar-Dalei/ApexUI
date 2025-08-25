@@ -183,10 +183,10 @@ const ComponentShowcase = ({ component }) => {
 const sampleData = [
 
     {
-        title: "John Carter",
-        summary: "Frontend Developer passionate about React & design systems.",
-        image: "https://images.unsplash.com/photo-1527980965255-d3b416303d12",
-        link: "https://example2.com",
+        title: "Spider Man",
+        summary: "A superhero film based on the Marvel Comics character Spider-Man.",
+        image: "/assets/spiderman.png",
+        link: "",
     },
 ];
 

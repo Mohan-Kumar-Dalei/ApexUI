@@ -16,10 +16,16 @@ const DragCarousel = ({ images }) => {
     const dragProxyRef = useRef(null);
     useEffect(() => {
         const cards = cardsRef.current;
+        // hint browser to use the GPU for transforms
+        cards.forEach((c) => {
+            if (c) c.style.willChange = 'transform, opacity';
+        });
+
         gsap.to(cards, {
-            duration: 0.4,
-            ease: 'power4.Out',
-            stagger: 0.05,
+            duration: 0.45,
+            ease: 'power2.out',
+            stagger: 0.03,
+            overwrite: true,
             // Har card ke liye naya transform calculate karta hai
             transform: (i) => {
                 let positionOffset = i - activeIndex;
@@ -31,7 +37,7 @@ const DragCarousel = ({ images }) => {
 
                 const translateX = positionOffset * 50;
                 const translateZ = -Math.abs(positionOffset) * 250;
-                const scale = 1 - Math.abs(positionOffset) * 0.15;
+                const scale = 1 - Math.abs(positionOffset) * 0.12;
 
                 return `translateX(${translateX}%) translateZ(${translateZ}px) scale(${scale})`;
             },
@@ -53,14 +59,39 @@ const DragCarousel = ({ images }) => {
     // GSAP Draggable ko setup karta hai
     useEffect(() => {
         // BUG FIX: Draggable ab proxy element par lagaya gaya hai
+        const cards = cardsRef.current;
+        const setters = cards.map((c) => (c ? gsap.quickSetter(c, 'css', 'transform') : null));
+
         const draggableInstance = Draggable.create(dragProxyRef.current, {
             type: "x",
             trigger: carouselRef.current,
             inertia: true,
             cursor: 'grab',
             activeCursor: 'grabbing',
+            onDrag: function () {
+                const w = carouselRef.current ? carouselRef.current.clientWidth : window.innerWidth;
+                const shiftPercent = (this.x / w) * 100; // percentage shift based on drag
+
+                cards.forEach((c, i) => {
+                    if (!c || !setters[i]) return;
+                    let positionOffset = i - activeIndex;
+                    if (positionOffset > images.length / 2) positionOffset -= images.length;
+                    if (positionOffset < -images.length / 2) positionOffset += images.length;
+
+                    const baseX = positionOffset * 50;
+                    const translateX = baseX + shiftPercent;
+                    const translateZ = -Math.abs(positionOffset) * 250;
+                    const scale = 1 - Math.abs(positionOffset) * 0.12;
+
+                    setters[i](`translateX(${translateX}%) translateZ(${translateZ}px) scale(${scale})`);
+                    c.style.opacity = Math.abs(positionOffset - (this.x / w)) > 2 ? 0 : 1;
+                    c.style.zIndex = images.length - Math.abs(positionOffset);
+                });
+            },
             onDragEnd: function () {
-                gsap.to(this.target, { x: 0, duration: 0.3 });
+                // Reset proxy position
+                gsap.to(this.target, { x: 0, duration: 0.35, ease: 'power2.out' });
+                // Direction based index change
                 if (this.getDirection("start") === "left") {
                     setActiveIndex(prev => (prev + 1) % images.length);
                 } else if (this.getDirection("start") === "right") {
@@ -74,8 +105,9 @@ const DragCarousel = ({ images }) => {
             if (draggableInstance && draggableInstance[0]) {
                 draggableInstance[0].kill();
             }
+            setters.forEach((s) => s && s.kill && s.kill());
         };
-    }, [images.length]);
+    }, [images.length, activeIndex]);
 
     return (
         <div

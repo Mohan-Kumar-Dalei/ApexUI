@@ -262,7 +262,7 @@ const KineticThreadsBackgroundEffect = () => {
                 { name: 'Three.js', desc: 'A powerful 3D library for creating immersive graphics.' },
             ],
             usageCode: `
-import KineticThreadsBackground From './ApexUI-Kit/LuminousParticleOcean/LuminousParticleOcean.jsx'
+import LuminousParticleOcean From './ApexUI-Kit/LuminousParticleOcean/LuminousParticleOcean.jsx'
 
 const App = () => (
   <div className="relative w-full h-screen">

@@ -8,7 +8,6 @@ import {
     List,
     Puzzle,
     Package,
-    MousePointer2, // Icon for this component
 } from 'lucide-react';
 import { CopyBlock, irBlack } from 'react-code-blocks';
 import { Copy } from 'lucide-react';
@@ -138,11 +137,22 @@ const PointerFollowerEffect = () => {
         { id: 'installation', label: 'Installation', icon: Terminal },
     ];
 
-    const codeSnippets = 
-       `import PointerFollower from './ApexUI-Kit/PointerFollower/PointerFollower.jsx';
-
+    const codeSnippets =
+        `import PointerFollower from './ApexUI-Kit/PointerFollower/PointerFollower.jsx';
 const App = () => (
-  <PointerFollower />
+    const people = [
+    { id: 1, name: "Captain America", job: "Leader of the Avengers", img: "/assets/captainamerica.png" },
+    { id: 2, name: "Doctor Strange", job: "Sorcerer Supreme", img: "/assets/doctorStrange.png" },
+    { id: 3, name: "Iron Man", job: "Leader Of Stark Industries", img: "/assets/ironman.png" },
+    // Add more people as needed
+];
+  <PointerFollower
+      people={people}
+      cursorColor="#fff"
+      interval={3000}
+      badgeColor="#fff"
+      badgeTextColor="#212121"
+  />
 );
 export default App;`
 
@@ -163,7 +173,7 @@ export default App;`
 
                 <header className="text-center mb-12 space-y-4">
                     <h1 className="text-5xl whitespace-nowrap sm:text-6xl font-extrabold tracking-tight bg-gradient-to-r from-[var(--color-pages-props-heading-text)] to-[var(--color-pages-props-heading-text2)] bg-clip-text text-transparent flex items-center justify-center gap-4">
-                        <MousePointer2 /> Pointer Follower
+                        Pointer Follower
                     </h1>
                     <p className="text-base sm:text-lg text-[var(--color-pages-props-sub-text)] max-w-2xl mx-auto">
                         An engaging pointer that follows the cursor, revealing images and information in a creative way.
