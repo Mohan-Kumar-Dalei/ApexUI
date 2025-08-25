@@ -127,7 +127,7 @@ export default function ModernLoader({ onFinish }) {
                 <span className="text-green-400">[OK]</span> System Status: Nominal
             </div>
             <div ref={versionRef} className="absolute top-4 right-4 opacity-0">
-                Version: 2.0.4
+                Version: 2.0.5
             </div>
 
             {/* Main Center Content */}
