@@ -5,27 +5,16 @@ import { MonitorX } from 'lucide-react';
 
 // --- Naya MessageBar Component ---
 const messages = [
-  // "🚀 Apex UI — Build modern UIs in seconds.",
-  // "📦 100% reusable components & CLI setup.",
-  // "🎯 Fast, accessible, production-ready.",
-  // "💡 Drop-in React components with Tailwind CSS.",
-  // "🦄 Stunning effects out of the box.",
-  // "⚡️ Super smooth GSAP animations.",
-  // "🔒 Secure, scalable, and easy to customize.",
-  // "🛠️ Designed for devs, loved by designers.",
-  // "📚 Full docs & live playground included!",
-  // "🌟 More UI components coming soon...",
-  `🚧 Npm Will be Available in 24hr stay tuned...`,
-  `🚧 Npm Will be Available in 24hr stay tuned...`,
-  `🚧 Npm Will be Available in 24hr stay tuned...`,
-  `🚧 Npm Will be Available in 24hr stay tuned...`,
-  `🚧 Npm Will be Available in 24hr stay tuned...`,
-  `🚧 Npm Will be Available in 24hr stay tuned...`,
-  `🚧 Npm Will be Available in 24hr stay tuned...`,
-  `🚧 Npm Will be Available in 24hr stay tuned...`,
-  `🚧 Npm Will be Available in 24hr stay tuned...`,
-  `🚧 Npm Will be Available in 24hr stay tuned...`
-
+  "🚀 Apex UI — Build modern UIs in seconds.",
+  "📦 100% reusable components & CLI setup.",
+  "🎯 Fast, accessible, production-ready.",
+  "💡 Drop-in React components with Tailwind CSS.",
+  "🦄 Stunning effects out of the box.",
+  "⚡️ Super smooth GSAP animations.",
+  "🔒 Secure, scalable, and easy to customize.",
+  "🛠️ Designed for devs, loved by designers.",
+  "📚 Full docs & live playground included!",
+  "🌟 More UI components coming soon..."
 ];
 
 const MessageBar = () => {
