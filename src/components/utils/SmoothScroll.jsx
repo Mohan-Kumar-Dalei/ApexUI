@@ -14,7 +14,7 @@ const SmoothScroll = ({ children }) => {
             smoother = ScrollSmoother.create({
                 wrapper: "#smooth-wrapper",
                 content: "#smooth-content",
-                smooth: 0.7,
+                smooth: 0.4,
                 // normalizeScroll: true, // Uncomment if needed
             });
         }
