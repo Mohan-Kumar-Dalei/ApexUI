@@ -33,6 +33,7 @@ const FadedBigText = styled.h1`
   color: var(--color-footer-text-color);
   opacity: 0.08; /* Faded effect */
   line-height: 1;
+  white-space: nowrap;
 
   /* Responsive font size */
   font-size: 6rem; /* 64px for mobile */
@@ -41,7 +42,7 @@ const FadedBigText = styled.h1`
     font-size: 8rem; /* 128px for tablets */
   }
 
-  @media (min-width: 1024px) { /* lg breakpoint */
+  @media (min-width: 1080px) { /* lg breakpoint */
     font-size: 20rem; /* 160px for desktops */
   }
 `;
@@ -88,7 +89,7 @@ const Footer = () => {
                 </div>
 
                 
-                <div className="mt-20 cursor-default whitespace-nowrap">
+                <div className="mt-20 cursor-default whitespace-nowrap w-full">
                     <FadedBigText style={{fontFamily: "Righteous, sans-serif", whiteSpace: "nowrap"}}>
                         APEX UI
                     </FadedBigText>

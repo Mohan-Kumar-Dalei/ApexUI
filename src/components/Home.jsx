@@ -190,7 +190,7 @@ const AnimatedHeadline = () => {
         // UPDATED: Parent div is now relative and inline-block for proper sizing
         <div className="relative inline-block mx-auto lg:mx-0">
             <motion.h1
-                className="text-5xl md:text-7xl font-semibold text-[var(--color-btn-text)] flex justify-center lg:justify-start"
+                className="text-4xl md:text-7xl font-semibold text-[var(--color-btn-text)] flex justify-center lg:justify-start"
                 variants={containerVariants}
                 initial="hidden"
                 animate="visible"
@@ -363,9 +363,9 @@ export default function Home() {
     };
 
     return (
-        <section className="min-h-screen w-full flex items-center justify-center p-4 md:p-8 relative overflow-hidden bg-[var(--color-bg)]">
+        <section className="md:min-h-[70vh] min-h-screen w-full flex items-center justify-center p-4 md:p-8 relative overflow-hidden bg-[var(--color-bg)]">
             <AnimatedShapes />
-            <div className="flex flex-col lg:flex-row gap-8 lg:gap-20 w-full max-w-7xl items-center justify-center relative z-10 px-4 py-8 lg:mt-30">
+            <div className=" mt-30 flex flex-col lg:flex-row gap-8 lg:gap-20 w-full max-w-7xl items-center justify-center relative z-10 px-4 py-8 lg:mt-30">
                 <motion.div
                     className="flex flex-col w-full lg:w-1/2 justify-center gap-6 text-center lg:text-left"
                     initial={{ opacity: 0, y: -50 }}

@@ -94,7 +94,7 @@ export const SmokeBackground = ({
     opacity = 1,
     mouseInteractive = true,
     className = "",
-    maxWidth = 'max-w-6xl',
+    maxWidth = 'max-w-4xl',
 }) => {
     const containerRef = useRef(null);
     const mousePos = useRef({ x: 0, y: 0 });
@@ -108,11 +108,16 @@ export const SmokeBackground = ({
 
         let directionMultiplier = direction === "backward" ? -1.0 : 1.0;
 
+        // cap DPR depending on mount width to avoid heavy pixel loads on small devices
+        const mountWidth = mountNode.clientWidth || window.innerWidth;
+        const dprCap = mountWidth > 1200 ? 1.8 : (mountWidth > 768 ? 1.4 : 1.0);
+        const dpr = Math.min(window.devicePixelRatio || 1, dprCap);
+
         const renderer = new Renderer({
             webgl: 2,
             alpha: true,
             antialias: false,
-            dpr: Math.min(window.devicePixelRatio || 1, 1.8),
+            dpr,
         });
 
         const gl = renderer.gl;
@@ -147,7 +152,7 @@ export const SmokeBackground = ({
         let mouseNeedsUpdate = false;
         const handleMouseMove = (e) => {
             if (!mouseInteractive) return;
-            const rect = containerRef.current.getBoundingClientRect();
+            const rect = mountNode.getBoundingClientRect();
             mousePos.current.x = e.clientX - rect.left;
             mousePos.current.y = rect.height - (e.clientY - rect.top);
             mouseNeedsUpdate = true;
@@ -157,7 +162,7 @@ export const SmokeBackground = ({
         }
 
         const setSize = () => {
-            const rect = containerRef.current.getBoundingClientRect();
+            const rect = mountNode.getBoundingClientRect();
             const width = Math.max(1, Math.floor(rect.width));
             const height = Math.max(1, Math.floor(rect.height));
             renderer.setSize(width, height);
@@ -209,7 +214,7 @@ export const SmokeBackground = ({
 
     return (
         <div className={`w-full ${className}`}>
-            <div className={`mx-auto w-full ${maxWidth} h-[60vh] lg:h-[90vh] overflow-hidden relative`}>
+            <div className={`mx-auto w-full ${maxWidth} h-[100vh] lg:h-[90vh] overflow-hidden relative`}>
                 <div ref={containerRef} className="absolute inset-0 w-full h-full" />
             </div>
         </div>
