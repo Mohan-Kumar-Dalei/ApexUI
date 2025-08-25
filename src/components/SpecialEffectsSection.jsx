@@ -306,7 +306,7 @@ const SpecialEffectsSection = () => {
                         </div>
                     </div>
                     {/* Right Panel */}
-                    <div className="relative flex-grow h-[700px] w-full lg:max-w-[59vw] overflow-hidden">
+                    <div className="relative flex-grow h-[700px] w-full lg:max-w-[65vw] overflow-hidden">
                         <div className=" absolute inset-0  rounded-md transition-all duration-500" />
                         <div className="h-full rounded-lg overflow-hidden" style={{ clipPath: 'polygon(50px 0, 100% 0, 100% calc(100% - 50px), calc(100% - 50px) 100%, 0 100%, 0 50px)' }}>
                             <AnimatedGridPanel>
