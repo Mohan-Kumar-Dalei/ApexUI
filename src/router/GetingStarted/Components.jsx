@@ -163,7 +163,7 @@ export default function Components() {
                     )}
 
                     <main ref={mainContentRef} className="flex-1 overflow-y-scroll scrollbar-hide lg:ml-20" style={{ scrollBehavior: 'smooth' }}>
-                        <div className="min-h-full flex flex-col items-center justify-center p-3  rounded-2xl relative">
+                        <div className="min-h-full flex flex-col items-center justify-center p-3 lg:p-1  rounded-2xl relative">
                             <div className="component-container flex-grow w-full z-10 relative">
                                 {/* Animated background shapes: all sides (like Home section), now inside preview container */}
                                 <div className="absolute -top-20 -left-20 w-80 h-80 bg-lime-400/5 rounded-full animate-pulse-slow pointer-events-none z-0" />
