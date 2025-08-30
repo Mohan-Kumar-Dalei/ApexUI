@@ -1,0 +1,95 @@
+.meteor-bg {
+  position: absolute;
+  width: 2px;
+  height: 80px;
+  background: linear-gradient(to top, #fff, transparent); /* This line to change the meteor's tail color */
+  animation: meteor-fall-bg linear infinite;
+  opacity: 0;
+  transform: rotate(-45deg);
+}
+/* Meteor ka head (glowing circle) */
+.meteor-bg::before {
+  content: "";
+  position: absolute;
+  bottom: -3px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 6px;
+  height: 6px;
+  background-color: #fff; /* This line to change the meteor's head color */
+  border-radius: 50%;
+}
+
+@keyframes meteor-fall-bg {
+  0% {
+    transform: translateX(-200px) translateY(-200px) rotate(-45deg);
+    opacity: 1;
+  }
+  100% {
+    transform: translateX(500px) translateY(500px) rotate(-45deg);
+    opacity: 0;
+  }
+}
+
+/* Particle Styles */
+.particle-bg {
+  position: absolute;
+  width: 3px;
+  height: 3px;
+  background-color: var(--particle-color);
+  border-radius: 50%;
+  box-shadow: 0 0 8px var(--particle-color), 0 0 12px var(--particle-color);
+  animation: particle-float linear infinite;
+  opacity: 0;
+}
+
+@keyframes particle-float {
+  0%,
+  100% {
+    opacity: 0;
+    transform: translateY(0px);
+  }
+  50% {
+    opacity: 1;
+    transform: translateY(-20px);
+  }
+}
+
+/* Moving Border */
+.moving-border-card {
+  position: relative;
+  overflow: hidden;
+}
+
+.moving-border-card::before {
+  content: "";
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: conic-gradient(
+    from var(--angle),
+    transparent 0deg 90deg,
+    rgb(0, 132, 209, 0.5) 180deg,
+    /* Sky Blue */ transparent 180deg 270deg,
+    rgb(0, 132, 209, 0.5) 360deg
+  );
+  animation: rotate 6s linear infinite;
+  z-index: 0;
+}
+
+@property --angle {
+  syntax: "<angle>";
+  initial-value: 0deg;
+  inherits: false;
+}
+
+@keyframes rotate {
+  from {
+    --angle: 0deg;
+  }
+  to {
+    --angle: 360deg;
+  }
+}

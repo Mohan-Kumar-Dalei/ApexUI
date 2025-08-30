@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import SidebarContext from './SidebarContext.jsx';
 
 // ✅ Import components
-import AllComponents from '../GetingStarted/AllComponents.jsx';
 import Introduction from '../GetingStarted/Introduction.jsx';
 import ReactSetup from '../GetingStarted/Installation/ReactViteSetup.jsx';
 import Tailwind from '../GetingStarted/Installation/TailwindSetup.jsx';
@@ -34,6 +33,8 @@ import kineticThreadBackgroundEffect from '../../components/MainUI/Pages/Kinetic
 import LuminousParticleOceanEffect from '../../components/MainUI/Pages/LuminousParticleOceanEffect.jsx';
 import SmokeBackgroundEffect from '../../components/MainUI/Pages/SmokeBackgroundEffect.jsx';
 import CardsEffect from '../../components/MainUI/Pages/CardsEffect.jsx';
+import BluePrintBackground from '../../components/MainUI/Pages/BluePrintBackgroundEffect.jsx';
+import AccordionMarqueeEffect from '../../components/MainUI/Pages/AccordionMarqueeEffect.jsx';
 
 
 const SidebarProvider = (props) => {
@@ -62,32 +63,34 @@ const SidebarProvider = (props) => {
             collapsed: false,
             content: [
 
-                { name: 'Avatar', path: '/components/avatar', component: AvatarEffect, badge: "New" },
+                { name: 'Avatar', path: '/components/avatar', component: AvatarEffect, },
+                { name: 'Accordion Marquee', path: '/components/accordion-marquee', component: AccordionMarqueeEffect, badge: "New" },
                 { name: 'Beam Bar', path: '/components/beam-bar', component: BeamBarEffect },
-                { name: 'Carousel', path: '/components/carousel', component: CarouselEffect, badge: "New" },
-                { name: "Cards", path: '/components/basic-card', component: CardsEffect, badge: "new" },
+                { name: 'BluePrint Background', path: '/components/blueprint-background', component: BluePrintBackground, badge: "New" },
+                { name: 'Carousel', path: '/components/carousel', component: CarouselEffect, },
+                { name: "Cards", path: '/components/cards', component: CardsEffect, badge: "New" },
                 { name: 'EdgeGlowForm', path: '/components/edge-glow-form', component: EdgeglowFromEffect },
                 { name: 'Glass Card Stack', path: '/components/glass-card-stack', component: GlassCardStack },
                 { name: 'Glare Card', path: '/components/glare-card', component: GlareCardEffect },
                 { name: 'Hover Text', path: '/components/hover-text', component: HoverTextEffect },
-                { name: 'Hyper Card', path: '/components/hyper-card', component: HyperCardEffect, badge: "Updated" },
-                { name: 'Kinetic Threads Background', path: '/components/kinetic-threads-background', component: kineticThreadBackgroundEffect, badge: "New" },
+                { name: 'Hyper Card', path: '/components/hyper-card', component: HyperCardEffect, },
+                { name: 'Kinetic Threads Background', path: '/components/kinetic-threads-background', component: kineticThreadBackgroundEffect, },
                 { name: 'Lens Flare Background', path: '/components/lens-flare-background', component: LensFlareBackgroundEffect },
-                { name: 'Luminous Particle Ocean', path: '/components/luminous-particle-ocean', component: LuminousParticleOceanEffect, badge: "New" },
-                { name: 'Nav Menu', path: '/components/nav-menu', component: NavMenuEffect, badge: "updated" },
-                { name: 'Nav DropDown', path: '/components/nav-drop-down', component: NavDropDownEffect, badge: "New" },
-                { name: 'Orbs Background', path: '/components/orbs-background', component: FloatingOrbs, badge: "New" },
+                { name: 'Luminous Particle Ocean', path: '/components/luminous-particle-ocean', component: LuminousParticleOceanEffect,},
+                { name: 'Nav Menu', path: '/components/nav-menu', component: NavMenuEffect, },
+                { name: 'Nav DropDown', path: '/components/nav-drop-down', component: NavDropDownEffect, },
+                { name: 'Orbs Background', path: '/components/orbs-background', component: FloatingOrbs, },
                 { name: 'Pointer Follower', path: '/components/pointer-follower', component: PointerFollowerEffect },
-                { name: 'Profile', path: '/components/profile', component: ProfileEffect, badge: "Updated" },
-                { name: 'Parallax Card', path: '/components/parallax-card', component: ParallaxCardEffect, badge: "New" },
+                { name: 'Profile', path: '/components/profile', component: ProfileEffect, },
+                { name: 'Parallax Card', path: '/components/parallax-card', component: ParallaxCardEffect, },
                 { name: 'Rain Background', path: '/components/rain-background', component: RainBackgroundEffect },
-                { name: 'Ripple Background', path: '/components/ripple-background', component: RippleBackgroundEffect, badge: "New" },
+                { name: 'Ripple Background', path: '/components/ripple-background', component: RippleBackgroundEffect, },
                 { name: 'Scroll Marquee', path: '/components/scroll-marquee', component: ScrollMarquee },
                 { name: 'Smart Grid Card', path: '/components/smart-grid-card', component: SmartGridEffect },
-                { name: 'Smoke Background', path: '/components/smoke-background', component: SmokeBackgroundEffect, badge: "New" },
-                { name: 'ToolTip', path: '/components/tool-tip', component: ToolTipEffect, badge: "Updated" },
-                { name: 'Theme Toggle', path: '/components/theme-toggle', component: ThemeToggleEffect, badge: "New" },
-                { name: 'Testimonials', path: '/components/testimonials', component: TestimonialsEffect, badge: "New" },
+                { name: 'Smoke Background', path: '/components/smoke-background', component: SmokeBackgroundEffect, },
+                { name: 'ToolTip', path: '/components/tool-tip', component: ToolTipEffect, },
+                { name: 'Theme Toggle', path: '/components/theme-toggle', component: ThemeToggleEffect, },
+                { name: 'Testimonials', path: '/components/testimonials', component: TestimonialsEffect, },
                 { name: 'Water Drop Reveal', path: '/components/water-drop-reveal', component: WaterDropRevealEffect },
             ],
         },

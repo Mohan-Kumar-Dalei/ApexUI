@@ -4,7 +4,9 @@ import BasicCard from '../../components/MainUI/ApexUI-Kit/Cards/BasicCard.jsx';
 // Manual JSON array for cards
 const cardsData = [
     { title: "Avatar", summary: "A clean and simple component to display user avatars, with support for stacked groups.", image: "/assets/componentsimage/Avatar.png", link: "/components/avatar" },
+    { title: "Accordion Marquee", summary: "An interactive accordion with a smooth marquee effect on hover.", image: "/assets/componentsimage/accordion-marquee.png", link: "/components/accordion-marquee" },
     { title: "Beam Bar", summary: "An animated beam bar with a pulsing light—perfect for modern loading states and dashboards.", image: "/assets/componentsimage/BeamBar.png", link: "/components/beam-bar" },
+    { title: "BluePrint Background", summary: "A dynamic, animated blueprint-style grid background with interactive hover effects.", image: "/assets/componentsimage/blueprint-background.png", link: "/components/blueprint-background" },
     { title: "Carousel", summary: "A smooth and customizable carousel component for showcasing images or content.", image: "/assets/componentsimage/Carousel.png", link: "/components/carousel" },
     { title: "Basic Card", summary: "A simple card component with a title, description, and image.", image: "/assets/componentsimage/BasicCard.png", link: "/components/basic-card" },
     { title: "Edge from Glow", summary: "A container that emits a beautiful, blurred gradient glow from its edges, perfect for highlighting content.", image: "/assets/componentsimage/EdgeGlow Form.png", link: "/components/edge-glow-form" },
@@ -15,6 +17,7 @@ const cardsData = [
     { title: "Threads Background", summary: "A dynamic, generative background component that creates a subtle, animated noise texture.", image: "/assets/componentsimage/Threads Background.png", link: "/components/kinetic-threads-background" },
     { title: "LensFlare Background", summary: "A beautiful, animated lens flare effect to add a cinematic touch to your backgrounds.", image: "/assets/componentsimage/LensFlare Background.png", link: "/components/lens-flare-background" },
     { title: "Particle Ocean", summary: "A mesmerizing ocean simulation with particles and waves, perfect for immersive backgrounds.", image: "/assets/componentsimage/Ocean Background.png", link: "/components/luminous-particle-ocean" },
+    { title: "Meteor Card", summary: "A captivating card with a meteor shower background effect, adding dynamic visual interest.", image: "/assets/componentsimage/meteor-card.png", link: "/components/meteor-card" },
     { title: "Nav Menu", summary: "Effortlessly highlight your navigation with animated indicators. Perfect for dashboards, landing pages, and more.", image: "/assets/componentsimage/Nav Menu.png", link: "/components/nav-menu" },
     { title: "Nav DropDown", summary: "A clean and accessible dropdown menu for navigation bars, powered by smooth animations.", image: "/assets/componentsimage/DropMenu.png", link: "/components/nav-drop-down" },
     { title: "Floating Orbs", summary: "A mesmerizing background effect with floating orbs that react to user interactions.", image: "/assets/componentsimage/ObsBackground.png", link: "/components/orbs-background" },

@@ -2,7 +2,7 @@ import React, { useLayoutEffect, useRef, useState } from "react";
 import { NavLink } from "react-router-dom";
 import { gsap } from "gsap";
 import { toast } from "sonner";
-import InfiniteBoxBackground from "./InfiniteBoxBackground";
+import BluePrintBackground from "./BluePrintBackground";
 import SidebarBadge from "./SidebarBadge";
 // --- Waitlist Form ---
 const WaitlistForm = () => {
@@ -44,7 +44,7 @@ const WaitlistForm = () => {
                 toast.error("Something went wrong. Please try again.");
             }
         } catch (error) {
-            toast.error("Network error, try again later.");
+            toast.error("Network error, try again later.", error);
         }
     };
 
@@ -131,7 +131,7 @@ export default function TechShowcasePage() {
     return (
         <div className="relative bg-slate-900 min-h-screen font-sans text-white flex flex-col items-center justify-center p-8 overflow-hidden">
             {/* ✅ Infinite Background */}
-            <InfiniteBoxBackground />
+            <BluePrintBackground />
 
             {/* ✅ Logo Left */}
             <div

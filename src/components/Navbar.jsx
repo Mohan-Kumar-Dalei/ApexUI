@@ -68,7 +68,7 @@ export default function GetNav() {
                     <div className="hidden lg:flex items-center gap-4">
                         <NavLink to="/components" className="text-sm font-medium text-gray-400 hover:text-[var(--color-hover-text)] transition-colors">Components</NavLink>
                         <NavLink to="/components/docs/getting-started/installation/react-setup" className="text-sm font-medium text-gray-400 hover:text-[var(--color-hover-text)] transition-colors">Installation</NavLink>
-                        <NavLink to="/components/docs/getting-started/introduction" className="text-sm font-medium text-gray-400 hover:text-[var(--color-hover-text)] transition-colors">Documentation</NavLink>
+                        <NavLink to="/components/docs/getting-started/introduction" className="text-sm font-medium text-gray-400 hover:text-[var(--color-hover-text)] transition-colors">introduction</NavLink>
                         <div className="w-px h-6 bg-gray-700" />
                         <button onClick={() => setShowSearch(true)} aria-label="Search" className="text-gray-400 hover:text-[var(--color-hover-text)] transition-colors">
                             <i className="fas fa-search text-lg"></i>

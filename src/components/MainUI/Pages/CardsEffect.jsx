@@ -14,7 +14,7 @@ import {
 } from 'lucide-react';
 import { CopyBlock, irBlack } from 'react-code-blocks';
 import BasicCard from '../ApexUI-Kit/Cards/BasicCard.jsx';
-import { motion } from 'framer-motion';
+import MeteorCard from '../ApexUI-Kit/MeteorCard/MeteorCard.jsx'
 // --- Reusable Sub-Components (No Changes) ---
 
 const CopyButton = ({ text }) => {
@@ -189,6 +189,18 @@ const sampleData = [
         link: "",
     },
 ];
+const cardData = [
+
+    {
+        imageUrl: '/assets/black-panther.png',
+        title: 'Black Panther',
+        description: 'Experience the power and grace of the Black Panther in the digital realm.',
+        buttonText: 'Explore Mission',
+    },
+
+];
+
+
 
 const CardEffect = () => {
     // To add more component showcases, just add a new object to this array.
@@ -202,7 +214,6 @@ const CardEffect = () => {
                 <>
                     <BasicCard
                         data={sampleData}
-
                     />
                 </>
             ),
@@ -217,28 +228,83 @@ const CardEffect = () => {
                 { name: 'TailwindCSS', desc: 'A utility-first CSS framework for rapid styling.' },
             ],
             usageCode: `
-import BasicCard From './ApexUI-Kit/Cards/BasicCard.jsx'
+import BasicCard from './ApexUI-Kit/Cards/BasicCard.jsx'
 
-const App = () => (
+const App = () => {
     const sampleData = [
-
-    {
-        title: "John Carter",
-        summary: "Frontend Developer passionate about React & design systems.",
-        image: "https://images.unsplash.com/photo-1527980965255-d3b416303d12",
-        link: "https://example2.com",
-    },
-];
-  <div className="relative w-full h-screen">
-    <BasicCard
-        data={sampleData}
-    />
-    {/* Your content here */}
-  </div>
-);
+        {
+            title: "John Carter",
+            summary: "Frontend developer passionate about React and design systems.",
+            image: "https://images.unsplash.com/photo-1527980965255-d3b416303d12",
+            link: "https://example2.com",
+        },
+    ];
+    return (
+        <div className="relative w-full h-screen">
+            <BasicCard
+                data={sampleData}
+            />
+            {/* Your content here */}
+        </div>
+    );
+};
 export default App;
             `,
             installationCode: "npm i apex-ui-kit && npx apex-ui-kit add basic-card",
+        },
+        {
+            id: 'MeteorCard',
+            name: "Meteor Card",
+            description: "A card component with a meteor animation effect.",
+            icon: Layers,
+            previewComponent: (
+                <>
+                    <MeteorCard
+                        data={cardData}
+                        particleNumber={70}
+                        particleColor="#6366f1"
+                        particleSpeed={0.8}
+                    />
+                </>
+            ),
+            props: [
+                { prop: 'data', type: 'object', def: '', desc: 'The data object containing title, description, imageUrl, and buttonText for the card.' },
+                { prop: 'particleNumber', type: 'number', def: '70', desc: 'The number of particles to display in the background.' },
+                { prop: 'particleColor', type: 'color', def: '#6366f1', desc: 'The color of the particles.' },
+                { prop: 'particleSpeed', type: 'number', def: '0.8', desc: 'The speed of the particle animation.' },
+            ],
+            dependencies: [
+                { name: 'React', desc: 'A JavaScript library for building user interfaces.' },
+                { name: 'TailwindCSS', desc: 'A utility-first CSS framework for rapid styling.' },
+            ],
+            usageCode: `
+import MeteorCard from './ApexUI-Kit/MeteorCard/MeteorCard.jsx'
+
+const App = () => {
+    const cardData = [
+        {
+            imageUrl: '/assets/black-panther.png',
+            title: 'Black Panther',
+            description: 'Experience the power and grace of the Black Panther in the digital realm.',
+            buttonText: 'Explore Mission',
+        },
+    ];
+    return (
+        <div className="relative w-screen h-screen flex items-start justify-center flex-wrap">
+            <MeteorCard
+                data={cardData}
+                particleNumber={70}
+                particleColor="#6366f1"
+                particleSpeed={0.8}
+            />
+        </div>
+    );
+    // If you want to change the meteor's tail or head color, then go to the CSS file.
+    // I have added comments in the CSS file to indicate where to make these changes.
+};
+export default App;
+            `,
+            installationCode: "npm i apex-ui-kit && npx apex-ui-kit add meteor-card",
         },
         // Add your next component's data object here
     ];

@@ -9,9 +9,6 @@ import NavBar from '../../components/Navbar.jsx';
 import AsideBar from './AsideBar.jsx';
 import Footer from './ComponentFooter.jsx';
 import AllComponents from './AllComponents.jsx'
-
-
-// --- Naya Animated Button ---
 const StyledNextButton = styled(NavLink)`
     position: relative;
     display: inline-flex;
@@ -137,6 +134,9 @@ export default function Components() {
     const allLinks = flattenLinks(summaryData);
     const active = allLinks.find((link) => link.path === location.pathname);
     const ComponentToRender = active?.component || null;
+    const currentPath = location.pathname || '';
+    const isInComponentsSection = currentPath.startsWith('/components');
+    const isComponentsRoot = currentPath === '/components' || currentPath === '/components/';
 
     return (
         <>
@@ -172,11 +172,16 @@ export default function Components() {
                                 <div className="absolute -bottom-20 right-1/4 w-72 h-40 bg-teal-500/5 rounded-lg animate-spin-slow-reverse pointer-events-none z-0" />
                                 {ComponentToRender ? (
                                     <ComponentToRender />
-                                ) : (
-                                    
-                                        <AllComponents />
-                                    
-                                )}
+                                ) : isComponentsRoot ? (
+                                    // If the user is at the components root, show the full components list
+                                    <AllComponents />
+                                ) : isInComponentsSection ? (
+                                    // If user is inside /components/* but no matching component, show only the message
+                                    <div className="w-full h-[calc(100vh-12rem)] py-12 flex flex-col items-center justify-center text-center text-slate-300">
+                                        <h2 className="text-xl md:text-2xl font-semibold mb-2">There are no components</h2>
+                                        <p className="text-sm md:text-base max-w-xl">We couldn't find a matching component for this route.</p>
+                                    </div>
+                                ) : null}
                             </div>
 
                             <div className='mt-8 z-10'>
