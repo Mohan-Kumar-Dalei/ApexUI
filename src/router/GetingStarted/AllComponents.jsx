@@ -39,7 +39,7 @@ const cardsData = [
 
 const AllComponents = () => {
     return (
-        <div className="w-full h-full flex flex-wrap justify-center items-center gap-6 bg-[var(--color-bg)] mt-10">
+        <div className="w-full h-full flex flex-wrap justify-center items-center gap-6 bg-[var(--color-bg)] mt-20">
             <BasicCard
                 data={cardsData}
             />
