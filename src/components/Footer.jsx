@@ -84,7 +84,6 @@ const StyledFancyLink = styled(NavLink)`
 
 const FancyButton = ({ to, children }) => {
     const buttonRef = useRef(null);
-
     const handleMouseMove = (e) => {
         if (!buttonRef.current) return;
         const rect = buttonRef.current.getBoundingClientRect();
@@ -105,6 +104,8 @@ const FancyButton = ({ to, children }) => {
 
 // --- Main Footer Component ---
 const Footer = () => {
+    const textRef = useRef(null);
+    const section2Ref = useRef(null);
     const sectionRef = useRef(null);
     const CopyButton = () => {
         const [copied, setCopied] = useState(false);
@@ -179,6 +180,18 @@ const Footer = () => {
         }, sectionRef);
         return () => ctx.revert();
     }, []);
+    useEffect(() => {
+        gsap.from(textRef.current, {
+            scrollTrigger: {
+                trigger: section2Ref.current,
+                start: "top 80%",
+                toggleActions: "play none none reverse"
+            },
+            filter: "blur(15px)",
+            duration: 3,
+            ease: 'power3.out'
+        });
+    }, []);
     // --- Styled Component for the Big, Faded, and Responsive Text (No changes here) ---
     const FadedBigText = styled.h1`
   font-weight: 300; /* font-black */
@@ -249,13 +262,17 @@ const Footer = () => {
                         <a href="https://www.instagram.com/_.apexui._/" target="_blank" rel="noopener noreferrer" className="hover:text-pink-500 transition-colors"><FontAwesomeIcon icon={faInstagram} className="w-5 h-5" /></a>
                     </div>
                 </div>
-                <div className="mt-20">
+                <div ref={section2Ref} className="mt-20 flex flex-col justify-between items-center gap-20">
                     <FadedBigText style={{ fontFamily: "Righteous, sans-serif" }}>
                         APEX UI
                     </FadedBigText>
+                    <div className="w-full flex items-center justify-center">
+                        <h1 ref={textRef} className="text-md font-thin text-[var(--color-footer-text-color)]" style={{ fontFamily: "Righteous, sans-serif" }}>Made With ❤️ Mohan</h1>
+                    </div>
                 </div>
             </div>
         </footer>
+
     );
 };
 export default Footer;

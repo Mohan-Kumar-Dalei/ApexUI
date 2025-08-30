@@ -1,10 +1,12 @@
 /* eslint-disable no-unused-vars */
-import React from "react"; // Removed unused imports like useEffect, useRef, etc.
+import { React, useRef, useEffect } from "react"; // Removed unused imports like useEffect, useRef, etc.
 import styled from "styled-components";
 import { NavLink } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faGithub, faInstagram, faLinkedin } from "@fortawesome/free-brands-svg-icons";
 import { motion } from "framer-motion";
+import gsap from "gsap";
+
 
 // --- Animated Background Shapes Component (No changes here) ---
 const AnimatedShapes = () => {
@@ -48,10 +50,24 @@ const FadedBigText = styled.h1`
 `;
 
 
-// --- Main Footer Component ---
-const Footer = () => {
-    // --- ✨ REMOVED: GSAP and ScrollTrigger useLayoutEffect hook ---
 
+
+// --- Main Footer Component ---
+const Footer = ({mainContentRef2}) => {
+    // const section2Ref = useRef(null);
+    // const textRef = useRef(null);
+    // useEffect(() => {
+    //     gsap.from(textRef.current, {
+    //         scrollTrigger: {
+    //             trigger: section2Ref.current,
+    //             start: "top 80%",
+    //             toggleActions: "play none none reverse"
+    //         },
+    //         filter: "blur(15px)",
+    //         duration: 3,
+    //         ease: 'power3.out'
+    //     });
+    // }, []);
     return (
         <footer className="relative bg-[var(--color-footer-bg)] text-[var(--color-footer-text-color)] w-full overflow-hidden pt-24 pb-12 px-4">
             <AnimatedShapes />
@@ -88,11 +104,14 @@ const Footer = () => {
                     </div>
                 </div>
 
-                
-                <div className="mt-20 cursor-default whitespace-nowrap w-full">
-                    <FadedBigText style={{fontFamily: "Righteous, sans-serif", whiteSpace: "nowrap"}}>
+
+                <div className="mt-20 flex flex-col justify-between items-center gap-20">
+                    <FadedBigText style={{ fontFamily: "Righteous, sans-serif" }}>
                         APEX UI
                     </FadedBigText>
+                    <div className="w-full flex items-center justify-center">
+                        <h1 className="text-md font-thin text-[var(--color-footer-text-color)]" style={{ fontFamily: "Righteous, sans-serif" }}>Made With ❤️ Mohan</h1>
+                    </div>
                 </div>
             </div>
         </footer>

@@ -12,6 +12,7 @@
 ::-moz-selection {
   background: var(--selection-bg);
   color: var(--selection-text);
+  
 }
 .neon-tracer-path {
   stroke: #fff;
