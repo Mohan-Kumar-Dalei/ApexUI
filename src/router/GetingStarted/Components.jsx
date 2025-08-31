@@ -139,8 +139,8 @@ export default function Components() {
         <>
             <div className="w-screen h-screen flex flex-col text-[var(--color-text)] bg-[var(--color-bg)] relative">
                 <div ref={bgRef} className="absolute inset-0 -z-10 overflow-hidden pointer-events-none">
-                    <div className="circle absolute w-[28rem] h-[28rem] bg-lime-500/10 rounded-full blur-[120px] left-1/4 top-1/4 -translate-y-1/2" />
-                    <div className="circle absolute w-[28rem] h-[28rem] bg-sky-500/10 rounded-full blur-[120px] left-3/4 top-1/3 -translate-y-1/2" />
+                    <div className="circle absolute w-[28rem] h-[28rem] bg-lime-500/40 rounded-full blur-[120px] left-1/4 top-1/4 -translate-y-1/2" />
+                    <div className="circle absolute w-[28rem] h-[28rem] bg-sky-500/50 rounded-full blur-[120px] left-3/4 top-1/3 -translate-y-1/2" />
                 </div>
 
                 <header className="h-20 flex-shrink-0 border-b border-[var(--color-border)] px-6">
@@ -159,7 +159,7 @@ export default function Components() {
                         </div>
                     )}
 
-                    <main ref={mainContentRef} className="flex-1 overflow-y-scroll scrollbar-hide lg:ml-20" style={{ scrollBehavior: 'smooth' }}>
+                    <main ref={mainContentRef} className="flex-1 overflow-y-scroll scrollbar-hide lg:ml-5" style={{ scrollBehavior: 'smooth' }}>
                         <div className="min-h-full flex flex-col items-center justify-center p-3 lg:p-1  rounded-2xl relative">
                             <div className="component-container flex-grow w-full z-10 relative">
                                 {/* Animated background shapes: all sides (like Home section), now inside preview container */}
