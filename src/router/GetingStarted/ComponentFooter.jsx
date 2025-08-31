@@ -55,7 +55,7 @@ const FadedBigText = styled.h1`
 // --- Main Footer Component ---
 const Footer = () => {
     return (
-        <footer className="relative bg-[var(--color-footer-bg)] text-[var(--color-footer-text-color)] w-full overflow-hidden pt-24 pb-12 px-4">
+        <footer className="relative bg-[var(--color-footer-bg)] text-[var(--color-footer-text-color)] w-full overflow-hidden pt-24 pb-12 px-4 lg:ml-5">
             <AnimatedShapes />
             <div className="max-w-7xl mx-auto text-center relative z-20">
                 <div>
