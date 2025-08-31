@@ -1,4 +1,3 @@
-// ...existing code...
 import { useEffect, useRef } from "react";
 import gsap from "gsap";
 import ScrollSmoother from "gsap/ScrollSmoother";
@@ -33,10 +32,7 @@ const SmoothScroll = ({ children }) => {
                 console.warn("ScrollSmoother init failed, falling back to native scroll", err);
             }
         };
-
-        // Defer init to next frame so body and layout are present
         rafRef.current = requestAnimationFrame(init);
-
         return () => {
             if (rafRef.current) cancelAnimationFrame(rafRef.current);
             if (smootherRef.current) {
@@ -45,7 +41,6 @@ const SmoothScroll = ({ children }) => {
             }
         };
     }, []);
-
     return (
         <div id="smooth-wrapper" style={{ overflowX: "hidden", position: "relative" }}>
             <div id="smooth-content">
@@ -54,6 +49,4 @@ const SmoothScroll = ({ children }) => {
         </div>
     );
 };
-
 export default SmoothScroll;
-// ...existing code...

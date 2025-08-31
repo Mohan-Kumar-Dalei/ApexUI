@@ -9,7 +9,7 @@ import {
     Package,
     Copy
 } from 'lucide-react';
-import GlassCardStack from '../ApexUI-Kit/GlassCardStack/GlassCardStack.jsx';
+import CardStack from '../ApexUI-Kit/CardStack/CardStack.jsx';
 import { CopyBlock, irBlack } from 'react-code-blocks';
 const CopyButton = ({ text }) => {
     const [copied, setCopied] = useState(false);
@@ -98,7 +98,7 @@ function DependenciesList() {
         </ul>
     );
 }
-const GlassCardStackEffect = () => {
+const CardStackEffect = () => {
     const Cards = [
         {
             title: "ApexUI Glass Card Stack",
@@ -145,16 +145,16 @@ const GlassCardStackEffect = () => {
         { id: 'usage', label: 'Usage', icon: Code },
         { id: 'installation', label: 'Installation', icon: Terminal },
     ];
-    const codeSnippets = 
-        `import GlassCardStack from './ApexUI-Kit/GlassCardStack/GlassCardStack.jsx';
+    const codeSnippets =
+        `import CardStack from './ApexUI-Kit/CardStack/CardStack.jsx';
 
 const App = () => {
   return (
       const Cards = [
         {
-            title: "ApexUI Glass Card Stack",
-            subtitle: "Modern glassmorphic stack with animation",
-            desc: "Beautiful glassmorphic UI. Pause on hover, auto-cycling.",
+            title: "ApexUI Card Stack",
+            subtitle: "Modern card stack with animation",
+            desc: "Beautiful card UI. Pause on hover, auto-cycling.",
             color: "from-blue-500/60 to-blue-300/30",
             image: "https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?auto=format&fit=crop&w=300&q=80",
             link: "https://github.com/sheryians/apexui",
@@ -164,7 +164,7 @@ const App = () => {
     ];
     return (
         <div>
-            <GlassCardStack 
+            <CardStack 
             cards={Cards} 
             autoCycle={true}
             cycleInterval={5000}
@@ -173,7 +173,7 @@ const App = () => {
     );
 }
 export default App;`
-let copyText = `npm i apex-ui-kit && npx apex-ui-kit add glass-card-stack`;
+    let copyText = `npm i apex-ui-kit && npx apex-ui-kit add card-stack`;
 
     useEffect(() => {
         if (contentRef.current) {
@@ -190,10 +190,10 @@ let copyText = `npm i apex-ui-kit && npx apex-ui-kit add glass-card-stack`;
 
                 <header className="text-center mb-12 space-y-4">
                     <h1 className="text-5xl sm:text-6xl font-extrabold tracking-tight bg-gradient-to-r from-[var(--color-pages-props-heading-text)] to-[var(--color-pages-props-heading-text2)] bg-clip-text text-transparent">
-                        Glass Card Stack
+                        Card Stack
                     </h1>
                     <p className="text-base sm:text-lg text-[var(--color-pages-props-sub-text)] max-w-2xl mx-auto">
-                        An interactive stack of glassmorphism cards that cycle automatically, perfect for showcasing projects or testimonials.
+                        An interactive stack of cards that cycle automatically, perfect for showcasing projects or testimonials.
                     </p>
                 </header>
 
@@ -226,7 +226,7 @@ let copyText = `npm i apex-ui-kit && npx apex-ui-kit add glass-card-stack`;
                     <div ref={contentRef} className="p-4 sm:p-6">
                         {activeTab === 'preview' && (
                             <div className="w-full min-h-[50vh] bg-black/30 rounded-md flex items-center justify-center p-4">
-                                <GlassCardStack
+                                <CardStack
                                     autoCycle={true}
                                     cycleInterval={3000}
                                     cards={Cards}
@@ -296,4 +296,4 @@ let copyText = `npm i apex-ui-kit && npx apex-ui-kit add glass-card-stack`;
     );
 }
 
-export default GlassCardStackEffect;
+export default CardStackEffect;

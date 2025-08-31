@@ -53,34 +53,18 @@ const FadedBigText = styled.h1`
 
 
 // --- Main Footer Component ---
-const Footer = ({mainContentRef2}) => {
-    // const section2Ref = useRef(null);
-    // const textRef = useRef(null);
-    // useEffect(() => {
-    //     gsap.from(textRef.current, {
-    //         scrollTrigger: {
-    //             trigger: section2Ref.current,
-    //             start: "top 80%",
-    //             toggleActions: "play none none reverse"
-    //         },
-    //         filter: "blur(15px)",
-    //         duration: 3,
-    //         ease: 'power3.out'
-    //     });
-    // }, []);
+const Footer = () => {
     return (
         <footer className="relative bg-[var(--color-footer-bg)] text-[var(--color-footer-text-color)] w-full overflow-hidden pt-24 pb-12 px-4">
             <AnimatedShapes />
-
             <div className="max-w-7xl mx-auto text-center relative z-20">
-                {/* Links and Copyright are on top */}
                 <div>
                     {/* Footer Links Grid */}
                     <div className="grid grid-cols-2 md:grid-cols-3 gap-8 text-left mb-16 max-w-4xl mx-auto">
                         <div className="space-y-4">
                             <p className="font-semibold text-[var(--color-footer-sub-color)]">Resources</p>
                             <NavLink to="components/docs/getting-started/introduction" className="text-[var(--color-footer-sub-text)] hover:text-[var(--color-footer-hover-text2)] hover:underline block transition-colors">Documentation</NavLink>
-                            <NavLink to="components/glass-navbar" className="text-[var(--color-footer-sub-text)] hover:text-[var(--color-footer-hover-text2)] hover:underline block transition-colors">Components</NavLink>
+                            <NavLink to="/components" className="text-[var(--color-footer-sub-text)] hover:text-[var(--color-footer-hover-text2)] hover:underline block transition-colors">Components</NavLink>
                         </div>
                         <div className="space-y-4">
                             <p className="font-semibold text-[var(--color-footer-text-color)]">Legal</p>
@@ -109,9 +93,6 @@ const Footer = ({mainContentRef2}) => {
                     <FadedBigText style={{ fontFamily: "Righteous, sans-serif" }}>
                         APEX UI
                     </FadedBigText>
-                    <div className="w-full flex items-center justify-center">
-                        <h1 className="text-md font-thin text-[var(--color-footer-text-color)]" style={{ fontFamily: "Righteous, sans-serif" }}>Made With ❤️ Mohan</h1>
-                    </div>
                 </div>
             </div>
         </footer>

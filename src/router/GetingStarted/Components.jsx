@@ -78,7 +78,6 @@ export default function Components() {
     const [sidebarOpen, setSidebarOpen] = useState(false);
     const bgRef = useRef(null);
     const mainContentRef = useRef(null);
-
     const handleSidebarToggle = () => setSidebarOpen((prev) => !prev);
     const handleSidebarClose = () => setSidebarOpen(false);
 
@@ -97,8 +96,6 @@ export default function Components() {
             });
         }
     }, []);
-
-
     // Animation for the inner content + scroll reset
     useEffect(() => {
         // Reset scroll on component change
@@ -210,14 +207,13 @@ export default function Components() {
                             </div>
                         </div>
                         <Footer />
+                        <div className="w-full flex items-center justify-center">
+                            <h1 className="text-md font-thin text-[var(--color-footer-text-color)]/30" style={{ fontFamily: "Righteous, sans-serif" }}>Made With ❤️ Mohan</h1>
+                        </div>
                     </main>
-
                 </div>
-
             </div>
-
             <FeedBack />
-
         </>
     );
 }

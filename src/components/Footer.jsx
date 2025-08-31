@@ -267,7 +267,7 @@ const Footer = () => {
                         APEX UI
                     </FadedBigText>
                     <div className="w-full flex items-center justify-center">
-                        <h1 ref={textRef} className="text-md font-thin text-[var(--color-footer-text-color)]" style={{ fontFamily: "Righteous, sans-serif" }}>Made With ❤️ Mohan</h1>
+                        <h1 ref={textRef} className="text-md font-thin text-[var(--color-footer-text-color)]/30" style={{ fontFamily: "Righteous, sans-serif" }}>Made With ❤️ Mohan</h1>
                     </div>
                 </div>
             </div>

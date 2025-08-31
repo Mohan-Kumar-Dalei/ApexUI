@@ -9,7 +9,7 @@ import ApexUICLI from '../GetingStarted/Installation/ApexUICLISetup.jsx';
 import NavMenuEffect from '../../components/MainUI/Pages/NavMenuEffect.jsx';
 import ScrollMarquee from '../../components/MainUI/Pages/ScrollMarqueeEffect.jsx';
 import EdgeglowFromEffect from '../../components/MainUI/Pages/EdgeglowFromEffect.jsx';
-import GlassCardStack from '../../components/MainUI/Pages/GlassCardStackEffect';
+import CardStack from '../../components/MainUI/Pages/CardStackEffect';
 import ProfileEffect from '../../components/MainUI/Pages/ProfileEffect.jsx';
 import GlareCardEffect from '../../components/MainUI/Pages/GlareCardeffect.jsx';
 import HoverTextEffect from '../../components/MainUI/Pages/HoverTextEffect.jsx';
@@ -69,8 +69,8 @@ const SidebarProvider = (props) => {
                 { name: 'BluePrint Background', path: '/components/blueprint-background', component: BluePrintBackground, badge: "New" },
                 { name: 'Carousel', path: '/components/carousel', component: CarouselEffect, },
                 { name: "Cards", path: '/components/cards', component: CardsEffect, badge: "New" },
+                { name: 'Card Stack', path: '/components/card-stack', component: CardStack },
                 { name: 'EdgeGlowForm', path: '/components/edge-glow-form', component: EdgeglowFromEffect },
-                { name: 'Glass Card Stack', path: '/components/glass-card-stack', component: GlassCardStack },
                 { name: 'Glare Card', path: '/components/glare-card', component: GlareCardEffect },
                 { name: 'Hover Text', path: '/components/hover-text', component: HoverTextEffect },
                 { name: 'Hyper Card', path: '/components/hyper-card', component: HyperCardEffect, },

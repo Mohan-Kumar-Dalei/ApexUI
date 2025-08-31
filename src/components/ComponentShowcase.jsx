@@ -11,14 +11,12 @@ import { motion } from "framer-motion";
 gsap.registerPlugin(TextPlugin, ScrollTrigger);
 
 import HoverText from "./MainUI/ApexUI-Kit/HoverText/HoverText.jsx";
-import GlassCardStack from "./MainUI/ApexUI-Kit/GlassCardStack/GlassCardStack.jsx";
-import Profile from "./MainUI/ApexUI-Kit/FlipProfile/FlipProfile.jsx";
-import Navbar from "./MainUI/ApexUI-Kit/NavMenu/NavMenu.jsx";
+import CardStack from "./MainUI/ApexUI-Kit/CardStack/CardStack.jsx";
 import Carousel from './MainUI/ApexUI-Kit/ParallaxCarousel/ParallaxCarousel.jsx'
 import ParallaxProfileCard from './MainUI/ApexUI-Kit/ParallaxProfile/ParallaxProfile.jsx';
 const Cards = [
     {
-        title: "ApexUI Glass Card Stack",
+        title: "ApexUI Card Stack",
         subtitle: "Modern glassmorphic stack with animation",
         desc: "Beautiful glassmorphic UI. Pause on hover, auto-cycling.",
         color: "from-blue-500/60 to-blue-300/30",
@@ -178,7 +176,7 @@ const ComponentShowcase = () => {
     const showcaseItems = [
         { name: "Carousel", component: <Carousel slides={slides} /> },
         { name: "Hover Text", component: <HoverText text="Hover Me!" /> },
-        { name: "Card Stack", component: <GlassCardStack cards={Cards} /> },
+        { name: "Card Stack", component: <CardStack cards={Cards} /> },
         { name: "Profile Card", component: <ParallaxProfileCard profile={profile}/> },
     ];
 

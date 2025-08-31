@@ -6,7 +6,6 @@ import { NavLink } from "react-router-dom";
 import styled, { keyframes } from "styled-components";
 import { Settings, Wifi, Rocket, HardDrive, Lock, Sparkles, ArrowRight } from "lucide-react";
 import { motion } from "framer-motion";
-import RainBackground from './MainUI/ApexUI-Kit/RainBackground/RainBackground.jsx';
 import ScrollMarquee from './MainUI/ApexUI-Kit/ScrollMarquee/ScrollMarquee.jsx';
 import SmartGrid from './MainUI/ApexUI-Kit/SmartGridCard/SmartGridCard.jsx';
 import SmokeBackground from './MainUI/ApexUI-Kit/SmokeBackground/SmokeBackground.jsx'
