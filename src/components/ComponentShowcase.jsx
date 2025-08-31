@@ -272,8 +272,8 @@ const ComponentShowcase = () => {
                     </div>
 
                 </div>
-                <div className="w-full flex justify-center items-center translate-y-5 ">
-                    <NavLink to="/components" className="lg:w-auto px-4 py-2 rounded-lg bg-[var(--color-component-side-active-bg2)] text-[var(--color-component-side-active-text2)] font-semibold border border-[var(--color-component-side-active-border)]/40 hover:bg-[var(--color-component-side-active-bg)]/50 transition-colors duration-300 shadow-lg cursor-pointer z-10">
+                <div className="w-full flex justify-center items-center translate-y-5  bg-red-400 ">
+                    <NavLink to="/components" className="lg:w-auto px-4 py-2 lg:translate-x-20 rounded-lg bg-[var(--color-component-side-active-bg2)] text-[var(--color-component-side-active-text2)] font-semibold border border-[var(--color-component-side-active-border)]/40 hover:bg-[var(--color-component-side-active-bg)]/50 transition-colors duration-300 shadow-lg cursor-pointer z-10">
                         More Components
                     </NavLink>
                 </div>
