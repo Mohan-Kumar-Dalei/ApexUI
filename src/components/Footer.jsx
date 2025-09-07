@@ -81,6 +81,39 @@ const StyledFancyLink = styled(NavLink)`
     opacity: 1;
   }
 `;
+// --- Styled Component for the Big, Faded, and Responsive Text (No changes here) ---
+const FadedBigText = styled.h1`
+  font-weight: 300; /* Corresponds to font-light, adjust if you need font-black */
+  text-transform: uppercase;
+  color: var(--color-footer-text-color);
+  opacity: 0.08; /* Faded effect */
+  line-height: 1;
+  white-space: nowrap;
+
+  /* Responsive font size with more breakpoints for smoother scaling */
+  font-size: 6rem; /* Base size for small screens */
+
+  @media (min-width: 640px) { /* sm breakpoint */
+    font-size: 8rem;
+  }
+  
+  @media (min-width: 768px) { /* md breakpoint */
+    font-size: 12rem;
+  }
+
+  @media (min-width: 1024px) { /* lg breakpoint */
+    font-size: 12rem;
+  }
+
+  @media (min-width: 1180px) { /* xl breakpoint */
+    font-size: 15rem;
+  }
+  
+  @media (min-width: 1536px) { /* 2xl breakpoint */
+    font-size: 24rem;
+  }
+`;
+
 
 const FancyButton = ({ to, children }) => {
     const buttonRef = useRef(null);
@@ -192,38 +225,8 @@ const Footer = () => {
             ease: 'power3.out'
         });
     }, []);
-    // --- Styled Component for the Big, Faded, and Responsive Text (No changes here) ---
-    const FadedBigText = styled.h1`
-  font-weight: 300; /* Corresponds to font-light, adjust if you need font-black */
-  text-transform: uppercase;
-  color: var(--color-footer-text-color);
-  opacity: 0.08; /* Faded effect */
-  line-height: 1;
-  white-space: nowrap;
 
-  /* Responsive font size with more breakpoints for smoother scaling */
-  font-size: 6rem; /* Base size for small screens */
 
-  @media (min-width: 640px) { /* sm breakpoint */
-    font-size: 8rem;
-  }
-  
-  @media (min-width: 768px) { /* md breakpoint */
-    font-size: 12rem;
-  }
-
-  @media (min-width: 1024px) { /* lg breakpoint */
-    font-size: 12rem;
-  }
-
-  @media (min-width: 1180px) { /* xl breakpoint */
-    font-size: 15rem;
-  }
-  
-  @media (min-width: 1536px) { /* 2xl breakpoint */
-    font-size: 24rem;
-  }
-`;
     return (
         <footer ref={sectionRef} className="relative bg-[var(--color-footer-bg)] text-[var(--color-footer-text-color)] w-full overflow-hidden py-24 px-4">
             <AnimatedShapes />

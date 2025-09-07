@@ -84,8 +84,8 @@ export default function GetNav() {
                     <ThemeToggle
                         LightTheme='light'
                         animation='circle-right'
-                        duration='1s'
-                        ease="var(--vt-ease)"
+                        duration='1.2s'
+                        ease='ease-in-outs'
                         className='text-gray-400 hover:text-[var(--color-hover-text)]'
 
                     />

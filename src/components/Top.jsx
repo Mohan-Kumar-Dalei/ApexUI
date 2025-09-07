@@ -18,7 +18,7 @@ const Top = () => {
         const ctx = gsap.context(() => {
             // Animation for button visibility
             ScrollTrigger.create({
-                trigger: "body",
+                trigger: document.body,
                 start: "300px top",
                 onEnter: () => gsap.to(container, { autoAlpha: 1, scale: 1, duration: 0.5, ease: "back.out(1.7)" }),
                 onLeaveBack: () => gsap.to(container, { autoAlpha: 0, scale: 0, duration: 0.3, ease: "power2.in" }),

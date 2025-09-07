@@ -184,4 +184,3 @@ const HyperCard = ({
 };
 
 export default HyperCard;
-// ...existing code...

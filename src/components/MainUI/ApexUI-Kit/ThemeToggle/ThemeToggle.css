@@ -71,7 +71,7 @@
   --color-aside-beam: #fff;
 
   /* animation defaults (can be overridden) */
-  --vt-duration: 1s;
+  --vt-duration: 1.7s;
   --vt-ease: ease-in-out;
 }
 

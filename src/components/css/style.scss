@@ -134,6 +134,8 @@
 body {
   margin: 0;
   padding: 0;
+  height: 100vh;
+  width: 100vw;
   overflow-x: hidden;
 }
 
@@ -241,7 +243,6 @@ body {
 .purple-cta-btn:active {
   box-shadow: 0 2px 8px 0 #a855f7;
 }
-
 
 .npm-cli-block-modern {
   box-shadow: 0 4px 24px 0 rgba(168, 85, 247, 0.8),
@@ -470,5 +471,3 @@ button {
   cursor: pointer;
   transition: background-color 0.3s ease, color 0.3s ease;
 }
-
-

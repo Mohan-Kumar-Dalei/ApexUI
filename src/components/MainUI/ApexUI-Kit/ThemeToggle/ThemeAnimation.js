@@ -87,12 +87,12 @@ export function buildAnimationCSS(animation, opts = {}) {
       mask: url('data:image/svg+xml,${svg}') top right / 0 no-repeat;
       -webkit-mask: url('data:image/svg+xml,${svg}') top right / 0 no-repeat;
       transform-origin: top right;
-      animation: vt-scale-tr 0.9s;
+      animation: vt-scale-tr var(--vt-duration);
     }
 
     ::view-transition-old(root), .dark::view-transition-old(root) {
       transform-origin: top right;
-      animation: vt-scale-tr 0.9s;
+      animation: vt-scale-tr var(--vt-duration);
     }
 
     @keyframes vt-scale-tr {
