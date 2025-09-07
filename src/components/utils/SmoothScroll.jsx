@@ -22,7 +22,7 @@ const SmoothScroll = ({ children }) => {
                     smootherRef.current = ScrollSmoother.create({
                         wrapper: "#smooth-wrapper",
                         content: "#smooth-content",
-                        smooth: 0.4,
+                        smooth: 0.7,
                         normalizeScroll: true,
                     });
                     // ensure ScrollTrigger uses correct scroller

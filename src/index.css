@@ -1,6 +1,9 @@
-
 @import "tailwindcss";
 @import "tailwind-scrollbar-hide/v4";
+body {
+  transition: background-color 0.5s, color 0.5s;
+  scroll-behavior: smooth;
+}
 @keyframes glow {
   0% {
     filter: blur(100px) brightness(1);
@@ -21,4 +24,3 @@
     box-shadow: 0 0 15px #fff, 0 0 30px #4f46e5, 0 0 40px #06b6d4;
   }
 }
-
