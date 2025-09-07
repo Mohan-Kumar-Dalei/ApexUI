@@ -9,7 +9,7 @@ export default function ModernLoader({ onFinish }) {
     const progressContainerRef = useRef(null);
     const helloRef = useRef(null);
 
-    // Naye rolling counter ke liye refs
+    // Refs for the rolling counter
     const counterContainerRef = useRef(null);
     const counter1Ref = useRef(null);
     const counter2Ref = useRef(null);
@@ -19,10 +19,10 @@ export default function ModernLoader({ onFinish }) {
         const tl = gsap.timeline({ defaults: { ease: "power2.out" } });
         const helloChars = gsap.utils.toArray(helloRef.current.children);
 
-        // --- Counter ke liye dynamic numbers add karein ---
+        // --- Dynamically add numbers for the counter ---
         const counter3 = counter3Ref.current;
         if (counter3) {
-            // Pehle se maujood numbers ko clear karein taaki multiple renders par add na ho
+            // Clear existing numbers to prevent duplication on re-renders
             counter3.innerHTML = '<div class="num">0</div><div class="num">1</div><div class="num">2</div><div class="num">3</div><div class="num">4</div><div class="num">5</div><div class="num">6</div><div class="num">7</div><div class="num">8</div><div class="num">9</div>';
             for (let i = 0; i < 2; i++) {
                 for (let j = 0; j < 10; j++) {
@@ -53,8 +53,8 @@ export default function ModernLoader({ onFinish }) {
             0.5
         );
 
-        // 3. Progress Bar aur Rolling Counter ka animation
-        const loadingDuration = 4; // Dono ka duration same rakha hai
+        // 3. Animate Progress Bar and Rolling Counter
+        const loadingDuration = 4; // Keep duration consistent
         tl.to(progressBarRef.current, {
             width: "100%",
             duration: loadingDuration,
@@ -64,21 +64,22 @@ export default function ModernLoader({ onFinish }) {
         // Rolling counter animation function
         const animateCounter = (counter, duration, delay = 0) => {
             if (!counter) return;
+            // The height is now read dynamically, so it adapts to responsive CSS changes
             const numHeight = counter.querySelector(".num").clientHeight;
             const totalDistance = (counter.querySelectorAll(".num").length - 1) * numHeight;
             tl.to(counter, {
                 y: -totalDistance,
                 duration: duration,
                 ease: "power2.inOut",
-            }, 1 + delay); // Main timeline ke hisaab se start karein
+            }, 1 + delay); // Start relative to the main timeline
         }
 
-        // Alag-alag digits ko animate karein
+        // Animate individual digits
         animateCounter(counter3Ref.current, loadingDuration * 0.85); // 0-99
-        animateCounter(counter2Ref.current, loadingDuration * 0.9); // 0-9
-        animateCounter(counter1Ref.current, loadingDuration * 0.2, loadingDuration * 0.7); // 100 par 1 dikhega
+        animateCounter(counter2Ref.current, loadingDuration * 0.9);  // 0-9
+        animateCounter(counter1Ref.current, loadingDuration * 0.2, loadingDuration * 0.7); // Shows '1' for 100
 
-
+        // 4. Animate "APEXUI" text
         tl.fromTo(helloChars,
             { autoAlpha: 0 },
             { autoAlpha: 1, duration: 3, stagger: 0.5, ease: "power2.out" },
@@ -86,7 +87,7 @@ export default function ModernLoader({ onFinish }) {
         );
 
         // --- EXIT ANIMATION ---
-        // 5. Sirf poora page upar lift hokar fade out hoga
+        // 5. Lift and fade out the entire screen
         tl.to(containerRef.current, {
             yPercent: -100,
             opacity: 0,
@@ -94,22 +95,35 @@ export default function ModernLoader({ onFinish }) {
             ease: "power3.in",
             onComplete: () => onFinish?.(),
         }, "+=1");
+
         return () => tl.kill();
     }, [onFinish]);
 
     return (
         <div
             ref={containerRef}
-            className="fixed inset-0 bg-[#0A0A0A] z-[999] font-mono text-sm text-slate-400 overflow-hidden"
+            className="fixed inset-0 bg-[#0A0A0A] z-[999] font-mono text-slate-400 overflow-hidden"
         >
-            {/* CSS ko yahan component ke andar daal diya hai */}
+            {/* MODIFIED: Inline CSS now uses variables and a media query for responsiveness */}
             <style>{`
+                :root {
+                    --counter-font-size: 28px;
+                    --counter-height: 28px;
+                    --counter-line-height: 30px;
+                }
+                @media (min-width: 640px) { /* sm breakpoint */
+                    :root {
+                        --counter-font-size: 32px;
+                        --counter-height: 32px;
+                        --counter-line-height: 34px;
+                    }
+                }
                 .counter {
                     display: flex;
-                    height: 32px; /* h-8 */
-                    font-size: 32px; /* text-3xl */
-                    line-height: 34px;
-                    clip-path: polygon(0 0, 100% 0, 100% 32px, 0 32px);
+                    height: var(--counter-height);
+                    font-size: var(--counter-font-size);
+                    line-height: var(--counter-line-height);
+                    clip-path: polygon(0 0, 100% 0, 100% var(--counter-height), 0 var(--counter-height));
                     font-weight: 600; /* font-semibold */
                     color: #a3e635; /* text-lime-400 */
                     overflow: hidden;
@@ -123,16 +137,18 @@ export default function ModernLoader({ onFinish }) {
             `}</style>
 
             {/* Corner Elements */}
-            <div ref={statusRef} className="absolute top-4 left-4 opacity-0">
+            {/* MODIFIED: Responsive font size for corner text */}
+            <div ref={statusRef} className="absolute top-4 left-4 opacity-0 text-xs sm:text-sm">
                 <span className="text-green-400">[OK]</span> System Status: Nominal
             </div>
-            <div ref={versionRef} className="absolute top-4 right-4 opacity-0">
+            <div ref={versionRef} className="absolute top-4 right-4 opacity-0 text-xs sm:text-sm">
                 Version: 2.0.7
             </div>
 
             {/* Main Center Content */}
             <div className="w-full h-full flex flex-col items-center justify-center">
-                <h1 ref={helloRef} className="text-8xl md:text-[25rem] font-bold text-white tracking-wider flex" style={{ fontFamily: "Righteous, sans-serif" }}>
+                {/* MODIFIED: Fully responsive font sizes for the main headline */}
+                <h1 ref={helloRef} className="text-7xl sm:text-9xl lg:text-[16rem] xl:text-[20rem] font-bold text-white tracking-wider flex" style={{ fontFamily: "Righteous, sans-serif" }}>
                     <span className="inline-block opacity-0">A</span>
                     <span className="inline-block opacity-0">P</span>
                     <span className="inline-block opacity-0">E</span>
@@ -143,7 +159,8 @@ export default function ModernLoader({ onFinish }) {
             </div>
 
             {/* Animated Rolling Counter (Bottom Left) */}
-            <div ref={counterContainerRef} className="absolute bottom-4 left-4 flex items-center gap-2 text-3xl text-slate-400 opacity-0">
+            {/* MODIFIED: Responsive font size for the counter container */}
+            <div ref={counterContainerRef} className="absolute bottom-4 left-4 flex items-center gap-2 text-slate-400 opacity-0">
                 <div className="counter">
                     <div ref={counter1Ref} className="counter-1 digit">
                         <div className="num">0</div>
@@ -154,14 +171,15 @@ export default function ModernLoader({ onFinish }) {
                         <div className="num">1</div><div className="num">2</div><div className="num">3</div><div className="num">4</div><div className="num">5</div><div className="num">6</div><div className="num">7</div><div className="num">8</div><div className="num">9</div><div className="num">0</div>
                     </div>
                     <div ref={counter3Ref} className="counter-3 digit">
-                        {/* Numbers will be added dynamically here by useEffect */}
+                        {/* Numbers are added dynamically here by useEffect */}
                     </div>
                 </div>
-                <span className="text-lime-400 font-semibold">%</span>
+                <span className="text-lime-400 font-semibold text-2xl sm:text-3xl">%</span>
             </div>
 
             {/* Progress Bar (Bottom Right) */}
-            <div ref={progressContainerRef} className="absolute bottom-6 right-4 w-48 opacity-0">
+            {/* MODIFIED: Responsive width for the progress bar */}
+            <div ref={progressContainerRef} className="absolute bottom-6 right-4 w-36 sm:w-48 opacity-0">
                 <div className="w-full bg-slate-800 h-1.5 rounded-full">
                     <div ref={progressBarRef} className="w-0 h-1.5 bg-lime-400 rounded-full"></div>
                 </div>

@@ -30,8 +30,8 @@ const Hero = () => {
         <>
             <Navbar />
             <SmoothScroll>
-                <div className="w-full min-h-screen relative" id='smooth-wrapper'>
-                    <div className="min-h-screen" id='smooth-content'>
+                <div id='smooth-wrapper'>
+                    <div id='smooth-content'>
                         <Home />
                         <FeaturesCard />
                         <ComponentShowcase />

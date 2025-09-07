@@ -194,21 +194,34 @@ const Footer = () => {
     }, []);
     // --- Styled Component for the Big, Faded, and Responsive Text (No changes here) ---
     const FadedBigText = styled.h1`
-  font-weight: 300; /* font-black */
+  font-weight: 300; /* Corresponds to font-light, adjust if you need font-black */
   text-transform: uppercase;
   color: var(--color-footer-text-color);
   opacity: 0.08; /* Faded effect */
   line-height: 1;
+  white-space: nowrap;
 
-  /* Responsive font size */
-  font-size: 6rem; /* 64px for mobile */
+  /* Responsive font size with more breakpoints for smoother scaling */
+  font-size: 6rem; /* Base size for small screens */
+
+  @media (min-width: 640px) { /* sm breakpoint */
+    font-size: 8rem;
+  }
   
   @media (min-width: 768px) { /* md breakpoint */
-    font-size: 8rem; /* 128px for tablets */
+    font-size: 12rem;
   }
 
   @media (min-width: 1024px) { /* lg breakpoint */
-    font-size: 20rem; /* 160px for desktops */
+    font-size: 12rem;
+  }
+
+  @media (min-width: 1180px) { /* xl breakpoint */
+    font-size: 15rem;
+  }
+  
+  @media (min-width: 1536px) { /* 2xl breakpoint */
+    font-size: 24rem;
   }
 `;
     return (

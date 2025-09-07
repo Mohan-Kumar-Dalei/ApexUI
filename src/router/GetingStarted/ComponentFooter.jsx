@@ -1,12 +1,10 @@
 /* eslint-disable no-unused-vars */
-import { React, useRef, useEffect } from "react"; // Removed unused imports like useEffect, useRef, etc.
+import React from "react";
 import styled from "styled-components";
 import { NavLink } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faGithub, faInstagram, faLinkedin } from "@fortawesome/free-brands-svg-icons";
 import { motion } from "framer-motion";
-import gsap from "gsap";
-
 
 // --- Animated Background Shapes Component (No changes here) ---
 const AnimatedShapes = () => {
@@ -28,39 +26,55 @@ const AnimatedShapes = () => {
     );
 };
 
-// --- Styled Component for the Big, Faded, and Responsive Text (No changes here) ---
+// --- Styled Component for the Big, Faded, and Responsive Text (Updated for smoother scaling) ---
 const FadedBigText = styled.h1`
-  font-weight: 300; /* font-black */
+  font-weight: 300; /* Corresponds to font-light, adjust if you need font-black */
   text-transform: uppercase;
   color: var(--color-footer-text-color);
   opacity: 0.08; /* Faded effect */
   line-height: 1;
   white-space: nowrap;
 
-  /* Responsive font size */
-  font-size: 6rem; /* 64px for mobile */
+  /* Responsive font size with more breakpoints for smoother scaling */
+  font-size: 6rem; /* Base size for small screens */
+
+  @media (min-width: 640px) { /* sm breakpoint */
+    font-size: 8rem;
+  }
   
   @media (min-width: 768px) { /* md breakpoint */
-    font-size: 8rem; /* 128px for tablets */
+    font-size: 12rem;
   }
 
-  @media (min-width: 1080px) { /* lg breakpoint */
-    font-size: 20rem; /* 160px for desktops */
+  @media (min-width: 1024px) { /* lg breakpoint */
+    font-size: 12rem;
+  }
+
+  @media (min-width: 1180px) { /* xl breakpoint */
+    font-size: 15rem;
+  }
+  
+  @media (min-width: 1536px) { /* 2xl breakpoint */
+    font-size: 20rem;
   }
 `;
 
 
-
-
-// --- Main Footer Component ---
-const Footer = () => {
+// --- Main Footer Component (Updated with responsive Tailwind classes) ---
+const ComponentFooter = () => {
     return (
-        <footer className="relative bg-[var(--color-footer-bg)] text-[var(--color-footer-text-color)] w-full overflow-hidden pt-24 pb-12 px-4 lg:ml-5">
+        // Added more responsive padding for larger screens and removed lg:ml-5 for proper centering.
+
+        <footer className="relative bg-[var(--color-footer-bg)] text-[var(--color-footer-text-color)] w-full overflow-hidden
+            flex flex-col items-center justify-center
+        "
+        >
             <AnimatedShapes />
-            <div className="max-w-7xl mx-auto text-center relative z-20">
+            {/* Using max-w-7xl ensures content doesn't stretch too wide on extra-large screens. */}
+            <div className=" max-w-7xl mx-auto text-center relative z-20">
                 <div>
-                    {/* Footer Links Grid */}
-                    <div className="grid grid-cols-2 md:grid-cols-3 gap-8 text-left mb-16 max-w-4xl mx-auto">
+                    {/* Footer Links Grid - Adjusted grid columns for better tablet/desktop layout and increased spacing */}
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-8 lg:gap-12 text-left mb-12 sm:mb-16 md:mb-20 max-w-5xl mx-auto">
                         <div className="space-y-4">
                             <p className="font-semibold text-[var(--color-footer-sub-color)]">Resources</p>
                             <NavLink to="components/docs/getting-started/introduction" className="text-[var(--color-footer-sub-text)] hover:text-[var(--color-footer-hover-text2)] hover:underline block transition-colors">Documentation</NavLink>
@@ -71,14 +85,15 @@ const Footer = () => {
                             <a href="https://apex-ui.notion.site/ApexUI-Privacy-Policy-23bcc7626dfc80aaad60f1033802579a" target="_blank" rel="noopener noreferrer" className="text-[var(--color-footer-sub-text)] hover:text-[var(--color-footer-hover-text2)] hover:underline block transition-colors">Privacy Policy</a>
                             <a href="https://apex-ui.notion.site/ApexUI-Terms-Conditions-23bcc7626dfc805c9271f18b9b7af916" target="_blank" rel="noopener noreferrer" className="text-[var(--color-footer-sub-text)] hover:text-[var(--color-footer-hover-text2)] hover:underline block transition-colors">Terms & Conditions</a>
                         </div>
-                        <div className="space-y-4 col-span-2 md:col-span-1">
+                        {/* Simplified the column span for this element to be consistent across breakpoints */}
+                        <div className="space-y-4">
                             <p className="font-semibold text-[var(--color-footer-text-color)]">Feedback</p>
                             <p className="text-[var(--color-footer-sub-text)]">Your feedback is valuable. Please connect on social media to share your thoughts.</p>
                         </div>
                     </div>
 
-                    {/* Bottom Bar */}
-                    <div className="flex flex-col sm:flex-row justify-between items-center text-sm text-gray-500 pt-8 border-t border-gray-800 px-20">
+                    {/* Bottom Bar - Layout is already robustly responsive, no changes needed here. */}
+                    <div className="flex flex-col sm:flex-row justify-between items-center text-sm text-gray-500 pt-8 border-t border-gray-800 px-4 sm:px-8 md:px-12 lg:px-20">
                         <span>&copy; 2025 ApexUI. All rights reserved.</span>
                         <div className="flex items-center gap-4 mt-4 sm:mt-0">
                             <a href="https://github.com/Mohan-Kumar-Dalei/ApexUI" target="_blank" rel="noopener noreferrer" className="hover:text-gray-300 transition-colors"><FontAwesomeIcon icon={faGithub} className="w-5 h-5" /></a>
@@ -88,8 +103,8 @@ const Footer = () => {
                     </div>
                 </div>
 
-
-                <div className="mt-20 flex flex-col justify-between items-center gap-20">
+                {/* Adjusted top margin for better spacing on larger screens */}
+                <div className="mt-16 sm:mt-20 md:mt-24 lg:mt-28 flex flex-col justify-center items-center">
                     <FadedBigText style={{ fontFamily: "Righteous, sans-serif" }}>
                         APEX UI
                     </FadedBigText>
@@ -98,4 +113,5 @@ const Footer = () => {
         </footer>
     );
 };
-export default Footer;
+
+export default ComponentFooter;

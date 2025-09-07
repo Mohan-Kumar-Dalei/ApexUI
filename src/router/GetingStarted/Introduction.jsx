@@ -119,7 +119,7 @@ const ApexIntro = () => {
     ];
 
     return (
-        <section className="py-20 sm:py-24">
+        <section className="py-20 sm:py-24 ">
             <div className="max-w-5xl mx-auto px-4 space-y-24">
 
                 {/* --- Hero Section --- */}

@@ -87,7 +87,7 @@ export default function AsideBar({ isMobile = false, onClose }) {
     const SidebarContent = (
         <aside
             ref={sidebarRef}
-            className={`relative h-full w-full min-h-0 lg:w-[20vw] overflow-hidden bg-[var(--nav-sidebar-bg)] text-[var(--nav-sidebar-text)] flex flex-col px-3 border-r border-[var(--color-border)]`}
+            className={`sticky h-full min-h-0 w-[27vw] min-[1200px]:w-[22.3vw] min-[1281px]:w-[21vw] min-[2000px]:w-[15vw] overflow-hidden bg-[var(--nav-sidebar-bg)] text-[var(--nav-sidebar-text)] flex flex-col px-3 border-r border-[var(--color-border)]`}
         >
             <div
                 ref={contentRef}
