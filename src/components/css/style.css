@@ -456,4 +456,19 @@ body {
 button {
   cursor: pointer;
   transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+::-moz-selection {
+  background: var(--selection-bg);
+  color: var(--selection-text);
+}
+
+::selection {
+  background: var(--selection-bg);
+  color: var(--selection-text);
+}
+
+::-moz-selection {
+  background: var(--selection-bg);
+  color: var(--selection-text);
 }/*# sourceMappingURL=style.css.map */
