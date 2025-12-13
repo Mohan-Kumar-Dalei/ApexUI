@@ -241,7 +241,7 @@ export function buildAnimationCSS(animation, opts = {}) {
     }
   `;
     }
-   // Add more animation 
+    // Add more animation 
 
 
 

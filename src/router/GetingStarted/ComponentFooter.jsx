@@ -77,7 +77,7 @@ const ComponentFooter = () => {
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-8 lg:gap-12 text-left mb-12 sm:mb-16 md:mb-20 max-w-5xl mx-auto">
                         <div className="space-y-4">
                             <p className="font-semibold text-[var(--color-footer-sub-color)]">Resources</p>
-                            <NavLink to="components/docs/getting-started/introduction" className="text-[var(--color-footer-sub-text)] hover:text-[var(--color-footer-hover-text2)] hover:underline block transition-colors">Documentation</NavLink>
+                            <NavLink to="/components/docs/getting-started/introduction" className="text-[var(--color-footer-sub-text)] hover:text-[var(--color-footer-hover-text2)] hover:underline block transition-colors">Introduction</NavLink>
                             <NavLink to="/components" className="text-[var(--color-footer-sub-text)] hover:text-[var(--color-footer-hover-text2)] hover:underline block transition-colors">Components</NavLink>
                         </div>
                         <div className="space-y-4">

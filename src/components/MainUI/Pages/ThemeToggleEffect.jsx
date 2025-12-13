@@ -292,7 +292,7 @@ Step 2️⃣: Register animation in ThemeToggle.jsx
                                             <ThemeToggle
                                                 LightTheme={item.theme}
                                                 animation={{ type: item.animation, link: item.link }}
-                                                duration="1s"
+                                                duration="1.2s"
                                                 ease="var(--vt-ease)"
                                                 className='text-gray-400 hover:text-[var(--color-hover-text)]'
                                             />
