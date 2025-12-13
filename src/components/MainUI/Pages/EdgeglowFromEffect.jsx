@@ -177,7 +177,7 @@ export default App;`
                 <header className="text-center mb-12 space-y-4">
                     {/* Change: Header gradient and text color updated to CSS variables */}
                     <h1 className="text-5xl sm:text-6xl font-extrabold tracking-tight bg-gradient-to-r from-[var(--color-pages-props-heading-text)] to-[var(--color-pages-props-heading-text2)] bg-clip-text text-transparent py-2">
-                        Edge from Glow
+                        Edge Glow Form
                     </h1>
                     <p className="text-base sm:text-lg text-[var(--color-pages-props-sub-text)] max-w-2xl mx-auto">
                         A container that emits a beautiful, blurred gradient glow from its edges, perfect for highlighting content.
