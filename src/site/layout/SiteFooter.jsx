@@ -84,12 +84,29 @@ export default function SiteFooter() {
                     </div>
                 ))}
             </div>
-            <p
-                aria-hidden="true"
-                className="font-display pointer-events-none select-none whitespace-nowrap px-[clamp(1rem,2.6vw,3rem)] pb-4 text-[clamp(5rem,18vw,22rem)] font-bold leading-[0.8] tracking-[-0.06em] text-transparent [-webkit-text-stroke:1px_var(--line-strong)]"
-            >
-                ApexUI
-            </p>
+            {/* Wordmark stretched to the full footer width; a soft fill instead of a text stroke,
+                which drew the overlapping contours of the variable font. */}
+            <div aria-hidden="true" className={`${PAD_X} pointer-events-none select-none overflow-hidden pt-4`}>
+                <svg viewBox="0 0 1200 250" className="block h-auto w-full" preserveAspectRatio="xMidYMax meet">
+                    <defs>
+                        <linearGradient id="footer-wordmark" x1="0" y1="0" x2="0" y2="1">
+                            <stop offset="0" style={{ stopColor: 'var(--ink)', stopOpacity: 0.16 }} />
+                            <stop offset="0.75" style={{ stopColor: 'var(--ink)', stopOpacity: 0.04 }} />
+                            <stop offset="1" style={{ stopColor: 'var(--ink)', stopOpacity: 0 }} />
+                        </linearGradient>
+                    </defs>
+                    <text
+                        x="0"
+                        y="232"
+                        textLength="1200"
+                        lengthAdjust="spacingAndGlyphs"
+                        fill="url(#footer-wordmark)"
+                        style={{ fontFamily: 'var(--font-display)', fontWeight: 700, fontSize: 300, letterSpacing: '-0.04em' }}
+                    >
+                        ApexUI
+                    </text>
+                </svg>
+            </div>
             <div className={`${PAD_X} flex flex-wrap items-center justify-between gap-2 border-t border-[var(--line)] py-5 font-mono text-[0.7rem] text-[var(--ink-3)]`}>
                 <span>© {new Date().getFullYear()} ApexUI. All rights reserved.</span>
                 <span>Made with care by Mohan Kumar Dalei</span>

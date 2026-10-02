@@ -25,11 +25,11 @@ const DropdownPanel = ({ item, isActive, onEnter, onLeave }) => {
             onMouseEnter={onEnter}
             onMouseLeave={onLeave}
             style={{ visibility: 'hidden', opacity: 0, transformOrigin: 'top center' }}
-            className="absolute top-full left-1/2 pt-6 w-max max-w-[min(56rem,92vw)] z-50"
+            className="absolute top-full left-1/2 pt-4 sm:pt-6 w-max max-w-[min(56rem,calc(100vw-1.5rem))] z-50"
         >
-            <div className="bg-gray-950 rounded-4xl shadow-xl p-6 border border-dashed border-gray-700/40">
+            <div className="bg-gray-950 rounded-3xl sm:rounded-4xl shadow-xl p-4 sm:p-6 border border-dashed border-gray-700/40">
                 {item.type === "links" && (
-                    <ul className="grid grid-cols-2 gap-x-8 gap-y-2 text-left">
+                    <ul className="grid grid-cols-1 sm:grid-cols-2 gap-x-8 gap-y-1 sm:gap-y-2 text-left">
                         {item.submenu.map((subItem, i) => (
                             <li key={subItem.label ?? i}>
                                 <a href={subItem.href} className="block p-1.5 text-sm text-gray-400 rounded-md transition-colors duration-150 hover:text-lime-400 hover:bg-slate-800">
@@ -75,8 +75,11 @@ const NavDropDown = ({ navData = [], fixed = false }) => {
     const [openIndex, setOpenIndex] = useState(null);
     const closeTimer = useRef(null);
 
+    const openedAt = useRef(0);
+
     const open = (index) => {
         clearTimeout(closeTimer.current);
+        if (openIndex !== index) openedAt.current = performance.now();
         setOpenIndex(index);
     };
     const scheduleClose = () => {
@@ -88,18 +91,19 @@ const NavDropDown = ({ navData = [], fixed = false }) => {
 
     return (
         <div
-            className={`${fixed ? 'fixed top-4 left-1/2 -translate-x-1/2' : 'relative'} inline-block bg-stone-950 border border-dashed border-slate-300/20 rounded-xl p-4`}
+            className={`${fixed ? 'fixed top-4 left-1/2 -translate-x-1/2' : 'relative'} inline-block max-w-[calc(100vw-1.5rem)] bg-stone-950 border border-dashed border-slate-300/20 rounded-xl p-2 sm:p-4`}
             style={{ zIndex: 4000 }}
             onKeyDown={(e) => e.key === 'Escape' && setOpenIndex(null)}
         >
             <nav className="relative">
-                <ul className="flex space-x-2 justify-center">
+                <ul className="flex flex-wrap items-center justify-center gap-1 sm:gap-2">
                     {navData.map((item, index) => {
                         const hasMenu = Boolean(item.submenu?.length);
                         return (
                             <li
                                 key={item.label ?? index}
-                                className="relative"
+                                // On phones the panel centres under the whole nav instead of its trigger.
+                                className="static sm:relative"
                                 onMouseEnter={() => hasMenu && open(index)}
                                 onMouseLeave={() => hasMenu && scheduleClose()}
                                 onFocus={() => hasMenu && open(index)}
@@ -109,7 +113,14 @@ const NavDropDown = ({ navData = [], fixed = false }) => {
                                     href={item.href || '#'}
                                     aria-haspopup={hasMenu || undefined}
                                     aria-expanded={hasMenu ? openIndex === index : undefined}
-                                    className="flex items-center px-3 py-2 text-sm font-medium hover:text-lime-400 text-slate-300 transition-colors duration-200 cursor-pointer"
+                                    onClick={(e) => {
+                                        if (!hasMenu || (item.href && item.href !== '#')) return;
+                                        e.preventDefault();
+                                        // A tap fires mouseenter right before click; don't let it close straight away.
+                                        if (openIndex === index && performance.now() - openedAt.current > 400) setOpenIndex(null);
+                                        else open(index);
+                                    }}
+                                    className="flex items-center whitespace-nowrap px-2 sm:px-3 py-2 text-[13px] sm:text-sm font-medium hover:text-lime-400 text-slate-300 transition-colors duration-200 cursor-pointer"
                                 >
                                     {item.label}
                                     {hasMenu && (

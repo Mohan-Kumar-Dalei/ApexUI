@@ -27,7 +27,7 @@ const MarqueeContent = ({ text }) => (
     </>
 );
 
-const AccordionMarquee = ({ bgColor = '#bbf451', textColor = '#27272a', items = defaultItems }) => {
+const AccordionMarquee = ({ bgColor = '#bbf451', textColor = '#27272a', items = defaultItems, className = 'h-[80vh] md:h-[70vh]' }) => {
     const containerRef = useRef(null);
 
     useLayoutEffect(() => {
@@ -50,25 +50,27 @@ const AccordionMarquee = ({ bgColor = '#bbf451', textColor = '#27272a', items = 
                     repeat: -1,
                     paused: true,
                 });
-                return { row, title, band, loop };
+                // One reversible timeline per row: the title and the band can never
+                // both be visible, however fast the pointer moves between rows.
+                gsap.set(band, { autoAlpha: 0, scaleY: 0 });
+                const reveal = gsap.timeline({ paused: true, defaults: { ease: "power3.inOut" } })
+                    .to(title, { autoAlpha: 0, y: -12, duration: 0.22 }, 0)
+                    .to(band, { autoAlpha: 1, scaleY: 1, duration: 0.32 }, 0.08);
+                return { row, loop, reveal };
             });
 
             const deactivate = (entry) => {
                 if (!entry) return;
-                gsap.to(entry.title, { autoAlpha: 1, y: 0, duration: 0.3, delay: 0.05, ease: "power3.out", overwrite: "auto" });
-                gsap.to(entry.band, { autoAlpha: 0, scaleY: 0.6, duration: 0.25, ease: "power3.in", overwrite: "auto" });
+                entry.reveal.timeScale(1.4).reverse();
                 entry.loop.pause();
             };
             const activate = (entry) => {
                 if (active === entry) return;
                 deactivate(active);
                 active = entry;
-                gsap.to(entry.title, { autoAlpha: 0, y: -10, duration: 0.2, ease: "power3.in", overwrite: "auto" });
-                gsap.to(entry.band, { autoAlpha: 1, scaleY: 1, duration: 0.35, delay: 0.05, ease: "power3.out", overwrite: "auto" });
+                entry.reveal.timeScale(1).play();
                 entry.loop.play();
             };
-
-            gsap.set(entries.map((e) => e.band), { autoAlpha: 0, scaleY: 0.6 });
 
             const cleanups = entries.map((entry) => {
                 const onEnter = () => activate(entry);
@@ -100,10 +102,10 @@ const AccordionMarquee = ({ bgColor = '#bbf451', textColor = '#27272a', items = 
                 .sparkle-icon { animation: sparkle-pulse 2.5s ease-in-out infinite; }
             `}</style>
             <div className="flex items-center justify-center w-full bg-gray-900 text-white font-sans">
-                <div ref={containerRef} className="flex flex-col w-full h-[80vh] md:h-[70vh]">
+                <div ref={containerRef} className={`flex flex-col w-full min-h-[22rem] ${className}`}>
                     {items.map((item, index) => (
                         <React.Fragment key={item.title ?? index}>
-                            <div className="accordion-item relative w-full flex-1 min-h-24 overflow-hidden cursor-pointer flex items-center justify-center bg-gray-800">
+                            <div className="accordion-item relative w-full flex-1 min-h-20 overflow-hidden cursor-pointer flex items-center justify-center bg-gray-800">
                                 <h2
                                     className="accordion-title relative z-10 px-4 text-center text-2xl sm:text-3xl lg:text-5xl font-extrabold uppercase tracking-wider whitespace-nowrap"
                                     style={{ textShadow: '2px 2px 8px rgba(0,0,0,0.7)' }}
@@ -111,11 +113,11 @@ const AccordionMarquee = ({ bgColor = '#bbf451', textColor = '#27272a', items = 
                                     {item.title}
                                 </h2>
                                 <div
-                                    className="marquee-wrapper absolute left-0 right-0 top-1/2 -translate-y-1/2 h-20 flex items-center overflow-hidden"
+                                    className="marquee-wrapper absolute inset-x-0 top-1/2 -mt-8 sm:-mt-10 h-16 sm:h-20 flex items-center overflow-hidden origin-center"
                                     style={{ backgroundColor: bgColor, visibility: 'hidden' }}
                                 >
                                     <p
-                                        className="marquee-text text-4xl sm:text-5xl md:text-6xl font-bold whitespace-nowrap flex items-center will-change-transform"
+                                        className="marquee-text text-3xl sm:text-5xl md:text-6xl font-bold whitespace-nowrap flex items-center will-change-transform"
                                         style={{ textShadow: '1px 1px 3px rgba(0,0,0,0.2)', fontFamily: "Righteous, sans-serif", color: textColor }}
                                     >
                                         <MarqueeContent text={item.text} />

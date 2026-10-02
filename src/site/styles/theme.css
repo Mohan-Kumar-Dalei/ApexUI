@@ -31,8 +31,8 @@
   --stage: #0a0a0a;
   --code-bg: #0a0a09;
   --code-line: rgba(255, 255, 235, 0.08);
-  --grid-line: rgba(255, 255, 235, 0.045);
-  --dot: rgba(255, 255, 235, 0.08);
+  --grid-line: rgba(255, 255, 235, 0.06);
+  --dot: rgba(255, 255, 235, 0.13);
   --glow: rgba(181, 239, 58, 0.16);
   --shadow: 0 1px 0 rgba(255, 255, 255, 0.03) inset, 0 20px 50px -20px rgba(0, 0, 0, 0.7);
 
@@ -65,8 +65,8 @@
   --stage: #0d0d0c;
   --code-bg: #10100e;
   --code-line: #1d1d1a;
-  --grid-line: rgba(24, 24, 12, 0.06);
-  --dot: rgba(24, 24, 12, 0.12);
+  --grid-line: rgba(24, 24, 12, 0.08);
+  --dot: rgba(24, 24, 12, 0.18);
   --glow: rgba(150, 210, 30, 0.22);
   --shadow: 0 1px 0 rgba(255, 255, 255, 0.6) inset, 0 20px 50px -24px rgba(40, 40, 20, 0.25);
 
@@ -119,7 +119,7 @@
  * are filled instead of showing a small centred column.
  */
 html {
-  font-size: clamp(15px, 0.25vw + 12px, 18px);
+  font-size: clamp(15px, 0.45vw + 8.5px, 21px);
   font-family: var(--font-body);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
@@ -190,15 +190,32 @@ pre,
   background-image: radial-gradient(var(--dot) 1px, transparent 1px);
   background-size: 1.25rem 1.25rem;
 }
+/* Stage patterns: visible on the dark preview canvas, fading out toward the edges. */
+.stage-dots,
+.stage-grid {
+  -webkit-mask-image: radial-gradient(ellipse 85% 80% at 50% 50%, #000 45%, transparent 100%);
+  mask-image: radial-gradient(ellipse 85% 80% at 50% 50%, #000 45%, transparent 100%);
+}
 .stage-dots {
-  background-image: radial-gradient(rgba(255, 255, 255, 0.07) 1px, transparent 1px);
-  background-size: 1.25rem 1.25rem;
+  background-image: radial-gradient(rgba(255, 255, 255, 0.22) 1.2px, transparent 1.7px);
+  background-size: 22px 22px;
+  background-position: center;
 }
 .stage-grid {
   background-image:
-    linear-gradient(rgba(255, 255, 255, 0.045) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(255, 255, 255, 0.045) 1px, transparent 1px);
-  background-size: 2.5rem 2.5rem;
+    linear-gradient(rgba(190, 242, 100, 0.12) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(190, 242, 100, 0.12) 1px, transparent 1px),
+    linear-gradient(rgba(255, 255, 255, 0.07) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.07) 1px, transparent 1px);
+  background-size: 160px 160px, 160px 160px, 32px 32px, 32px 32px;
+  background-position: center;
+}
+/* Over full-bleed previews the pattern becomes an alignment overlay. */
+.stage-overlay.stage-dots,
+.stage-overlay.stage-grid {
+  -webkit-mask-image: none;
+  mask-image: none;
+  opacity: 0.75;
 }
 
 /* Corner tick marks used on framed panels. */

@@ -40,13 +40,13 @@ const dependencies = [
 function Preview() {
     const scrollRef = useRef(null);
     return (
-        <div ref={scrollRef} className="scrollbar-hide relative h-[520px] w-full overflow-y-auto">
-            <div className="flex h-[1100px] w-full flex-col items-center justify-between py-24">
-                <p className="text-4xl font-semibold text-white/25 sm:text-5xl">Scroll down ↓</p>
+        <div ref={scrollRef} className="scrollbar-hide absolute inset-0 overflow-y-auto overscroll-contain">
+            <div className="flex min-h-[260%] w-full flex-col items-center gap-[clamp(2.5rem,8vh,6rem)] pb-[60%] pt-[clamp(2rem,7vh,5rem)]">
+                <p className="text-center font-mono text-xs uppercase tracking-[0.3em] text-white/40">Scroll inside this box ↕</p>
                 <div className="w-full">
                     <ScrollMarquee scrollRef={scrollRef} />
                 </div>
-                <p className="text-4xl font-semibold text-white/25 sm:text-5xl">Now scroll up ↑</p>
+                <p className="text-center font-mono text-xs uppercase tracking-[0.3em] text-white/30">Now scroll back up ↑</p>
             </div>
         </div>
     );

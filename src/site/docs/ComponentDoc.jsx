@@ -46,7 +46,7 @@ const toolBtn = 'inline-flex h-8 w-8 items-center justify-center rounded-full te
 /* The live preview: a dark canvas with view / background / replay / fullscreen controls. */
 function Stage({ variant, variants, activeVariant, onVariant }) {
     const [view, setView] = useState('preview');
-    const [bg, setBg] = useState('dots');
+    const [bg, setBg] = useState(variant.fullBleed ? 'plain' : 'dots');
     const [replayKey, setReplayKey] = useState(0);
     const [full, setFull] = useState(false);
     const stageRef = useRef(null);
@@ -57,7 +57,11 @@ function Stage({ variant, variants, activeVariant, onVariant }) {
         return () => document.removeEventListener('fullscreenchange', onChange);
     }, []);
 
-    useEffect(() => setView('preview'), [activeVariant]);
+    // Full-bleed previews paint their own background, so the pattern starts off there.
+    useEffect(() => {
+        setView('preview');
+        setBg(variant.fullBleed ? 'plain' : 'dots');
+    }, [activeVariant, variant.fullBleed]);
 
     const toggleFull = () => {
         if (document.fullscreenElement) document.exitFullscreen?.();
@@ -83,8 +87,8 @@ function Stage({ variant, variants, activeVariant, onVariant }) {
                 <div className="ml-auto flex items-center gap-1.5">
                     {view === 'preview' && (
                         <>
-                            <div className="hidden sm:block">
-                                <Segmented size="sm" value={bg} onChange={setBg} options={STAGE_BG.map((b) => ({ value: b.id, icon: b.icon, title: `${b.label} background` }))} />
+                            <div>
+                                <Segmented size="sm" value={bg} onChange={setBg} options={STAGE_BG.map((b) => ({ value: b.id, icon: b.icon, title: variant.fullBleed ? `${b.label} overlay` : `${b.label} background` }))} />
                             </div>
                             <button type="button" onClick={() => setReplayKey((k) => k + 1)} className={toolBtn} aria-label="Replay preview" title="Replay">
                                 <RotateCcw className="h-3.5 w-3.5" />
@@ -113,8 +117,9 @@ function Stage({ variant, variants, activeVariant, onVariant }) {
                         animate={{ opacity: 1 }}
                         exit={{ opacity: 0 }}
                         transition={{ duration: 0.18 }}
-                        className={`relative flex flex-1 items-center justify-center overflow-hidden bg-[var(--stage)] text-white [transform:translateZ(0)] ${bgClass} ${full ? 'h-screen' : STAGE_H} ${variant.fullBleed ? '' : 'p-[clamp(1.25rem,3vw,3.5rem)]'} ${variant.previewClassName ?? ''}`}
+                        className={`relative isolate flex flex-1 items-center justify-center overflow-hidden bg-[var(--stage)] text-white [transform:translateZ(0)] ${full ? 'h-screen' : STAGE_H} ${variant.fullBleed ? '' : 'p-[clamp(1.25rem,3vw,3.5rem)]'} ${variant.previewClassName ?? ''}`}
                     >
+                        {bgClass && <div aria-hidden="true" className={`pointer-events-none absolute inset-0 ${bgClass} ${variant.fullBleed ? 'stage-overlay z-20' : '-z-10'}`} />}
                         {variant.preview}
                     </motion.div>
                 ) : (
