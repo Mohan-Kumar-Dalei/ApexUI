@@ -132,7 +132,7 @@ const ResponsiveNavMenu = (props) => {
                 <div className="md:hidden absolute top-20 left-4 right-4 rounded-xl shadow-lg border border-white/10"
                     style={{ backdropFilter: 'blur(16px)', WebkitBackdropFilter: 'blur(16px)', background: 'rgba(17, 24, 39, 0.7)' }}>
                     <div className="flex flex-col items-center gap-2 p-4">
-                        {navItems.map((label, i) => (
+                        {navItems.map((label) => (
                             <button
                                 key={label}
                                 onClick={() => {

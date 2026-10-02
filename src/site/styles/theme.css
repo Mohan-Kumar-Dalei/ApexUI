@@ -1,0 +1,321 @@
+/*
+ * ApexUI "Studio" design tokens.
+ * The site is a framed app: an outer frame, a rounded window, a dock and
+ * panels. Every surface reads from these variables.
+ */
+
+:root,
+.theme-dark {
+  color-scheme: dark;
+
+  --frame: #000000;
+  --bg: #09090b;
+  --panel: #0f0f12;
+  --panel-2: #16161a;
+  --panel-3: #232329;
+  --line: rgba(255, 255, 255, 0.07);
+  --line-strong: rgba(255, 255, 255, 0.13);
+
+  --ink: #fafafa;
+  --ink-2: #a1a1aa;
+  --ink-3: #71717a;
+
+  /* Brand lime, taken from the ApexUI logo. */
+  --lime: #b5ef3a;
+  --lime-ink: #0b1002;
+  --lime-text: #c6f56a;
+  --lime-soft: rgba(181, 239, 58, 0.11);
+  --lime-line: rgba(181, 239, 58, 0.32);
+  --ring: rgba(181, 239, 58, 0.5);
+  --accent-from: #d9fb7a;
+  --accent-to: #84cc16;
+
+  /* Live preview stage: follows the site theme. */
+  --stage: #0b0b0e;
+  --stage-ink: #fafafa;
+  --stage-dot: rgba(255, 255, 255, 0.18);
+  --stage-grid: rgba(255, 255, 255, 0.07);
+  --stage-grid-major: rgba(181, 239, 58, 0.14);
+
+  --code-bg: #0b0b0e;
+  --code-line: rgba(255, 255, 255, 0.08);
+  --grid-line: rgba(255, 255, 255, 0.06);
+  --dot: rgba(255, 255, 255, 0.13);
+  --glow: rgba(181, 239, 58, 0.14);
+  --shadow: 0 1px 0 rgba(255, 255, 255, 0.04) inset, 0 24px 60px -24px rgba(0, 0, 0, 0.8);
+
+  --syntax-type: #8bd3ff;
+  --syntax-value: #f5c37a;
+}
+
+.theme-light {
+  color-scheme: light;
+
+  --frame: #e4e4e7;
+  --bg: #fafafa;
+  --panel: #ffffff;
+  --panel-2: #f4f4f5;
+  --panel-3: #e4e4e7;
+  --line: rgba(9, 9, 11, 0.08);
+  --line-strong: rgba(9, 9, 11, 0.15);
+
+  --ink: #09090b;
+  --ink-2: #52525b;
+  --ink-3: #71717a;
+
+  --lime: #a3e635;
+  --lime-ink: #0b1002;
+  --lime-text: #4d7c0f;
+  --lime-soft: rgba(132, 204, 22, 0.14);
+  --lime-line: rgba(77, 124, 15, 0.35);
+  --ring: rgba(77, 124, 15, 0.45);
+  --accent-from: #65a30d;
+  --accent-to: #3f6212;
+
+  --stage: #f4f4f5;
+  --stage-ink: #09090b;
+  --stage-dot: rgba(9, 9, 11, 0.2);
+  --stage-grid: rgba(9, 9, 11, 0.07);
+  --stage-grid-major: rgba(77, 124, 15, 0.2);
+
+  --code-bg: #0b0b0e;
+  --code-line: #1f1f24;
+  --grid-line: rgba(9, 9, 11, 0.07);
+  --dot: rgba(9, 9, 11, 0.16);
+  --glow: rgba(132, 204, 22, 0.2);
+  --shadow: 0 1px 0 rgba(255, 255, 255, 0.8) inset, 0 24px 60px -28px rgba(9, 9, 11, 0.22);
+
+  --syntax-type: #0b6aa8;
+  --syntax-value: #9a5b00;
+}
+
+/* Older variable names that live demos and library components still read. */
+:root,
+.theme-dark,
+.theme-light {
+  --color-bg: var(--bg);
+  --color-text: var(--ink);
+  --color-border: var(--line);
+  --color-hover-text: var(--ink);
+  --color-pages-bg: var(--panel-2);
+  --color-pages-border: var(--line);
+  --color-pages-divider: var(--line);
+  --color-pages-side-hover: var(--ink);
+  --color-pages-side-text2: var(--ink);
+  --color-pages-side-active-text: var(--lime-text);
+  --color-pages-side-active-text2: var(--syntax-type);
+  --color-pages-side-active-text3: var(--syntax-value);
+  --color-pages-side-active-text4: var(--ink);
+  --color-pages-side-active-text6: var(--ink);
+  --color-pages-side-active-hover: var(--lime);
+  --color-pages-props-text: var(--ink-2);
+  --color-pages-props-text2: var(--ink);
+  --color-pages-props-text3: var(--ink-3);
+  --color-pages-props-sub-text: var(--ink-2);
+  --color-pages-props-heading-text: var(--ink);
+  --color-pages-props-heading-text2: var(--ink);
+  --selection-bg: var(--lime);
+  --selection-text: var(--lime-ink);
+
+  --vt-duration: 1.2s;
+  --vt-ease: ease-in-out;
+
+  --font-display: "Geist", "Inter", ui-sans-serif, system-ui, sans-serif;
+  --font-body: "Geist", "Inter", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-mono: "Geist Mono", "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+
+  --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+/*
+ * Fluid root size: every rem-based measure (spacing, type, panels) grows
+ * from 15px on phones to 18px on 27" / 1440p+ displays, so large screens
+ * are filled instead of showing a small centred column.
+ */
+html {
+  font-size: clamp(15px, 0.45vw + 8.5px, 21px);
+  font-family: var(--font-body);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+  scroll-padding-top: 5rem;
+}
+
+body {
+  margin: 0;
+  min-height: 100dvh;
+  overflow-x: hidden;
+  background: var(--frame);
+  color: var(--ink);
+  font-feature-settings: "cv11", "ss01";
+}
+
+code,
+kbd,
+pre,
+.font-mono {
+  font-family: var(--font-mono);
+}
+
+.font-display {
+  font-family: var(--font-display);
+  letter-spacing: -0.035em;
+}
+
+/* Accent words in headings: brand lime gradient, same face and weight as the heading. */
+.text-accent {
+  background-image: linear-gradient(100deg, var(--accent-from), var(--accent-to));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  -webkit-text-fill-color: transparent;
+}
+
+::selection {
+  background: var(--selection-bg);
+  color: var(--selection-text);
+}
+
+:focus-visible:not(input, textarea, select) {
+  outline: 2px solid var(--ring);
+  outline-offset: 2px;
+}
+
+.thin-scroll {
+  scrollbar-width: thin;
+  scrollbar-color: var(--panel-3) transparent;
+}
+.thin-scroll::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+.thin-scroll::-webkit-scrollbar-thumb {
+  background: var(--panel-3);
+  border-radius: 999px;
+  border: 2px solid transparent;
+  background-clip: padding-box;
+}
+
+.bg-grid {
+  background-image:
+    linear-gradient(var(--grid-line) 1px, transparent 1px),
+    linear-gradient(90deg, var(--grid-line) 1px, transparent 1px);
+  background-size: 3.5rem 3.5rem;
+}
+.bg-dots {
+  background-image: radial-gradient(var(--dot) 1px, transparent 1px);
+  background-size: 1.25rem 1.25rem;
+}
+/* Stage patterns: visible on the dark preview canvas, fading out toward the edges. */
+.stage-dots,
+.stage-grid {
+  -webkit-mask-image: radial-gradient(ellipse 85% 80% at 50% 50%, #000 45%, transparent 100%);
+  mask-image: radial-gradient(ellipse 85% 80% at 50% 50%, #000 45%, transparent 100%);
+}
+.stage-dots {
+  background-image: radial-gradient(var(--stage-dot) 1.2px, transparent 1.7px);
+  background-size: 22px 22px;
+  background-position: center;
+}
+.stage-grid {
+  background-image:
+    linear-gradient(var(--stage-grid-major) 1px, transparent 1px),
+    linear-gradient(90deg, var(--stage-grid-major) 1px, transparent 1px),
+    linear-gradient(var(--stage-grid) 1px, transparent 1px),
+    linear-gradient(90deg, var(--stage-grid) 1px, transparent 1px);
+  background-size: 160px 160px, 160px 160px, 32px 32px, 32px 32px;
+  background-position: center;
+}
+/* Over full-bleed previews the pattern becomes an alignment overlay. */
+.stage-overlay.stage-dots,
+.stage-overlay.stage-grid {
+  -webkit-mask-image: none;
+  mask-image: none;
+  opacity: 0.75;
+}
+
+/* Corner tick marks used on framed panels. */
+.ticks {
+  position: relative;
+}
+.ticks::before,
+.ticks::after {
+  content: "";
+  position: absolute;
+  width: 0.6rem;
+  height: 0.6rem;
+  pointer-events: none;
+  border-color: var(--lime-line);
+}
+.ticks::before {
+  top: -1px;
+  left: -1px;
+  border-top: 1px solid;
+  border-left: 1px solid;
+}
+.ticks::after {
+  bottom: -1px;
+  right: -1px;
+  border-bottom: 1px solid;
+  border-right: 1px solid;
+}
+
+/* Infinite ticker used on the home page. */
+@keyframes apex-ticker {
+  to {
+    transform: translateX(-50%);
+  }
+}
+.ticker-track {
+  animation: apex-ticker 60s linear infinite;
+}
+.ticker:hover .ticker-track {
+  animation-play-state: paused;
+}
+
+@keyframes apex-progress {
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(250%);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ticker-track {
+    animation: none;
+  }
+}
+
+/* Used by the BeamBar component's demo. */
+@keyframes glow {
+  0% {
+    filter: blur(100px) brightness(1);
+    opacity: 0.8;
+  }
+  100% {
+    filter: blur(100px) brightness(1.3);
+    opacity: 1;
+  }
+}
+
+::view-transition-group(root) {
+  animation-timing-function: var(--vt-ease);
+}
+
+/* App frame geometry: no gap on small screens, a thin bezel from lg up. */
+:root {
+  --pad: 0px;
+}
+@media (min-width: 1024px) {
+  :root {
+    --pad: 0.6rem;
+  }
+}
+.h-shell {
+  height: calc(100dvh - 2 * var(--pad));
+}
+.min-h-shell {
+  min-height: calc(100dvh - 2 * var(--pad));
+}

@@ -59,7 +59,7 @@ export default function CardStack({
         return () => {
             tl.kill();
         };
-    }, [active]);
+    }, [active, cards.length]);
     const getCardIndex = (i) => (active + i) % cards.length;
     return (
         <div

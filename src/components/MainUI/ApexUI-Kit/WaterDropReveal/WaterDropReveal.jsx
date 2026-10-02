@@ -88,7 +88,7 @@ const WaterDropReveal = ({
                 <svg width="100%" height="100%" viewBox="0 0 400 160" preserveAspectRatio="xMidYMid slice">
                     <defs>
                         <filter id="drop-shadow" x="-30%" y="-30%" width="160%" height="160%">
-                            <feDropShadow dx="0" dy="6" stdDeviation="18" flood-color="black" flood-opacity="60" />
+                            <feDropShadow dx="0" dy="6" stdDeviation="18" floodColor="black" floodOpacity="60" />
                         </filter>
                     </defs>
                     {(() => {

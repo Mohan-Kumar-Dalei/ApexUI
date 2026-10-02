@@ -241,6 +241,7 @@ const KineticThreadsBackground = ({
             geometry.dispose();
             material.dispose();
             renderer.dispose();
+            renderer.forceContextLoss();
         };
     }, [color, amplitude, distance, speed, mouseInteraction]);
 

@@ -1,9 +1,10 @@
 @import "tailwindcss";
 @import "tailwind-scrollbar-hide/v4";
-body {
-  transition: background-color 0.5s, color 0.5s;
-  scroll-behavior: smooth;
-}
+
+/* Theme classes are applied on <html>; dark is the default. */
+@custom-variant dark (&:where(.theme-dark, .theme-dark *));
+
+/* Used by the BeamBar component. */
 @keyframes glow {
   0% {
     filter: blur(100px) brightness(1);
@@ -12,15 +13,5 @@ body {
   100% {
     filter: blur(100px) brightness(1.3);
     opacity: 1;
-  }
-}
-
-@keyframes pulse {
-  0%,
-  100% {
-    box-shadow: 0 0 10px #fff, 0 0 20px #4f46e5, 0 0 30px #06b6d4;
-  }
-  50% {
-    box-shadow: 0 0 15px #fff, 0 0 30px #4f46e5, 0 0 40px #06b6d4;
   }
 }

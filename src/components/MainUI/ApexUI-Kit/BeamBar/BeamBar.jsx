@@ -43,21 +43,23 @@ const BeamBar = ({
 
             // Animate beam opacity gradually during width expansion
             let start = null;
+            let frame = 0;
             function animateBeam(ts) {
                 if (!start) start = ts;
                 const elapsed = (ts - start) / 1000;
                 const progress = Math.min(elapsed / duration, 1);
                 setBeamOpacity(0.2 + 0.8 * progress); // from 0.2 to 1.0
                 if (progress < 1) {
-                    requestAnimationFrame(animateBeam);
+                    frame = requestAnimationFrame(animateBeam);
                 } else {
                     setPulse(true);
                 }
             }
-            requestAnimationFrame(animateBeam);
+            frame = requestAnimationFrame(animateBeam);
 
-            // Cleanup
+            // Cleanup (stop the running loop so a resize or unmount doesn't leave it going)
             return () => {
+                cancelAnimationFrame(frame);
                 setBeamOpacity(0.2);
                 setPulse(false);
             };

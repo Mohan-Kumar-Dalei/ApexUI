@@ -235,8 +235,9 @@ const LensFlareBackground = ({
             window.removeEventListener("resize", updatePlacement);
             window.removeEventListener("mousemove", handleMouseMove);
             renderer.dispose();
-            if (mountRef.current && renderer.domElement.parentNode === mountRef.current) {
-                mountRef.current.removeChild(renderer.domElement);
+            renderer.forceContextLoss();
+            if (renderer.domElement.parentNode) {
+                renderer.domElement.parentNode.removeChild(renderer.domElement);
             }
         };
     }, [flareColor, intensity, animationSpeed]);

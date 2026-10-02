@@ -14,6 +14,7 @@ const ParallaxCard = ({ cardData = [], tiltEnable, glareEnable, scale, perspecti
     const linkRefs = useRef([]);
 
     useEffect(() => {
+        const cleanups = [];
         cardData.forEach((_, idx) => {
             const cardElement = cardRefs.current[idx];
             const titleElement = titleRefs.current[idx];
@@ -40,11 +41,11 @@ const ParallaxCard = ({ cardData = [], tiltEnable, glareEnable, scale, perspecti
                     ease: "power3.out",
                 });
 
-                gsap.to(titleElement, { duration: 0.7, x: rotateY * 0.8, y: -rotateX * 0.8 });
-                gsap.to(imageElement, { duration: 0.8, x: rotateY * 1.5, y: -rotateX * 1.5 });
-                gsap.to(descElement, { duration: 0.9, x: rotateY * 1.2, y: -rotateX * 1.2 });
-                gsap.to(buttonElement, { duration: 1, x: rotateY * 1.1, y: -rotateX * 1.1 });
-                gsap.to(linkElement, { duration: 1, x: rotateY * 1.1, y: -rotateX * 1.1 });
+                if (titleElement) gsap.to(titleElement, { duration: 0.7, x: rotateY * 0.8, y: -rotateX * 0.8 });
+                if (imageElement) gsap.to(imageElement, { duration: 0.8, x: rotateY * 1.5, y: -rotateX * 1.5 });
+                if (descElement) gsap.to(descElement, { duration: 0.9, x: rotateY * 1.2, y: -rotateX * 1.2 });
+                if (buttonElement) gsap.to(buttonElement, { duration: 1, x: rotateY * 1.1, y: -rotateX * 1.1 });
+                if (linkElement) gsap.to(linkElement, { duration: 1, x: rotateY * 1.1, y: -rotateX * 1.1 });
             };
 
             const handleMouseLeave = () => {
@@ -56,7 +57,7 @@ const ParallaxCard = ({ cardData = [], tiltEnable, glareEnable, scale, perspecti
                         scale: 1,
                         ease: "elastic.out(1, 0.5)",
                     });
-                    gsap.to([titleElement, imageElement, descElement, buttonElement, linkElement], {
+                    gsap.to([titleElement, imageElement, descElement, buttonElement, linkElement].filter(Boolean), {
                         duration: 1.2,
                         x: 0,
                         y: 0,
@@ -68,11 +69,12 @@ const ParallaxCard = ({ cardData = [], tiltEnable, glareEnable, scale, perspecti
             cardElement.addEventListener("mousemove", handleMouseMove);
             cardElement.addEventListener("mouseleave", handleMouseLeave);
 
-            return () => {
+            cleanups.push(() => {
                 cardElement.removeEventListener("mousemove", handleMouseMove);
                 cardElement.removeEventListener("mouseleave", handleMouseLeave);
-            };
+            });
         });
+        return () => cleanups.forEach((fn) => fn());
     }, [cardData, tiltEnable, scale]);
 
     return (

@@ -1,5 +1,5 @@
 import React, { useEffect, useRef } from "react";
-import { Renderer, Program, Mesh, Triangle } from "https://unpkg.com/ogl";
+import { Renderer, Program, Mesh, Triangle } from "ogl";
 
 const hexToRgb = (hex) => {
     const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
@@ -209,6 +209,7 @@ export const SmokeBackground = ({
             try {
                 mountNode.removeChild(canvas);
             } catch (error) { console.error("Error removing canvas:", error); }
+            gl.getExtension("WEBGL_lose_context")?.loseContext();
         };
     }, [color, speed, direction, scale, opacity, mouseInteractive, className]);
 

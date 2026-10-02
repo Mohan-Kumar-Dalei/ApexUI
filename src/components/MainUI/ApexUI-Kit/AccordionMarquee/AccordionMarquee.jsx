@@ -26,66 +26,87 @@ const AccordionMarquee = ({bgColor='#bbf451', textColor='#27272a'}) => {
     const containerRef = useRef(null);
 
     useLayoutEffect(() => {
-        const items = gsap.utils.toArray(".accordion-item");
-        let activeItem = null;
-        let activeMarquee = null;
+        const container = containerRef.current;
+        if (!container) return undefined;
+        const cleanups = [];
 
-        items.forEach((item) => {
-            const marqueeText = item.querySelector(".marquee-text");
-            const title = item.querySelector(".accordion-title");
+        // Scoped to this instance and reverted on unmount, so a remount (or React
+        // StrictMode) no longer stacks a second set of handlers and tweens — that
+        // is what left several marquee bands visible at once.
+        const ctx = gsap.context(() => {
+            const items = gsap.utils.toArray(".accordion-item", container);
+            let activeItem = null;
+            let activeMarquee = null;
 
-            // Marquee text ko 2 baar duplicate karte hain for seamless loop
-            const marqueeContent = marqueeText.innerText;
-            const sparkleIconSVG = `<svg xmlns="http://www.w3.org/2000/svg" width="100" height="70" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-sparkle-icon lucide-sparkle"><path d="M11.017 2.814a1 1 0 0 1 1.966 0l1.051 5.558a2 2 0 0 0 1.594 1.594l5.558 1.051a1 1 0 0 1 0 1.966l-5.558 1.051a2 2 0 0 0-1.594 1.594l-1.051 5.558a1 1 0 0 1-1.966 0l-1.051-5.558a2 2 0 0 0-1.594-1.594l-5.558-1.051a1 1 0 0 1 0-1.966l5.558-1.051a2 2 0 0 0 1.594-1.594z" class="sparkle-icon"/></svg>`;
-            marqueeText.innerHTML = [marqueeContent, sparkleIconSVG, marqueeContent, sparkleIconSVG, marqueeContent, sparkleIconSVG, marqueeContent, sparkleIconSVG].join("");
+            items.forEach((item) => {
+                const marqueeText = item.querySelector(".marquee-text");
+                const title = item.querySelector(".accordion-title");
 
-            // Seamless Marquee animation
-            const marqueeWidth = marqueeText.scrollWidth / 2;
-            const marqueeTl = gsap.to(marqueeText, {
-                x: -marqueeWidth,
-                duration: marqueeWidth / 30, // Speed ko consistent rakhta hai
-                ease: "linear",
-                repeat: -1,
-            }).pause();
+                // Marquee text ko 2 baar duplicate karte hain for seamless loop
+                // (the original text is kept so a remount doesn't duplicate it again)
+                if (!marqueeText.dataset.text) marqueeText.dataset.text = marqueeText.innerText;
+                const marqueeContent = marqueeText.dataset.text;
+                const sparkleIconSVG = `<svg xmlns="http://www.w3.org/2000/svg" width="100" height="70" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-sparkle-icon lucide-sparkle"><path d="M11.017 2.814a1 1 0 0 1 1.966 0l1.051 5.558a2 2 0 0 0 1.594 1.594l5.558 1.051a1 1 0 0 1 0 1.966l-5.558 1.051a2 2 0 0 0-1.594 1.594l-1.051 5.558a1 1 0 0 1-1.966 0l-1.051-5.558a2 2 0 0 0-1.594-1.594l-5.558-1.051a1 1 0 0 1 0-1.966l5.558-1.051a2 2 0 0 0 1.594-1.594z" class="sparkle-icon"/></svg>`;
+                marqueeText.innerHTML = [marqueeContent, sparkleIconSVG, marqueeContent, sparkleIconSVG, marqueeContent, sparkleIconSVG, marqueeContent, sparkleIconSVG].join("");
 
-            item.addEventListener("mouseenter", () => {
-                if (activeItem === item) return;
+                // Seamless Marquee animation
+                const marqueeWidth = marqueeText.scrollWidth / 2;
+                const marqueeTl = gsap.to(marqueeText, {
+                    x: -marqueeWidth,
+                    duration: marqueeWidth / 30, // Speed ko consistent rakhta hai
+                    ease: "linear",
+                    repeat: -1,
+                }).pause();
 
-                if (activeItem) {
-                    const oldTitle = activeItem.querySelector(".accordion-title");
-                    const oldMarqueeWrapper = activeItem.querySelector(".marquee-wrapper");
-                    gsap.to(oldTitle, { autoAlpha: 1, duration: 0.2, ease: "power3.inOut" });
-                    gsap.to(oldMarqueeWrapper, { autoAlpha: 0, duration: 0.2, ease: "power3.inOut" });
-                    if (activeMarquee) activeMarquee.pause();
-                }
+                // overwrite: true kills a still-delayed tween on the same element,
+                // so fast pointer moves can't leave a title and a band both visible.
+                const onEnter = () => {
+                    if (activeItem === item) return;
 
-                activeItem = item;
-                activeMarquee = marqueeTl;
+                    if (activeItem) {
+                        const oldTitle = activeItem.querySelector(".accordion-title");
+                        const oldMarqueeWrapper = activeItem.querySelector(".marquee-wrapper");
+                        gsap.to(oldTitle, { autoAlpha: 1, duration: 0.2, ease: "power3.inOut", overwrite: true });
+                        gsap.to(oldMarqueeWrapper, { autoAlpha: 0, duration: 0.2, ease: "power3.inOut", overwrite: true });
+                        if (activeMarquee) activeMarquee.pause();
+                    }
 
-                const marqueeWrapper = item.querySelector(".marquee-wrapper");
-                gsap.to(title, { autoAlpha: 0, duration: 0.2, ease: "power3.inOut" });
-                gsap.to(marqueeWrapper, { autoAlpha: 1, duration: 0.2, delay: 0.1, ease: "power3.inOut" });
+                    activeItem = item;
+                    activeMarquee = marqueeTl;
 
-                marqueeTl.play();
+                    const marqueeWrapper = item.querySelector(".marquee-wrapper");
+                    gsap.to(title, { autoAlpha: 0, duration: 0.2, ease: "power3.inOut", overwrite: true });
+                    gsap.to(marqueeWrapper, { autoAlpha: 1, duration: 0.2, delay: 0.1, ease: "power3.inOut", overwrite: true });
+
+                    marqueeTl.play();
+                };
+                item.addEventListener("mouseenter", onEnter);
+                cleanups.push(() => item.removeEventListener("mouseenter", onEnter));
             });
-        });
 
-        containerRef.current.addEventListener("mouseleave", () => {
-            if (!activeItem) return;
+            const onLeave = () => {
+                if (!activeItem) return;
 
-            const activeTitle = activeItem.querySelector(".accordion-title");
-            const activeMarqueeWrapper = activeItem.querySelector(".marquee-wrapper");
+                const activeTitle = activeItem.querySelector(".accordion-title");
+                const activeMarqueeWrapper = activeItem.querySelector(".marquee-wrapper");
 
-            gsap.to(activeTitle, { autoAlpha: 1, duration: 0.2, delay: 0.1, ease: "power3.inOut" });
-            gsap.to(activeMarqueeWrapper, { autoAlpha: 0, duration: 0.2, ease: "power3.inOut" });
+                gsap.to(activeTitle, { autoAlpha: 1, duration: 0.2, delay: 0.1, ease: "power3.inOut", overwrite: true });
+                gsap.to(activeMarqueeWrapper, { autoAlpha: 0, duration: 0.2, ease: "power3.inOut", overwrite: true });
 
-            if (activeMarquee) {
-                activeMarquee.pause();
-            }
-            activeItem = null;
-            activeMarquee = null;
-        });
+                if (activeMarquee) {
+                    activeMarquee.pause();
+                }
+                activeItem = null;
+                activeMarquee = null;
+            };
+            container.addEventListener("mouseleave", onLeave);
+            cleanups.push(() => container.removeEventListener("mouseleave", onLeave));
+        }, container);
 
+        return () => {
+            cleanups.forEach((fn) => fn());
+            ctx.revert();
+        };
     }, []);
 
     return (
@@ -107,7 +128,7 @@ const AccordionMarquee = ({bgColor='#bbf451', textColor='#27272a'}) => {
                 }
                 `}
             </style>
-            <div className="flex items-center justify-center w-screen bg-gray-900 text-white font-sans">
+            <div className="flex items-center justify-center w-full bg-gray-900 text-white font-sans">
                 <div ref={containerRef} className="flex flex-col w-full h-[80vh] md:h-[70vh]">
                     {accordionData.map((item, index) => (
                         <React.Fragment key={index}>
