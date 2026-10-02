@@ -1,13 +1,11 @@
-import React from 'react';
 import AppRouter from './router/AppRouter.jsx';
-const App = () => {
-  return (
-    <>
-        <div className='box-border bg-[var(--color-bg)]'>
-          <AppRouter />
-        </div>
-    </>
-  );
-};
-export default App;
+import CommandMenu from './site/layout/CommandMenu.jsx';
 
+const App = () => (
+    <>
+        <AppRouter />
+        <CommandMenu />
+    </>
+);
+
+export default App;

@@ -1,30 +1,20 @@
-import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
-import React, { useEffect } from 'react';
-import Hero from '../components/Hero.jsx';
-import Components from './GetingStarted/Components.jsx';
-import TemplateSoon from "../components/TemplatesSoon.jsx"
+import { lazy, Suspense } from 'react';
+import { Routes, Route } from 'react-router-dom';
+import DocsLayout from '../site/layout/DocsLayout.jsx';
+import NotFound from '../site/pages/NotFound.jsx';
+
+const HomePage = lazy(() => import('../site/pages/home/HomePage.jsx'));
+const TemplatesSoon = lazy(() => import('../site/pages/TemplatesSoon.jsx'));
+
 export default function AppRouter() {
-    const location = useLocation();
-    const prevPathRef = React.useRef(location.pathname);
-    useEffect(() => {
-        if (location.pathname === "/" && prevPathRef.current !== "/") {
-            window.location.reload();
-        }
-        prevPathRef.current = location.pathname;
-    }, [location.pathname]);
     return (
-        <Routes>
-            <Route path="/" element={
-                <>
-                    <Hero />
-                </>
-            } />
-            <Route path="/components" element={<Components />} />
-            <Route path="/templates-soon" element={<TemplateSoon />} />
-            <Route path="/components/:section" element={<Components />} />
-            <Route path="/components/docs/getting-started/:section" element={<Components />} />
-            <Route path="/components/docs/getting-started/installation/:section" element={<Components />} />
-        </Routes>
+        <Suspense fallback={<div className="min-h-screen bg-[var(--bg)]" />}>
+            <Routes>
+                <Route path="/" element={<HomePage />} />
+                <Route path="/templates-soon" element={<TemplatesSoon />} />
+                <Route path="/components/*" element={<DocsLayout />} />
+                <Route path="*" element={<NotFound />} />
+            </Routes>
+        </Suspense>
     );
 }
-

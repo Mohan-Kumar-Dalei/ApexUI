@@ -1,0 +1,169 @@
+/*
+ * ApexUI site design tokens.
+ * Every site surface reads from these variables, so a theme only has to
+ * redefine this list. The library components in ApexUI-Kit do not depend on it.
+ */
+
+:root,
+.theme-dark {
+  color-scheme: dark;
+
+  --bg: #09090b;
+  --bg-subtle: #0c0c0f;
+  --surface: #111114;
+  --surface-2: #18181b;
+  --surface-3: #232328;
+  --border: rgba(255, 255, 255, 0.08);
+  --border-strong: rgba(255, 255, 255, 0.14);
+
+  --fg: #fafafa;
+  --fg-muted: #a1a1aa;
+  --fg-subtle: #71717a;
+
+  --accent: #a3e635;
+  --accent-fg: #0a0a0a;
+  --accent-text: #bef264;
+  --accent-soft: rgba(163, 230, 53, 0.1);
+  --ring: rgba(163, 230, 53, 0.45);
+
+  --code-bg: #0b0b0e;
+  --code-border: rgba(255, 255, 255, 0.08);
+  --preview-bg: #0b0b0e;
+  --grid-line: rgba(255, 255, 255, 0.045);
+  --glow: rgba(163, 230, 53, 0.14);
+  --shadow: 0 1px 2px rgba(0, 0, 0, 0.4), 0 12px 40px -12px rgba(0, 0, 0, 0.6);
+
+  --syntax-string: #bef264;
+  --syntax-type: #7dd3fc;
+  --syntax-value: #6ee7b7;
+}
+
+.theme-light {
+  color-scheme: light;
+
+  --bg: #ffffff;
+  --bg-subtle: #fafafa;
+  --surface: #ffffff;
+  --surface-2: #f4f4f5;
+  --surface-3: #e4e4e7;
+  --border: #e4e4e7;
+  --border-strong: #d4d4d8;
+
+  --fg: #09090b;
+  --fg-muted: #52525b;
+  --fg-subtle: #a1a1aa;
+
+  --accent: #84cc16;
+  --accent-fg: #0a0a0a;
+  --accent-text: #4d7c0f;
+  --accent-soft: rgba(132, 204, 22, 0.12);
+  --ring: rgba(101, 163, 13, 0.4);
+
+  --code-bg: #0b0b0e;
+  --code-border: #18181b;
+  --preview-bg: #0b0b0e;
+  --grid-line: rgba(9, 9, 11, 0.05);
+  --glow: rgba(132, 204, 22, 0.16);
+  --shadow: 0 1px 2px rgba(9, 9, 11, 0.04), 0 12px 40px -12px rgba(9, 9, 11, 0.12);
+
+  --syntax-string: #4d7c0f;
+  --syntax-type: #0369a1;
+  --syntax-value: #047857;
+}
+
+/* Older variable names that live demos and library components still read. */
+:root,
+.theme-dark,
+.theme-light {
+  --color-bg: var(--bg);
+  --color-text: var(--fg);
+  --color-border: var(--border);
+  --color-hover-text: var(--fg);
+  --color-pages-bg: var(--surface-2);
+  --color-pages-border: var(--border);
+  --color-pages-divider: var(--border);
+  --color-pages-side-hover: var(--fg);
+  --color-pages-side-text2: var(--fg);
+  --color-pages-side-active-text: var(--accent-text);
+  --color-pages-side-active-text2: var(--syntax-type);
+  --color-pages-side-active-text3: var(--syntax-value);
+  --color-pages-side-active-text4: var(--fg);
+  --color-pages-side-active-text6: var(--fg);
+  --color-pages-side-active-hover: var(--accent);
+  --color-pages-props-text: var(--fg-muted);
+  --color-pages-props-text2: var(--fg);
+  --color-pages-props-text3: var(--fg-subtle);
+  --color-pages-props-sub-text: var(--fg-muted);
+  --color-pages-props-heading-text: var(--fg);
+  --color-pages-props-heading-text2: var(--fg);
+  --selection-bg: var(--accent);
+  --selection-text: var(--accent-fg);
+
+  --vt-duration: 1.2s;
+  --vt-ease: ease-in-out;
+}
+
+html {
+  font-family: "Geist", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  overflow-x: hidden;
+  background: var(--bg);
+  color: var(--fg);
+}
+
+code,
+kbd,
+pre,
+.font-mono {
+  font-family: "Geist Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+}
+
+::selection {
+  background: var(--selection-bg);
+  color: var(--selection-text);
+}
+
+:focus-visible:not(input, textarea, select) {
+  outline: 2px solid var(--ring);
+  outline-offset: 2px;
+}
+
+/* Thin, quiet scrollbars for the docs panes. */
+.thin-scroll {
+  scrollbar-width: thin;
+  scrollbar-color: var(--surface-3) transparent;
+}
+.thin-scroll::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+.thin-scroll::-webkit-scrollbar-thumb {
+  background: var(--surface-3);
+  border-radius: 999px;
+  border: 2px solid transparent;
+  background-clip: padding-box;
+}
+
+/* Faint grid used behind hero and preview canvases. */
+.bg-grid {
+  background-image:
+    linear-gradient(var(--grid-line) 1px, transparent 1px),
+    linear-gradient(90deg, var(--grid-line) 1px, transparent 1px);
+  background-size: 48px 48px;
+}
+.bg-dots {
+  background-image: radial-gradient(rgba(255, 255, 255, 0.07) 1px, transparent 1px);
+  background-size: 18px 18px;
+}
+
+/* Theme toggle view-transition (animation CSS is injected by ThemeToggle). */
+::view-transition-group(root) {
+  animation-timing-function: var(--vt-ease);
+}
