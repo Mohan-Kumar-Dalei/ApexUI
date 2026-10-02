@@ -39,7 +39,7 @@ export default function KineticThreadsBackgroundDoc() {
             title="Kinetic Threads Background"
             description="A generative WebGL background of flowing threads that bend toward the pointer."
             preview={
-                <BackgroundDemo title="Kinetic Threads">
+                <BackgroundDemo title="Kinetic Threads Background Demo">
                     <KineticThreadBackground speed={0.7} amplitude={1.2} distance={0.3} color="#a3e635" mouseInteraction />
                 </BackgroundDemo>
             }

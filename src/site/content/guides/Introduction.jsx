@@ -61,7 +61,7 @@ export default function Introduction() {
             toc={toc}
         >
             <DocSection id="meet-apexui">
-                <div className="grid items-center gap-8 overflow-hidden rounded-[1.5rem] border border-[var(--line)] bg-[var(--panel)] p-[clamp(1rem,2vw,2rem)] md:grid-cols-[minmax(0,15rem)_minmax(0,1fr)]">
+                <div className="grid items-center gap-8 overflow-hidden rounded-[1.5rem] border border-[var(--line)] bg-[var(--panel)] p-[clamp(1rem,2vw,2rem)] sm:grid-cols-[minmax(0,12rem)_minmax(0,1fr)]">
                     <motion.img
                         src={LOGO_FULL}
                         alt="ApexUI logo"
@@ -69,11 +69,11 @@ export default function Introduction() {
                         whileInView={{ opacity: 1, scale: 1, rotate: 0 }}
                         viewport={{ once: true }}
                         transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
-                        className="w-full max-w-[15rem] rounded-[1.25rem] border border-white/10 shadow-[var(--shadow)]"
+                        className="w-full max-w-[12rem] rounded-[1.25rem] border border-white/10 shadow-[var(--shadow)]"
                     />
                     <div>
                         <p className="font-mono text-[0.68rem] uppercase tracking-[0.18em] text-[var(--lime-text)]">ApexUI {SITE.version}</p>
-                        <h2 className="font-display mt-3 text-[clamp(1.6rem,2.4vw,2.4rem)] font-semibold leading-tight text-[var(--ink)]">
+                        <h2 className="font-display mt-3 text-[clamp(1.2rem,1.5vw,1.7rem)] font-semibold leading-snug text-[var(--ink)]">
                             {componentPages.length} components across {CATEGORIES.length} families — backgrounds, cards, text effects, navigation and more.
                         </h2>
                         <div className="mt-6 flex flex-wrap gap-3">

@@ -1,10 +1,10 @@
+import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { motion, useMotionValue, useSpring, useTransform } from 'framer-motion';
+import { AnimatePresence, motion, useReducedMotion } from 'framer-motion';
 import { ArrowRight, ArrowUpRight } from 'lucide-react';
 import SiteFooter from '../../layout/SiteFooter.jsx';
 import CodeBlock, { CommandLine } from '../../ui/CodeBlock.jsx';
 import { ComponentList } from '../../ui/ComponentIndex.jsx';
-import { LOGO_FULL } from '../../ui/Logo.jsx';
 import { CliChip, Meta } from '../../docs/parts.jsx';
 import { PAD_X } from '../../docs/style.js';
 import { CATEGORIES, componentPages, prefetch, SITE } from '../../config/navigation.js';
@@ -72,59 +72,154 @@ const principles = [
     { title: `${CATEGORIES.length} families`, body: `${CATEGORIES.join(', ')}.` },
 ];
 
-/* The real ApexUI logo on a tilting card that follows the pointer. */
-function LogoStage() {
-    const mx = useMotionValue(0);
-    const my = useMotionValue(0);
-    const rx = useSpring(useTransform(my, [-0.5, 0.5], [10, -10]), { stiffness: 150, damping: 18 });
-    const ry = useSpring(useTransform(mx, [-0.5, 0.5], [-12, 12]), { stiffness: 150, damping: 18 });
-    const glare = useTransform([mx, my], ([x, y]) => `radial-gradient(circle at ${(x + 0.5) * 100}% ${(y + 0.5) * 100}%, rgba(255,255,255,0.18), transparent 55%)`);
+/* Components the hero console installs and renders live, one after another. */
+const consoleItems = [
+    { slug: 'hyper-card', file: 'HyperCard/HyperCard.jsx', node: <HyperCard text="Apex UI is Lightning" LastText="Speed" SubText="Hover to jump to warp speed." starColor="#b5ef3a" glow /> },
+    { slug: 'glare-card', file: 'GlareCard/GlareCard.jsx', node: <GlareCard /> },
+    { slug: 'tool-tip', file: 'ToolTip/ToolTip.jsx', node: <ToolTip items={people} /> },
+    { slug: 'hover-text', file: 'HoverText/HoverText.jsx', node: <HoverText text="Hover me" effect="wave" effectColor="#b5ef3a" fontSize="clamp(2rem, 3.4vw, 3.2rem)" /> },
+    { slug: 'avatar', file: 'Avatar/Avatar.jsx', node: <Avatar users={avatars} /> },
+];
+const CYCLE_MS = 6500;
 
-    const chips = [
-        { label: `${componentPages.length} components`, className: 'left-[2%] top-[12%]', delay: 0 },
-        { label: 'npx apex-ui-kit add', className: 'right-[0%] top-[34%] font-mono', delay: 0.6 },
-        { label: 'MIT · open source', className: 'left-[6%] bottom-[12%]', delay: 1.2 },
-    ];
+/*
+ * "Live console": types the CLI command for a component, logs the install,
+ * then renders the real component underneath. Cycles on its own, pauses on
+ * hover, and the tabs jump straight to a component.
+ */
+function HeroConsole() {
+    const [index, setIndex] = useState(0);
+    const [typed, setTyped] = useState(0);
+    const [paused, setPaused] = useState(false);
+    const reduce = useReducedMotion();
+    const item = consoleItems[index];
+    const command = `npx apex-ui-kit add ${item.slug}`;
+    const done = typed >= command.length;
+    const page = byPath(`/components/${item.slug}`);
+
+    // Type the command one character at a time (instantly with reduced motion).
+    useEffect(() => {
+        if (reduce) {
+            setTyped(command.length);
+            return undefined;
+        }
+        setTyped(0);
+        const id = setInterval(() => {
+            setTyped((n) => {
+                if (n >= command.length) {
+                    clearInterval(id);
+                    return n;
+                }
+                return n + 1;
+            });
+        }, 38);
+        return () => clearInterval(id);
+    }, [command, reduce]);
+
+    // Move on to the next component once this one has been on screen for a while.
+    useEffect(() => {
+        if (!done || paused) return undefined;
+        const id = setTimeout(() => setIndex((i) => (i + 1) % consoleItems.length), CYCLE_MS);
+        return () => clearTimeout(id);
+    }, [done, paused, index]);
 
     return (
-        <div
-            className="relative flex h-full min-h-[24rem] items-center justify-center [perspective:1200px]"
-            onPointerMove={(e) => {
-                const r = e.currentTarget.getBoundingClientRect();
-                mx.set((e.clientX - r.left) / r.width - 0.5);
-                my.set((e.clientY - r.top) / r.height - 0.5);
-            }}
-            onPointerLeave={() => {
-                mx.set(0);
-                my.set(0);
-            }}
+        <motion.div
+            initial={{ opacity: 0, y: 30, scale: 0.97 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            transition={{ duration: 1, ease, delay: 0.15 }}
+            className="relative"
+            onPointerEnter={() => setPaused(true)}
+            onPointerLeave={() => setPaused(false)}
         >
-            <div className="pointer-events-none absolute inset-[12%] rounded-full bg-[var(--glow)] blur-[90px]" />
-            <motion.div
-                initial={{ opacity: 0, scale: 0.9, y: 30 }}
-                animate={{ opacity: 1, scale: 1, y: 0 }}
-                transition={{ duration: 1.1, ease }}
-                style={{ rotateX: rx, rotateY: ry, transformStyle: 'preserve-3d' }}
-                className="relative w-[min(78%,32rem)]"
-            >
-                <div className="relative overflow-hidden rounded-[2rem] border border-white/10 shadow-[0_40px_120px_-30px_rgba(0,0,0,0.8)]">
-                    <img src={LOGO_FULL} alt="ApexUI logo" className="block aspect-square w-full object-cover" draggable="false" />
-                    <motion.div className="pointer-events-none absolute inset-0" style={{ background: glare }} />
+            <div className="pointer-events-none absolute -inset-6 -z-10 rounded-[3rem] bg-[var(--glow)] blur-[80px]" />
+            <div className="overflow-hidden rounded-[1.6rem] border border-[var(--line-strong)] bg-[var(--panel)] shadow-[var(--shadow)]">
+                {/* Title bar with component tabs */}
+                <div className="flex items-center gap-3 border-b border-[var(--line)] px-4 py-3">
+                    <span className="relative flex h-2.5 w-2.5 shrink-0">
+                        <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-[var(--lime)] opacity-50" />
+                        <span className="relative inline-flex h-2.5 w-2.5 rounded-full bg-[var(--lime)]" />
+                    </span>
+                    <span className="hidden font-mono text-[0.7rem] uppercase tracking-[0.18em] text-[var(--ink-3)] sm:inline">apexui · live</span>
+                    <div className="thin-scroll -my-1 ml-auto flex gap-1 overflow-x-auto py-1" role="tablist" aria-label="Components">
+                        {consoleItems.map((c, i) => (
+                            <button
+                                key={c.slug}
+                                type="button"
+                                role="tab"
+                                aria-selected={i === index}
+                                onClick={() => setIndex(i)}
+                                className={`relative shrink-0 rounded-full px-3 py-1 font-mono text-[0.7rem] transition-colors ${i === index ? 'text-[var(--lime-ink)]' : 'text-[var(--ink-3)] hover:text-[var(--ink)]'}`}
+                            >
+                                {i === index && <motion.span layoutId="console-tab" className="absolute inset-0 rounded-full bg-[var(--lime)]" transition={{ type: 'spring', stiffness: 500, damping: 38 }} />}
+                                <span className="relative">{c.slug}</span>
+                            </button>
+                        ))}
+                    </div>
                 </div>
-            </motion.div>
-            {chips.map((c) => (
-                <motion.span
-                    key={c.label}
-                    className={`absolute hidden items-center rounded-full border border-[var(--line-strong)] bg-[var(--panel)]/90 px-3.5 py-1.5 text-[0.78rem] text-[var(--ink-2)] shadow-[var(--shadow)] backdrop-blur sm:inline-flex ${c.className}`}
-                    initial={{ opacity: 0, y: 10 }}
-                    animate={{ opacity: 1, y: [0, -8, 0] }}
-                    transition={{ opacity: { delay: 0.6 + c.delay * 0.3, duration: 0.6 }, y: { delay: c.delay, duration: 5, repeat: Infinity, ease: 'easeInOut' } }}
-                >
-                    <span className="mr-2 inline-block h-1.5 w-1.5 rounded-full bg-[var(--lime)]" />
-                    {c.label}
-                </motion.span>
-            ))}
-        </div>
+
+                {/* Terminal */}
+                <div className="border-b border-[var(--line)] bg-[var(--code-bg)] px-5 py-4 font-mono text-[0.8rem] leading-6">
+                    <p className="text-[#f2f1ea]">
+                        <span className="text-[#b5ef3a]">$</span> {command.slice(0, typed)}
+                        {!done && <span className="ml-0.5 inline-block h-4 w-2 translate-y-0.5 animate-pulse bg-[var(--lime)]" />}
+                    </p>
+                    <AnimatePresence initial={false} mode="wait">
+                        {done && (
+                            <motion.div key={item.slug} initial={{ opacity: 0, y: 4 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }} transition={{ duration: 0.3 }} className="text-white/45">
+                                <p><span className="text-[#b5ef3a]">✓</span> resolved {item.slug}</p>
+                                <p className="truncate"><span className="text-[#b5ef3a]">✓</span> wrote src/ApexUI-Kit/{item.file}</p>
+                            </motion.div>
+                        )}
+                    </AnimatePresence>
+                    {!done && <div className="h-12" aria-hidden="true" />}
+                </div>
+
+                {/* Live preview of the real component */}
+                <div className="relative isolate flex h-[clamp(22rem,46vh,34rem)] items-center justify-center overflow-hidden bg-[var(--stage)] p-6 text-white">
+                    <div aria-hidden="true" className="stage-dots pointer-events-none absolute inset-0 -z-10" />
+                    <AnimatePresence mode="wait">
+                        {done ? (
+                            <motion.div
+                                key={item.slug}
+                                initial={{ opacity: 0, scale: 0.94, filter: 'blur(6px)' }}
+                                animate={{ opacity: 1, scale: 1, filter: 'blur(0px)' }}
+                                exit={{ opacity: 0, scale: 0.97, filter: 'blur(4px)' }}
+                                transition={{ duration: 0.5, ease }}
+                                className="flex max-h-full w-full items-center justify-center"
+                            >
+                                {item.node}
+                            </motion.div>
+                        ) : (
+                            <motion.p key="installing" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="font-mono text-[0.72rem] uppercase tracking-[0.25em] text-white/35">
+                                installing…
+                            </motion.p>
+                        )}
+                    </AnimatePresence>
+                </div>
+
+                {/* Footer: cycle progress + link to the docs */}
+                <div className="relative flex items-center justify-between gap-3 px-5 py-3 text-[0.8rem]">
+                    <span className="font-mono text-[0.7rem] text-[var(--ink-3)]">
+                        {String(index + 1).padStart(2, '0')} / {String(consoleItems.length).padStart(2, '0')} · {page?.category}
+                    </span>
+                    {page && (
+                        <Link to={page.path} onMouseEnter={() => prefetch(page)} className="group inline-flex items-center gap-1.5 font-medium text-[var(--ink)] transition-colors hover:text-[var(--lime-text)]">
+                            Open {page.name}
+                            <ArrowUpRight className="h-4 w-4 transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5" />
+                        </Link>
+                    )}
+                    <motion.span
+                        key={`${index}-${done}-${paused}`}
+                        aria-hidden="true"
+                        className="absolute inset-x-0 top-0 h-px origin-left bg-[var(--lime)]"
+                        initial={{ scaleX: 0 }}
+                        animate={{ scaleX: done && !paused ? 1 : 0 }}
+                        transition={{ duration: done && !paused ? CYCLE_MS / 1000 : 0.2, ease: 'linear' }}
+                    />
+                </div>
+            </div>
+        </motion.div>
     );
 }
 
@@ -132,7 +227,7 @@ function Hero() {
     return (
         <section className="relative isolate overflow-hidden border-b border-[var(--line)]">
             <div className="bg-grid pointer-events-none absolute inset-0 -z-10 [mask-image:radial-gradient(ellipse_80%_70%_at_30%_30%,#000_35%,transparent_85%)]" />
-            <div className={`${PAD_X} grid min-h-[calc(100dvh-3.5rem-2*var(--pad))] items-center gap-10 py-[clamp(2.5rem,6vw,6rem)] lg:grid-cols-[minmax(0,1.15fr)_minmax(0,1fr)]`}>
+            <div className={`${PAD_X} grid items-center lg:min-h-[calc(100dvh-3.5rem-2*var(--pad))] gap-10 py-[clamp(2.5rem,6vw,6rem)] lg:grid-cols-[minmax(0,1.15fr)_minmax(0,1fr)]`}>
                 <div>
                     <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, ease }}>
                         <Meta>
@@ -179,7 +274,7 @@ function Hero() {
                         ))}
                     </motion.div>
                 </div>
-                <LogoStage />
+                <HeroConsole />
             </div>
         </section>
     );

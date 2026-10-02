@@ -39,7 +39,7 @@ export default function RippleBackgroundDoc() {
             title="Ripple Background"
             description="A grid of tiles that ripple outward in waves of color."
             preview={
-                <BackgroundDemo title="Ripple Background">
+                <BackgroundDemo title="Ripple Background Demo">
                     <RippleBackground colors={colors} containerClassName="!h-full !w-full" />
                 </BackgroundDemo>
             }

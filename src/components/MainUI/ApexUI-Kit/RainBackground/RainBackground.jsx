@@ -1,115 +1,108 @@
 import React, { useEffect, useRef } from 'react';
 import gsap from 'gsap';
+function createRainEffectWithCollision(container, dropCount = 0, dropColor, collisionColor, dropGradient, collisionGradient) {
+    if (!container) return;
+    for (let i = 0; i < dropCount; i++) {
+        const drop = document.createElement('div');
+        drop.className = 'rain-drop pointer-events-none';
+        drop.style.position = 'absolute';
+        drop.style.left = Math.random() * 98 + '%';
+        drop.style.top = Math.random() * -100 - 20 + 'px';
+        drop.style.width = '2px';
+        drop.style.height = Math.random() * 32 + 16 + 'px';
+        drop.style.background = dropGradient ? dropGradient : `linear-gradient(to bottom, ${dropColor} 60%, ${collisionColor} 100%)`;
+        drop.style.opacity = Math.random() * 0.3 + 0.3;
+        drop.style.borderRadius = '1px';
+        drop.style.zIndex = 1;
+        container.appendChild(drop);
+        animateRainDropWithCollision(drop, container, collisionColor, dropGradient, collisionGradient, dropColor);
+    }
+}
 
-const dropBackground = (dropColor, collisionColor, dropGradient) =>
-    dropGradient || `linear-gradient(to bottom, ${dropColor} 60%, ${collisionColor} 100%)`;
+function animateRainDropWithCollision(drop, container, collisionColor, dropGradient, collisionGradient, dropColor) {
+    const duration = Math.random() * 1.2 + 0.8;
+    gsap.fromTo(drop, {
+        y: 0,
+    }, {
+        y: container.offsetHeight + 40,
 
-function createSplash(x, y, container, collisionColor, collisionGradient) {
-    const fill = collisionGradient || collisionColor;
-    const splash = document.createElement("div");
-    splash.className = "absolute z-50 h-2 w-2 pointer-events-none";
-    splash.style.left = `${x}px`;
-    splash.style.top = `${y}px`;
-    splash.style.transform = "translate(-50%, 0)";
-
-    const bar = document.createElement("div");
-    Object.assign(bar.style, {
-        position: "absolute", left: "-0.7rem", top: "0", width: "1.4rem", height: "0.18rem",
-        borderRadius: "1rem", background: fill, filter: "blur(2px)", opacity: "0",
+        duration,
+        ease: 'power1.in',
+        onUpdate: function () {
+            const rect = drop.getBoundingClientRect();
+            const parentRect = container.getBoundingClientRect();
+            if (!drop._collided && rect.bottom >= parentRect.bottom - 8) {
+                drop._collided = true;
+                drop.style.background = collisionGradient ? collisionGradient : collisionColor;
+                const relX = rect.left - parentRect.left + rect.width / 2;
+                createRainCollisionExplosion(relX, container.offsetHeight - 8, container, collisionColor, collisionGradient);
+            }
+        },
+        onStart: function () {
+            drop._collided = false;
+            drop.style.background = dropGradient ? dropGradient : `linear-gradient(to bottom, ${dropColor} 60%, ${collisionColor} 100%)`;
+        },
+        onComplete: () => {
+            drop.style.left = Math.random() * 98 + '%';
+            drop.style.height = Math.random() * 32 + 16 + 'px';
+            drop.style.opacity = Math.random() * 0.3 + 0.3;
+            drop.style.background = dropGradient ? dropGradient : `linear-gradient(to bottom, ${dropColor} 60%, ${collisionColor} 100%)`;
+            gsap.set(drop, { y: 0, opacity: drop.style.opacity });
+            animateRainDropWithCollision(drop, container, collisionColor, dropGradient, collisionGradient, dropColor);
+        }
     });
-    splash.appendChild(bar);
+}
 
-    const parts = [];
+function createRainCollisionExplosion(x, y, container, collisionColor = '#e0e7ff', collisionGradient) {
+    const explosion = document.createElement("div");
+    explosion.className = "absolute z-50 h-2 w-2 pointer-events-none";
+    explosion.style.left = `${x}px`;
+    explosion.style.top = `${y}px`;
+    explosion.style.transform = "translate(-50%, 0)";
+    const blurBar = document.createElement("div");
+    blurBar.style.position = "absolute";
+    blurBar.style.left = "-0.7rem";
+    blurBar.style.top = "0";
+    blurBar.style.width = "1.4rem";
+    blurBar.style.height = "0.18rem";
+    blurBar.style.borderRadius = "1rem";
+    blurBar.style.background = collisionGradient ? collisionGradient : `${collisionColor}`;
+    blurBar.style.filter = "blur(2px)";
+    explosion.appendChild(blurBar);
     for (let i = 0; i < 6; i++) {
         const span = document.createElement("span");
-        Object.assign(span.style, {
-            position: "absolute", height: "0.18rem", width: "0.18rem", borderRadius: "50%", background: fill,
-        });
-        splash.appendChild(span);
-        parts.push(span);
-    }
-    container.appendChild(splash);
-
-    const tl = gsap.timeline({ onComplete: () => splash.remove() });
-    tl.to(bar, { opacity: 1, duration: 0.12, yoyo: true, repeat: 1 }, 0);
-    parts.forEach((span) => {
-        tl.to(span, {
-            x: gsap.utils.random(-8, 8),
-            y: gsap.utils.random(-12, -2),
+        span.style.position = "absolute";
+        span.style.height = "0.18rem";
+        span.style.width = "0.18rem";
+        span.style.borderRadius = "50%";
+        span.style.background = collisionGradient ? collisionGradient : `${collisionColor}`;
+        explosion.appendChild(span);
+        const dx = Math.floor(Math.random() * 16 - 8);
+        const dy = Math.floor(Math.random() * -10 - 2);
+        gsap.fromTo(span, { x: 0, y: 0 }, {
+            x: dx,
+            y: dy,
             opacity: 0,
-            duration: gsap.utils.random(0.2, 0.7),
+            duration: Math.random() * 0.5 + 0.2,
             ease: "power2.out",
-        }, 0);
-    });
+            onComplete: () => { span.remove(); }
+        });
+    }
+    gsap.fromTo(blurBar, { opacity: 0 }, { opacity: 1, duration: 0.12, yoyo: true, repeat: 1, onComplete: () => blurBar.remove() });
+    setTimeout(() => explosion.remove(), 500);
+    container.appendChild(explosion);
 }
 
 const RainBackground = ({ dropCount = 32, dropColor = '#fff', collisionColor = '#e0e7ff', dropGradient, collisionGradient }) => {
     const rainRef = useRef(null);
-
     useEffect(() => {
         const container = rainRef.current;
-        if (!container) return undefined;
-
-        let height = container.offsetHeight;
-        const ro = new ResizeObserver(() => { height = container.offsetHeight; });
-        ro.observe(container);
-
-        // Drops re-schedule themselves, so an `alive` flag plus killing every
-        // tween on unmount stops them instead of leaving them running forever.
-        let alive = true;
-        const ctx = gsap.context(() => {
-            const fall = (drop) => {
-                if (!alive) return;
-                const dropHeight = gsap.utils.random(16, 48);
-                Object.assign(drop.style, {
-                    left: `${gsap.utils.random(0, 98)}%`,
-                    height: `${dropHeight}px`,
-                    background: dropBackground(dropColor, collisionColor, dropGradient),
-                });
-                gsap.set(drop, { y: 0, opacity: gsap.utils.random(0.3, 0.6) });
-
-                const distance = Math.max(height, 1) + 40;
-                gsap.to(drop, {
-                    y: distance,
-                    duration: gsap.utils.random(0.8, 2),
-                    ease: 'power1.in',
-                    onComplete: () => {
-                        if (!alive) return;
-                        // Splash where the drop meets the bottom edge.
-                        const x = (parseFloat(drop.style.left) / 100) * container.offsetWidth;
-                        createSplash(x, height - 8, container, collisionColor, collisionGradient);
-                        fall(drop);
-                    },
-                });
-            };
-
-            for (let i = 0; i < dropCount; i++) {
-                const drop = document.createElement('div');
-                drop.className = 'pointer-events-none';
-                Object.assign(drop.style, {
-                    position: 'absolute',
-                    top: `${gsap.utils.random(-120, -20)}px`,
-                    width: '2px',
-                    borderRadius: '1px',
-                    zIndex: 1,
-                    willChange: 'transform',
-                });
-                container.appendChild(drop);
-                gsap.delayedCall(gsap.utils.random(0, 1.5), () => fall(drop));
-            }
-        }, container);
-
-        return () => {
-            alive = false;
-            ctx.revert();
-            gsap.killTweensOf(container.querySelectorAll('*'));
-            ro.disconnect();
-            container.innerHTML = '';
-        };
+        if (!container) return;
+        createRainEffectWithCollision(container, dropCount, dropColor, collisionColor, dropGradient, collisionGradient);
+        return () => { container.innerHTML = ''; };
     }, [dropCount, dropColor, collisionColor, dropGradient, collisionGradient]);
-
     return (
-        <div ref={rainRef} className="absolute inset-0 w-full h-full pointer-events-none z-0 overflow-hidden" />
+        <div ref={rainRef} id="beams-collision-container" className="absolute inset-0 w-full h-full pointer-events-none z-0" style={{ overflow: 'hidden' }} />
     );
 };
 

@@ -1,96 +1,132 @@
 import React, { useRef, useEffect, useState } from "react";
 import { gsap } from "gsap";
 
-const BOX = 40;
-
-function BluePrintBackground({ color = '#9ae600', borderColor = 'rgb(98, 116, 142, 0.1)', bgColor, circleColor = 'rgb(154, 230, 0, 0.2)' }) {
-    const rootRef = useRef(null);
+function BluePrintBackground({ color = '#9ae600', borderColor = 'rgb(98, 116, 142, 0.1)', bgColor, circleColor = 'rgb(154, 230, 0, 0.2)'}) {
     const gridRef = useRef(null);
     const [grid, setGrid] = useState({ cols: 0, rows: 0 });
+    const boxSize = 40;
+    const lastHighlighted = useRef(null);
     const colorRef = useRef(color);
-    const lastHighlighted = useRef(-1);
 
-    useEffect(() => { colorRef.current = color; }, [color]);
-
-    // Size the grid to the component itself (not the window), and keep it in sync.
+    // Effect 1: calculate grid size and keep it updated on resize
     useEffect(() => {
-        const root = rootRef.current;
-        if (!root) return undefined;
-        const measure = () => {
-            const cols = Math.ceil(root.clientWidth / BOX) + 1;
-            // rows are doubled so the -50% loop is seamless
-            const rows = (Math.ceil(root.clientHeight / BOX) + 1) * 2;
-            setGrid((g) => (g.cols === cols && g.rows === rows ? g : { cols, rows }));
+        const calculateGrid = () => {
+            const cols = Math.ceil(window.innerWidth / boxSize);
+            const rows = Math.ceil(window.innerHeight / boxSize) * 2; // double rows for infinite scroll
+            // kill any child tweens before we replace children to avoid visual flicker
+            const el = gridRef.current;
+            if (el) {
+                try { gsap.killTweensOf(el); } catch { /* ignore */ }
+                Array.from(el.children).forEach((c) => { try { gsap.killTweensOf(c); } catch { /* ignore */ } });
+                lastHighlighted.current = null;
+            }
+            setGrid({ cols, rows });
         };
-        measure();
-        const ro = new ResizeObserver(measure);
-        ro.observe(root);
-        return () => ro.disconnect();
+
+        calculateGrid();
+        window.addEventListener("resize", calculateGrid);
+        return () => window.removeEventListener("resize", calculateGrid);
     }, []);
 
+    // keep colorRef up-to-date without forcing effect re-run
+    useEffect(() => { colorRef.current = color; }, [color]);
+
+    // Effect 2: initialize GSAP infinite scroll and mouse handlers once (do not recreate on grid changes)
     useEffect(() => {
-        const root = rootRef.current;
         const el = gridRef.current;
-        if (!root || !el) return undefined;
+        let scrollTween = null;
 
-        const scroll = gsap.fromTo(el, { yPercent: 0 }, { yPercent: -50, duration: 15, repeat: -1, ease: "none" });
+        if (el) {
+            // make sure we start from current transform so GSAP doesn't jump
+            // create a looping tween on the container only once
+            scrollTween = gsap.to(el, {
+                y: "-50%",
+                duration: 15,
+                repeat: -1,
+                ease: "linear",
+                overwrite: false,
+            });
+        }
 
-        const fadeOut = (index) => {
-            const box = el.children[index];
-            if (box) gsap.to(box, { backgroundColor: "rgba(0,0,0,0)", boxShadow: "0 0 0px rgba(0,0,0,0)", duration: 0.35, overwrite: "auto" });
-        };
+        const handleMouseMove = (e) => {
+            const el2 = gridRef.current;
+            if (!el2) return;
 
-        // The hovered cell is calculated from the pointer position and the grid's
-        // current scroll offset, so it also works under overlaid content.
-        const handleMove = (e) => {
-            const rect = el.getBoundingClientRect();
-            const rootRect = root.getBoundingClientRect();
-            const inside = e.clientX >= rootRect.left && e.clientX <= rootRect.right && e.clientY >= rootRect.top && e.clientY <= rootRect.bottom;
-            const cols = Math.round(rect.width / BOX);
-            const col = Math.floor((e.clientX - rect.left) / BOX);
-            const row = Math.floor((e.clientY - rect.top) / BOX);
-            const index = inside && col >= 0 && col < cols && row >= 0 ? row * cols + col : -1;
-
-            if (index === lastHighlighted.current) return;
-            if (lastHighlighted.current !== -1) fadeOut(lastHighlighted.current);
-            const box = index !== -1 ? el.children[index] : null;
-            if (box) {
-                const c = colorRef.current || "#a3e635";
-                gsap.to(box, { backgroundColor: c, boxShadow: `0 0 12px ${c}`, duration: 0.12, overwrite: "auto" });
+            const target = document.elementFromPoint(e.clientX, e.clientY);
+            if (!target || !el2.contains(target)) {
+                if (lastHighlighted.current !== null) {
+                    const prev = el2.children[lastHighlighted.current];
+                    if (prev) gsap.to(prev, { backgroundColor: "transparent", boxShadow: "none", duration: 0.18 });
+                    lastHighlighted.current = null;
+                }
+                return;
             }
-            lastHighlighted.current = box ? index : -1;
+
+            const child = target.closest("div");
+            const index = Array.prototype.indexOf.call(el2.children, child);
+            if (index === -1) return;
+
+            if (lastHighlighted.current !== index) {
+                if (lastHighlighted.current !== null) {
+                    const prevBox = el2.children[lastHighlighted.current];
+                    if (prevBox) gsap.to(prevBox, { backgroundColor: "transparent", boxShadow: "none", duration: 0.18 });
+                }
+
+                const newBox = el2.children[index];
+                if (newBox) {
+                    const c = colorRef.current || "#a3e635";
+                    gsap.to(newBox, { backgroundColor: c, boxShadow: `0 0 12px ${c}`, duration: 0.12 });
+                }
+
+                lastHighlighted.current = index;
+            }
         };
 
-        window.addEventListener("pointermove", handleMove, { passive: true });
+        window.addEventListener("mousemove", handleMouseMove);
+
         return () => {
-            window.removeEventListener("pointermove", handleMove);
-            scroll.kill();
-            gsap.killTweensOf(el.children);
-            lastHighlighted.current = -1;
+            window.removeEventListener("mousemove", handleMouseMove);
+            if (scrollTween && typeof scrollTween.kill === "function") {
+                try { scrollTween.kill(); } catch { /* ignore */ }
+            }
+            if (el) {
+                try { gsap.killTweensOf(el); } catch { /* ignore */ }
+                Array.from(el.children).forEach((c) => { try { gsap.killTweensOf(c); } catch { /* ignore */ } });
+            }
+            lastHighlighted.current = null;
         };
-    }, [grid]);
+    }, []);
 
     const total = grid.cols * grid.rows;
 
     return (
-        <div ref={rootRef} className="absolute inset-0 z-0 w-full h-full overflow-hidden bg-slate-800" style={bgColor ? { backgroundColor: bgColor } : undefined}>
+        <div className="absolute inset-0 z-0 w-full h-full overflow-hidden bg-slate-800" style={{ backgroundColor: `${bgColor}` }}>
             <div
                 ref={gridRef}
-                className="grid will-change-transform"
+                className="grid"
                 style={{
-                    gridTemplateColumns: `repeat(${grid.cols}, ${BOX}px)`,
-                    gridTemplateRows: `repeat(${grid.rows}, ${BOX}px)`,
+                    gridTemplateColumns: `repeat(${grid.cols}, ${boxSize}px)`,
+                    gridTemplateRows: `repeat(${grid.rows}, ${boxSize}px)`,
                 }}
             >
-                {Array.from({ length: total }, (_, i) => (
-                    <div key={i} className="border bg-transparent w-10 h-10" style={{ borderColor }} />
+                {Array.from({ length: total }).map((_, i) => (
+                    <div
+                        key={i}
+                        className={`border bg-transparent w-10 h-10`}
+                        style={{
+                            borderColor: borderColor
+                        }}
+                    />
                 ))}
             </div>
+            {/* Spotlight overlay - positioned after grid to not interfere with scroll */}
             <div
                 className="absolute inset-0 z-10 pointer-events-none blur-3xl"
-                style={{ background: `radial-gradient(circle, ${circleColor} 0%, rgba(0, 0, 255, 0.1) 100%)` }}
+                style={{
+                    background: `radial-gradient(circle, ${circleColor} 0%, rgba(0, 0, 255, 0.1) 100%)`
+                }}
             />
-        </div>
+        </div >
     );
 }
 

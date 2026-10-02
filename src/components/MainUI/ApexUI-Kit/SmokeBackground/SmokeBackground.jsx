@@ -108,10 +108,9 @@ export const SmokeBackground = ({
 
         let directionMultiplier = direction === "backward" ? -1.0 : 1.0;
 
-        // The shader is expensive per pixel, so the resolution is capped on
-        // large screens (a 27" display would otherwise render ~10M pixels a frame).
+        // cap DPR depending on mount width to avoid heavy pixel loads on small devices
         const mountWidth = mountNode.clientWidth || window.innerWidth;
-        const dprCap = mountWidth > 1600 ? 1 : mountWidth > 900 ? 1.25 : 1.5;
+        const dprCap = mountWidth > 1200 ? 1.8 : (mountWidth > 768 ? 1.4 : 1.0);
         const dpr = Math.min(window.devicePixelRatio || 1, dprCap);
 
         const renderer = new Renderer({
@@ -179,48 +178,40 @@ export const SmokeBackground = ({
         setSize();
 
         let raf = 0;
-        let visible = true;
         const t0 = performance.now();
         const loop = (t) => {
-            const timeValue = (t - t0) * 0.001;
+            let timeValue = (t - t0) * 0.001;
 
             if (direction === "funny") {
-                program.uniforms.uDirection.value = Math.sin(timeValue * 0.5);
+                const cycle = Math.sin(timeValue * 0.5);
+                program.uniforms.uDirection.value = cycle;
             }
 
             if (mouseNeedsUpdate) {
                 const mouseUniform = program.uniforms.uMouse.value;
-                // pointer is in CSS pixels, the shader works in device pixels
-                mouseUniform[0] = mousePos.current.x * dpr;
-                mouseUniform[1] = mousePos.current.y * dpr;
+                mouseUniform[0] = mousePos.current.x;
+                mouseUniform[1] = mousePos.current.y;
                 mouseNeedsUpdate = false;
             }
 
             program.uniforms.iTime.value = timeValue;
             renderer.render({ scene: mesh });
-            if (visible) raf = requestAnimationFrame(loop);
+            raf = requestAnimationFrame(loop);
         };
         raf = requestAnimationFrame(loop);
-
-        // Stop rendering while the component is off-screen.
-        const io = new IntersectionObserver(([entry]) => {
-            const wasVisible = visible;
-            visible = entry.isIntersecting;
-            if (visible && !wasVisible) raf = requestAnimationFrame(loop);
-            if (!visible) cancelAnimationFrame(raf);
-        });
-        io.observe(mountNode);
 
         return () => {
             cancelAnimationFrame(raf);
             ro.disconnect();
-            io.disconnect();
-            if (mouseInteractive) mountNode.removeEventListener("mousemove", handleMouseMove);
-            if (canvas.parentNode === mountNode) mountNode.removeChild(canvas);
-            // Free the GPU context right away; browsers only allow a handful at once.
+            if (mouseInteractive && mountNode) {
+                mountNode.removeEventListener("mousemove", handleMouseMove);
+            }
+            try {
+                mountNode.removeChild(canvas);
+            } catch (error) { console.error("Error removing canvas:", error); }
             gl.getExtension("WEBGL_lose_context")?.loseContext();
         };
-    }, [color, speed, direction, scale, opacity, mouseInteractive]);
+    }, [color, speed, direction, scale, opacity, mouseInteractive, className]);
 
     return (
         <div className={`w-full ${className}`}>

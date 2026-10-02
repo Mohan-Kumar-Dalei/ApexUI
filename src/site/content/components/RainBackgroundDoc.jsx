@@ -37,7 +37,7 @@ export default function RainBackgroundDoc() {
             title="Rain Background"
             description="Animated rainfall with collision detection — drops splash when they hit the ground."
             preview={
-                <BackgroundDemo title="Rain Effect">
+                <BackgroundDemo title="Rain Effect Demo">
                     <RainBackground
                         dropGradient="linear-gradient(to bottom, #ec003f, #51a2ff)"
                         collisionGradient="linear-gradient(90deg, #ec003f 0%, #51a2ff 100%)"

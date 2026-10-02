@@ -2,18 +2,6 @@ import { useState, useEffect, useRef, useId } from "react";
 import { FiSun, FiMoon } from "react-icons/fi";
 import { buildAnimationCSS } from "./ThemeAnimation.js";
 
-const STORAGE_KEY = "apexui-theme";
-
-const readSavedTheme = (lightTheme) => {
-    try {
-        const saved = localStorage.getItem(STORAGE_KEY);
-        if (saved === "dark" || saved === lightTheme) return saved;
-    } catch {
-        /* storage unavailable (private mode, blocked cookies) */
-    }
-    return "dark";
-};
-
 export default function ThemeToggle({
     animation = "circle",
     duration = "1.5s",
@@ -22,72 +10,95 @@ export default function ThemeToggle({
     onApplied,
     LightTheme = "light"
 }) {
+    // unique ID per instance
     const uid = useId();
-    const [theme, setTheme] = useState(() => (typeof window === "undefined" ? "dark" : readSavedTheme(LightTheme)));
+
+    const getInitialTheme = () => {
+        if (typeof window !== "undefined") {
+            const saved = localStorage.getItem("apexui-theme");
+            if (saved === "dark" || saved === LightTheme) return saved;
+        }
+        return "dark";
+    };
+
+    const [theme, setTheme] = useState(getInitialTheme);
     const btnRef = useRef(null);
-    const onAppliedRef = useRef(onApplied);
-    onAppliedRef.current = onApplied;
 
-    // A stable key so an inline `animation={{...}}` object doesn't rebuild the CSS every render.
-    const animationKey = typeof animation === "string" ? animation : JSON.stringify(animation ?? {});
-
-    // Inject this instance's animation CSS, scoped with html[vt-owner] so several
-    // toggles with different animations can live on one page.
+    // ------------------------------
+    // Inject animation CSS (scoped per instance)
+    // ------------------------------
     useEffect(() => {
-        const scope = `html[vt-owner="${uid}"]`;
-        const anim = animationKey.startsWith("{") ? JSON.parse(animationKey) : animationKey;
-        const css = buildAnimationCSS(anim, { duration, ease })
-            .replaceAll(":root", scope)
-            .replaceAll("::view-transition-new", `${scope}::view-transition-new`)
-            .replaceAll("::view-transition-old", `${scope}::view-transition-old`)
-            .replaceAll("::view-transition-group", `${scope}::view-transition-group`);
+        const rawCSS = buildAnimationCSS(animation, { duration, ease });
 
-        const styleEl = document.createElement("style");
-        styleEl.dataset.apexuiThemeToggle = uid;
-        styleEl.textContent = css;
-        document.head.appendChild(styleEl);
-        return () => styleEl.remove();
-    }, [animationKey, duration, ease, uid]);
+        // ✅ Scope selectors with html[vt-owner]
+        const scopedCSS = rawCSS
+            .replaceAll("::view-transition-new", `html[vt-owner="${uid}"]::view-transition-new`)
+            .replaceAll("::view-transition-old", `html[vt-owner="${uid}"]::view-transition-old`)
+            .replaceAll("::view-transition-group", `html[vt-owner="${uid}"]::view-transition-group`);
 
-    // Apply the theme class to <html> and tell other toggles about it.
+        let styleEl = document.getElementById(`vt-style-${uid}`);
+        if (!styleEl) {
+            styleEl = document.createElement("style");
+            styleEl.id = `vt-style-${uid}`;
+            document.head.appendChild(styleEl);
+        }
+        styleEl.textContent = scopedCSS;
+    }, [animation, duration, ease, uid]);
+
+    // ------------------------------
+    // Apply theme globally + notify
+    // ------------------------------
     useEffect(() => {
         const html = document.documentElement;
-        [...html.classList].forEach((c) => c.startsWith("theme-") && html.classList.remove(c));
+        html.classList.forEach((c) => c.startsWith("theme-") && html.classList.remove(c));
         html.classList.add(`theme-${theme}`);
-        try {
-            localStorage.setItem(STORAGE_KEY, theme);
-        } catch {
-            /* ignore */
-        }
-        window.dispatchEvent(new CustomEvent("theme-change", { detail: theme }));
-        onAppliedRef.current?.(theme);
-    }, [theme]);
 
+        try {
+            localStorage.setItem("apexui-theme", theme);
+            window.dispatchEvent(new CustomEvent("theme-change", { detail: theme }));
+        } catch (err) {
+            console.error("Error saving theme:", err);
+        }
+
+        onApplied?.(theme);
+    }, [theme, onApplied]);
+
+    // ------------------------------
+    // Listen for global theme sync
+    // ------------------------------
     useEffect(() => {
         const handler = (e) => setTheme(e.detail);
         window.addEventListener("theme-change", handler);
         return () => window.removeEventListener("theme-change", handler);
     }, []);
 
+    // ------------------------------
+    // Toggle handler
+    // ------------------------------
     const handleClick = () => {
         const nextTheme = theme === LightTheme ? "dark" : LightTheme;
-        const html = document.documentElement;
-        const run = () => setTheme(nextTheme);
 
-        const reduceMotion = window.matchMedia?.("(prefers-reduced-motion: reduce)").matches;
-        if (!document.startViewTransition || reduceMotion) {
-            run();
-            return;
-        }
-
+        // Origin from button center
         if (btnRef.current) {
             const r = btnRef.current.getBoundingClientRect();
-            html.style.setProperty("--cx", `${r.left + r.width / 2}px`);
-            html.style.setProperty("--cy", `${r.top + r.height / 2}px`);
+            document.documentElement.style.setProperty("--cx", `${r.left + r.width / 2}px`);
+            document.documentElement.style.setProperty("--cy", `${r.top + r.height / 2}px`);
         }
-        html.setAttribute("vt-owner", uid);
-        const vt = document.startViewTransition(run);
-        vt.finished.finally(() => html.removeAttribute("vt-owner"));
+
+        // ✅ Use html instead of body
+        document.documentElement.setAttribute("vt-owner", uid);
+
+        const run = () => setTheme(nextTheme);
+
+        if (document.startViewTransition) {
+            const vt = document.startViewTransition(run);
+            vt.finished.finally(() => {
+                document.documentElement.removeAttribute("vt-owner"); // cleanup
+            });
+        } else {
+            run();
+            document.documentElement.removeAttribute("vt-owner");
+        }
     };
 
     const isLight = theme === LightTheme;
@@ -95,10 +106,10 @@ export default function ThemeToggle({
     return (
         <button
             ref={btnRef}
-            type="button"
             onClick={handleClick}
-            className={`rounded-full text-2xl transition-transform hover:scale-110 text-[var(--color-text)] ${className}`}
-            aria-label={isLight ? "Switch to dark theme" : "Switch to light theme"}
+            className={`rounded-full text-2xl transition-transform hover:scale-110 
+                 text-[var(--color-text)] ${className}`}
+            aria-label="Toggle theme"
             title="Toggle theme"
         >
             {isLight ? <FiMoon /> : <FiSun />}

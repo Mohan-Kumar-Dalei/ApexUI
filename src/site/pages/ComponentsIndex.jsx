@@ -47,7 +47,7 @@ export default function ComponentsIndex() {
     const counts = useMemo(() => Object.fromEntries(CATEGORIES.map((c) => [c, componentPages.filter((p) => p.category === c).length])), []);
 
     const chip = (active) =>
-        `inline-flex items-center gap-2 rounded-full border px-3.5 py-1.5 text-[0.84rem] transition-colors ${active
+        `inline-flex shrink-0 items-center gap-2 whitespace-nowrap rounded-full border px-3.5 py-1.5 text-[0.84rem] transition-colors ${active
             ? 'border-[var(--lime)] bg-[var(--lime)] text-[var(--lime-ink)]'
             : 'border-[var(--line)] text-[var(--ink-2)] hover:border-[var(--line-strong)] hover:text-[var(--ink)]'}`;
 
@@ -59,8 +59,8 @@ export default function ComponentsIndex() {
                 description="Every ApexUI component with a live playground, props and a one-line install. Filter by category or search by name."
             />
 
-            <div className={`${PAD_X} sticky top-[calc(var(--pad)+3.5rem)] z-20 flex flex-col gap-3 border-y border-[var(--line)] bg-[var(--bg)]/90 py-3 backdrop-blur-xl lg:flex-row lg:items-center`}>
-                <div className="thin-scroll -mx-1 flex gap-2 overflow-x-auto px-1">
+            <div className={`${PAD_X} sticky top-[calc(var(--pad)+3.5rem)] z-20 flex flex-col gap-3 border-y border-[var(--line)] bg-[var(--bg)]/90 py-3 backdrop-blur-xl xl:flex-row xl:items-center`}>
+                <div className="thin-scroll -mx-1 flex min-w-0 gap-2 overflow-x-auto px-1">
                     {['All', ...CATEGORIES].map((c) => (
                         <button key={c} type="button" onClick={() => update('category', c)} className={chip(category === c)}>
                             {c}
@@ -68,8 +68,8 @@ export default function ComponentsIndex() {
                         </button>
                     ))}
                 </div>
-                <div className="flex items-center gap-2 lg:ml-auto">
-                    <label className="relative block flex-1 lg:w-72 lg:flex-none">
+                <div className="flex items-center gap-2 xl:ml-auto">
+                    <label className="relative block flex-1 xl:w-72 xl:flex-none">
                         <Search className="pointer-events-none absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-[var(--ink-3)]" />
                         <input
                             value={query}

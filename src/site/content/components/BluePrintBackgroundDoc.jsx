@@ -34,7 +34,7 @@ export default function BluePrintBackgroundDoc() {
             title="BluePrint Background"
             description="A blueprint-style grid background with dynamic lines and a spotlight that follows the pointer."
             preview={
-                <BackgroundDemo title="BluePrint Background">
+                <BackgroundDemo title="BluePrint Background Effect">
                     <BluePrintBackground color="#9ae600" borderColor="rgb(98, 116, 142, 0.1)" />
                 </BackgroundDemo>
             }

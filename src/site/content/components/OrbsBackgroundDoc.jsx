@@ -38,7 +38,7 @@ export default function OrbsBackgroundDoc() {
             title="Orbs Background"
             description="Soft floating orbs that drift across the canvas and react to the pointer."
             preview={
-                <BackgroundDemo title="Floating Orbs">
+                <BackgroundDemo title="Floating Orbs Demo">
                     <FloatingOrbs containerClassName="!h-full" />
                 </BackgroundDemo>
             }

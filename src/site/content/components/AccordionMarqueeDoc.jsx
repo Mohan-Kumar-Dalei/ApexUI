@@ -17,8 +17,6 @@ export default App;`;
 const props = [
     { prop: 'bgColor', type: 'string', def: "'#bbf451'", desc: 'Background color of the marquee.' },
     { prop: 'textColor', type: 'string', def: "'#27272a'", desc: 'Text color of the marquee.' },
-    { prop: 'className', type: 'string', def: "'h-[80vh] md:h-[70vh]'", desc: 'Classes for the list container, typically its height.' },
-    { prop: 'items', type: 'array', def: '4 sample rows', desc: 'Rows to show, each with a title and the marquee text.' },
 ];
 
 const dependencies = [
@@ -32,7 +30,7 @@ export default function AccordionMarqueeDoc() {
         <ComponentDoc
             title="Accordion Marquee"
             description="An accordion where each row reveals a marquee on hover — great for highlighting key information."
-            preview={<AccordionMarquee className="h-[clamp(26rem,64vh,60rem)]" />}
+            preview={<AccordionMarquee />}
             fullBleed
             code={code}
             cli="accordion-marquee"

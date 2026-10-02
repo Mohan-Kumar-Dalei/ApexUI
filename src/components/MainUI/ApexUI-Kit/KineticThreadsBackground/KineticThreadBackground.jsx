@@ -144,120 +144,107 @@ const KineticThreadsBackground = ({
     mouseInteraction = true,
 }) => {
     const mountRef = useRef(null);
-    const uniformsRef = useRef(null);
-    const speedRef = useRef(speed);
-    const mouseInteractionRef = useRef(mouseInteraction);
-
-    // Cheap prop changes update uniforms instead of rebuilding the WebGL scene.
-    useEffect(() => {
-        speedRef.current = speed;
-        mouseInteractionRef.current = mouseInteraction;
-        const u = uniformsRef.current;
-        if (!u) return;
-        u.uColor.value.set(color);
-        u.uAmplitude.value = amplitude;
-        u.uDistance.value = distance;
-    }, [color, amplitude, distance, speed, mouseInteraction]);
+    const mouseRef = useRef({ x: 0.5, y: 0.5 });
+    const targetMouseRef = useRef({ x: 0.5, y: 0.5 });
 
     useEffect(() => {
         const mountNode = mountRef.current;
-        if (!mountNode) return undefined;
 
+        // Scene, Camera, Renderer
         const scene = new THREE.Scene();
         const camera = new THREE.OrthographicCamera(-1, 1, 1, -1, 0, 1);
-        const renderer = new THREE.WebGLRenderer({ antialias: false, alpha: true, powerPreference: "high-performance" });
-        renderer.domElement.style.display = "block";
-        renderer.domElement.style.width = "100%";
-        renderer.domElement.style.height = "100%";
+        const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
         mountNode.appendChild(renderer.domElement);
 
+        // Shader Material
         const uniforms = {
             uTime: { value: 0 },
-            uResolution: { value: new THREE.Vector2(1, 1) },
+            uResolution: { value: new THREE.Vector2() },
             uMouse: { value: new THREE.Vector2(0.5, 0.5) },
             uColor: { value: new THREE.Color(color) },
             uAmplitude: { value: amplitude },
             uDistance: { value: distance },
-            u_line_count: { value: 40 },
+            u_line_count: { value: 40 } // Default line count
         };
-        uniformsRef.current = uniforms;
-        const material = new THREE.ShaderMaterial({ vertexShader, fragmentShader, uniforms, transparent: true });
-        const geometry = new THREE.PlaneGeometry(2, 2);
-        scene.add(new THREE.Mesh(geometry, material));
+        const material = new THREE.ShaderMaterial({
+            vertexShader,
+            fragmentShader,
+            uniforms,
+            transparent: true,
+        });
 
-        const mouse = { x: 0.5, y: 0.5 };
-        const target = { x: 0.5, y: 0.5 };
+        // Fullscreen Plane
+        const geometry = new THREE.PlaneGeometry(2, 2);
+        const plane = new THREE.Mesh(geometry, material);
+        scene.add(plane);
+
+        // Mouse move handler
         const handleMouseMove = (event) => {
-            if (!mouseInteractionRef.current) return;
+            if (!mouseInteraction) return;
             const rect = mountNode.getBoundingClientRect();
-            target.x = (event.clientX - rect.left) / rect.width;
-            target.y = 1.0 - (event.clientY - rect.top) / rect.height;
+            targetMouseRef.current.x = (event.clientX - rect.left) / rect.width;
+            targetMouseRef.current.y = 1.0 - (event.clientY - rect.top) / rect.height;
         };
         const handleMouseLeave = () => {
-            target.x = 0.5;
-            target.y = 0.5;
+            targetMouseRef.current.x = 0.5;
+            targetMouseRef.current.y = 0.5;
         };
-        window.addEventListener("pointermove", handleMouseMove, { passive: true });
-        document.documentElement.addEventListener("mouseleave", handleMouseLeave);
+        if (mouseInteraction) {
+            window.addEventListener('mousemove', handleMouseMove);
+            window.addEventListener('mouseleave', handleMouseLeave);
+        }
 
-        const resize = () => {
+        // Resize handler with mobile optimization
+        const handleResize = () => {
             const { clientWidth, clientHeight } = mountNode;
+            renderer.setSize(clientWidth, clientHeight);
+
+            // --- Mobile Optimization ---
             const isMobile = clientWidth < 768;
-            // Cap the pixel ratio: this shader runs 80 noise lines per pixel.
-            renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, isMobile ? 1.25 : clientWidth > 1600 ? 1 : 1.5));
-            renderer.setSize(clientWidth, clientHeight, false);
+
+            // 1. Adjust pixel ratio for performance on small screens
+            renderer.setPixelRatio(Math.min(window.devicePixelRatio, isMobile ? 1.5 : 2));
+
+            // 2. Reduce shader complexity (line count) on mobile
             uniforms.u_line_count.value = isMobile ? 20 : 40;
-            // gl_FragCoord is in device pixels, so the resolution must be too
-            // (using CSS pixels only drew the bottom-left quarter on HiDPI screens).
-            renderer.getDrawingBufferSize(uniforms.uResolution.value);
-        };
-        const ro = new ResizeObserver(resize);
-        ro.observe(mountNode);
-        resize();
 
+            uniforms.uResolution.value.set(clientWidth, clientHeight);
+        };
+        window.addEventListener('resize', handleResize);
+        handleResize(); // Initial call
+
+        // Animation loop
         const clock = new THREE.Clock();
-        let elapsed = 0;
-        let frameId = 0;
-        let visible = true;
+        let animationFrameId;
         const animate = () => {
-            elapsed += clock.getDelta() * speedRef.current;
-            uniforms.uTime.value = elapsed;
-            mouse.x += (target.x - mouse.x) * 0.05;
-            mouse.y += (target.y - mouse.y) * 0.05;
-            uniforms.uMouse.value.set(mouse.x, mouse.y);
+            uniforms.uTime.value = clock.getElapsedTime() * speed;
+
+            // Smoothly update mouse position (lerping)
+            mouseRef.current.x += (targetMouseRef.current.x - mouseRef.current.x) * 0.05;
+            mouseRef.current.y += (targetMouseRef.current.y - mouseRef.current.y) * 0.05;
+            uniforms.uMouse.value.set(mouseRef.current.x, mouseRef.current.y);
+
             renderer.render(scene, camera);
-            if (visible) frameId = requestAnimationFrame(animate);
+            animationFrameId = requestAnimationFrame(animate);
         };
-        frameId = requestAnimationFrame(animate);
+        animate();
 
-        const io = new IntersectionObserver(([entry]) => {
-            const was = visible;
-            visible = entry.isIntersecting;
-            if (visible && !was) {
-                clock.getDelta();
-                frameId = requestAnimationFrame(animate);
-            }
-            if (!visible) cancelAnimationFrame(frameId);
-        });
-        io.observe(mountNode);
-
+        // Cleanup function
         return () => {
-            cancelAnimationFrame(frameId);
-            ro.disconnect();
-            io.disconnect();
-            window.removeEventListener("pointermove", handleMouseMove);
-            document.documentElement.removeEventListener("mouseleave", handleMouseLeave);
+            cancelAnimationFrame(animationFrameId);
+            window.removeEventListener('resize', handleResize);
+            window.removeEventListener('mousemove', handleMouseMove);
+            window.removeEventListener('mouseleave', handleMouseLeave);
+            if (mountNode && renderer.domElement) {
+                mountNode.removeChild(renderer.domElement);
+            }
             geometry.dispose();
             material.dispose();
             renderer.dispose();
             renderer.forceContextLoss();
-            renderer.domElement.remove();
-            uniformsRef.current = null;
         };
-        // Only rebuilt on mount; prop changes are handled by the effect above.
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, []);
+    }, [color, amplitude, distance, speed, mouseInteraction]);
 
-    return <div ref={mountRef} className="absolute inset-0 z-0 w-full h-full" />;
+    return <div ref={mountRef} className="absolute inset-0 z-0 w-full h-full -translate-y-20"/>;
 };
 export default KineticThreadsBackground;

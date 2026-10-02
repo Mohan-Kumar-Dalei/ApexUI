@@ -1,132 +1,151 @@
-import React, { useState, useRef, useCallback, useEffect } from 'react';
-import { motion, useMotionValue, useSpring, useTransform } from 'framer-motion';
+/* eslint-disable no-unused-vars */
+import React, { useState, useEffect, useRef } from 'react';
+import { motion, useMotionValue, useTransform } from 'framer-motion';
 import { ArrowLeft, ArrowRight } from 'lucide-react';
-
-const SWIPE_THRESHOLD = 50;
-const NAV_COOLDOWN_MS = 450;
-
-const getOffset = (index, active, length) => {
-    let offset = index - active;
-    if (offset > length / 2) offset -= length;
-    else if (offset < -length / 2) offset += length;
-    return offset;
-};
-
-const CarouselCard = ({ slide, isCenter }) => {
+const CarouselCard = ({ slide, isCenter, isScrolling }) => {
     const cardRef = useRef(null);
     const x = useMotionValue(0);
     const y = useMotionValue(0);
-    // Springs make the tilt follow the pointer smoothly instead of jumping.
-    const sx = useSpring(x, { stiffness: 200, damping: 22 });
-    const sy = useSpring(y, { stiffness: 200, damping: 22 });
-    const rotateX = useTransform(sy, [-200, 200], [12, -12]);
-    const rotateY = useTransform(sx, [-200, 200], [-12, 12]);
 
-    useEffect(() => {
-        if (!isCenter) {
-            x.set(0);
-            y.set(0);
-        }
-    }, [isCenter, x, y]);
+    const rotateX = useTransform(y, [-200, 200], [15, -15]);
+    const rotateY = useTransform(x, [-200, 200], [-15, 15]);
 
-    const handleMove = (event) => {
-        if (!cardRef.current || !isCenter || event.pointerType === 'touch') return;
+    const handleMouseMove = (event) => {
+        if (!cardRef.current || !isCenter || isScrolling) return;
         const rect = cardRef.current.getBoundingClientRect();
         x.set(event.clientX - rect.left - rect.width / 2);
         y.set(event.clientY - rect.top - rect.height / 2);
     };
 
-    const reset = () => {
+    const handleMouseLeave = () => {
         x.set(0);
         y.set(0);
     };
 
+    useEffect(() => {
+        if (isScrolling) {
+            x.set(0);
+            y.set(0);
+        }
+    }, [isScrolling, x, y]);
+
     return (
         <motion.div
             ref={cardRef}
-            className="relative w-full h-full bg-slate-900 rounded-2xl group"
-            style={{ transformStyle: 'preserve-3d', transformPerspective: 1500, rotateX, rotateY }}
-            onPointerMove={handleMove}
-            onPointerLeave={reset}
+            className="w-full h-full bg-slate-900 rounded-2xl group"
+            style={{
+                transformStyle: 'preserve-3d',
+                perspective: '1500px',
+                rotateX: isCenter ? rotateX : 0,
+                rotateY: isCenter ? rotateY : 0,
+            }}
+            onMouseMove={handleMouseMove}
+            onMouseLeave={handleMouseLeave}
         >
-            <div className="absolute inset-0 w-full h-full" style={{ transformStyle: 'preserve-3d' }}>
-                <img src={slide.imageUrl} alt={slide.title} draggable="false" className="w-full h-full object-cover group-hover:opacity-30 transition-opacity duration-500 ease-out rounded-2xl" />
-                {slide.pngUrl && (
-                    <img src={slide.pngUrl} alt="" aria-hidden="true" draggable="false" className="absolute inset-0 w-full h-full object-cover group-hover:translate-z-15 transition-transform duration-500 ease-out rounded-2xl" />
-                )}
+            {/* Slide Content */}
+            <div className="absolute inset-0 w-full h-full" style={{ transformStyle: 'preserve-3d', perspective: '1500px' }}>
+                <img src={slide.imageUrl} alt={slide.title} className="w-full h-full object-cover group-hover:opacity-30 transition-all duration-300 ease-in-out rounded-2xl" />
+                <img src={slide.pngUrl} alt={slide.title} className="absolute inset-0 w-full h-full object-cover group-hover:translate-z-15 transition-all duration-300 ease-in-out rounded-2xl" />
             </div>
-            <div className="relative flex flex-col justify-end h-full text-white p-8" style={{ transformStyle: 'preserve-3d' }}>
-                <h2 className="text-3xl font-bold group-hover:translate-z-18 transition-transform duration-500 ease-out">{slide.title}</h2>
-                <p className="text-lime-400 mt-1 group-hover:translate-z-18 transition-transform duration-500 ease-out">{slide.subtitle}</p>
-                <p className="text-slate-300 mt-4 text-sm leading-relaxed group-hover:translate-z-18 transition-transform duration-500 ease-out">{slide.text}</p>
+            <div className="relative flex flex-col justify-end h-full text-white p-8" style={{ transformStyle: 'preserve-3d', perspective: '1500px' }}>
+                <h2 className="text-3xl font-bold group-hover:translate-z-18 transition-all duration-300 ease-in-out">{slide.title}</h2>
+                <p className="text-lime-400 mt-1 group-hover:translate-z-18 transition-all duration-300 ease-in-out">{slide.subtitle}</p>
+                <p className="text-slate-300 mt-4 text-sm leading-relaxed group-hover:translate-z-18 transition-all duration-300 ease-in-out">{slide.text}</p>
             </div>
         </motion.div>
     );
 };
 
-const ParallaxCarousel = ({ slides = [] }) => {
+
+// --- Custom Parallax Carousel Component ---
+const ParallaxCarousel = ({ slides }) => {
     const [activeIndex, setActiveIndex] = useState(0);
-    const lastNav = useRef(0);
-    const count = slides.length;
+    const animatingRef = useRef(false);
+    const animTimeoutRef = useRef(null);
 
-    const paginate = useCallback((dir) => {
-        const now = Date.now();
-        if (!count || now - lastNav.current < NAV_COOLDOWN_MS) return;
-        lastNav.current = now;
-        setActiveIndex((i) => (i + dir + count) % count);
-    }, [count]);
+    const [isScrolling, setIsScrolling] = useState(false);
+    const scrollTimeoutRef = useRef(null);
 
-    if (!count) return null;
+    // ✅ REMOVED: isHovered state hata diya gaya hai.
+
+    const NAV_ANIM_MS = 600;
+    const handleNext = () => {
+        if (animatingRef.current) return;
+        animatingRef.current = true;
+        clearTimeout(animTimeoutRef.current);
+        setActiveIndex((prevIndex) => (prevIndex + 1) % slides.length);
+        animTimeoutRef.current = setTimeout(() => {
+            animatingRef.current = false;
+        }, NAV_ANIM_MS);
+    };
+
+    const handlePrev = () => {
+        if (animatingRef.current) return;
+        animatingRef.current = true;
+        clearTimeout(animTimeoutRef.current);
+        setActiveIndex((prevIndex) => (prevIndex - 1 + slides.length) % slides.length);
+        animTimeoutRef.current = setTimeout(() => {
+            animatingRef.current = false;
+        }, NAV_ANIM_MS);
+    };
+    useEffect(() => {
+        const handleScroll = () => {
+            setIsScrolling(true);
+            clearTimeout(scrollTimeoutRef.current);
+            scrollTimeoutRef.current = setTimeout(() => {
+                setIsScrolling(false);
+            }, 150);
+        };
+
+        window.addEventListener('scroll', handleScroll, { passive: true });
+
+        return () => {
+            window.removeEventListener('scroll', handleScroll);
+            clearTimeout(scrollTimeoutRef.current);
+        };
+    }, []);
+
 
     return (
-        <div
-            className="relative w-full flex flex-col items-center px-2 overflow-x-clip outline-none"
-            tabIndex={0}
-            onKeyDown={(e) => {
-                if (e.key === 'ArrowRight') paginate(1);
-                if (e.key === 'ArrowLeft') paginate(-1);
-            }}
-        >
-            <motion.div
-                className="relative w-full h-[480px] touch-pan-y"
+        <div className="relative w-full flex flex-col items-center px-2">
+            <div
+                className="relative w-full h-[480px] portrait:h-[480px] portrait:px-0"
                 style={{ perspective: '1200px', transformStyle: 'preserve-3d' }}
-                onPanEnd={(_, info) => {
-                    if (info.offset.x < -SWIPE_THRESHOLD) paginate(1);
-                    else if (info.offset.x > SWIPE_THRESHOLD) paginate(-1);
-                }}
             >
                 {slides.map((slide, index) => {
-                    const offset = getOffset(index, activeIndex, count);
-                    const distance = Math.abs(offset);
-                    const isVisible = distance <= 2;
+                    let positionOffset = index - activeIndex;
+                    if (positionOffset > slides.length / 2) {
+                        positionOffset -= slides.length;
+                    } else if (positionOffset < -slides.length / 2) {
+                        positionOffset += slides.length;
+                    }
+
+                    const isVisible = Math.abs(positionOffset) <= 2;
 
                     return (
                         <motion.div
-                            key={slide.id ?? slide.title ?? index}
-                            className="absolute top-0 left-0 w-full h-[340px] portrait:h-[480px] md:w-1/2 md:h-[400px] md:top-[50px] md:left-1/4"
+                            key={index}
+                            className={`absolute w-full h-[340px] portrait:w-full portrait:h-[480px] top-0 left-0 portrait:left-0 portrait:top-0 ${positionOffset === 0 ? '' : ' pointer-events-none'} md:w-[50%] md:h-[400px] md:top-[50px] md:left-1/2 lg:-translate-x-1/2`}
                             initial={false}
-                            style={{ transformStyle: 'preserve-3d', pointerEvents: offset === 0 ? 'auto' : 'none' }}
+                            style={{ transformStyle: 'preserve-3d', willChange: 'transform, opacity' }}
                             animate={{
-                                x: `${offset * 50}%`,
-                                z: -distance * 250,
-                                scale: 1 - distance * 0.15,
-                                opacity: isVisible ? 1 - distance * 0.45 : 0,
-                                zIndex: count - distance,
+                                transform: `translateX(${positionOffset * 50}%) translateZ(${-Math.abs(positionOffset) * 250}px) scale(${1 - Math.abs(positionOffset) * 0.15})`,
+                                opacity: isVisible ? (1 - Math.abs(positionOffset) * 0.45) : 0,
+                                zIndex: slides.length - Math.abs(positionOffset),
                             }}
-                            transition={{ type: 'spring', stiffness: 180, damping: 26, mass: 0.9 }}
-                            aria-hidden={offset !== 0}
+                            transition={{ type: 'spring', stiffness: 160, damping: 22 }}
                         >
-                            <CarouselCard slide={slide} isCenter={offset === 0} />
+                            <CarouselCard slide={slide} isCenter={positionOffset === 0} isScrolling={isScrolling} />
                         </motion.div>
                     );
                 })}
-            </motion.div>
+            </div>
 
-            <motion.button type="button" aria-label="Previous slide" onClick={() => paginate(-1)} className="absolute left-1 lg:left-0 top-1/2 -translate-y-1/2 z-30 p-3 rounded-full bg-black/30 backdrop-blur text-slate-300 hover:text-lime-400 transition-colors" whileTap={{ scale: 0.9 }}>
-                <ArrowLeft size={28} />
+            <motion.button onClick={handlePrev} className="absolute -left-10 lg:left-0 top-1/2 -translate-y-1/2 z-30 p-3 rounded-full text-slate-400 hover:text-lime-400 transition-colors" whileTap={{ scale: 0.9 }}>
+                <ArrowLeft size={32} />
             </motion.button>
-            <motion.button type="button" aria-label="Next slide" onClick={() => paginate(1)} className="absolute right-1 lg:right-0 top-1/2 -translate-y-1/2 z-30 p-3 rounded-full bg-black/30 backdrop-blur text-slate-300 hover:text-lime-400 transition-colors" whileTap={{ scale: 0.9 }}>
-                <ArrowRight size={28} />
+            <motion.button onClick={handleNext} className="absolute -right-10 lg:right-0 top-1/2 -translate-y-1/2 z-30 p-3 rounded-full text-slate-400 hover:text-lime-400 transition-colors" whileTap={{ scale: 0.9 }}>
+                <ArrowRight size={32} />
             </motion.button>
         </div>
     );

@@ -21,7 +21,7 @@ export default function BackgroundDemo({ title, subtitle = 'A beautiful animated
                         <span>About</span>
                     </div>
                 </nav>
-                <h2 className="mb-2 text-center text-4xl font-bold tracking-tight text-white drop-shadow-lg md:text-5xl">{title}</h2>
+                <h2 className="mb-2 text-center text-4xl font-extrabold text-white drop-shadow-lg md:text-5xl">{title}</h2>
                 <p className="max-w-md text-center text-lg text-white/80">{subtitle}</p>
             </div>
             <button

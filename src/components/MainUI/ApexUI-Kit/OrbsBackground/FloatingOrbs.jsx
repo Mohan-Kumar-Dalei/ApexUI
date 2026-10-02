@@ -1,82 +1,96 @@
-import React, { useState, useEffect, useMemo } from 'react';
+/* eslint-disable no-unused-vars */
+import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 
-const DEFAULT_COLORS = [
-    "#10b981", "#06b6d4", "#6366f1", "#a855f7",
-    "#d946ef", "#ec4899", "#f43f5e", "#f97316",
-];
-
-const rand = (min, max) => Math.random() * (max - min) + min;
-
+// --- FloatingOrbsBackground Component (Optimized for Mobile) ---
 const FloatingOrbsBackground = ({
     children,
-    className = "",
-    containerClassName = "",
+    className,
+    containerClassName,
     colors,
-    desktopOrbs = 20,
-    mobileOrbs = 10,
+    desktopOrbs = 20, // Orbs for desktop
+    mobileOrbs = 10,   // Orbs for mobile
 }) => {
+    const [numberOfOrbs, setNumberOfOrbs] = useState(desktopOrbs);
     const [isMobile, setIsMobile] = useState(false);
 
+    // Screen size check karne ke liye
     useEffect(() => {
-        const mq = window.matchMedia('(max-width: 767px)');
-        const update = () => setIsMobile(mq.matches);
-        update();
-        mq.addEventListener('change', update);
-        return () => mq.removeEventListener('change', update);
-    }, []);
+        const checkScreenSize = () => {
+            const isMobileDevice = window.innerWidth < 768;
+            setIsMobile(isMobileDevice);
+            setNumberOfOrbs(isMobileDevice ? mobileOrbs : desktopOrbs);
+        };
 
-    const numberOfOrbs = isMobile ? mobileOrbs : desktopOrbs;
+        checkScreenSize(); // Pehli baar check karein
+        window.addEventListener('resize', checkScreenSize);
 
-    // Each orb gets its path once; re-renders no longer re-randomise (and jump) them.
-    const orbs = useMemo(
-        () => Array.from({ length: numberOfOrbs }, () => ({
-            size: rand(100, 300),
-            left: `${rand(0, 100)}%`,
-            top: `${rand(0, 100)}%`,
-            duration: rand(18, 34),
-            x: [0, rand(-30, 30), rand(-30, 30)].map((v) => `${v}vw`),
-            y: [0, rand(-25, 25), rand(-25, 25)].map((v) => `${v}vh`),
-        })),
-        [numberOfOrbs]
-    );
+        // Cleanup
+        return () => window.removeEventListener('resize', checkScreenSize);
+    }, [desktopOrbs, mobileOrbs]);
 
-    const orbColors = colors?.length ? colors : DEFAULT_COLORS;
-    const blur = isMobile ? 60 : 80;
+    const orbColors = colors ?? [
+        "#10b981", "#06b6d4", "#6366f1", "#a855f7",
+        "#d946ef", "#ec4899", "#f43f5e", "#f97316",
+    ];
 
     return (
-        <div className={`relative h-[60vh] lg:h-[80vh] w-full flex flex-col items-center justify-center overflow-hidden bg-slate-950 ${containerClassName}`}>
-            <div className="absolute inset-0 z-0 w-full h-full pointer-events-none">
-                {orbs.map((orb, index) => (
-                    <motion.div
-                        key={index}
-                        className="absolute rounded-full"
-                        style={{
-                            width: orb.size,
-                            height: orb.size,
-                            left: orb.left,
-                            top: orb.top,
-                            marginLeft: -orb.size / 2,
-                            marginTop: -orb.size / 2,
-                            backgroundColor: orbColors[index % orbColors.length],
-                            filter: `blur(${blur}px)`,
-                            opacity: 0.4,
-                            willChange: 'transform',
-                        }}
-                        animate={{ x: orb.x, y: orb.y, scale: [1, 1.2, 1] }}
-                        transition={{
-                            duration: orb.duration,
-                            repeat: Infinity,
-                            repeatType: 'mirror',
-                            ease: 'easeInOut',
-                        }}
-                    />
-                ))}
+        <div
+            className={`relative h-[60vh] lg:h-[80vh] w-full flex flex-col items-center justify-center overflow-hidden bg-slate-950 ${containerClassName}`}
+        >
+            {/* Orbs Container */}
+            <div className="absolute inset-0 z-0 w-full h-full">
+                {Array.from({ length: numberOfOrbs }).map((_, index) => {
+                    const size = Math.random() * 200 + 100;
+                    const duration = Math.random() * 20 + 15;
+                    // Mobile ke liye blur kam kar diya hai
+                    const blur = isMobile ? '60px' : '80px';
+
+                    return (
+                        <motion.div
+                            key={index}
+                            className="absolute rounded-full"
+                            style={{
+                                width: size,
+                                height: size,
+                                backgroundColor: orbColors[index % orbColors.length],
+                                filter: `blur(${blur})`,
+                                opacity: 0.4,
+                                // Performance behtar karne ke liye browser ko hint dena
+                                willChange: 'transform, opacity',
+                            }}
+                            animate={{
+                                x: [
+                                    // Movement range ko badha diya hai taaki yeh poori screen cover kare
+                                    `${Math.random() * 150 - 75}vw`,
+                                    `${Math.random() * 150 - 75}vw`,
+                                    `${Math.random() * 150 - 75}vw`,
+                                ],
+                                y: [
+                                    // Movement range ko badha diya hai taaki yeh poori screen cover kare
+                                    `${Math.random() * 150 - 75}vh`,
+                                    `${Math.random() * 150 - 75}vh`,
+                                    `${Math.random() * 150 - 75}vh`,
+                                ],
+                                scale: [1, 1.2, 1],
+                            }}
+                            transition={{
+                                duration: duration,
+                                repeat: Infinity,
+                                ease: 'easeInOut',
+                                repeatType: 'mirror',
+                            }}
+                        />
+                    );
+                })}
             </div>
 
-            <div className={`relative z-10 ${className}`}>{children}</div>
+            <div className={`relative z-10 ${className}`}>
+                {children}
+            </div>
         </div>
     );
 };
+
 
 export default FloatingOrbsBackground;

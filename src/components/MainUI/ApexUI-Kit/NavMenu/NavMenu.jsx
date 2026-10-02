@@ -1,84 +1,103 @@
-import React, { useState, useRef, useEffect, useLayoutEffect } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { gsap } from "gsap";
-
-const DEFAULT_ITEMS = ['Home', 'Docs', 'UI Kit', 'Contact'];
-
-const EASES = {
-    spring: "back.out(1.6)",
-    power: "power3.out",
-    elastic: "elastic.out(1, 0.6)",
-};
-
 const NavMenu = ({
     indicatorColor = "#a3e635",
     backgroundColor = "rgba(17, 24, 39, 0.5)",
     activeColor = "#ffffff",
     indicatorAnimation = "elastic",
-    items = DEFAULT_ITEMS,
-    activeIndex: controlledIndex,
-    onNavItemClick,
+    onNavItemClick
 }) => {
-    const [internalIdx, setInternalIdx] = useState(0);
-    const activeIdx = controlledIndex ?? internalIdx;
-    const navRef = useRef(null);
-    const itemRefs = useRef([]);
+    const [activeIdx, setActiveIdx] = useState(0);
+    const navItemsRef = useRef([]);
     const indicatorRef = useRef(null);
-    const firstRun = useRef(true);
-
+    const navContainerRef = useRef(null);
     useEffect(() => {
-        if (!navRef.current) return undefined;
-        const tween = gsap.fromTo(navRef.current, { opacity: 0, y: -8 }, { opacity: 1, y: 0, duration: 0.6, ease: "power3.out", delay: 0.2 });
-        return () => tween.kill();
+        if (!navContainerRef.current) return;
+        gsap.fromTo(
+            navContainerRef.current,
+            { width: 0, opacity: 0 },
+            { width: "auto", opacity: 1, duration: 0.8, ease: "power2.out", delay: 0.5 }
+        );
     }, []);
 
-    // Position the indicator relative to the nav itself (which is now `relative`).
-    useLayoutEffect(() => {
-        const nav = navRef.current;
+    useEffect(() => {
         const indicator = indicatorRef.current;
-        if (!nav || !indicator) return undefined;
+        const el = navItemsRef.current[activeIdx];
 
-        const place = (animate) => {
-            const el = itemRefs.current[activeIdx];
-            if (!el) return;
-            const vars = { x: el.offsetLeft, width: el.offsetWidth };
-            if (animate) gsap.to(indicator, { ...vars, duration: 0.55, ease: EASES[indicatorAnimation] ?? EASES.elastic, overwrite: "auto" });
-            else gsap.set(indicator, vars);
+        if (!indicator || !el) return;
+
+        const getEase = () => {
+            switch (indicatorAnimation) {
+                case "spring": return "bounce.out";
+                case "power": return "power3.out";
+                case "elastic":
+                default: return "elastic.out(1, 0.6)";
+            }
         };
 
-        place(!firstRun.current);
-        firstRun.current = false;
+        const moveWithGSAP = () => {
+            const rect = el.getBoundingClientRect();
+            const parentRect = el.parentElement.getBoundingClientRect();
+            const left = rect.left - parentRect.left;
+            const width = rect.width;
 
-        const ro = new ResizeObserver(() => place(false));
-        ro.observe(nav);
-        return () => ro.disconnect();
-    }, [activeIdx, indicatorAnimation, items]);
+            gsap.to(indicator, {
+                x: left,
+                width,
+                duration: 0.5,
+                ease: getEase(),
+            });
+        };
 
-    const select = (i, label) => {
-        if (controlledIndex === undefined) setInternalIdx(i);
-        onNavItemClick?.(label, i);
-    };
+        const timeoutId = setTimeout(moveWithGSAP, 50);
+        return () => clearTimeout(timeoutId);
+
+    }, [activeIdx, indicatorAnimation]);
+
+    // Handle resize
+    useEffect(() => {
+        const handleResize = () => {
+            const el = navItemsRef.current[activeIdx];
+            if (el) {
+                const rect = el.getBoundingClientRect();
+                const parentRect = el.parentElement.getBoundingClientRect();
+                const left = rect.left - parentRect.left;
+                const width = rect.width;
+
+                gsap.set(indicatorRef.current, {
+                    x: left,
+                    width: width
+                });
+            }
+        };
+
+        window.addEventListener("resize", handleResize);
+        return () => window.removeEventListener("resize", handleResize);
+    }, [activeIdx]);
+
+    const navItems = ['Home', 'Docs', 'UI Kit', 'Contact'];
 
     return (
         <nav
-            ref={navRef}
-            className="relative rounded px-3 py-2 shadow-lg border border-white/10 overflow-hidden"
-            style={{ backdropFilter: 'blur(16px)', WebkitBackdropFilter: 'blur(16px)', background: backgroundColor }}
+            ref={navContainerRef}
+            className="rounded px-3 py-2 shadow-lg border border-white/10 overflow-hidden"
+            style={{ backdropFilter: 'blur(16px)', WebkitBackdropFilter: 'blur(16px)', background: backgroundColor ,  }}
         >
-            <div className="relative flex gap-2 whitespace-nowrap">
-                <div
-                    ref={indicatorRef}
-                    aria-hidden="true"
-                    className="absolute left-0 top-0 h-full rounded-lg pointer-events-none"
-                    style={{ background: indicatorColor, opacity: 0.3, width: 0 }}
-                />
-                {items.map((label, i) => (
+            <div
+                ref={indicatorRef}
+                className="absolute top-1.5 h-[calc(100%-0.75rem)] rounded-lg z-0 "
+                style={{ background: indicatorColor, opacity: 0.3 }}
+            />
+            <div className="relative flex gap-2 z-10 whitespace-nowrap">
+                {navItems.map((label, i) => (
                     <button
                         key={label}
-                        type="button"
-                        ref={(el) => (itemRefs.current[i] = el)}
-                        onClick={() => select(i, label)}
-                        aria-current={i === activeIdx ? "page" : undefined}
-                        className={`px-6 py-2 text-base font-semibold rounded-full relative z-10 transition-colors duration-300 ${i === activeIdx ? '' : 'text-gray-400 hover:text-white'}`}
+                        ref={(el) => (navItemsRef.current[i] = el)}
+                        onClick={() => {
+                            setActiveIdx(i);
+                            if (onNavItemClick) onNavItemClick();
+                        }}
+                        className={`nav-item px-6 py-2 text-base font-semibold rounded-full relative z-10 transition-colors duration-300 ${i === activeIdx ? '' : 'text-gray-400 hover:text-white'}`}
                         style={{ color: i === activeIdx ? activeColor : undefined }}
                     >
                         {label}
@@ -89,30 +108,20 @@ const NavMenu = ({
     );
 };
 
-const ResponsiveNavMenu = ({ items = DEFAULT_ITEMS, onNavItemClick, ...props }) => {
-    const [isOpen, setIsOpen] = useState(false);
-    const [activeIdx, setActiveIdx] = useState(0);
 
-    const handleSelect = (label, i) => {
-        setActiveIdx(i);
-        setIsOpen(false);
-        onNavItemClick?.(label, i);
-    };
+// Responsive Wrapper Component
+const ResponsiveNavMenu = (props) => {
+    const [isOpen, setIsOpen] = useState(false);
+    const navItems = ['Home', 'Docs', 'UI Kit', 'Contact'];
 
     return (
-        <nav className="sticky top-0 flex items-center justify-center p-4 w-full z-50 bg-transparent">
+        <nav className="flex items-center justify-center p-4 sticky top-0 left-0 w-full z-50 bg-transparent">
             <div className="hidden md:flex w-full justify-center">
-                <NavMenu {...props} items={items} activeIndex={activeIdx} onNavItemClick={handleSelect} />
+                <NavMenu {...props} />
             </div>
 
             <div className="md:hidden flex w-full justify-end">
-                <button
-                    type="button"
-                    aria-label={isOpen ? "Close menu" : "Open menu"}
-                    aria-expanded={isOpen}
-                    onClick={() => setIsOpen((v) => !v)}
-                    className="text-white focus:outline-none"
-                >
+                <button onClick={() => setIsOpen(!isOpen)} className="text-white focus:outline-none">
                     <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d={isOpen ? "M6 18L18 6M6 6l12 12" : "M4 6h16M4 12h16m-7 6h7"} />
                     </svg>
@@ -120,17 +129,17 @@ const ResponsiveNavMenu = ({ items = DEFAULT_ITEMS, onNavItemClick, ...props }) 
             </div>
 
             {isOpen && (
-                <div
-                    className="md:hidden absolute top-16 left-4 right-4 rounded-xl shadow-lg border border-white/10"
-                    style={{ backdropFilter: 'blur(16px)', WebkitBackdropFilter: 'blur(16px)', background: 'rgba(17, 24, 39, 0.85)' }}
-                >
+                <div className="md:hidden absolute top-20 left-4 right-4 rounded-xl shadow-lg border border-white/10"
+                    style={{ backdropFilter: 'blur(16px)', WebkitBackdropFilter: 'blur(16px)', background: 'rgba(17, 24, 39, 0.7)' }}>
                     <div className="flex flex-col items-center gap-2 p-4">
-                        {items.map((label, i) => (
+                        {navItems.map((label) => (
                             <button
                                 key={label}
-                                type="button"
-                                onClick={() => handleSelect(label, i)}
-                                className={`w-full text-center px-6 py-3 text-lg font-semibold rounded-full transition-colors duration-300 ${i === activeIdx ? 'text-white bg-white/10' : 'text-gray-300 hover:text-white hover:bg-white/10'}`}
+                                onClick={() => {
+                                    console.log(`${label} clicked`);
+                                    setIsOpen(false);
+                                }}
+                                className="w-full text-center px-6 py-3 text-lg font-semibold rounded-full text-gray-300 hover:text-white hover:bg-white/10 transition-colors duration-300"
                             >
                                 {label}
                             </button>
@@ -141,5 +150,4 @@ const ResponsiveNavMenu = ({ items = DEFAULT_ITEMS, onNavItemClick, ...props }) 
         </nav>
     );
 };
-
 export default ResponsiveNavMenu;

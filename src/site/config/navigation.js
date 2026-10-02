@@ -287,7 +287,9 @@ export const componentPages = [
     },
 ];
 
-// Catalogue numbers (No. 01 …) follow the alphabetical order above.
+// Keep components in the same order everywhere (index panel, grid, prev / next):
+// grouped by category, alphabetical inside each group, numbered 01, 02 … in that order.
+componentPages.sort((a, b) => CATEGORIES.indexOf(a.category) - CATEGORIES.indexOf(b.category) || a.name.localeCompare(b.name));
 componentPages.forEach((page, i) => {
     page.num = String(i + 1).padStart(2, '0');
 });

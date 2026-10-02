@@ -27,7 +27,6 @@ const props = [
     { prop: 'separation', type: 'number', def: '4', desc: 'Separation between spheres.' },
     { prop: 'bgColor1', type: 'string', def: "'#010a2d'", desc: 'First background gradient color.' },
     { prop: 'bgColor2', type: 'string', def: "'#001133'", desc: 'Second background gradient color.' },
-    { prop: 'className', type: 'string', def: "''", desc: 'Classes for the wrapper, e.g. a custom height.' },
 ];
 
 const dependencies = [
@@ -42,7 +41,7 @@ export default function LuminousParticleOceanDoc() {
             title="Luminous Particle Ocean"
             description="A 3D ocean of glowing particles with dynamic lighting that ripples under the pointer."
             preview={
-                <BackgroundDemo title="Particle Ocean">
+                <BackgroundDemo title="Luminous Particle Ocean Demo">
                     <LuminousParticleOcean sphereCount={100} sphereColor="#51a2ff" interactionStrength={15} separation={4} bgColor1="#010a2d" bgColor2="#001133" />
                 </BackgroundDemo>
             }

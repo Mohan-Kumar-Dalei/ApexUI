@@ -1,131 +1,154 @@
 import React, { useLayoutEffect, useRef } from 'react';
+// GSAP ko seedhe CDN se import kiya gaya hai taaki yeh browser mein chale
 import gsap from "gsap";
-import './AccordionMarquee.css';
-
-const defaultItems = [
-    { title: "Cybernetic Dreams", text: "Explore the Future" },
-    { title: "Quantum Leap", text: "Journey Through Spacetime" },
-    { title: "Neural Networks", text: "Unravel Complexity" },
-    { title: "Digital Odyssey", text: "Voyage into the Digital World" },
+import './AccordionMarquee.css'
+// Accordion ka data
+const accordionData = [
+    {
+        title: "Cybernetic Dreams",
+        text: "Explore the Future",
+    },
+    {
+        title: "Quantum Leap",
+        text: "Journey Through Spacetime",
+    },
+    {
+        title: "Neural Networks",
+        text: "Unravel Complexity",
+    },
+    {
+        title: "Digital Odyssey",
+        text: "Voyage into the Digital World",
+    },
 ];
 
-const Sparkle = () => (
-    <svg xmlns="http://www.w3.org/2000/svg" width="100" height="70" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="shrink-0" aria-hidden="true">
-        <path className="sparkle-icon" d="M11.017 2.814a1 1 0 0 1 1.966 0l1.051 5.558a2 2 0 0 0 1.594 1.594l5.558 1.051a1 1 0 0 1 0 1.966l-5.558 1.051a2 2 0 0 0-1.594 1.594l-1.051 5.558a1 1 0 0 1-1.966 0l-1.051-5.558a2 2 0 0 0-1.594-1.594l-5.558-1.051a1 1 0 0 1 0-1.966l5.558-1.051a2 2 0 0 0 1.594-1.594z" />
-    </svg>
-);
-
-// Two identical halves make the -50% loop seamless.
-const MarqueeContent = ({ text }) => (
-    <>
-        {[0, 1, 2, 3].map((i) => (
-            <React.Fragment key={i}>
-                <span className="px-4">{text}</span>
-                <Sparkle />
-            </React.Fragment>
-        ))}
-    </>
-);
-
-const AccordionMarquee = ({ bgColor = '#bbf451', textColor = '#27272a', items = defaultItems, className = 'h-[80vh] md:h-[70vh]' }) => {
+const AccordionMarquee = ({bgColor='#bbf451', textColor='#27272a'}) => {
     const containerRef = useRef(null);
 
     useLayoutEffect(() => {
         const container = containerRef.current;
         if (!container) return undefined;
+        const cleanups = [];
 
-        // Everything is scoped to this instance and torn down on unmount.
+        // Scoped to this instance and reverted on unmount, so a remount (or React
+        // StrictMode) no longer stacks a second set of handlers and tweens — that
+        // is what left several marquee bands visible at once.
         const ctx = gsap.context(() => {
-            const rows = gsap.utils.toArray(".accordion-item", container);
-            let active = null;
+            const items = gsap.utils.toArray(".accordion-item", container);
+            let activeItem = null;
+            let activeMarquee = null;
 
-            const entries = rows.map((row) => {
-                const title = row.querySelector(".accordion-title");
-                const band = row.querySelector(".marquee-wrapper");
-                const track = row.querySelector(".marquee-text");
-                const loop = gsap.to(track, {
-                    xPercent: -50,
-                    duration: Math.max(track.scrollWidth / 2 / 60, 6),
-                    ease: "none",
+            items.forEach((item) => {
+                const marqueeText = item.querySelector(".marquee-text");
+                const title = item.querySelector(".accordion-title");
+
+                // Marquee text ko 2 baar duplicate karte hain for seamless loop
+                // (the original text is kept so a remount doesn't duplicate it again)
+                if (!marqueeText.dataset.text) marqueeText.dataset.text = marqueeText.innerText;
+                const marqueeContent = marqueeText.dataset.text;
+                const sparkleIconSVG = `<svg xmlns="http://www.w3.org/2000/svg" width="100" height="70" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-sparkle-icon lucide-sparkle"><path d="M11.017 2.814a1 1 0 0 1 1.966 0l1.051 5.558a2 2 0 0 0 1.594 1.594l5.558 1.051a1 1 0 0 1 0 1.966l-5.558 1.051a2 2 0 0 0-1.594 1.594l-1.051 5.558a1 1 0 0 1-1.966 0l-1.051-5.558a2 2 0 0 0-1.594-1.594l-5.558-1.051a1 1 0 0 1 0-1.966l5.558-1.051a2 2 0 0 0 1.594-1.594z" class="sparkle-icon"/></svg>`;
+                marqueeText.innerHTML = [marqueeContent, sparkleIconSVG, marqueeContent, sparkleIconSVG, marqueeContent, sparkleIconSVG, marqueeContent, sparkleIconSVG].join("");
+
+                // Seamless Marquee animation
+                const marqueeWidth = marqueeText.scrollWidth / 2;
+                const marqueeTl = gsap.to(marqueeText, {
+                    x: -marqueeWidth,
+                    duration: marqueeWidth / 30, // Speed ko consistent rakhta hai
+                    ease: "linear",
                     repeat: -1,
-                    paused: true,
-                });
-                // One reversible timeline per row: the title and the band can never
-                // both be visible, however fast the pointer moves between rows.
-                gsap.set(band, { autoAlpha: 0, scaleY: 0 });
-                const reveal = gsap.timeline({ paused: true, defaults: { ease: "power3.inOut" } })
-                    .to(title, { autoAlpha: 0, y: -12, duration: 0.22 }, 0)
-                    .to(band, { autoAlpha: 1, scaleY: 1, duration: 0.32 }, 0.08);
-                return { row, loop, reveal };
+                }).pause();
+
+                // overwrite: true kills a still-delayed tween on the same element,
+                // so fast pointer moves can't leave a title and a band both visible.
+                const onEnter = () => {
+                    if (activeItem === item) return;
+
+                    if (activeItem) {
+                        const oldTitle = activeItem.querySelector(".accordion-title");
+                        const oldMarqueeWrapper = activeItem.querySelector(".marquee-wrapper");
+                        gsap.to(oldTitle, { autoAlpha: 1, duration: 0.2, ease: "power3.inOut", overwrite: true });
+                        gsap.to(oldMarqueeWrapper, { autoAlpha: 0, duration: 0.2, ease: "power3.inOut", overwrite: true });
+                        if (activeMarquee) activeMarquee.pause();
+                    }
+
+                    activeItem = item;
+                    activeMarquee = marqueeTl;
+
+                    const marqueeWrapper = item.querySelector(".marquee-wrapper");
+                    gsap.to(title, { autoAlpha: 0, duration: 0.2, ease: "power3.inOut", overwrite: true });
+                    gsap.to(marqueeWrapper, { autoAlpha: 1, duration: 0.2, delay: 0.1, ease: "power3.inOut", overwrite: true });
+
+                    marqueeTl.play();
+                };
+                item.addEventListener("mouseenter", onEnter);
+                cleanups.push(() => item.removeEventListener("mouseenter", onEnter));
             });
 
-            const deactivate = (entry) => {
-                if (!entry) return;
-                entry.reveal.timeScale(1.4).reverse();
-                entry.loop.pause();
-            };
-            const activate = (entry) => {
-                if (active === entry) return;
-                deactivate(active);
-                active = entry;
-                entry.reveal.timeScale(1).play();
-                entry.loop.play();
-            };
-
-            const cleanups = entries.map((entry) => {
-                const onEnter = () => activate(entry);
-                entry.row.addEventListener("pointerenter", onEnter);
-                return () => entry.row.removeEventListener("pointerenter", onEnter);
-            });
             const onLeave = () => {
-                deactivate(active);
-                active = null;
-            };
-            container.addEventListener("pointerleave", onLeave);
+                if (!activeItem) return;
 
-            return () => {
-                cleanups.forEach((fn) => fn());
-                container.removeEventListener("pointerleave", onLeave);
+                const activeTitle = activeItem.querySelector(".accordion-title");
+                const activeMarqueeWrapper = activeItem.querySelector(".marquee-wrapper");
+
+                gsap.to(activeTitle, { autoAlpha: 1, duration: 0.2, delay: 0.1, ease: "power3.inOut", overwrite: true });
+                gsap.to(activeMarqueeWrapper, { autoAlpha: 0, duration: 0.2, ease: "power3.inOut", overwrite: true });
+
+                if (activeMarquee) {
+                    activeMarquee.pause();
+                }
+                activeItem = null;
+                activeMarquee = null;
             };
+            container.addEventListener("mouseleave", onLeave);
+            cleanups.push(() => container.removeEventListener("mouseleave", onLeave));
         }, container);
 
-        return () => ctx.revert();
-    }, [items]);
+        return () => {
+            cleanups.forEach((fn) => fn());
+            ctx.revert();
+        };
+    }, []);
 
     return (
         <>
-            <style>{`
+            <style>
+                {`
                 @keyframes sparkle-pulse {
-                    0%, 100% { stroke: #000; stroke-width: 0.5; }
-                    50% { stroke: #444; stroke-width: 1; }
+                    0%, 100% {
+                        stroke: #000;
+                        stroke-width: 0.5;
+                    }
+                    50% {
+                        stroke: #444;
+                        stroke-width: 1;
+                    }
                 }
-                .sparkle-icon { animation: sparkle-pulse 2.5s ease-in-out infinite; }
-            `}</style>
+                .sparkle-icon {
+                    animation: sparkle-pulse 2.5s ease-in-out infinite;
+                }
+                `}
+            </style>
             <div className="flex items-center justify-center w-full bg-gray-900 text-white font-sans">
-                <div ref={containerRef} className={`flex flex-col w-full min-h-[22rem] ${className}`}>
-                    {items.map((item, index) => (
-                        <React.Fragment key={item.title ?? index}>
-                            <div className="accordion-item relative w-full flex-1 min-h-20 overflow-hidden cursor-pointer flex items-center justify-center bg-gray-800">
-                                <h2
-                                    className="accordion-title relative z-10 px-4 text-center text-2xl sm:text-3xl lg:text-5xl font-extrabold uppercase tracking-wider whitespace-nowrap"
-                                    style={{ textShadow: '2px 2px 8px rgba(0,0,0,0.7)' }}
-                                >
-                                    {item.title}
-                                </h2>
-                                <div
-                                    className="marquee-wrapper absolute inset-x-0 top-1/2 -mt-8 sm:-mt-10 h-16 sm:h-20 flex items-center overflow-hidden origin-center"
-                                    style={{ backgroundColor: bgColor, visibility: 'hidden' }}
-                                >
-                                    <p
-                                        className="marquee-text text-3xl sm:text-5xl md:text-6xl font-bold whitespace-nowrap flex items-center will-change-transform"
+                <div ref={containerRef} className="flex flex-col w-full h-[80vh] md:h-[70vh]">
+                    {accordionData.map((item, index) => (
+                        <React.Fragment key={index}>
+                            <div className="accordion-item relative w-full h-40 overflow-hidden cursor-pointer flex items-center justify-center bg-gray-800">
+                                <div className="relative z-10 w-full text-center px-4">
+                                    <h2 className="accordion-title text-2xl sm:text-3xl lg:text-5xl font-extrabold uppercase tracking-wider whitespace-nowrap" style={{ textShadow: '2px 2px 8px rgba(0,0,0,0.7)' }}>
+                                        {item.title}
+                                    </h2>
+                                    <div className="marquee-wrapper absolute inset-0 w-full h-20 flex items-center overflow-hidden opacity-0" style={{backgroundColor: bgColor}}>
+                                        <p className="marquee-text text-4xl sm:text-5xl md:text-6xl font-bold whitespace-nowrap flex items-center" 
                                         style={{ textShadow: '1px 1px 3px rgba(0,0,0,0.2)', fontFamily: "Righteous, sans-serif", color: textColor }}
-                                    >
-                                        <MarqueeContent text={item.text} />
-                                        <MarqueeContent text={item.text} />
-                                    </p>
+                                        >
+                                            {item.text}
+                                        </p>
+                                    </div>
                                 </div>
                             </div>
-                            {index < items.length - 1 && <hr className="w-full border-t-2 border-gray-700 my-0" />}
+                            {index < accordionData.length - 1 && (
+                                <hr className="w-full border-t-2 border-gray-700 my-0" />
+                            )}
                         </React.Fragment>
                     ))}
                 </div>
@@ -135,3 +158,4 @@ const AccordionMarquee = ({ bgColor = '#bbf451', textColor = '#27272a', items = 
 };
 
 export default AccordionMarquee;
+

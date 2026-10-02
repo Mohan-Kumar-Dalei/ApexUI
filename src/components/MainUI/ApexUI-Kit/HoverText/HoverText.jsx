@@ -1,182 +1,367 @@
-import React, { useEffect, useRef } from "react";
+import React, { useRef } from "react";
 import gsap from "gsap";
-
-const glow = (color) => `drop-shadow(0 4px 32px ${color})`;
-const noGlow = (color) => `drop-shadow(0 0px 0px ${color})`;
 
 const HoverText = ({
     text = "ApexUI",
     fontSize = "2.5rem",
     className = "",
-    effect = "defaultReveal",
-    effectColor = "#C27AFF",
-    textColor = "#fff",
+    effect, // if not passed, use 'defaultReveal'
+    effectColor = "#C27AFF"
 }) => {
     const charsRef = useRef([]);
     const containerRef = useRef(null);
-    const chars = () => charsRef.current.slice(0, text.length).filter(Boolean);
 
-    // `overwrite: "auto"` lets a new hover take over smoothly from the previous one.
-    const to = (el, vars) => el && gsap.to(el, { overwrite: "auto", ...vars });
-
-    const rest = (el, duration = 0.4) =>
-        to(el, {
-            x: 0, y: 0, scale: 1, scaleX: 1, scaleY: 1, rotate: 0,
-            color: textColor,
-            filter: noGlow(effectColor),
-            duration,
-            ease: "power3.out",
-        });
-
-    // Reset every letter whenever the text, colours or effect change, so
-    // switching effects never leaves letters stuck mid-animation.
-    useEffect(() => {
-        const els = chars();
-        gsap.killTweensOf(els);
-        gsap.set(els, { x: 0, y: 0, scale: 1, scaleX: 1, scaleY: 1, rotate: 0, color: textColor, filter: noGlow(effectColor) });
-        return () => gsap.killTweensOf(els);
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [text, effect, effectColor, textColor]);
-
-    const neighbours = (i, radius, fn) => {
-        for (let j = -radius; j <= radius; j++) fn(charsRef.current[i + j], j);
-    };
-
-    const onCharEnter = (i) => {
+    // Default animated reveal
+    function handleDefaultEnter(i) {
+        if (effect && effect !== "defaultReveal") return;
         const el = charsRef.current[i];
-        switch (effect) {
-            case "wave":
-                neighbours(i, 2, (n, j) => to(n, {
-                    y: -18 + Math.abs(j) * 8,
-                    scale: 1.12 - Math.abs(j) * 0.08,
-                    color: effectColor,
-                    filter: glow(effectColor),
-                    duration: 0.45 + Math.abs(j) * 0.08,
-                    ease: "elastic.out(1, 0.55)",
-                }));
-                break;
-            case "rubber":
-                if (!el) return;
-                gsap.timeline({ defaults: { overwrite: "auto" } })
-                    .to(el, { scaleX: 1.5, scaleY: 0.7, color: effectColor, filter: glow(effectColor), duration: 0.18, ease: "power3.out" })
-                    .to(el, { scaleX: 0.85, scaleY: 1.18, duration: 0.16, ease: "power2.inOut" })
-                    .to(el, { scaleX: 1, scaleY: 1, color: textColor, filter: noGlow(effectColor), duration: 0.5, ease: "elastic.out(1, 0.4)" });
-                break;
-            case "jump":
-                neighbours(i, 1, (n, j) => to(n, j === 0
-                    ? { y: -28, color: effectColor, filter: glow(effectColor), duration: 0.35, ease: "back.out(2)" }
-                    : { x: j * 8, rotate: j * 8, duration: 0.25, ease: "power3.out" }));
-                break;
-            case "rotate":
-                neighbours(i, 1, (n, j) => to(n, j === 0
-                    ? { rotate: 24, scale: 1.18, color: effectColor, filter: glow(effectColor), duration: 0.35, ease: "back.out(2)" }
-                    : { rotate: j * 12, duration: 0.25, ease: "power3.out" }));
-                break;
-            case "defaultReveal":
-            default:
-                if (effect !== "defaultReveal" && effect) return;
-                to(el, {
-                    scale: 1.4,
-                    rotate: gsap.utils.random(-10, 10),
-                    color: effectColor,
-                    filter: glow(effectColor),
-                    duration: 0.45,
-                    ease: "elastic.out(1, 0.5)",
-                });
-        }
-    };
-
-    const onCharLeave = (i) => {
-        switch (effect) {
-            case "wave":
-                neighbours(i, 2, (n, j) => rest(n, 0.45 + Math.abs(j) * 0.08));
-                break;
-            case "jump":
-            case "rotate":
-                neighbours(i, 1, (n) => rest(n, 0.4));
-                break;
-            case "defaultReveal":
-                rest(charsRef.current[i], 0.4);
-                break;
-            default:
-        }
-    };
-
-    const onMove = (e) => {
-        if (effect !== "magnetic") return;
-        const box = containerRef.current.getBoundingClientRect();
-        const mx = e.clientX - box.left;
-        const my = e.clientY - box.top;
-        // Measure every letter once per move, then animate.
-        const data = chars().map((el) => {
-            const r = el.getBoundingClientRect();
-            const dx = (mx - (r.left - box.left + r.width / 2)) / box.width;
-            const dy = (my - (r.top - box.top + r.height / 2)) / box.height;
-            return { el, dx, dy, dist: Math.hypot(dx, dy) };
+        if (!el) return;
+        gsap.to(el, {
+            scale: 1.4,
+            rotate: gsap.utils.random(-10, 10),
+            color: effectColor,
+            filter: `drop-shadow(0 4px 32px ${effectColor})`,
+            duration: 0.32,
+            ease: "elastic.out(1,0.5)",
         });
-        const focus = data.reduce((best, d) => (d.dist < best.dist ? d : best), data[0]);
-        data.forEach((d) => {
-            const mag = Math.max(0, 1 - d.dist / 0.35);
-            const isFocus = d === focus;
-            to(d.el, {
-                x: d.dx * 18 * mag,
-                y: d.dy * 18 * mag,
+    }
+    function handleDefaultLeave(i) {
+        if (effect && effect !== "defaultReveal") return;
+        const el = charsRef.current[i];
+        if (!el) return;
+        gsap.to(el, {
+            scale: 1,
+            rotate: 0,
+            color: "#fff",
+            filter: `drop-shadow(0 0px 0px ${effectColor})`,
+            duration: 0.32,
+            ease: "expo.inOut",
+        });
+    }
+
+    // Party effect
+    function handlePartyEnter() {
+        if (effect !== "party") return;
+        charsRef.current.forEach((el, i) => {
+            if (!el) return;
+            gsap.to(el, {
+                scale: 1.25,
+                rotate: (i % 2 === 0 ? 1 : -1) * (18 + i * 4),
+                color: effectColor,
+                filter: `drop-shadow(0 4px 32px ${effectColor})`,
+                duration: 0.38,
+                ease: "elastic.out(1,0.5)",
+            });
+        });
+    }
+    function handlePartyLeave() {
+        if (effect !== "party") return;
+        charsRef.current.forEach((el) => {
+            if (!el) return;
+            gsap.to(el, {
+                scale: 1,
+                rotate: 0,
+                color: "#fff",
+                filter: `drop-shadow(0 0px 0px ${effectColor})`,
+                duration: 0.38,
+                ease: "expo.inOut",
+            });
+        });
+    }
+
+    // Reset all letters on mount or color change
+    React.useEffect(() => {
+        charsRef.current.forEach((el) => {
+            if (el) {
+                gsap.set(el, {
+                    scale: 1,
+                    rotate: 0,
+                    x: 0,
+                    y: 0,
+                    filter: `drop-shadow(0 0px 0px ${effectColor})`,
+                    color: "#fff",
+                });
+            }
+        });
+    }, [text, effectColor]);
+
+    // Magnetic effect
+    const handleMouseMove = (e) => {
+        if (effect !== "magnetic") return;
+        const rect = containerRef.current.getBoundingClientRect();
+        const mouseX = e.clientX - rect.left;
+        const mouseY = e.clientY - rect.top;
+        let minDist = Infinity;
+        let minIdx = -1;
+        charsRef.current.forEach((el, i) => {
+            if (!el) return;
+            const elRect = el.getBoundingClientRect();
+            const elCenterX = elRect.left - rect.left + elRect.width / 2;
+            const elCenterY = elRect.top - rect.top + elRect.height / 2;
+            const dx = (mouseX - elCenterX) / rect.width;
+            const dy = (mouseY - elCenterY) / rect.height;
+            const dist = Math.sqrt(dx * dx + dy * dy);
+            if (dist < minDist) {
+                minDist = dist;
+                minIdx = i;
+            }
+        });
+        // Animate all letters
+        charsRef.current.forEach((el, i) => {
+            if (!el) return;
+            const elRect = el.getBoundingClientRect();
+            const elCenterX = elRect.left - rect.left + elRect.width / 2;
+            const elCenterY = elRect.top - rect.top + elRect.height / 2;
+            const dx = (mouseX - elCenterX) / rect.width;
+            const dy = (mouseY - elCenterY) / rect.height;
+            const dist = Math.sqrt(dx * dx + dy * dy);
+            const maxDist = 0.35;
+            const mag = Math.max(0, 1 - dist / maxDist);
+            const isFocus = i === minIdx;
+            gsap.to(el, {
+                x: dx * 18 * mag,
+                y: dy * 18 * mag,
                 scale: isFocus ? 1.22 : 1 + 0.12 * mag,
-                rotate: d.dx * 10 * mag,
-                filter: isFocus ? glow(effectColor) : `drop-shadow(0 2px 16px ${effectColor}44)`,
-                color: isFocus ? effectColor : textColor,
+                rotate: dx * 10 * mag,
+                filter: isFocus
+                    ? `drop-shadow(0 4px 32px ${effectColor})`
+                    : `drop-shadow(0 2px 16px ${effectColor}44)`,
+                color: isFocus ? effectColor : "#fff",
                 zIndex: isFocus ? 10 : 2,
                 duration: 0.35,
-                ease: "power3.out",
+                ease: "expo.out",
             });
         });
     };
 
-    const onEnter = () => {
-        if (effect !== "party") return;
-        chars().forEach((el, i) => to(el, {
-            scale: 1.25,
-            rotate: (i % 2 === 0 ? 1 : -1) * (18 + i * 4),
+    // Rubber effect
+    function handleRubberEnter(i) {
+        if (effect !== "rubber") return;
+        const el = charsRef.current[i];
+        if (!el) return;
+        gsap.to(el, {
+            scaleX: 1.5,
+            scaleY: 0.7,
             color: effectColor,
-            filter: glow(effectColor),
-            duration: 0.5,
-            ease: "elastic.out(1, 0.5)",
-            delay: i * 0.015,
-        }));
-    };
+            filter: `drop-shadow(0 4px 32px ${effectColor})`,
+            duration: 0.22,
+            ease: "expo.out",
+            onComplete: () => {
+                gsap.to(el, {
+                    scaleX: 0.85,
+                    scaleY: 1.18,
+                    duration: 0.18,
+                    ease: "expo.inOut",
+                    onComplete: () => {
+                        gsap.to(el, {
+                            scaleX: 1,
+                            scaleY: 1,
+                            color: "#fff",
+                            filter: `drop-shadow(0 0px 0px ${effectColor})`,
+                            duration: 0.18,
+                            ease: "expo.inOut",
+                        });
+                    }
+                });
+            }
+        });
+    }
 
-    const onLeave = () => {
-        if (effect === "party" || effect === "magnetic") chars().forEach((el) => rest(el, 0.6));
+    // Jump effect
+    function handleJumpEnter(i) {
+        if (effect !== "jump") return;
+        for (let j = -1; j <= 1; j++) {
+            const idx = i + j;
+            const el = charsRef.current[idx];
+            if (!el) continue;
+            if (j === 0) {
+                gsap.to(el, {
+                    y: -28,
+                    color: effectColor,
+                    filter: `drop-shadow(0 4px 32px ${effectColor})`,
+                    duration: 0.32,
+                    ease: "expo.out",
+                });
+            } else {
+                gsap.to(el, {
+                    x: j * 8,
+                    rotate: j * 8,
+                    duration: 0.22,
+                    ease: "expo.out",
+                });
+            }
+        }
+    }
+    function handleJumpLeave(i) {
+        if (effect !== "jump") return;
+        for (let j = -1; j <= 1; j++) {
+            const idx = i + j;
+            const el = charsRef.current[idx];
+            if (!el) continue;
+            gsap.to(el, {
+                x: 0,
+                y: 0,
+                scale: 1,
+                rotate: 0,
+                color: "#fff",
+                filter: `drop-shadow(0 0px 0px ${effectColor})`,
+                duration: 0.32,
+                ease: "expo.inOut",
+            });
+        }
+    }
+
+    // Rotate effect
+    function handleRotateEnter(i) {
+        if (effect !== "rotate") return;
+        for (let j = -1; j <= 1; j++) {
+            const idx = i + j;
+            const el = charsRef.current[idx];
+            if (!el) continue;
+            if (j === 0) {
+                gsap.to(el, {
+                    rotate: 24,
+                    scale: 1.18,
+                    color: effectColor,
+                    filter: `drop-shadow(0 4px 32px ${effectColor})`,
+                    duration: 0.32,
+                    ease: "expo.out",
+                });
+            } else {
+                gsap.to(el, {
+                    rotate: j * 12,
+                    duration: 0.22,
+                    ease: "expo.out",
+                });
+            }
+        }
+    }
+    function handleRotateLeave(i) {
+        if (effect !== "rotate") return;
+        for (let j = -1; j <= 1; j++) {
+            const idx = i + j;
+            const el = charsRef.current[idx];
+            if (!el) continue;
+            gsap.to(el, {
+                scale: 1,
+                rotate: 0,
+                color: "#fff",
+                filter: `drop-shadow(0 0px 0px ${effectColor})`,
+                duration: 0.32,
+                ease: "expo.inOut",
+            });
+        }
+    }
+
+    // Wave effect
+    function handleCharEnter(i) {
+        if (effect !== "wave") return;
+        for (let j = -2; j <= 2; j++) {
+            const idx = i + j;
+            const el = charsRef.current[idx];
+            if (!el) continue;
+            gsap.to(el, {
+                y: -18 + Math.abs(j) * 8,
+                scale: 1.12 - Math.abs(j) * 0.08,
+                color: effectColor,
+                filter: `drop-shadow(0 4px 32px ${effectColor})`,
+                duration: 0.38 + Math.abs(j) * 0.08,
+                ease: "elastic.out(1,0.5)",
+            });
+        }
+    }
+    function handleCharLeave(i) {
+        if (effect !== "wave") return;
+        for (let j = -2; j <= 2; j++) {
+            const idx = i + j;
+            const el = charsRef.current[idx];
+            if (!el) continue;
+            gsap.to(el, {
+                y: 0,
+                scale: 1,
+                color: "#fff",
+                filter: `drop-shadow(0 0px 0px ${effectColor})`,
+                duration: 0.38 + Math.abs(j) * 0.08,
+                ease: "expo.inOut",
+            });
+        }
+    }
+
+    // Reset on mouse leave
+    const handleMouseLeave = () => {
+        if (effect === "magnetic") {
+            charsRef.current.forEach((el) => {
+                if (el) {
+                    gsap.to(el, {
+                        x: 0,
+                        y: 0,
+                        scale: 1,
+                        rotate: 0,
+                        color: "#fff",
+                        filter: `drop-shadow(0 0px 0px ${effectColor})`,
+                        duration: 0.6,
+                        ease: "expo.inOut",
+                    });
+                }
+            });
+        } else if (effect === "flip") {
+            charsRef.current.forEach((el) => {
+                if (el) {
+                    gsap.to(el, {
+                        rotateY: 0,
+                        color: "#fff",
+                        filter: `drop-shadow(0 0px 0px ${effectColor})`,
+                        duration: 0.6,
+                        ease: "expo.inOut",
+                    });
+                }
+            });
+        }
     };
 
     return (
         <div
             ref={containerRef}
             className={`relative inline-flex items-center select-none cursor-pointer ${className}`}
-            style={{ fontSize, fontWeight: 900, letterSpacing: "0.08em", textTransform: "uppercase" }}
-            onMouseMove={onMove}
-            onMouseEnter={onEnter}
-            onMouseLeave={onLeave}
-            aria-label={text}
+            style={{ fontSize, fontWeight: 900, letterSpacing: "0.08em", textTransform: "uppercase", background: "none", userSelect: "none" }}
+            onMouseMove={effect === "magnetic" ? handleMouseMove : undefined}
+            onMouseLeave={effect === "party" ? handlePartyLeave : handleMouseLeave}
+            onMouseEnter={effect === "party" ? handlePartyEnter : undefined}
         >
             {text.split("").map((char, i) => (
                 <span
                     key={i}
-                    ref={(el) => (charsRef.current[i] = el)}
-                    aria-hidden="true"
-                    onMouseEnter={() => onCharEnter(i)}
-                    onMouseLeave={() => onCharLeave(i)}
+                    ref={el => charsRef.current[i] = el}
+                    onMouseEnter={
+                        !effect || effect === "defaultReveal" ? () => handleDefaultEnter(i)
+                            : effect === "wave" ? () => handleCharEnter(i)
+                                : effect === "rubber" ? () => handleRubberEnter(i)
+                                    : effect === "jump" ? () => handleJumpEnter(i)
+                                        : effect === "rotate" ? () => handleRotateEnter(i)
+                                            : undefined
+                    }
+                    onMouseLeave={
+                        !effect || effect === "defaultReveal" ? () => handleDefaultLeave(i)
+                            : effect === "wave" ? () => handleCharLeave(i)
+                                : effect === "rubber" ? () => handleRubberEnter(i)
+                                    : effect === "jump" ? () => handleJumpLeave(i)
+                                        : effect === "rotate" ? () => handleRotateLeave(i)
+                                            : undefined
+                    }
                     style={{
                         display: "inline-block",
                         marginRight: char === " " ? "0.18em" : 0,
                         padding: "0 0.04em",
-                        willChange: "transform",
+                        willChange: "transform, color, filter, opacity",
+                        borderRadius: "0.18em",
                         position: "relative",
                         zIndex: 2,
-                        color: textColor,
+                        color: "#fff",
+                        background: "none",
+                        transition: "filter 0.3s, color 0.3s, background 0.3s, opacity 0.3s",
                     }}
                 >
-                    {char === " " ? " " : char}
+                    {char === " " ? "\u00A0" : char}
                 </span>
             ))}
         </div>

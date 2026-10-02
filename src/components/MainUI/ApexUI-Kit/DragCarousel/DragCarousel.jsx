@@ -1,111 +1,133 @@
-import React, { useState, useEffect, useRef, useCallback } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
+
+// To use GSAP in this environment, we'll import it from a CDN.
+// In a local project: `npm install gsap`
 import { gsap } from 'gsap';
 import { Draggable } from 'gsap/Draggable';
 
+// GSAP Draggable plugin ko register karna zaroori hai
 gsap.registerPlugin(Draggable);
 
-const DRAG_THRESHOLD = 40;
-
-const getOffset = (i, active, length) => {
-    let offset = i - active;
-    if (offset > length / 2) offset -= length;
-    if (offset < -length / 2) offset += length;
-    return offset;
-};
-
-// Cards are centred with left: 50% + negative margin, so translateX only
-// carries the carousel offset.
-const cardTransform = (offset, shift = 0) => {
-    const distance = Math.abs(offset + shift / 50);
-    return `translateX(${offset * 50 + shift}%) translateZ(${-distance * 250}px) scale(${1 - Math.min(distance, 3) * 0.12})`;
-};
-
-const DragCarousel = ({ images = [] }) => {
+// --- GSAP Drag Carousel Component ---
+const DragCarousel = ({ images }) => {
     const [activeIndex, setActiveIndex] = useState(0);
     const carouselRef = useRef(null);
     const cardsRef = useRef([]);
-    const proxyRef = useRef(null);
-    const activeRef = useRef(0);
-    const count = images.length;
-
-    const go = useCallback((dir) => {
-        if (count) setActiveIndex((i) => (i + dir + count) % count);
-    }, [count]);
-
+    const dragProxyRef = useRef(null);
     useEffect(() => {
-        activeRef.current = activeIndex;
-        const cards = cardsRef.current.slice(0, count).filter(Boolean);
-        gsap.to(cards, {
-            duration: 0.6,
-            ease: 'power3.out',
-            overwrite: true,
-            transform: (i) => cardTransform(getOffset(i, activeIndex, count)),
-            zIndex: (i) => count - Math.abs(getOffset(i, activeIndex, count)),
-            opacity: (i) => (Math.abs(getOffset(i, activeIndex, count)) > 2 ? 0 : 1),
+        const cards = cardsRef.current;
+        // hint browser to use the GPU for transforms
+        cards.forEach((c) => {
+            if (c) c.style.willChange = 'transform, opacity';
         });
-    }, [activeIndex, count]);
 
-    // One Draggable for the component's lifetime; it reads the active index from a ref.
+        gsap.to(cards, {
+            duration: 0.45,
+            ease: 'power2.out',
+            stagger: 0.03,
+            overwrite: true,
+            // Har card ke liye naya transform calculate karta hai
+            transform: (i) => {
+                let positionOffset = i - activeIndex;
+                if (positionOffset > images.length / 2) {
+                    positionOffset -= images.length;
+                } else if (positionOffset < -images.length / 2) {
+                    positionOffset += images.length;
+                }
+
+                const translateX = positionOffset * 50;
+                const translateZ = -Math.abs(positionOffset) * 250;
+                const scale = 1 - Math.abs(positionOffset) * 0.12;
+
+                return `translateX(${translateX}%) translateZ(${translateZ}px) scale(${scale})`;
+            },
+            zIndex: (i) => {
+                let positionOffset = i - activeIndex;
+                if (positionOffset > images.length / 2) positionOffset -= images.length;
+                if (positionOffset < -images.length / 2) positionOffset += images.length;
+                return images.length - Math.abs(positionOffset);
+            },
+            opacity: (i) => {
+                let positionOffset = i - activeIndex;
+                if (positionOffset > images.length / 2) positionOffset -= images.length;
+                if (positionOffset < -images.length / 2) positionOffset += images.length;
+                return Math.abs(positionOffset) > 2 ? 0 : 1;
+            }
+        });
+    }, [activeIndex, images.length]);
+
+    // GSAP Draggable ko setup karta hai
     useEffect(() => {
-        if (!proxyRef.current || !count) return undefined;
-        const [drag] = Draggable.create(proxyRef.current, {
-            type: 'x',
+        // BUG FIX: Draggable ab proxy element par lagaya gaya hai
+        const cards = cardsRef.current;
+        const setters = cards.map((c) => (c ? gsap.quickSetter(c, 'css', 'transform') : null));
+
+        const draggableInstance = Draggable.create(dragProxyRef.current, {
+            type: "x",
             trigger: carouselRef.current,
+            inertia: true,
             cursor: 'grab',
             activeCursor: 'grabbing',
-            onDrag() {
-                const w = carouselRef.current?.clientWidth || window.innerWidth;
-                const shift = (this.x / w) * 100;
-                cardsRef.current.slice(0, count).forEach((c, i) => {
-                    if (!c) return;
-                    const offset = getOffset(i, activeRef.current, count);
-                    gsap.set(c, {
-                        transform: cardTransform(offset, shift),
-                        opacity: Math.abs(offset + shift / 50) > 2.5 ? 0 : 1,
-                    });
+            onDrag: function () {
+                const w = carouselRef.current ? carouselRef.current.clientWidth : window.innerWidth;
+                const shiftPercent = (this.x / w) * 100; // percentage shift based on drag
+
+                cards.forEach((c, i) => {
+                    if (!c || !setters[i]) return;
+                    let positionOffset = i - activeIndex;
+                    if (positionOffset > images.length / 2) positionOffset -= images.length;
+                    if (positionOffset < -images.length / 2) positionOffset += images.length;
+
+                    const baseX = positionOffset * 50;
+                    const translateX = baseX + shiftPercent;
+                    const translateZ = -Math.abs(positionOffset) * 250;
+                    const scale = 1 - Math.abs(positionOffset) * 0.12;
+
+                    setters[i](`translateX(${translateX}%) translateZ(${translateZ}px) scale(${scale})`);
+                    c.style.opacity = Math.abs(positionOffset - (this.x / w)) > 2 ? 0 : 1;
+                    c.style.zIndex = images.length - Math.abs(positionOffset);
                 });
             },
-            onDragEnd() {
-                const moved = this.x;
-                gsap.set(this.target, { x: 0 });
-                if (moved < -DRAG_THRESHOLD) go(1);
-                else if (moved > DRAG_THRESHOLD) go(-1);
-                else {
-                    // Not far enough: snap back to the current slide.
-                    gsap.to(cardsRef.current.slice(0, count).filter(Boolean), {
-                        duration: 0.5,
-                        ease: 'power3.out',
-                        transform: (i) => cardTransform(getOffset(i, activeRef.current, count)),
-                        opacity: (i) => (Math.abs(getOffset(i, activeRef.current, count)) > 2 ? 0 : 1),
-                    });
+            onDragEnd: function () {
+                // Reset proxy position
+                gsap.to(this.target, { x: 0, duration: 0.35, ease: 'power2.out' });
+                // Direction based index change
+                if (this.getDirection("start") === "left") {
+                    setActiveIndex(prev => (prev + 1) % images.length);
+                } else if (this.getDirection("start") === "right") {
+                    setActiveIndex(prev => (prev - 1 + images.length) % images.length);
                 }
-            },
+            }
         });
-        return () => drag.kill();
-    }, [count, go]);
 
-    if (!count) return null;
+        // Cleanup function
+        return () => {
+            if (draggableInstance && draggableInstance[0]) {
+                draggableInstance[0].kill();
+            }
+            setters.forEach((s) => s && s.kill && s.kill());
+        };
+    }, [images.length, activeIndex]);
 
     return (
         <div
             ref={carouselRef}
-            tabIndex={0}
-            onKeyDown={(e) => {
-                if (e.key === 'ArrowRight') go(1);
-                if (e.key === 'ArrowLeft') go(-1);
-            }}
-            className="relative w-full h-[490px] lg:h-[590px] cursor-grab overflow-x-clip outline-none select-none touch-pan-y"
-            style={{ perspective: '1200px' }}
+            className="relative w-full h-[490px] lg:h-[590px] cursor-grab"
+            style={{ perspective: '1200px', transformStyle: 'preserve-3d' }}
         >
-            <div ref={proxyRef} className="absolute inset-0 z-20" />
+            <div ref={dragProxyRef} className="absolute inset-0 z-20"></div>
+
             {images.map((src, index) => (
                 <div
-                    key={`${src}-${index}`}
-                    ref={(el) => (cardsRef.current[index] = el)}
-                    className="absolute top-[25px] left-1/2 h-[440px] w-[280px] -ml-[140px] sm:h-[480px] sm:w-[300px] sm:-ml-[150px] lg:h-[550px] lg:w-[350px] lg:-ml-[175px] rounded-xl overflow-hidden shadow-2xl will-change-transform"
-                    style={{ transform: cardTransform(getOffset(index, 0, count)), opacity: Math.abs(getOffset(index, 0, count)) > 2 ? 0 : 1 }}
+                    key={index}
+                    ref={el => cardsRef.current[index] = el}
+                    className="card-item absolute h-[480px] w-[300px] lg:h-[550px] lg:w-[350px] rounded-xl overflow-hidden shadow-2xl top-[25px] -left-4 md:left-36 lg:left-70"
                 >
-                    <img src={src} alt={`Slide ${index + 1}`} draggable="false" className="w-full h-full object-cover pointer-events-none" />
+                    <img
+                        src={src}
+                        alt={`carousel-item-${index}`}
+                        className="w-full h-full object-cover pointer-events-none"
+                    />
                 </div>
             ))}
         </div>
