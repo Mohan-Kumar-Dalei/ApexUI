@@ -27,6 +27,7 @@ const props = [
     { prop: 'separation', type: 'number', def: '4', desc: 'Separation between spheres.' },
     { prop: 'bgColor1', type: 'string', def: "'#010a2d'", desc: 'First background gradient color.' },
     { prop: 'bgColor2', type: 'string', def: "'#001133'", desc: 'Second background gradient color.' },
+    { prop: 'className', type: 'string', def: "''", desc: 'Classes for the wrapper, e.g. a custom height.' },
 ];
 
 const dependencies = [

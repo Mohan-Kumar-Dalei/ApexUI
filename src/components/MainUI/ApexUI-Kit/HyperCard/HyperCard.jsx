@@ -1,4 +1,3 @@
-// ...existing code...
 import React, { useRef, useEffect, useState } from "react";
 import { gsap } from "gsap";
 import {
@@ -29,62 +28,85 @@ const HyperCard = ({
     const stars = useRef([]);
     const speedRef = useRef({ value: baseSpeed });
 
-    // Particle canvas (kept same logic; responsive CSS classes control visual size)
+    // Starfield canvas: sharp on high-DPI screens, resizes with its box and
+    // pauses while scrolled out of view.
     useEffect(() => {
         const canvas = canvasRef.current;
-        if (!canvas) return;
+        if (!canvas) return undefined;
         const ctx = canvas.getContext("2d");
-        let animationFrame;
-        let w, h;
+        let animationFrame = 0;
+        let running = false;
+        let w = 0;
+        let h = 0;
 
         const init = () => {
-            w = canvas.width = canvas.offsetWidth;
-            h = canvas.height = canvas.offsetHeight;
+            const dpr = Math.min(window.devicePixelRatio || 1, 2);
+            w = canvas.offsetWidth;
+            h = canvas.offsetHeight;
+            canvas.width = Math.max(1, Math.round(w * dpr));
+            canvas.height = Math.max(1, Math.round(h * dpr));
+            ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
             stars.current = Array.from({ length: starCount }, () => {
                 const z = Math.random() * Math.max(w, 1);
-                return {
-                    x: Math.random() * w, y: Math.random() * h,
-                    z, baseZ: z, brightness: Math.random() * 0.5 + 0.5,
-                };
+                return { x: Math.random() * w, y: Math.random() * h, z, baseZ: z, brightness: Math.random() * 0.5 + 0.5 };
             });
         };
 
         const draw = () => {
-            if (!ctx) return;
             ctx.clearRect(0, 0, w, h);
             ctx.fillStyle = starColor;
+            ctx.strokeStyle = starColor;
+            ctx.lineWidth = 1;
+            const speed = speedRef.current.value;
+            const warping = speed > baseSpeed + 0.3;
+            const maxZ = Math.max(w, 1);
 
             stars.current.forEach((star) => {
-                star.z -= speedRef.current.value;
-                if (star.z <= 1) star.z = star.baseZ || Math.max(w, 1);
+                star.z -= speed;
+                if (star.z <= 1) star.z = star.baseZ || maxZ;
                 const sx = (star.x - w / 2) * (w / star.z) + w / 2;
                 const sy = (star.y - h / 2) * (h / star.z) + h / 2;
-                const size = (1 - star.z / Math.max(w, 1)) * 2;
-                ctx.beginPath();
                 ctx.globalAlpha = star.brightness;
-                if (speedRef.current.value > baseSpeed + 0.3) {
-                    const tailLength = speedRef.current.value * 3;
-                    const dx = sx - w / 2, dy = sy - h / 2;
-                    const mag = Math.sqrt(dx * dx + dy * dy) || 1;
+                ctx.beginPath();
+                if (warping) {
+                    const tail = speed * 3;
+                    const dx = sx - w / 2;
+                    const dy = sy - h / 2;
+                    const mag = Math.hypot(dx, dy) || 1;
                     ctx.moveTo(sx, sy);
-                    ctx.lineTo(sx + (dx / mag) * tailLength, sy + (dy / mag) * tailLength);
-                    ctx.strokeStyle = starColor;
-                    ctx.lineWidth = 1;
+                    ctx.lineTo(sx + (dx / mag) * tail, sy + (dy / mag) * tail);
                     ctx.stroke();
                 } else {
+                    const size = (1 - star.z / maxZ) * 2;
                     ctx.arc(sx, sy, size > 0 ? size : 0.1, 0, Math.PI * 2);
                     ctx.fill();
                 }
-                ctx.globalAlpha = 1;
             });
-
+            ctx.globalAlpha = 1;
             animationFrame = requestAnimationFrame(draw);
         };
 
+        const start = () => {
+            if (running) return;
+            running = true;
+            animationFrame = requestAnimationFrame(draw);
+        };
+        const stop = () => {
+            running = false;
+            cancelAnimationFrame(animationFrame);
+        };
+
         init();
-        draw();
-        window.addEventListener("resize", init);
-        return () => { cancelAnimationFrame(animationFrame); window.removeEventListener("resize", init); };
+        const ro = new ResizeObserver(init);
+        ro.observe(canvas);
+        const io = new IntersectionObserver(([entry]) => (entry.isIntersecting ? start() : stop()));
+        io.observe(canvas);
+
+        return () => {
+            stop();
+            ro.disconnect();
+            io.disconnect();
+        };
     }, [starColor, starCount, baseSpeed]);
 
     // GSAP speed tween (cleaned up)

@@ -1,138 +1,162 @@
-import { useId, useState } from 'react';
+import { useEffect, useId, useRef, useState } from 'react';
+import { useLocation } from 'react-router-dom';
 import { AnimatePresence, motion } from 'framer-motion';
-import { Code2, Eye, Package, RotateCcw } from 'lucide-react';
-import DocShell, { DocSection } from './DocShell.jsx';
+import { Code2, Eye, Grid3x3, Maximize2, Minimize2, Package, RotateCcw, Square, Sparkle } from 'lucide-react';
 import CodeBlock, { CommandLine } from '../ui/CodeBlock.jsx';
-import { slugify as slug } from './toc.js';
+import { findPage } from '../config/navigation.js';
+import { CliChip, DocFooter, DocHero, NewChip, Pager } from './parts.jsx';
+import { PAD_X } from './style.js';
 
+const STAGE_BG = [
+    { id: 'dots', icon: Sparkle, label: 'Dots', className: 'stage-dots' },
+    { id: 'grid', icon: Grid3x3, label: 'Grid', className: 'stage-grid' },
+    { id: 'plain', icon: Square, label: 'Plain', className: '' },
+];
 
-/* Preview / Code tabs around a live demo. */
-export function PreviewTabs({ preview, controls, code, codeLanguage = 'jsx', previewClassName = '', fullBleed = false }) {
-    const [tab, setTab] = useState('preview');
-    const [replayKey, setReplayKey] = useState(0);
-    const pillId = useId();
+const STAGE_H = 'min-h-[clamp(26rem,64vh,60rem)]';
 
-    const tabBtn = (id, label, Icon) => (
-        <button
-            type="button"
-            onClick={() => setTab(id)}
-            className={`relative inline-flex items-center gap-1.5 rounded-md px-3 py-1.5 text-sm font-medium transition-colors ${tab === id ? 'text-[var(--fg)]' : 'text-[var(--fg-subtle)] hover:text-[var(--fg-muted)]'}`}
-        >
-            {tab === id && (
-                <motion.span layoutId={pillId} className="absolute inset-0 rounded-md bg-[var(--surface-2)] ring-1 ring-[var(--border)]" transition={{ type: 'spring', stiffness: 500, damping: 40 }} />
-            )}
-            <Icon className="relative h-3.5 w-3.5" />
-            <span className="relative">{label}</span>
-        </button>
+function Segmented({ value, onChange, options, size = 'md' }) {
+    const id = useId();
+    return (
+        <div className="inline-flex max-w-full overflow-x-auto rounded-full border border-[var(--line)] bg-[var(--panel)] p-0.5 thin-scroll">
+            {options.map((o) => {
+                const active = o.value === value;
+                return (
+                    <button
+                        key={o.value}
+                        type="button"
+                        onClick={() => onChange(o.value)}
+                        aria-pressed={active}
+                        aria-label={o.title}
+                        title={o.title}
+                        className={`relative inline-flex shrink-0 items-center gap-1.5 rounded-full font-medium transition-colors ${size === 'sm' ? 'h-7 px-2.5 text-[0.72rem]' : 'h-8 px-3.5 text-[0.8rem]'} ${active ? 'text-[var(--lime-ink)]' : 'text-[var(--ink-3)] hover:text-[var(--ink)]'}`}
+                    >
+                        {active && <motion.span layoutId={`seg-${id}`} className="absolute inset-0 rounded-full bg-[var(--lime)]" transition={{ type: 'spring', stiffness: 500, damping: 38 }} />}
+                        {o.icon && <o.icon className="relative h-3.5 w-3.5" />}
+                        {o.label && <span className="relative whitespace-nowrap">{o.label}</span>}
+                    </button>
+                );
+            })}
+        </div>
     );
+}
+
+const toolBtn = 'inline-flex h-8 w-8 items-center justify-center rounded-full text-[var(--ink-3)] transition-colors hover:bg-[var(--panel-2)] hover:text-[var(--ink)]';
+
+/* The live preview: a dark canvas with view / background / replay / fullscreen controls. */
+function Stage({ variant, variants, activeVariant, onVariant }) {
+    const [view, setView] = useState('preview');
+    const [bg, setBg] = useState('dots');
+    const [replayKey, setReplayKey] = useState(0);
+    const [full, setFull] = useState(false);
+    const stageRef = useRef(null);
+
+    useEffect(() => {
+        const onChange = () => setFull(document.fullscreenElement === stageRef.current);
+        document.addEventListener('fullscreenchange', onChange);
+        return () => document.removeEventListener('fullscreenchange', onChange);
+    }, []);
+
+    useEffect(() => setView('preview'), [activeVariant]);
+
+    const toggleFull = () => {
+        if (document.fullscreenElement) document.exitFullscreen?.();
+        else stageRef.current?.requestFullscreen?.();
+    };
+
+    const bgClass = STAGE_BG.find((b) => b.id === bg)?.className ?? '';
 
     return (
-        <div>
-            <div className="mb-3 flex items-center justify-between">
-                <div className="inline-flex gap-1 rounded-lg border border-[var(--border)] bg-[var(--surface)] p-1">
-                    {tabBtn('preview', 'Preview', Eye)}
-                    {tabBtn('code', 'Code', Code2)}
-                </div>
-                {tab === 'preview' && (
-                    <button
-                        type="button"
-                        onClick={() => setReplayKey((k) => k + 1)}
-                        className="inline-flex h-8 items-center gap-1.5 rounded-md px-2.5 text-xs text-[var(--fg-subtle)] transition hover:bg-[var(--surface-2)] hover:text-[var(--fg)]"
-                        aria-label="Replay preview"
-                    >
-                        <RotateCcw className="h-3.5 w-3.5" /> Replay
-                    </button>
+        <section ref={stageRef} aria-label="Live preview" className="flex min-w-0 flex-col bg-[var(--bg)]">
+            <div className="flex flex-wrap items-center gap-2 border-b border-[var(--line)] px-3 py-2 sm:px-4">
+                {variants ? (
+                    <Segmented value={activeVariant} onChange={onVariant} options={variants.map((v, i) => ({ value: i, label: v.name }))} />
+                ) : (
+                    <span className="inline-flex items-center gap-2 px-1 font-mono text-[0.7rem] uppercase tracking-[0.16em] text-[var(--ink-3)]">
+                        <span className="relative flex h-2 w-2">
+                            <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-[var(--lime)] opacity-60" />
+                            <span className="relative inline-flex h-2 w-2 rounded-full bg-[var(--lime)]" />
+                        </span>
+                        Live
+                    </span>
                 )}
+                <div className="ml-auto flex items-center gap-1.5">
+                    {view === 'preview' && (
+                        <>
+                            <div className="hidden sm:block">
+                                <Segmented size="sm" value={bg} onChange={setBg} options={STAGE_BG.map((b) => ({ value: b.id, icon: b.icon, title: `${b.label} background` }))} />
+                            </div>
+                            <button type="button" onClick={() => setReplayKey((k) => k + 1)} className={toolBtn} aria-label="Replay preview" title="Replay">
+                                <RotateCcw className="h-3.5 w-3.5" />
+                            </button>
+                            <button type="button" onClick={toggleFull} className={`${toolBtn} hidden sm:inline-flex`} aria-label={full ? 'Exit full screen' : 'Full screen'} title="Full screen">
+                                {full ? <Minimize2 className="h-3.5 w-3.5" /> : <Maximize2 className="h-3.5 w-3.5" />}
+                            </button>
+                        </>
+                    )}
+                    <Segmented
+                        value={view}
+                        onChange={setView}
+                        options={[
+                            { value: 'preview', label: 'Preview', icon: Eye },
+                            { value: 'code', label: 'Code', icon: Code2 },
+                        ]}
+                    />
+                </div>
             </div>
 
             <AnimatePresence mode="wait" initial={false}>
-                {tab === 'preview' ? (
-                    <motion.div key="preview" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.15 }}>
-                        <div
-                            key={replayKey}
-                            className={`bg-dots relative flex min-h-[460px] [transform:translateZ(0)] w-full items-center justify-center overflow-hidden rounded-xl border border-[var(--border)] bg-[var(--preview-bg)] text-white ${fullBleed ? '' : 'p-6 sm:p-10'} ${previewClassName}`}
-                        >
-                            {preview}
-                        </div>
-                        {controls && (
-                            <div className="mt-3 rounded-xl border border-[var(--border)] bg-[var(--surface)] p-4 text-sm text-[var(--fg-muted)] sm:p-5">
-                                {controls}
-                            </div>
-                        )}
+                {view === 'preview' ? (
+                    <motion.div
+                        key={`preview-${activeVariant}-${replayKey}`}
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        exit={{ opacity: 0 }}
+                        transition={{ duration: 0.18 }}
+                        className={`relative flex flex-1 items-center justify-center overflow-hidden bg-[var(--stage)] text-white [transform:translateZ(0)] ${bgClass} ${full ? 'h-screen' : STAGE_H} ${variant.fullBleed ? '' : 'p-[clamp(1.25rem,3vw,3.5rem)]'} ${variant.previewClassName ?? ''}`}
+                    >
+                        {variant.preview}
                     </motion.div>
                 ) : (
-                    <motion.div key="code" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.15 }}>
-                        <CodeBlock code={code} language={codeLanguage} className="max-h-[560px] overflow-y-auto" />
+                    <motion.div key="code" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.18 }} className={`flex-1 bg-[var(--code-bg)] ${STAGE_H}`}>
+                        <CodeBlock code={variant.code} language={variant.codeLanguage ?? 'jsx'} className="thin-scroll max-h-[clamp(26rem,64vh,60rem)] overflow-y-auto rounded-none border-0" />
                     </motion.div>
                 )}
             </AnimatePresence>
-        </div>
+        </section>
     );
 }
 
-export function InstallSteps({ cli }) {
-    const steps = [
-        { title: 'Install the package', command: 'npm i apex-ui-kit' },
-        { title: 'Add the component to your project', command: `npx apex-ui-kit add ${cli}` },
-    ];
+function PropsList({ rows }) {
+    if (!rows?.length) return <p className="text-sm text-[var(--ink-3)]">This component takes no props.</p>;
     return (
-        <ol className="space-y-5">
-            {steps.map((step, i) => (
-                <li key={step.command} className="relative pl-10">
-                    <span className="absolute left-0 top-0 inline-flex h-6 w-6 items-center justify-center rounded-full border border-[var(--border-strong)] bg-[var(--surface)] font-mono text-xs text-[var(--fg-muted)]">
-                        {i + 1}
-                    </span>
-                    {i < steps.length - 1 && <span className="absolute bottom-[-14px] left-3 top-8 w-px bg-[var(--border)]" />}
-                    <p className="mb-2 text-sm font-medium text-[var(--fg)]">{step.title}</p>
-                    <CommandLine command={step.command} />
+        <ul className="divide-y divide-[var(--line)]">
+            {rows.map((row) => (
+                <li key={row.prop} className="py-3.5 first:pt-0">
+                    <div className="flex flex-wrap items-center gap-2">
+                        <code className="rounded-md bg-[var(--lime-soft)] px-1.5 py-0.5 text-[0.78rem] font-medium text-[var(--lime-text)]">{row.prop}</code>
+                        <code className="text-[0.72rem] text-[var(--syntax-type)]">{row.type}</code>
+                        {row.def != null && row.def !== '' && <code className="ml-auto text-[0.72rem] text-[var(--ink-3)]">= {row.def}</code>}
+                    </div>
+                    <p className="mt-1.5 text-[0.84rem] leading-relaxed text-[var(--ink-2)]">{row.desc}</p>
                 </li>
             ))}
-        </ol>
+        </ul>
     );
 }
 
-export function PropsTable({ rows }) {
-    if (!rows?.length) return <p className="text-sm text-[var(--fg-subtle)]">This component takes no props.</p>;
+function DependencyList({ items }) {
+    if (!items?.length) return <p className="text-sm text-[var(--ink-3)]">No extra dependencies.</p>;
     return (
-        <div className="thin-scroll overflow-x-auto rounded-xl border border-[var(--border)]">
-            <table className="w-full min-w-[560px] text-left text-sm">
-                <thead className="bg-[var(--surface)] text-xs text-[var(--fg-subtle)]">
-                    <tr>
-                        <th className="px-4 py-2.5 font-medium">Prop</th>
-                        <th className="px-4 py-2.5 font-medium">Type</th>
-                        <th className="px-4 py-2.5 font-medium">Default</th>
-                        <th className="px-4 py-2.5 font-medium">Description</th>
-                    </tr>
-                </thead>
-                <tbody className="divide-y divide-[var(--border)]">
-                    {rows.map((row) => (
-                        <tr key={row.prop} className="align-top">
-                            <td className="whitespace-nowrap px-4 py-3">
-                                <code className="rounded bg-[var(--accent-soft)] px-1.5 py-0.5 text-[12.5px] text-[var(--accent-text)]">{row.prop}</code>
-                            </td>
-                            <td className="px-4 py-3 font-mono text-[12.5px] text-[var(--syntax-type)]">{row.type}</td>
-                            <td className="whitespace-nowrap px-4 py-3 font-mono text-[12.5px] text-[var(--fg-muted)]">{row.def ?? '—'}</td>
-                            <td className="px-4 py-3 leading-6 text-[var(--fg-muted)]">{row.desc}</td>
-                        </tr>
-                    ))}
-                </tbody>
-            </table>
-        </div>
-    );
-}
-
-export function DependencyList({ items }) {
-    if (!items?.length) return null;
-    return (
-        <ul className="grid gap-3 sm:grid-cols-2">
+        <ul className="space-y-2">
             {items.map((dep) => (
-                <li key={dep.name} className="flex items-start gap-3 rounded-xl border border-[var(--border)] bg-[var(--surface)] p-3.5">
-                    <span className="mt-0.5 inline-flex h-7 w-7 shrink-0 items-center justify-center rounded-md bg-[var(--surface-2)] text-[var(--fg-muted)]">
+                <li key={dep.name} className="flex items-start gap-3 rounded-xl border border-[var(--line)] bg-[var(--bg)] p-3">
+                    <span className="mt-0.5 inline-flex h-7 w-7 shrink-0 items-center justify-center rounded-lg bg-[var(--panel-2)] text-[var(--ink-3)]">
                         <Package className="h-3.5 w-3.5" />
                     </span>
                     <div className="min-w-0">
-                        <p className="text-sm font-medium text-[var(--fg)]">{dep.name}</p>
-                        <p className="text-[13px] leading-5 text-[var(--fg-muted)]">{dep.desc}</p>
+                        <p className="text-sm font-medium text-[var(--ink)]">{dep.name}</p>
+                        <p className="text-[0.8rem] leading-5 text-[var(--ink-2)]">{dep.desc}</p>
                     </div>
                 </li>
             ))}
@@ -140,70 +164,124 @@ export function DependencyList({ items }) {
     );
 }
 
-function VariantBody({ variant, prefix = '', nested = false }) {
-    const level = nested ? 3 : 2;
+export function InstallSteps({ cli }) {
+    const steps = [
+        { title: 'Install the package', command: 'npm i apex-ui-kit' },
+        { title: 'Add the component', command: `npx apex-ui-kit add ${cli}` },
+    ];
     return (
-        <>
-            <DocSection id={`${prefix}preview`} level={level}>
-                <PreviewTabs {...variant} />
-            </DocSection>
-            <DocSection id={`${prefix}installation`} level={level} title="Installation">
-                <InstallSteps cli={variant.cli} />
-            </DocSection>
-            {variant.extra}
-            <DocSection id={`${prefix}props`} level={level} title="Props">
-                <PropsTable rows={variant.props} />
-            </DocSection>
-            {variant.dependencies?.length > 0 && (
-                <DocSection id={`${prefix}dependencies`} level={level} title="Dependencies">
-                    <DependencyList items={variant.dependencies} />
-                </DocSection>
+        <ol className="space-y-4">
+            {steps.map((step, i) => (
+                <li key={step.command}>
+                    <p className="mb-2 flex items-center gap-2 text-[0.82rem] font-medium text-[var(--ink)]">
+                        <span className="inline-flex h-5 w-5 items-center justify-center rounded-full bg-[var(--panel-3)] font-mono text-[0.65rem] text-[var(--ink-2)]">{i + 1}</span>
+                        {step.title}
+                    </p>
+                    <CommandLine command={step.command} />
+                </li>
+            ))}
+        </ol>
+    );
+}
+
+/* Right-hand panel: optional playground controls plus Props / Install / Deps tabs. */
+function Inspector({ variant }) {
+    const [tab, setTab] = useState('props');
+    const tabs = [
+        { value: 'props', label: `Props${variant.props?.length ? ` · ${variant.props.length}` : ''}` },
+        { value: 'install', label: 'Install' },
+        { value: 'deps', label: 'Deps' },
+    ];
+
+    return (
+        <aside aria-label="Inspector" className="flex min-w-0 flex-col border-t border-[var(--line)] bg-[var(--panel)] xl:border-l xl:border-t-0">
+            {variant.controls && (
+                <section className="border-b border-[var(--line)] p-5">
+                    <h3 className="mb-4 font-mono text-[0.68rem] uppercase tracking-[0.18em] text-[var(--lime-text)]">Playground</h3>
+                    <div className="text-sm text-[var(--ink-2)] xl:[&_.grid]:!grid-cols-1">{variant.controls}</div>
+                </section>
             )}
-        </>
+            <div className="border-b border-[var(--line)] px-5 py-3">
+                <Segmented size="sm" value={tab} onChange={setTab} options={tabs} />
+            </div>
+            <div className="thin-scroll flex-1 overflow-y-auto p-5 xl:max-h-[clamp(26rem,64vh,60rem)]">
+                <AnimatePresence mode="wait" initial={false}>
+                    <motion.div key={tab} initial={{ opacity: 0, y: 4 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }} transition={{ duration: 0.16 }}>
+                        {tab === 'props' && <PropsList rows={variant.props} />}
+                        {tab === 'install' && <InstallSteps cli={variant.cli} />}
+                        {tab === 'deps' && <DependencyList items={variant.dependencies} />}
+                    </motion.div>
+                </AnimatePresence>
+            </div>
+        </aside>
+    );
+}
+
+/* Extra prose sections below the stage (e.g. Theme Toggle setup). */
+export function DocSection({ id, title, description, children }) {
+    return (
+        <section id={id} className={`${PAD_X} scroll-mt-24 border-b border-[var(--line)] py-12`}>
+            <div className="grid gap-8 xl:grid-cols-[18rem_minmax(0,1fr)]">
+                <div>
+                    <h2 className="font-display text-2xl font-semibold text-[var(--ink)]">{title}</h2>
+                    {description && <p className="mt-2 text-sm leading-relaxed text-[var(--ink-2)]">{description}</p>}
+                </div>
+                <div className="min-w-0">{children}</div>
+            </div>
+        </section>
     );
 }
 
 /*
- * Standard component documentation page.
+ * Standard component page: editorial header, then a "stage" (live preview)
+ * beside an "inspector" (playground, props, install, dependencies).
  *
  * Single component:
  *   <ComponentDoc title description preview code cli props dependencies
  *                 controls? previewClassName? fullBleed? extra? />
  *
- * Several related components on one page (e.g. Carousel variants):
+ * Several related components on one page (e.g. Carousel):
  *   <ComponentDoc title description variants={[{ name, description, ...same fields }]} />
  */
 export default function ComponentDoc({ title, description, variants, ...single }) {
-    if (variants?.length) {
-        const toc = variants.map((v) => ({ id: slug(v.name), label: v.name }));
-        return (
-            <DocShell title={title} description={description} toc={toc}>
-                {variants.map((v) => {
-                    const id = slug(v.name);
-                    return (
-                        <section key={id} id={id} className="scroll-mt-24 space-y-10 border-t border-[var(--border)] pt-10 first:border-t-0 first:pt-0">
-                            <div>
-                                <h2 className="text-2xl font-semibold tracking-tight text-[var(--fg)]">{v.name}</h2>
-                                {v.description && <p className="mt-2 text-[15px] leading-7 text-[var(--fg-muted)]">{v.description}</p>}
-                            </div>
-                            <VariantBody variant={v} prefix={`${id}-`} nested />
-                        </section>
-                    );
-                })}
-            </DocShell>
-        );
-    }
+    const { pathname } = useLocation();
+    const page = findPage(pathname);
+    const list = variants?.length ? variants : [single];
+    const [active, setActive] = useState(0);
+    const variant = list[Math.min(active, list.length - 1)];
+    const multi = list.length > 1;
 
-    const toc = [
-        { id: 'preview', label: 'Preview' },
-        { id: 'installation', label: 'Installation' },
-        ...(single.extraToc || []),
-        { id: 'props', label: 'Props' },
-        ...(single.dependencies?.length ? [{ id: 'dependencies', label: 'Dependencies' }] : []),
-    ];
     return (
-        <DocShell title={title} description={description} toc={toc}>
-            <VariantBody variant={single} />
-        </DocShell>
+        <article>
+            <DocHero
+                meta={
+                    <>
+                        {page?.num && <span>No. {page.num}</span>}
+                        {page?.category && <span>· {page.category}</span>}
+                        {multi && <span>· {list.length} variants</span>}
+                        {page?.badge && <NewChip />}
+                    </>
+                }
+                title={title}
+                description={description}
+                aside={variant.cli && <CliChip command={`npx apex-ui-kit add ${variant.cli}`} />}
+            />
+
+            <div className="grid border-y border-[var(--line)] xl:grid-cols-[minmax(0,1fr)_clamp(22rem,24vw,30rem)]">
+                <div className="flex min-w-0 flex-col">
+                    {multi && variant.description && (
+                        <p className={`${PAD_X} border-b border-[var(--line)] py-3 text-sm text-[var(--ink-2)]`}>
+                            <span className="font-medium text-[var(--ink)]">{variant.name}.</span> {variant.description}
+                        </p>
+                    )}
+                    <Stage variant={variant} variants={multi ? list : null} activeVariant={active} onVariant={setActive} />
+                </div>
+                <Inspector key={active} variant={variant} />
+            </div>
+
+            {single.extra}
+            {page && <Pager path={page.path} />}
+            <DocFooter />
+        </article>
     );
 }

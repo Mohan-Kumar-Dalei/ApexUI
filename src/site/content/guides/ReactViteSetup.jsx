@@ -41,7 +41,7 @@ export default function ReactViteSetup() {
         >
             <GuideSteps steps={steps} />
             <Callout>
-                That’s it — your React + Vite project is ready. Next, set up <strong className="text-[var(--fg)]">Tailwind CSS</strong> so ApexUI components can be styled.
+                That’s it — your React + Vite project is ready. Next, set up <strong className="text-[var(--ink)]">Tailwind CSS</strong> so ApexUI components can be styled.
             </Callout>
         </DocShell>
     );

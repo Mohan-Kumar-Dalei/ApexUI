@@ -23,12 +23,15 @@ export default function LensFlareBackgroundDoc() {
     const [speed, setSpeed] = useState(1);
     const code = `import LensFlareBackground from './ApexUI-Kit/LensFlareBackground/LensFlareBackground.jsx';
 
+// The background fills its nearest positioned parent.
 const App = () => (
-  <LensFlareBackground
-    flareColor="${flareColor}"
-    intensity={${intensity}}
-    animationSpeed={${speed}}
-  />
+  <section className="relative h-screen overflow-hidden bg-black">
+    <LensFlareBackground
+      flareColor="${flareColor}"
+      intensity={${intensity}}
+      animationSpeed={${speed}}
+    />
+  </section>
 );
 
 export default App;`;

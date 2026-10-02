@@ -1,5 +1,4 @@
-/* eslint-disable no-unused-vars */
-import { react, useRef, useEffect } from "react";
+import { useRef, useEffect } from "react";
 import * as THREE from "three";
 const hexToRgb = (hex) => {
     const m = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
@@ -32,7 +31,11 @@ const LensFlareBackground = ({
     useEffect(() => {
         if (!mountRef.current) return;
         let renderer, scene, camera, material, mesh, frameId;
-        let dpr = Math.min(window.devicePixelRatio, 2);
+        const capDpr = () => {
+            const width = mountRef.current?.clientWidth || window.innerWidth;
+            return Math.min(window.devicePixelRatio || 1, width > 1600 ? 1.25 : 2);
+        };
+        let dpr = capDpr();
 
         const getDims = () => {
             if (!mountRef.current) return [0, 0];
@@ -40,9 +43,13 @@ const LensFlareBackground = ({
         };
 
         const setupRenderer = () => {
-            renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
+            renderer = new THREE.WebGLRenderer({ alpha: true, antialias: false });
             renderer.setClearColor(0x000000, 0);
+            renderer.domElement.style.display = "block";
+            renderer.domElement.style.width = "100%";
+            renderer.domElement.style.height = "100%";
             if (mountRef.current) {
+                renderer.setPixelRatio(dpr);
                 renderer.setSize(mountRef.current.clientWidth, mountRef.current.clientHeight, false);
                 mountRef.current.appendChild(renderer.domElement);
             }
@@ -51,7 +58,8 @@ const LensFlareBackground = ({
         const setupScene = () => {
             camera = new THREE.OrthographicCamera(0, 1, 1, 0, -1, 1);
             scene = new THREE.Scene();
-            const geometry = new THREE.PlaneGeometry(1, 2);
+            // 2x2 covers the whole clip space (1x2 only covered the middle half).
+            const geometry = new THREE.PlaneGeometry(2, 2);
             const [w, h] = getDims();
             const uniforms = {
                 iTime: { value: 0 },
@@ -61,7 +69,7 @@ const LensFlareBackground = ({
                 raysColor: { value: new THREE.Color(...hexToRgb(flareColor)) },
                 raysSpeed: { value: animationSpeed },
                 lightSpread: { value: 4 },
-                rayLength: { value: 1 },
+                rayLength: { value: rayLengthValue },
                 pulsating: { value: 0.0 },
                 fadeDistance: { value: 1.0 },
                 saturation: { value: 1.0 },
@@ -195,10 +203,11 @@ const LensFlareBackground = ({
         ({ uniforms } = setupScene());
 
         const updatePlacement = () => {
-            dpr = Math.min(window.devicePixelRatio, 2);
+            dpr = capDpr();
             if (!mountRef.current) return;
             const w = mountRef.current.clientWidth * dpr;
             const h = mountRef.current.clientHeight * dpr;
+            renderer.setPixelRatio(dpr);
             renderer.setSize(mountRef.current.clientWidth, mountRef.current.clientHeight, false);
             uniforms.iResolution.value.set(w, h);
             const { anchor, dir } = getAnchorAndDir(w, h);
@@ -206,7 +215,9 @@ const LensFlareBackground = ({
             uniforms.rayDir.value.set(dir[0], dir[1]);
         };
         updatePlacement();
-        window.addEventListener("resize", updatePlacement);
+        const mountNode = mountRef.current;
+        const ro = new ResizeObserver(updatePlacement);
+        ro.observe(mountNode);
 
         const handleMouseMove = (e) => {
             if (!mountRef.current) return;
@@ -215,8 +226,9 @@ const LensFlareBackground = ({
             const y = (e.clientY - rect.top) / rect.height;
             mouseRef.current = { x, y };
         };
-        window.addEventListener("mousemove", handleMouseMove);
+        window.addEventListener("pointermove", handleMouseMove, { passive: true });
 
+        let visible = true;
         const animate = (now) => {
             uniforms.iTime.value = now * 0.001;
             const smoothing = 0.92;
@@ -226,41 +238,48 @@ const LensFlareBackground = ({
                 smoothMouseRef.current.y * smoothing + mouseRef.current.y * (1 - smoothing);
             uniforms.mousePos.value.set(smoothMouseRef.current.x, smoothMouseRef.current.y);
             renderer.render(scene, camera);
-            frameId = requestAnimationFrame(animate);
+            if (visible) frameId = requestAnimationFrame(animate);
         };
         frameId = requestAnimationFrame(animate);
 
+        // Pause while off-screen.
+        const io = new IntersectionObserver(([entry]) => {
+            const was = visible;
+            visible = entry.isIntersecting;
+            if (visible && !was) frameId = requestAnimationFrame(animate);
+            if (!visible) cancelAnimationFrame(frameId);
+        });
+        io.observe(mountNode);
+
         return () => {
-            if (frameId) cancelAnimationFrame(frameId);
-            window.removeEventListener("resize", updatePlacement);
-            window.removeEventListener("mousemove", handleMouseMove);
+            cancelAnimationFrame(frameId);
+            ro.disconnect();
+            io.disconnect();
+            window.removeEventListener("pointermove", handleMouseMove);
+            mesh.geometry.dispose();
+            material.dispose();
             renderer.dispose();
-            if (mountRef.current && renderer.domElement.parentNode === mountRef.current) {
-                mountRef.current.removeChild(renderer.domElement);
-            }
+            renderer.forceContextLoss();
+            renderer.domElement.remove();
+            uniformsRef.current = null;
         };
-    }, [flareColor, intensity, animationSpeed]);
+        // Built once: colour / intensity / speed are pushed into the uniforms by the
+        // effect below. (Rebuilding here created a new WebGL context on every slider move.)
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
 
     useEffect(() => {
         if (!uniformsRef.current) return;
         uniformsRef.current.raysColor.value.set(...hexToRgb(flareColor));
         uniformsRef.current.raysSpeed.value = animationSpeed;
         uniformsRef.current.intensity.value = intensity;
-    }, [flareColor, animationSpeed, intensity]);
+        uniformsRef.current.rayLength.value = rayLengthValue;
+    }, [flareColor, animationSpeed, intensity, rayLengthValue]);
 
     return (
         <div
             ref={mountRef}
-            // Corrected the className and ensured overflow is hidden
-            className="pointer-events-none w-[135vw] overflow-hidden"
-            style={{
-                position: "absolute",
-                bottom: 0,
-                height: "100vh",
-                // Add these two lines to center the element horizontally
-                left: "50%",
-                transform: "translateX(-50%)",
-            }}
+            className="pointer-events-none absolute inset-0 w-full h-full overflow-hidden"
         />
     );
 };

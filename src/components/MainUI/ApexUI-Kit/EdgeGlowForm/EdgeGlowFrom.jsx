@@ -9,10 +9,14 @@ const fields = [
 ];
 
 const EdgeGlowForm = ({
-    GlowColor = 'violet',
+    GlowColor,
+    glowColor,
     borderGlowColor = '#a78bfa88',
     borderGlowShadow = '#a78bfa33',
+    onSubmit,
 }) => {
+    // `glowColor` is accepted as an alias of the original `GlowColor` prop.
+    const glow = GlowColor ?? glowColor ?? 'violet';
     const [values, setValues] = useState({ firstName: '', lastName: '', email: '', mobile: '' });
     const [focused, setFocused] = useState('');
     const [checked, setChecked] = useState(false);
@@ -21,23 +25,36 @@ const EdgeGlowForm = ({
     const [checkboxError, setCheckboxError] = useState(false);
     const labelRefs = useRef({});
     const borderRefs = useRef({});
-    const ballsRef = [useRef(), useRef(), useRef()];
+    const ballsRef = useRef([]);
+    const ballTweens = useRef([]);
+    const timers = useRef([]);
     const checkTick = useRef();
-
-    // Mouse movement for glassy background
-    const [radialPos, setRadialPos] = useState({ x: 50, y: 50 });
     const bgRef = useRef();
+    const glowRef = useRef();
 
+    // The glow follows the pointer via CSS variables: no React re-render per move.
+    const setGlow = (x, y) => {
+        glowRef.current?.style.setProperty('--gx', `${x}%`);
+        glowRef.current?.style.setProperty('--gy', `${y}%`);
+    };
     const handleBgMouseMove = e => {
         if (!bgRef.current) return;
         const rect = bgRef.current.getBoundingClientRect();
-        const x = ((e.clientX - rect.left) / rect.width) * 100;
-        const y = ((e.clientY - rect.top) / rect.height) * 100;
-        setRadialPos({ x, y });
+        setGlow(((e.clientX - rect.left) / rect.width) * 100, ((e.clientY - rect.top) / rect.height) * 100);
     };
-    const handleBgMouseLeave = () => {
-        setRadialPos({ x: 50, y: 50 });
+    const handleBgMouseLeave = () => setGlow(50, 50);
+
+    const stopBalls = () => {
+        ballTweens.current.forEach(t => t.kill());
+        ballTweens.current = [];
+        gsap.set(ballsRef.current, { y: 0 });
     };
+    const later = (fn, ms) => timers.current.push(setTimeout(fn, ms));
+
+    useEffect(() => () => {
+        timers.current.forEach(clearTimeout);
+        ballTweens.current.forEach(t => t.kill());
+    }, []);
 
     const floatLabel = (name, up, color = null) => {
         const label = labelRefs.current[name];
@@ -46,12 +63,12 @@ const EdgeGlowForm = ({
                 top: up ? '-2px' : '23%',
                 left: '5px',
                 scale: up ? 0.85 : 1,
+                transformOrigin: 'left center',
                 color: color ?? (up ? '#a78bfa' : '#bdbdbd'),
-                transform: 'translateY(-4%)',
                 fontWeight: up ? 500 : 400,
-                duration: 0.2,
-                ease: 'easeInOut',
-                zIndex: 10,
+                duration: 0.25,
+                ease: 'power2.inOut',
+                overwrite: 'auto',
             });
         }
     };
@@ -65,8 +82,9 @@ const EdgeGlowForm = ({
                     scaleX: show ? 1 : 0.7,
                     background: `linear-gradient(90deg, transparent 0%, ${color} 50%, transparent 100%)`,
                     boxShadow: `0 0 8px 0 ${color.replace('88', '33')}`,
-                    duration: 0.2,
-                    ease: show ? 'ease.out' : 'ease.in',
+                    duration: 0.25,
+                    ease: show ? 'power2.out' : 'power2.in',
+                    overwrite: 'auto',
                 });
             }
         });
@@ -87,6 +105,7 @@ const EdgeGlowForm = ({
     const handleChange = (e, name) => {
         const v = e.target.value;
         setValues(vals => ({ ...vals, [name]: v }));
+        if (errors[name]) setErrors(errs => ({ ...errs, [name]: false }));
         if (v) floatLabel(name, true);
         else if (focused !== name) floatLabel(name, false);
     };
@@ -100,8 +119,8 @@ const EdgeGlowForm = ({
                 top: '23%',
                 left: '5px',
                 scale: 1,
+                transformOrigin: 'left center',
                 color: '#bdbdbd',
-                transform: 'translateY(-4%)',
                 fontWeight: 400,
                 position: 'absolute',
                 pointerEvents: 'none',
@@ -112,23 +131,17 @@ const EdgeGlowForm = ({
         });
     }, []);
 
-    const handleCheckbox = () => {
-        setChecked(v => {
-            const next = !v;
-            if (checkTick.current) {
-                gsap.to(checkTick.current, {
-                    scale: next ? 1 : 0,
-                    opacity: next ? 1 : 0,
-                    duration: 0.3,
-                    ease: 'expo.out',
-                });
-            }
-            return next;
-        });
-    };
+    const handleCheckbox = () => setChecked(v => !v);
 
     useEffect(() => {
-        if (checkTick.current) gsap.set(checkTick.current, { scale: checked ? 1 : 0, opacity: checked ? 1 : 0 });
+        if (!checkTick.current) return;
+        gsap.to(checkTick.current, {
+            scale: checked ? 1 : 0,
+            opacity: checked ? 1 : 0,
+            duration: 0.35,
+            ease: checked ? 'back.out(2.5)' : 'power2.in',
+            overwrite: 'auto',
+        });
     }, [checked]);
 
     const handleBtnClick = e => {
@@ -144,28 +157,21 @@ const EdgeGlowForm = ({
         });
         if (!checked) {
             setCheckboxError(true);
-            setTimeout(() => setCheckboxError(false), 2000);
+            later(() => setCheckboxError(false), 2000);
         }
         if (Object.keys(newErrors).length > 0 || !checked) return;
         if (btnState !== 'default') return;
 
         setBtnState('loading');
-        ballsRef.forEach((ref, i) => {
-            gsap.fromTo(ref.current, { y: 0 }, {
-                y: -12,
-                repeat: -1,
-                yoyo: true,
-                delay: i * 0.12,
-                duration: 0.38,
-                ease: 'power1.inOut',
-            });
-        });
-        setTimeout(() => {
+        onSubmit?.(values);
+        stopBalls();
+        ballTweens.current = ballsRef.current.map((ball, i) =>
+            gsap.fromTo(ball, { y: 0 }, { y: -12, repeat: -1, yoyo: true, delay: i * 0.12, duration: 0.38, ease: 'power1.inOut' })
+        );
+        later(() => {
+            stopBalls();
             setBtnState('success');
-            ballsRef.forEach(ref => gsap.set(ref.current, { y: 0 }));
-            setTimeout(() => {
-                setBtnState('default');
-            }, 1200);
+            later(() => setBtnState('default'), 1200);
         }, 1600);
     };
 
@@ -181,9 +187,12 @@ const EdgeGlowForm = ({
                 {/* 🎯 Glassy Background */}
                 <div className="absolute inset-0 z-0 hidden md:block pointer-events-none rounded-xl">
                     <div
+                        ref={glowRef}
                         className="absolute inset-0 opacity-95"
                         style={{
-                            background: `radial-gradient(circle at ${radialPos.x}% ${radialPos.y}%, ${GlowColor} 10%, transparent 60%)`
+                            '--gx': '50%',
+                            '--gy': '50%',
+                            background: `radial-gradient(circle at var(--gx) var(--gy), ${glow} 10%, transparent 60%)`,
                         }}
                     ></div>
                 </div>
@@ -198,8 +207,9 @@ const EdgeGlowForm = ({
                         {fields.map(f => (
                             <div key={f.name} className="relative flex flex-col justify-center">
                                 <label
+                                    htmlFor={`edge-glow-${f.name}`}
                                     ref={el => (labelRefs.current[f.name] = el)}
-                                    className="absolute text-white/60 text-sm transition-all pointer-events-none"
+                                    className="absolute text-white/60 text-sm pointer-events-none"
                                 >{f.label}</label>
                                 <span
                                     ref={el => {
@@ -213,6 +223,7 @@ const EdgeGlowForm = ({
                                     }}
                                 />
                                 <input
+                                    id={`edge-glow-${f.name}`}
                                     type={f.type}
                                     name={f.name}
                                     value={values[f.name]}
@@ -239,7 +250,9 @@ const EdgeGlowForm = ({
                         <div className="flex items-center gap-3 mt-2 select-none relative">
                             <button
                                 type="button"
+                                role="checkbox"
                                 aria-checked={checked}
+                                aria-label="I agree to the terms"
                                 tabIndex={0}
                                 onClick={handleCheckbox}
                                 className={`relative w-6 h-6 rounded-md border-2 border-white/30 bg-white/10 flex items-center justify-center focus:outline-none focus:ring-2 focus:ring-purple-400 transition`}
@@ -249,7 +262,7 @@ const EdgeGlowForm = ({
                                     ref={checkTick}
                                     width="18" height="18" viewBox="0 0 18 18"
                                     className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 text-purple-400"
-                                    style={{ scale: checked ? 1 : 0, opacity: checked ? 1 : 0, transition: 'all 0.2s' }}
+                                    style={{ scale: 0, opacity: 0 }}
                                 >
                                     <polyline points="3,10 7,14 15,6" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" />
                                 </svg>
@@ -267,14 +280,13 @@ const EdgeGlowForm = ({
                             type="submit"
                             className="mt-6 py-3 px-6 bg-gradient-to-r from-purple-700 via-purple-500 to-indigo-800 rounded-md hover:brightness-110 transition shadow-lg w-full font-semibold text-base flex items-center justify-center gap-2 relative overflow-hidden"
                             style={{ minHeight: 48 }}
-                            onClick={handleBtnClick}
                             disabled={btnState !== 'default'}
                         >
                             {/* Bouncing Balls */}
                             <span className={`absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 flex gap-1 ${btnState === 'loading' ? 'opacity-100' : 'opacity-0'}`} style={{ transition: 'opacity 0.2s' }}>
-                                <span ref={ballsRef[0]} className="w-2.5 h-2.5 rounded-full bg-white/80 inline-block" />
-                                <span ref={ballsRef[1]} className="w-2.5 h-2.5 rounded-full bg-white/80 inline-block" />
-                                <span ref={ballsRef[2]} className="w-2.5 h-2.5 rounded-full bg-white/80 inline-block" />
+                                {[0, 1, 2].map(i => (
+                                    <span key={i} ref={el => (ballsRef.current[i] = el)} className="w-2.5 h-2.5 rounded-full bg-white/80 inline-block" />
+                                ))}
                             </span>
                             {/* Checkmark */}
                             <span

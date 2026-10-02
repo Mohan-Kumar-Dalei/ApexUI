@@ -1,5 +1,4 @@
 import { useState } from 'react';
-import { Monitor } from 'lucide-react';
 import ComponentDoc from '../../docs/ComponentDoc.jsx';
 import SmartGridCard from '../../../components/MainUI/ApexUI-Kit/SmartGridCard/SmartGridCard.jsx';
 
@@ -16,7 +15,7 @@ const printMergeMap = (obj) => {
 
 const props = [
     { prop: 'cards', type: 'array', def: 'defaultCards()', desc: 'Card objects with id, icon, title, description and buttonText.' },
-    { prop: 'mergeMap', type: 'object', def: '{}', desc: 'Cards to merge, as { source: target } — e.g. { 5: 2 } merges card 5 into card 2.' },
+    { prop: 'mergeMap', type: 'object', def: '{}', desc: 'Cards to merge, as { source: target } — e.g. { 5: 2 } hides card 5 and grows card 2 into its place (3-column layout).' },
     { prop: 'borderColor', type: 'string', def: '"cyan"', desc: 'Border color of the grid cards.' },
 ];
 
@@ -40,22 +39,13 @@ export default App;`;
     return (
         <ComponentDoc
             title="Smart Grid Card"
-            description="A responsive grid of cards that can merge into each other to create unique layouts."
+            description="A responsive card grid whose cards smoothly merge into each other to form new layouts. Columns follow the grid's own width."
             preview={
-                <>
-                    <div className="hidden w-full shrink-0 items-center justify-center lg:flex lg:scale-[0.82]">
-                        <SmartGridCard mergeMap={mergeMap} />
-                    </div>
-                    <div className="flex flex-col items-center py-10 text-center lg:hidden">
-                        <Monitor className="mb-4 h-10 w-10 text-lime-300" />
-                        <h4 className="mb-1 text-lg font-semibold text-white">Best viewed on a larger screen</h4>
-                        <p className="max-w-xs text-sm text-zinc-400">This interactive grid needs a wider viewport to preview.</p>
-                    </div>
-                </>
+<SmartGridCard mergeMap={mergeMap} />
             }
             controls={
                 <div className="flex flex-wrap items-center gap-2">
-                    <span className="mr-2 text-sm text-[var(--fg-muted)]">Merge</span>
+                    <span className="mr-2 text-sm text-[var(--ink-2)]">Merge</span>
                     {mergeOptions.map(({ label, source, target }) => {
                         const active = mergeMap[source] === target;
                         return (
@@ -63,13 +53,13 @@ export default App;`;
                                 key={label}
                                 type="button"
                                 onClick={() => setMergeMap((prev) => ({ ...prev, [source]: target }))}
-                                className={`${pill} ${active ? 'border-[var(--fg)] bg-[var(--fg)] text-[var(--bg)]' : 'border-[var(--border)] text-[var(--fg-muted)] hover:text-[var(--fg)]'}`}
+                                className={`${pill} ${active ? 'border-[var(--ink)] bg-[var(--ink)] text-[var(--bg)]' : 'border-[var(--line)] text-[var(--ink-2)] hover:text-[var(--ink)]'}`}
                             >
                                 {label}
                             </button>
                         );
                     })}
-                    <button type="button" onClick={() => setMergeMap({})} className={`${pill} border-[var(--border)] text-[var(--fg-muted)] hover:text-[var(--fg)]`}>
+                    <button type="button" onClick={() => setMergeMap({})} className={`${pill} border-[var(--line)] text-[var(--ink-2)] hover:text-[var(--ink)]`}>
                         Reset
                     </button>
                 </div>

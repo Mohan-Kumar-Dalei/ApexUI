@@ -4,17 +4,17 @@ import GlareCard from '../../../components/MainUI/ApexUI-Kit/GlareCard/GlareCard
 const code = `import GlareCard from './ApexUI-Kit/GlareCard/GlareCard.jsx';
 
 const App = () => (
-  <GlareCard>
-    <h1 style={{ color: 'white', textAlign: 'center' }}>
-      Your Content Here
-    </h1>
+  <GlareCard className="flex items-center justify-center">
+    <h1 className="text-white text-2xl font-bold">Your Content Here</h1>
   </GlareCard>
 );
+
+// Render it without children to get the built-in ApexUI demo card.
 
 export default App;`;
 
 const props = [
-    { prop: 'children', type: 'ReactNode', def: 'null', desc: 'Content to render inside the glare card.' },
+    { prop: 'children', type: 'ReactNode', def: 'demo content', desc: 'Content inside the card. Without children the ApexUI demo card is shown.' },
     { prop: 'className', type: 'string', def: '""', desc: 'Additional CSS classes for the card.' },
     { prop: 'backgroundImage', type: 'string', def: 'bgHexa', desc: 'Background image URL for the card.' },
     { prop: 'foilSvg', type: 'string', def: 'default SVG', desc: 'SVG string or URL for the foil overlay effect.' },
@@ -32,11 +32,9 @@ export default function GlareCardDoc() {
             title="Glare Card"
             description="A card with a reflective glare effect that follows the user's cursor."
             preview={
-                <GlareCard>
-                    <div className="text-center text-white">
-                        <h3 className="text-2xl font-bold">Glare Card Effect</h3>
-                        <p className="mt-2 text-white/80">Move cursor to see the effect</p>
-                    </div>
+                <GlareCard className="flex flex-col items-center justify-center p-8 text-center">
+                    <h3 className="text-2xl font-bold text-white">Glare Card Effect</h3>
+                    <p className="mt-2 text-white/80">Move your cursor over the card</p>
                 </GlareCard>
             }
             code={code}

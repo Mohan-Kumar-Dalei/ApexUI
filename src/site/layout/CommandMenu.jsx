@@ -2,31 +2,8 @@ import { useEffect, useMemo, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { AnimatePresence, motion } from 'framer-motion';
 import { ArrowRight, BookOpen, Box, Search } from 'lucide-react';
-import { componentPages, guidePages } from '../config/navigation.js';
-import { OPEN_SEARCH_EVENT, openSearch } from './search.js';
-
-
-export function SearchTrigger({ className = '', compact = false }) {
-    const isMac = typeof navigator !== 'undefined' && /Mac|iPhone|iPad/.test(navigator.platform);
-    return (
-        <button
-            type="button"
-            onClick={openSearch}
-            className={`group inline-flex items-center gap-2 rounded-lg border border-[var(--border)] bg-[var(--surface)] text-sm text-[var(--fg-subtle)] transition hover:border-[var(--border-strong)] hover:text-[var(--fg-muted)] ${compact ? 'h-9 w-9 justify-center' : 'h-9 w-full px-3'} ${className}`}
-            aria-label="Search documentation"
-        >
-            <Search className="h-4 w-4 shrink-0" />
-            {!compact && (
-                <>
-                    <span className="flex-1 text-left">Search docs…</span>
-                    <kbd className="rounded border border-[var(--border)] bg-[var(--surface-2)] px-1.5 py-0.5 font-mono text-[10px] text-[var(--fg-subtle)]">
-                        {isMac ? '⌘' : 'Ctrl'} K
-                    </kbd>
-                </>
-            )}
-        </button>
-    );
-}
+import { componentPages, guidePages, prefetch } from '../config/navigation.js';
+import { OPEN_SEARCH_EVENT } from './overlays.js';
 
 const groups = [
     { label: 'Guides', icon: BookOpen, items: guidePages },
@@ -117,14 +94,14 @@ export default function CommandMenu() {
                     <motion.div
                         role="dialog"
                         aria-label="Search documentation"
-                        className="w-full max-w-xl overflow-hidden rounded-2xl border border-[var(--border-strong)] bg-[var(--surface)] shadow-2xl"
+                        className="w-full max-w-xl overflow-hidden rounded-2xl border border-[var(--line-strong)] bg-[var(--panel)] shadow-2xl"
                         initial={{ opacity: 0, y: -8, scale: 0.98 }}
                         animate={{ opacity: 1, y: 0, scale: 1 }}
                         exit={{ opacity: 0, y: -8, scale: 0.98 }}
                         transition={{ duration: 0.18, ease: 'easeOut' }}
                     >
-                        <div className="flex items-center gap-3 border-b border-[var(--border)] px-4">
-                            <Search className="h-4 w-4 text-[var(--fg-subtle)]" />
+                        <div className="flex items-center gap-3 border-b border-[var(--line)] px-4">
+                            <Search className="h-4 w-4 text-[var(--ink-3)]" />
                             <input
                                 autoFocus
                                 value={query}
@@ -134,17 +111,17 @@ export default function CommandMenu() {
                                 }}
                                 onKeyDown={onKeyDown}
                                 placeholder="Search components and guides…"
-                                className="h-12 flex-1 bg-transparent text-[15px] text-[var(--fg)] placeholder:text-[var(--fg-subtle)] focus:outline-none"
+                                className="h-12 flex-1 bg-transparent text-[15px] text-[var(--ink)] placeholder:text-[var(--ink-3)] focus:outline-none"
                             />
-                            <kbd className="rounded border border-[var(--border)] px-1.5 py-0.5 font-mono text-[10px] text-[var(--fg-subtle)]">ESC</kbd>
+                            <kbd className="rounded border border-[var(--line)] px-1.5 py-0.5 font-mono text-[10px] text-[var(--ink-3)]">ESC</kbd>
                         </div>
                         <div ref={listRef} className="thin-scroll max-h-[min(60vh,420px)] overflow-y-auto p-2">
                             {results.length === 0 && (
-                                <p className="px-3 py-10 text-center text-sm text-[var(--fg-subtle)]">No results for “{query}”.</p>
+                                <p className="px-3 py-10 text-center text-sm text-[var(--ink-3)]">No results for “{query}”.</p>
                             )}
                             {results.map((group) => (
                                 <div key={group.label} className="mb-1">
-                                    <p className="px-3 pb-1 pt-2 text-[11px] font-medium uppercase tracking-wider text-[var(--fg-subtle)]">{group.label}</p>
+                                    <p className="px-3 pb-1 pt-2 text-[11px] font-medium uppercase tracking-wider text-[var(--ink-3)]">{group.label}</p>
                                     {group.items.map((item) => {
                                         index += 1;
                                         const i = index;
@@ -155,12 +132,14 @@ export default function CommandMenu() {
                                                 type="button"
                                                 data-active={isActive}
                                                 onMouseMove={() => setActive(i)}
+                                                onMouseEnter={() => prefetch(item)}
                                                 onClick={() => go(item)}
-                                                className={`flex w-full items-center gap-3 rounded-lg px-3 py-2 text-left text-sm transition-colors ${isActive ? 'bg-[var(--surface-2)] text-[var(--fg)]' : 'text-[var(--fg-muted)]'}`}
+                                                className={`flex w-full items-center gap-3 rounded-lg px-3 py-2 text-left text-sm transition-colors ${isActive ? 'bg-[var(--lime-soft)] text-[var(--ink)]' : 'text-[var(--ink-2)]'}`}
                                             >
-                                                <group.icon className="h-4 w-4 shrink-0 text-[var(--fg-subtle)]" />
+                                                <span className="w-6 font-mono text-[0.68rem] text-[var(--ink-3)]">{item.num}</span>
+                                                <group.icon className="h-4 w-4 shrink-0 text-[var(--ink-3)]" />
                                                 <span className="flex-1 truncate">{item.name}</span>
-                                                {item.category && <span className="text-xs text-[var(--fg-subtle)]">{item.category}</span>}
+                                                {item.category && <span className="text-xs text-[var(--ink-3)]">{item.category}</span>}
                                                 <ArrowRight className={`h-3.5 w-3.5 transition-opacity ${isActive ? 'opacity-100' : 'opacity-0'}`} />
                                             </button>
                                         );

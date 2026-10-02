@@ -1,158 +1,104 @@
 import React, { useLayoutEffect, useRef, useState, useEffect } from 'react';
 import { gsap } from 'gsap';
 
-// --- RippleBackground Component (Optimized for Mobile) ---
+const DEFAULT_COLORS = ["#10b981", "#06b6d4", "#6366f1", "#a855f7"];
+
 const RippleBackground = ({
     children,
-    className,
-    containerClassName,
+    className = "",
+    containerClassName = "",
     colors,
-    desktopGridSize = 20, // Grid size for desktop
-    mobileGridSize = 10,  // Grid size for mobile
+    desktopGridSize = 20,
+    mobileGridSize = 10,
 }) => {
-    const containerRef = useRef(null);
-    const shapesRef = useRef([]);
-    const [gridSize, setGridSize] = useState(desktopGridSize);
+    const rootRef = useRef(null);
+    // Each cell has two layers: the outer one reacts to hover / click, the inner
+    // dot keeps blinking. Separate elements mean hovering no longer cancels the blink.
+    const cellsRef = useRef([]);
+    const dotsRef = useRef([]);
     const [isMobile, setIsMobile] = useState(false);
 
-    // Check screen size to determine if it's mobile
     useEffect(() => {
-        const checkScreenSize = () => {
-            const isMobileDevice = window.innerWidth < 768;
-            setIsMobile(isMobileDevice);
-            setGridSize(isMobileDevice ? mobileGridSize : desktopGridSize);
-        };
+        const mq = window.matchMedia('(max-width: 767px)');
+        const update = () => setIsMobile(mq.matches);
+        update();
+        mq.addEventListener('change', update);
+        return () => mq.removeEventListener('change', update);
+    }, []);
 
-        checkScreenSize();
-        window.addEventListener('resize', checkScreenSize);
-        return () => window.removeEventListener('resize', checkScreenSize);
-    }, [mobileGridSize, desktopGridSize]);
+    const gridSize = isMobile ? mobileGridSize : desktopGridSize;
+    const shapeColors = colors?.length ? colors : DEFAULT_COLORS;
 
+    useLayoutEffect(() => {
+        const dots = dotsRef.current.slice(0, gridSize * gridSize).filter(Boolean);
+        if (!dots.length) return undefined;
+        if (isMobile) {
+            gsap.set(dots, { scale: 1, opacity: 0.3 });
+            return undefined;
+        }
+        const ctx = gsap.context(() => {
+            dots.forEach((dot) => {
+                gsap.to(dot, {
+                    scale: () => gsap.utils.random(0.5, 2),
+                    opacity: () => gsap.utils.random(0.3, 1),
+                    duration: 2,
+                    ease: "sine.inOut",
+                    repeat: -1,
+                    yoyo: true,
+                    repeatRefresh: true,
+                    delay: Math.random() * 2,
+                });
+            });
+        });
+        return () => ctx.revert();
+    }, [gridSize, isMobile]);
 
-    const shapeColors = colors ?? [
-        "#10b981", // emerald-500
-        "#06b6d4", // cyan-500
-        "#6366f1", // indigo-500
-        "#a855f7", // purple-500
-    ];
-
-    // Handles the ripple effect on click
     const handleClick = (e) => {
         const { clientX, clientY } = e;
-        const shapes = shapesRef.current;
-
-        shapes.forEach(shape => {
-            if (!shape) return;
-            const rect = shape.getBoundingClientRect();
-            const dx = rect.left + rect.width / 2 - clientX;
-            const dy = rect.top + rect.height / 2 - clientY;
-            const distance = Math.sqrt(dx * dx + dy * dy);
-            const delay = distance * 0.005; // Ripple delay based on distance
-
-            gsap.timeline({ defaults: { overwrite: 'auto' } })
-                .to(shape, {
-                    scale: 2.5,
-                    opacity: 1,
-                    duration: 0.3,
-                    ease: "power2.out",
-                    delay: delay
-                })
-                .to(shape, {
-                    scale: 1,
-                    opacity: 0.5,
-                    duration: 0.5,
-                    ease: "power2.in"
-                });
+        cellsRef.current.slice(0, gridSize * gridSize).forEach((cell) => {
+            if (!cell) return;
+            const rect = cell.getBoundingClientRect();
+            const distance = Math.hypot(rect.left + rect.width / 2 - clientX, rect.top + rect.height / 2 - clientY);
+            gsap.timeline({ delay: distance * 0.0025 })
+                .to(cell, { scale: 2.5, duration: 0.3, ease: "power2.out", overwrite: "auto" })
+                .to(cell, { scale: 1, duration: 0.6, ease: "power2.inOut" });
         });
     };
 
-    // Handles micro-interaction on hover
-    const handleMouseEnter = (shape) => {
-        gsap.to(shape, {
-            scale: 2,
-            opacity: 1,
-            duration: 0.3,
-            ease: 'power2.out',
-            overwrite: 'auto'
-        });
+    const hover = (i, on) => {
+        const cell = cellsRef.current[i];
+        if (cell) gsap.to(cell, { scale: on ? 2 : 1, duration: on ? 0.3 : 1.2, ease: 'power2.out', overwrite: 'auto' });
     };
-
-    const handleMouseLeave = (shape) => {
-        // Returns the shape to its normal blinking state
-        gsap.to(shape, {
-            scale: 1,
-            opacity: 0.3,
-            duration: 2,
-            ease: 'power2.out',
-            overwrite: 'auto'
-        });
-    };
-
-    // Continuous blinking animation
-    useLayoutEffect(() => {
-        const shapes = shapesRef.current.filter(s => s);
-        if (shapes.length === 0) return;
-
-        // On mobile, we disable the heavy continuous animation for better performance
-        if (isMobile) {
-            // Set a default static state for mobile
-            gsap.set(shapes, { scale: 1, opacity: 0.3 });
-            return;
-        }
-
-        const masterTl = gsap.timeline({ repeat: -1, yoyo: true });
-
-        shapes.forEach(shape => {
-            masterTl.to(shape, {
-                scale: () => Math.random() * 1.5 + 0.5,
-                opacity: () => Math.random() * 0.7 + 0.3,
-                duration: 2,
-                ease: "sine.inOut",
-            }, Math.random() * 2); // Random start time for each shape
-        });
-
-        return () => {
-            masterTl.kill(); // Cleanup the timeline
-        };
-    }, [gridSize, isMobile]); // Rerun effect if grid size or mobile status changes
 
     return (
         <div
-            className={`relative h-[60vh] lg:h-[80vh] w-screen flex flex-col items-center justify-center overflow-hidden ${containerClassName}`}
-            onClick={handleClick} // Click event listener on the main container
+            ref={rootRef}
+            className={`relative h-[60vh] lg:h-[80vh] w-full flex flex-col items-center justify-center overflow-hidden ${containerClassName}`}
+            onClick={handleClick}
         >
-            {/* Shapes Grid Container */}
             <div
-                ref={containerRef}
                 className="absolute inset-0 z-0 w-full h-full grid"
-                style={{
-                    gridTemplateColumns: `repeat(${gridSize}, 1fr)`,
-                    gridTemplateRows: `repeat(${gridSize}, 1fr)`,
-                }}
+                style={{ gridTemplateColumns: `repeat(${gridSize}, 1fr)`, gridTemplateRows: `repeat(${gridSize}, 1fr)` }}
             >
-                {Array.from({ length: gridSize * gridSize }).map((_, index) => (
+                {Array.from({ length: gridSize * gridSize }, (_, index) => (
                     <div
                         key={index}
                         className="w-full h-full flex items-center justify-center"
-                        onMouseEnter={() => handleMouseEnter(shapesRef.current[index])}
-                        onMouseLeave={() => handleMouseLeave(shapesRef.current[index])}
+                        onMouseEnter={() => hover(index, true)}
+                        onMouseLeave={() => hover(index, false)}
                     >
-                        <div
-                            ref={el => shapesRef.current[index] = el}
-                            className="w-2 h-2 rounded-full pointer-events-none"
-                            style={{
-                                backgroundColor: shapeColors[index % shapeColors.length],
-                                // Performance optimization for animations
-                                willChange: 'transform, opacity',
-                            }}
-                        />
+                        <div ref={(el) => (cellsRef.current[index] = el)} className="pointer-events-none will-change-transform">
+                            <div
+                                ref={(el) => (dotsRef.current[index] = el)}
+                                className="w-2 h-2 rounded-full will-change-transform"
+                                style={{ backgroundColor: shapeColors[index % shapeColors.length], opacity: 0.3 }}
+                            />
+                        </div>
                     </div>
                 ))}
             </div>
 
-            <div className={`relative z-10 ${className}`}>
-                {children}
-            </div>
+            <div className={`relative z-10 ${className}`}>{children}</div>
         </div>
     );
 };

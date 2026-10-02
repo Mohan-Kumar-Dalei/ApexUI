@@ -1,17 +1,25 @@
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
-import { Loader2, MessageSquare, X } from 'lucide-react';
+import { Loader2, X } from 'lucide-react';
 import { toast } from 'sonner';
+import { OPEN_FEEDBACK_EVENT } from './overlays.js';
 
 const ACCESS_KEY = '17a68c11-3e40-4879-ba02-65457533f959';
 
 const field =
-    'w-full rounded-lg border border-[var(--border)] bg-[var(--bg)] px-3 py-2.5 text-sm text-[var(--fg)] placeholder:text-[var(--fg-subtle)] transition focus:border-[var(--border-strong)] focus:outline-none focus:ring-2 focus:ring-[var(--ring)]';
+    'w-full rounded-lg border border-[var(--line)] bg-[var(--bg)] px-3 py-2.5 text-sm text-[var(--ink)] placeholder:text-[var(--ink-3)] transition focus:border-[var(--line-strong)] focus:outline-none focus:ring-2 focus:ring-[var(--ring)]';
 
-export default function FeedbackButton() {
+/* Feedback dialog; opened from the dock or the mobile menu. */
+export default function FeedbackDialog() {
     const [open, setOpen] = useState(false);
     const [sending, setSending] = useState(false);
     const formRef = useRef(null);
+
+    useEffect(() => {
+        const onOpen = () => setOpen(true);
+        window.addEventListener(OPEN_FEEDBACK_EVENT, onOpen);
+        return () => window.removeEventListener(OPEN_FEEDBACK_EVENT, onOpen);
+    }, []);
 
     const submit = async (e) => {
         e.preventDefault();
@@ -35,15 +43,6 @@ export default function FeedbackButton() {
 
     return (
         <>
-            <button
-                type="button"
-                onClick={() => setOpen(true)}
-                className="fixed bottom-5 right-5 z-[900] inline-flex items-center gap-2 rounded-full border border-[var(--border-strong)] bg-[var(--surface)] px-4 py-2 text-sm font-medium text-[var(--fg)] shadow-[var(--shadow)] transition hover:-translate-y-0.5 hover:bg-[var(--surface-2)]"
-            >
-                <MessageSquare className="h-4 w-4 text-[var(--accent-text)]" />
-                Feedback
-            </button>
-
             <AnimatePresence>
                 {open && (
                     <motion.div
@@ -56,7 +55,7 @@ export default function FeedbackButton() {
                         <motion.div
                             role="dialog"
                             aria-label="Send feedback"
-                            className="relative w-full max-w-sm rounded-2xl border border-[var(--border-strong)] bg-[var(--surface)] p-6 shadow-2xl"
+                            className="relative w-full max-w-sm rounded-2xl border border-[var(--line-strong)] bg-[var(--panel)] p-6 shadow-2xl"
                             initial={{ opacity: 0, y: 12, scale: 0.98 }}
                             animate={{ opacity: 1, y: 0, scale: 1 }}
                             exit={{ opacity: 0, y: 12, scale: 0.98 }}
@@ -65,20 +64,20 @@ export default function FeedbackButton() {
                             <button
                                 type="button"
                                 onClick={() => setOpen(false)}
-                                className="absolute right-3 top-3 inline-flex h-8 w-8 items-center justify-center rounded-md text-[var(--fg-subtle)] hover:bg-[var(--surface-2)] hover:text-[var(--fg)]"
+                                className="absolute right-3 top-3 inline-flex h-8 w-8 items-center justify-center rounded-md text-[var(--ink-3)] hover:bg-[var(--panel-2)] hover:text-[var(--ink)]"
                                 aria-label="Close"
                             >
                                 <X className="h-4 w-4" />
                             </button>
-                            <h2 className="text-base font-semibold text-[var(--fg)]">Share your feedback</h2>
-                            <p className="mt-1 text-sm text-[var(--fg-muted)]">Found a bug or want a component? Let us know.</p>
+                            <h2 className="font-display text-xl font-semibold text-[var(--ink)]">Share your feedback</h2>
+                            <p className="mt-1 text-sm text-[var(--ink-2)]">Found a bug or want a component? Let us know.</p>
                             <form ref={formRef} onSubmit={submit} className="mt-5 space-y-3">
                                 <input type="email" name="email" required placeholder="you@example.com" className={field} />
                                 <textarea name="message" required rows={4} placeholder="What could be better?" className={`${field} resize-none`} />
                                 <button
                                     type="submit"
                                     disabled={sending}
-                                    className="inline-flex h-10 w-full items-center justify-center gap-2 rounded-lg bg-[var(--fg)] text-sm font-medium text-[var(--bg)] transition hover:opacity-90 disabled:opacity-60"
+                                    className="inline-flex h-11 w-full items-center justify-center gap-2 rounded-full bg-[var(--lime)] text-sm font-semibold text-[var(--lime-ink)] transition hover:brightness-105 disabled:opacity-60"
                                 >
                                     {sending && <Loader2 className="h-4 w-4 animate-spin" />}
                                     {sending ? 'Sending…' : 'Send feedback'}

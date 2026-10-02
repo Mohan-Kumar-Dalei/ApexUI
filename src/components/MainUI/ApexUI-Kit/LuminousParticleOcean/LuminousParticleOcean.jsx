@@ -1,4 +1,4 @@
-import React, { useRef, useMemo } from 'react';
+import React, { useRef, useMemo, useEffect, useState } from 'react';
 import { Canvas, useFrame } from '@react-three/fiber';
 import * as THREE from 'three';
 // Helper function to convert hex color to rgba for CSS
@@ -30,20 +30,20 @@ function FlowingSpheres({ count, sep, color, pushStrength }) {
     }, [count, sep]);
 
     // useFrame runs on every rendered frame
-    useFrame(({ clock, mouse }) => {
+    useFrame(({ clock, pointer }) => {
         if (!instancedMeshRef.current) return;
         const elapsedTime = clock.getElapsedTime();
+        const timeFactor = Math.sin(elapsedTime * 0.5);
 
-        // Map mouse position (-1 to 1) to the grid's world coordinates
-        const mouseXWorld = mouse.x * (count * sep / 4);
-        const mouseZWorld = -mouse.y * (count * sep / 4);
+        // Map pointer position (-1 to 1) to the grid's world coordinates
+        const mouseXWorld = pointer.x * (count * sep / 4);
+        const mouseZWorld = -pointer.y * (count * sep / 4);
 
         // Animate each sphere's y-position and update its matrix
         particles.forEach((particle, i) => {
             const { x, z } = particle;
 
             // --- 1. Wave Animation ---
-            const timeFactor = Math.sin(elapsedTime * 0.5);
             const wave1 = Math.sin(x * 0.15 + timeFactor * Math.PI);
             const wave2 = Math.sin(z * 1 + timeFactor * Math.PI);
             let y = (wave1 + wave2) * 7;
@@ -75,7 +75,8 @@ function FlowingSpheres({ count, sep, color, pushStrength }) {
                 ref={instancedMeshRef}
                 args={[null, null, count * count]}
             >
-                <sphereGeometry args={[0.2, 19, 19]} />
+                {/* Low-poly spheres: they're tiny on screen and there are count² of them. */}
+                <sphereGeometry args={[0.2, 8, 8]} />
                 <meshStandardMaterial
                     color={color}
                     emissive={color}
@@ -97,21 +98,33 @@ const LuminousParticleOcean = ({
     separation = 4,
     bgColor1 = "#010a2d",
     bgColor2 = "#001133",
-    
+    className = "",
 }) => {
+    const wrapperRef = useRef(null);
+    const [inView, setInView] = useState(true);
+
+    // Stop the render loop while the ocean is off-screen.
+    useEffect(() => {
+        const el = wrapperRef.current;
+        if (!el) return undefined;
+        const io = new IntersectionObserver(([entry]) => setInView(entry.isIntersecting));
+        io.observe(el);
+        return () => io.disconnect();
+    }, []);
 
     const lightColorRgba = useMemo(() => hexToRgba(sphereColor, 0.5), [sphereColor]);
 
     return (
         <div
-            className="relative w-screen h-[60vh] lg:h-[80vh] overflow-hidden"
+            ref={wrapperRef}
+            className={`relative isolate w-full h-[60vh] lg:h-[80vh] overflow-hidden ${className}`}
             style={{
                 background: `linear-gradient(to bottom, ${bgColor1}, ${bgColor2})`
             }}
         >
             {/* Sunlight Effect: Now uses the sphereColor prop */}
             <div
-                className="absolute -top-10 left-0 w-full h-1/2 z-[999]"
+                className="absolute -top-10 left-0 w-full h-1/2 z-10"
                 style={{
                     background: `radial-gradient(circle at top center, ${lightColorRgba} 0%, transparent 90%)`,
                     filter: 'blur(40px)',
@@ -130,6 +143,9 @@ const LuminousParticleOcean = ({
 
             <Canvas
                 camera={{ position: [0, 60, 150], fov: 55 }}
+                dpr={[1, 1.5]}
+                frameloop={inView ? "always" : "never"}
+                gl={{ powerPreference: "high-performance", antialias: false }}
             >
                 {/* Sunlight: Also uses the sphereColor prop */}
                 <pointLight

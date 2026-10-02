@@ -70,7 +70,8 @@ const App = () => <NavDropDown navData={navigationData} />;
 export default App;`;
 
 const props = [
-    { prop: 'navData', type: 'array', def: '[...]', desc: 'Menu items: label, href, and an optional type ("services", "products", "links") with a submenu.' },
+    { prop: 'navData', type: 'array', def: '[]', desc: 'Menu items: label, href, and an optional type ("services", "products", "links") with a submenu.' },
+    { prop: 'fixed', type: 'boolean', def: 'false', desc: 'Pin the menu to the top centre of the viewport.' },
 ];
 
 const dependencies = [

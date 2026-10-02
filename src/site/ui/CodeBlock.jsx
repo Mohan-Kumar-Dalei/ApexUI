@@ -39,7 +39,7 @@ export function CopyButton({ text, className = '' }) {
             aria-label={copied ? 'Copied' : 'Copy code'}
             className={`inline-flex h-7 w-7 items-center justify-center rounded-md text-zinc-400 transition hover:bg-white/10 hover:text-zinc-100 ${className}`}
         >
-            {copied ? <Check className="h-3.5 w-3.5 text-lime-300" /> : <Copy className="h-3.5 w-3.5" />}
+            {copied ? <Check className="h-3.5 w-3.5 text-[var(--lime)]" /> : <Copy className="h-3.5 w-3.5" />}
         </button>
     );
 }
@@ -51,7 +51,7 @@ export function CopyButton({ text, className = '' }) {
 export default function CodeBlock({ code, language = 'jsx', title, className = '' }) {
     const text = code.trim();
     return (
-        <div className={`group relative overflow-hidden rounded-xl border border-[var(--code-border)] bg-[var(--code-bg)] ${className}`}>
+        <div className={`group relative overflow-hidden rounded-xl border border-[var(--code-line)] bg-[var(--code-bg)] ${className}`}>
             {title ? (
                 <div className="flex items-center justify-between border-b border-white/[0.06] px-4 py-2">
                     <span className="font-mono text-xs text-zinc-400">{title}</span>
@@ -60,12 +60,12 @@ export default function CodeBlock({ code, language = 'jsx', title, className = '
             ) : (
                 <CopyButton text={text} className="absolute right-2.5 top-2.5 z-10 opacity-70 group-hover:opacity-100" />
             )}
-            <div className="thin-scroll overflow-x-auto px-4 py-3.5 pr-12 text-[13px] leading-6">
+            <div className="thin-scroll overflow-x-auto px-4 py-3.5 pr-12 text-[0.8rem] leading-6">
                 <SyntaxHighlighter
                     language={language === 'text' ? 'bash' : language}
                     style={codeTheme}
                     customStyle={{ background: 'transparent', margin: 0, padding: 0, fontSize: 'inherit', lineHeight: 'inherit' }}
-                    codeTagProps={{ style: { fontFamily: '"Geist Mono", ui-monospace, monospace' } }}
+                    codeTagProps={{ style: { fontFamily: 'var(--font-mono)' } }}
                 >
                     {text}
                 </SyntaxHighlighter>
@@ -77,7 +77,7 @@ export default function CodeBlock({ code, language = 'jsx', title, className = '
 /* One-line terminal command with a `$` prompt and copy button. */
 export function CommandLine({ command, className = '' }) {
     return (
-        <div className={`flex items-center gap-3 rounded-xl border border-[var(--code-border)] bg-[var(--code-bg)] py-2.5 pl-4 pr-2 font-mono text-[13px] text-zinc-200 ${className}`}>
+        <div className={`flex items-center gap-3 rounded-xl border border-[var(--code-line)] bg-[var(--code-bg)] py-2.5 pl-4 pr-2 font-mono text-[0.8rem] text-zinc-200 ${className}`}>
             <span className="select-none text-zinc-500">$</span>
             <span className="thin-scroll flex-1 overflow-x-auto whitespace-nowrap">{command}</span>
             <CopyButton text={command} />

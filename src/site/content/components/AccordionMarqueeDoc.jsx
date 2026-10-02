@@ -17,6 +17,7 @@ export default App;`;
 const props = [
     { prop: 'bgColor', type: 'string', def: "'#bbf451'", desc: 'Background color of the marquee.' },
     { prop: 'textColor', type: 'string', def: "'#27272a'", desc: 'Text color of the marquee.' },
+    { prop: 'items', type: 'array', def: '4 sample rows', desc: 'Rows to show, each with a title and the marquee text.' },
 ];
 
 const dependencies = [

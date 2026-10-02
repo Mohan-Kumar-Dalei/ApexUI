@@ -16,9 +16,10 @@ const App = () => (
 export default App;`;
 
 const props = [
-    { prop: 'GlowColor', type: 'string', def: "'violet'", desc: 'Color of the glow around the form.' },
+    { prop: 'GlowColor', type: 'string', def: "'violet'", desc: 'Color of the glow that follows the pointer (alias: glowColor).' },
     { prop: 'borderGlowColor', type: 'string', def: "'#a78bfa88'", desc: 'Color of the focused field border.' },
     { prop: 'borderGlowShadow', type: 'string', def: "'#a78bfa33'", desc: 'Shadow color of the focused field border.' },
+    { prop: 'onSubmit', type: '(values) => void', def: '—', desc: 'Called with the field values when a valid form is submitted.' },
 ];
 
 const dependencies = [

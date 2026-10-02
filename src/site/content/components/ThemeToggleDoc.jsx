@@ -1,5 +1,4 @@
-import ComponentDoc from '../../docs/ComponentDoc.jsx';
-import { DocSection } from '../../docs/DocShell.jsx';
+import ComponentDoc, { DocSection } from '../../docs/ComponentDoc.jsx';
 import CodeBlock from '../../ui/CodeBlock.jsx';
 import ThemeToggle from '../../../components/MainUI/ApexUI-Kit/ThemeToggle/ThemeToggle.jsx';
 
@@ -103,7 +102,6 @@ export default function ThemeToggleDoc() {
             cli="theme-toggle"
             props={props}
             dependencies={dependencies}
-            extraToc={[{ id: 'setup', label: 'Setup' }]}
             extra={
                 <DocSection id="setup" title="Setup" description="Add your own themes and reveal animations.">
                     <div className="space-y-4">

@@ -1,74 +1,77 @@
 /*
- * ApexUI site design tokens.
- * Every site surface reads from these variables, so a theme only has to
- * redefine this list. The library components in ApexUI-Kit do not depend on it.
+ * ApexUI "Studio" design tokens.
+ * The site is a framed app: an outer frame, a rounded window, a dock and
+ * panels. Every surface reads from these variables.
  */
 
 :root,
 .theme-dark {
   color-scheme: dark;
 
-  --bg: #09090b;
-  --bg-subtle: #0c0c0f;
-  --surface: #111114;
-  --surface-2: #18181b;
-  --surface-3: #232328;
-  --border: rgba(255, 255, 255, 0.08);
-  --border-strong: rgba(255, 255, 255, 0.14);
+  --frame: #050505;
+  --bg: #0c0c0b;
+  --panel: #111110;
+  --panel-2: #171715;
+  --panel-3: #22221f;
+  --line: rgba(255, 255, 235, 0.07);
+  --line-strong: rgba(255, 255, 235, 0.14);
 
-  --fg: #fafafa;
-  --fg-muted: #a1a1aa;
-  --fg-subtle: #71717a;
+  --ink: #f3f3ec;
+  --ink-2: #a5a59b;
+  --ink-3: #6c6c64;
 
-  --accent: #a3e635;
-  --accent-fg: #0a0a0a;
-  --accent-text: #bef264;
-  --accent-soft: rgba(163, 230, 53, 0.1);
-  --ring: rgba(163, 230, 53, 0.45);
+  /* Brand lime, taken from the ApexUI logo. */
+  --lime: #b5ef3a;
+  --lime-ink: #0b1002;
+  --lime-text: #c6f56a;
+  --lime-soft: rgba(181, 239, 58, 0.11);
+  --lime-line: rgba(181, 239, 58, 0.32);
+  --ring: rgba(181, 239, 58, 0.5);
 
-  --code-bg: #0b0b0e;
-  --code-border: rgba(255, 255, 255, 0.08);
-  --preview-bg: #0b0b0e;
-  --grid-line: rgba(255, 255, 255, 0.045);
-  --glow: rgba(163, 230, 53, 0.14);
-  --shadow: 0 1px 2px rgba(0, 0, 0, 0.4), 0 12px 40px -12px rgba(0, 0, 0, 0.6);
+  --stage: #0a0a0a;
+  --code-bg: #0a0a09;
+  --code-line: rgba(255, 255, 235, 0.08);
+  --grid-line: rgba(255, 255, 235, 0.045);
+  --dot: rgba(255, 255, 235, 0.08);
+  --glow: rgba(181, 239, 58, 0.16);
+  --shadow: 0 1px 0 rgba(255, 255, 255, 0.03) inset, 0 20px 50px -20px rgba(0, 0, 0, 0.7);
 
-  --syntax-string: #bef264;
-  --syntax-type: #7dd3fc;
-  --syntax-value: #6ee7b7;
+  --syntax-type: #8bd3ff;
+  --syntax-value: #f5c37a;
 }
 
 .theme-light {
   color-scheme: light;
 
-  --bg: #ffffff;
-  --bg-subtle: #fafafa;
-  --surface: #ffffff;
-  --surface-2: #f4f4f5;
-  --surface-3: #e4e4e7;
-  --border: #e4e4e7;
-  --border-strong: #d4d4d8;
+  --frame: #dcdad1;
+  --bg: #f5f4ef;
+  --panel: #fbfaf7;
+  --panel-2: #eeede6;
+  --panel-3: #e2e0d7;
+  --line: rgba(24, 24, 12, 0.09);
+  --line-strong: rgba(24, 24, 12, 0.16);
 
-  --fg: #09090b;
-  --fg-muted: #52525b;
-  --fg-subtle: #a1a1aa;
+  --ink: #141412;
+  --ink-2: #57564f;
+  --ink-3: #8e8d84;
 
-  --accent: #84cc16;
-  --accent-fg: #0a0a0a;
-  --accent-text: #4d7c0f;
-  --accent-soft: rgba(132, 204, 22, 0.12);
-  --ring: rgba(101, 163, 13, 0.4);
+  --lime: #a6e22a;
+  --lime-ink: #0b1002;
+  --lime-text: #4b6b00;
+  --lime-soft: rgba(132, 190, 20, 0.14);
+  --lime-line: rgba(100, 150, 0, 0.35);
+  --ring: rgba(100, 150, 0, 0.45);
 
-  --code-bg: #0b0b0e;
-  --code-border: #18181b;
-  --preview-bg: #0b0b0e;
-  --grid-line: rgba(9, 9, 11, 0.05);
-  --glow: rgba(132, 204, 22, 0.16);
-  --shadow: 0 1px 2px rgba(9, 9, 11, 0.04), 0 12px 40px -12px rgba(9, 9, 11, 0.12);
+  --stage: #0d0d0c;
+  --code-bg: #10100e;
+  --code-line: #1d1d1a;
+  --grid-line: rgba(24, 24, 12, 0.06);
+  --dot: rgba(24, 24, 12, 0.12);
+  --glow: rgba(150, 210, 30, 0.22);
+  --shadow: 0 1px 0 rgba(255, 255, 255, 0.6) inset, 0 20px 50px -24px rgba(40, 40, 20, 0.25);
 
-  --syntax-string: #4d7c0f;
-  --syntax-type: #0369a1;
-  --syntax-value: #047857;
+  --syntax-type: #0b6aa8;
+  --syntax-value: #9a5b00;
 }
 
 /* Older variable names that live demos and library components still read. */
@@ -76,53 +79,80 @@
 .theme-dark,
 .theme-light {
   --color-bg: var(--bg);
-  --color-text: var(--fg);
-  --color-border: var(--border);
-  --color-hover-text: var(--fg);
-  --color-pages-bg: var(--surface-2);
-  --color-pages-border: var(--border);
-  --color-pages-divider: var(--border);
-  --color-pages-side-hover: var(--fg);
-  --color-pages-side-text2: var(--fg);
-  --color-pages-side-active-text: var(--accent-text);
+  --color-text: var(--ink);
+  --color-border: var(--line);
+  --color-hover-text: var(--ink);
+  --color-pages-bg: var(--panel-2);
+  --color-pages-border: var(--line);
+  --color-pages-divider: var(--line);
+  --color-pages-side-hover: var(--ink);
+  --color-pages-side-text2: var(--ink);
+  --color-pages-side-active-text: var(--lime-text);
   --color-pages-side-active-text2: var(--syntax-type);
   --color-pages-side-active-text3: var(--syntax-value);
-  --color-pages-side-active-text4: var(--fg);
-  --color-pages-side-active-text6: var(--fg);
-  --color-pages-side-active-hover: var(--accent);
-  --color-pages-props-text: var(--fg-muted);
-  --color-pages-props-text2: var(--fg);
-  --color-pages-props-text3: var(--fg-subtle);
-  --color-pages-props-sub-text: var(--fg-muted);
-  --color-pages-props-heading-text: var(--fg);
-  --color-pages-props-heading-text2: var(--fg);
-  --selection-bg: var(--accent);
-  --selection-text: var(--accent-fg);
+  --color-pages-side-active-text4: var(--ink);
+  --color-pages-side-active-text6: var(--ink);
+  --color-pages-side-active-hover: var(--lime);
+  --color-pages-props-text: var(--ink-2);
+  --color-pages-props-text2: var(--ink);
+  --color-pages-props-text3: var(--ink-3);
+  --color-pages-props-sub-text: var(--ink-2);
+  --color-pages-props-heading-text: var(--ink);
+  --color-pages-props-heading-text2: var(--ink);
+  --selection-bg: var(--lime);
+  --selection-text: var(--lime-ink);
 
   --vt-duration: 1.2s;
   --vt-ease: ease-in-out;
+
+  --font-display: "Bricolage Grotesque", "Inter", ui-sans-serif, system-ui, sans-serif;
+  --font-serif: "Instrument Serif", ui-serif, Georgia, serif;
+  --font-body: "Inter", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+
+  --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
 }
 
+/*
+ * Fluid root size: every rem-based measure (spacing, type, panels) grows
+ * from 15px on phones to 18px on 27" / 1440p+ displays, so large screens
+ * are filled instead of showing a small centred column.
+ */
 html {
-  font-family: "Geist", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+  font-size: clamp(15px, 0.25vw + 12px, 18px);
+  font-family: var(--font-body);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-rendering: optimizeLegibility;
+  scroll-padding-top: 5rem;
 }
 
 body {
   margin: 0;
-  min-height: 100vh;
+  min-height: 100dvh;
   overflow-x: hidden;
-  background: var(--bg);
-  color: var(--fg);
+  background: var(--frame);
+  color: var(--ink);
+  font-feature-settings: "cv11", "ss01";
 }
 
 code,
 kbd,
 pre,
 .font-mono {
-  font-family: "Geist Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-family: var(--font-mono);
+}
+
+.font-display {
+  font-family: var(--font-display);
+  letter-spacing: -0.035em;
+}
+
+.font-serif-italic {
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-weight: 400;
+  letter-spacing: -0.01em;
 }
 
 ::selection {
@@ -135,35 +165,124 @@ pre,
   outline-offset: 2px;
 }
 
-/* Thin, quiet scrollbars for the docs panes. */
 .thin-scroll {
   scrollbar-width: thin;
-  scrollbar-color: var(--surface-3) transparent;
+  scrollbar-color: var(--panel-3) transparent;
 }
 .thin-scroll::-webkit-scrollbar {
   width: 8px;
   height: 8px;
 }
 .thin-scroll::-webkit-scrollbar-thumb {
-  background: var(--surface-3);
+  background: var(--panel-3);
   border-radius: 999px;
   border: 2px solid transparent;
   background-clip: padding-box;
 }
 
-/* Faint grid used behind hero and preview canvases. */
 .bg-grid {
   background-image:
     linear-gradient(var(--grid-line) 1px, transparent 1px),
     linear-gradient(90deg, var(--grid-line) 1px, transparent 1px);
-  background-size: 48px 48px;
+  background-size: 3.5rem 3.5rem;
 }
 .bg-dots {
+  background-image: radial-gradient(var(--dot) 1px, transparent 1px);
+  background-size: 1.25rem 1.25rem;
+}
+.stage-dots {
   background-image: radial-gradient(rgba(255, 255, 255, 0.07) 1px, transparent 1px);
-  background-size: 18px 18px;
+  background-size: 1.25rem 1.25rem;
+}
+.stage-grid {
+  background-image:
+    linear-gradient(rgba(255, 255, 255, 0.045) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.045) 1px, transparent 1px);
+  background-size: 2.5rem 2.5rem;
 }
 
-/* Theme toggle view-transition (animation CSS is injected by ThemeToggle). */
+/* Corner tick marks used on framed panels. */
+.ticks {
+  position: relative;
+}
+.ticks::before,
+.ticks::after {
+  content: "";
+  position: absolute;
+  width: 0.6rem;
+  height: 0.6rem;
+  pointer-events: none;
+  border-color: var(--lime-line);
+}
+.ticks::before {
+  top: -1px;
+  left: -1px;
+  border-top: 1px solid;
+  border-left: 1px solid;
+}
+.ticks::after {
+  bottom: -1px;
+  right: -1px;
+  border-bottom: 1px solid;
+  border-right: 1px solid;
+}
+
+/* Infinite ticker used on the home page. */
+@keyframes apex-ticker {
+  to {
+    transform: translateX(-50%);
+  }
+}
+.ticker-track {
+  animation: apex-ticker 60s linear infinite;
+}
+.ticker:hover .ticker-track {
+  animation-play-state: paused;
+}
+
+@keyframes apex-progress {
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(250%);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ticker-track {
+    animation: none;
+  }
+}
+
+/* Used by the BeamBar component's demo. */
+@keyframes glow {
+  0% {
+    filter: blur(100px) brightness(1);
+    opacity: 0.8;
+  }
+  100% {
+    filter: blur(100px) brightness(1.3);
+    opacity: 1;
+  }
+}
+
 ::view-transition-group(root) {
   animation-timing-function: var(--vt-ease);
+}
+
+/* App frame geometry: no gap on small screens, a thin bezel from lg up. */
+:root {
+  --pad: 0px;
+}
+@media (min-width: 1024px) {
+  :root {
+    --pad: 0.6rem;
+  }
+}
+.h-shell {
+  height: calc(100dvh - 2 * var(--pad));
+}
+.min-h-shell {
+  min-height: calc(100dvh - 2 * var(--pad));
 }

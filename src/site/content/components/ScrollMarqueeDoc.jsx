@@ -24,7 +24,7 @@ const props = [
     { prop: 'speed', type: 'number', def: '50', desc: 'Base speed of the marquee.' },
     { prop: 'direction', type: 'string', def: 'undefined', desc: 'Global direction for all lines.' },
     { prop: 'repeat', type: 'number', def: '10', desc: 'Number of repeated text copies per line.' },
-    { prop: 'textStroke', type: 'boolean', def: 'false', desc: 'Enable text stroke on hover.' },
+    { prop: 'textStroke', type: 'boolean', def: 'true', desc: 'Outline the hovered word with textStrokeColor.' },
     { prop: 'textStrokeColor', type: 'string', def: "'#C27AFF'", desc: 'Color of the text stroke on hover.' },
     { prop: 'textFillColor', type: 'string', def: "'#1E2637'", desc: 'Fill color of the text on hover.' },
     { prop: 'textColor', type: 'string', def: "'#fff'", desc: 'Default text color.' },

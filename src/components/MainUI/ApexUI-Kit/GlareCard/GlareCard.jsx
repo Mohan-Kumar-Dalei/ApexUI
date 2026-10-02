@@ -1,14 +1,17 @@
-/* eslint-disable no-unused-vars */
+import React, { useEffect, useRef } from "react";
+import { motion, useMotionValue, useSpring, useMotionTemplate } from "framer-motion";
+import bgHexa from '/assets/bg-hexa.jpg';
 
 function cn(...classes) {
     return classes.filter(Boolean).join(" ");
 }
-import React, { useRef } from "react";
-import { motion, useMotionValue, useSpring, useMotionTemplate } from "framer-motion";
-import bgHexa from '/assets/bg-hexa.jpg'
-export default function GlareCardDemo() {
+
+// Default export: renders your children inside the card, or the ApexUI demo
+// content when no children are passed.
+export default function GlareCardDemo({ children, ...props }) {
+    if (children) return <GlareCard {...props}>{children}</GlareCard>;
     return (
-        <GlareCard className="flex flex-col items-center justify-center bg-gradient-to-br from-gray-900 via-slate-800 to-[#181825] p-8 border border-slate-800 shadow-2xl relative overflow-hidden group group-hover:scale-100 transition-transform duration-300 ease-in-out">
+        <GlareCard {...props} className="flex flex-col items-center justify-center bg-gradient-to-br from-gray-900 via-slate-800 to-[#181825] p-8 border border-slate-800 shadow-2xl relative overflow-hidden group group-hover:scale-100 transition-transform duration-300 ease-in-out">
             {/* Background Image */}
             <img
                 src={bgHexa}
@@ -31,6 +34,8 @@ export function GlareCard({
     foilSvg = `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100' width='26' height='26' fill='white'%3E%3Cpath d='M10 90 L40 10 L60 10 L90 90 L70 90 L62 70 H38 L30 90 Z M45 50 H55 L50 30 Z' fill='white'/%3E%3C/svg%3E")`
 }) {
     const refElement = useRef(null);
+    const enterTimer = useRef(null);
+    useEffect(() => () => clearTimeout(enterTimer.current), []);
     // Framer Motion values
     const glareX = useMotionValue(50);
     const glareY = useMotionValue(50);
@@ -103,18 +108,21 @@ export function GlareCard({
                 glareY.set(percentage.y);
             }}
             onPointerEnter={() => {
-                if (refElement.current) {
-                    setTimeout(() => {
-                        refElement.current?.style.setProperty("--duration", "0s");
-                    }, 300);
-                }
+                clearTimeout(enterTimer.current);
+                enterTimer.current = setTimeout(() => {
+                    refElement.current?.style.setProperty("--duration", "0s");
+                }, 300);
             }}
             onPointerLeave={() => {
-                if (refElement.current) {
-                    refElement.current.style.removeProperty("--duration");
-                    rX.set(0);
-                    rY.set(0);
-                }
+                // Cancel the pending "--duration: 0s" so the card eases back instead of snapping.
+                clearTimeout(enterTimer.current);
+                refElement.current?.style.removeProperty("--duration");
+                rX.set(0);
+                rY.set(0);
+                glareX.set(50);
+                glareY.set(50);
+                bgX.set(50);
+                bgY.set(50);
             }}
         >
             <div

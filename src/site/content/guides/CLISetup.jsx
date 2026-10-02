@@ -43,7 +43,7 @@ export default function CLISetup() {
         >
             <GuideSteps steps={steps} />
             <Callout>
-                Every component page lists its own <code className="rounded bg-[var(--surface-2)] px-1.5 py-0.5 font-mono text-[13px] text-[var(--fg)]">npx apex-ui-kit add …</code> command under <strong className="text-[var(--fg)]">Installation</strong>.
+                Every component page lists its own <code className="rounded bg-[var(--panel-2)] px-1.5 py-0.5 font-mono text-[13px] text-[var(--ink)]">npx apex-ui-kit add …</code> command under <strong className="text-[var(--ink)]">Installation</strong>.
             </Callout>
         </DocShell>
     );

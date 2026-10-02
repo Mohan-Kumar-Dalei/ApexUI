@@ -17,7 +17,9 @@ const props = [
     { prop: 'text', type: 'string', def: '"Hover Me"', desc: 'Text to display with the hover effect.' },
     { prop: 'effect', type: 'string', def: '"defaultReveal"', desc: 'Animation effect: "defaultReveal", "magnetic", "wave", "rubber", "jump", "rotate" or "party".' },
     { prop: 'effectColor', type: 'string', def: '"#C27AFF"', desc: 'Color of the hover effect.' },
-    { prop: 'fontSize', type: 'string | number', def: '"2rem"', desc: 'Font size of the text.' },
+    { prop: 'fontSize', type: 'string | number', def: '"2.5rem"', desc: 'Font size of the text.' },
+    { prop: 'textColor', type: 'string', def: '"#fff"', desc: 'Resting colour of the letters (use a dark colour on light backgrounds).' },
+    { prop: 'className', type: 'string', def: "''", desc: 'Classes for the wrapper.' },
 ];
 
 const dependencies = [

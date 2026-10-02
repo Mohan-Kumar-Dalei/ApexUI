@@ -1,4 +1,5 @@
-import React, { useRef, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
+import { motion, useMotionValue, useSpring, AnimatePresence } from "framer-motion";
 
 const defaultPeople = [
     { id: 1, name: "Captain America", job: "Leader of the Avengers", img: "/assets/captainamerica.png" },
@@ -16,75 +17,54 @@ const PointerFollower = ({
     badgeTextColor = "#212121",
     people = defaultPeople,
 }) => {
-    const containerRef = useRef(null);
-    const [pos, setPos] = useState({ x: 0, y: 0 });
+    const safePeople = Array.isArray(people) && people.length > 0 ? people : defaultPeople;
     const [hovered, setHovered] = useState(false);
     const [activeIndex, setActiveIndex] = useState(0);
 
-    // 🛠️ Auto cycle with sync fix
+    // Pointer position lives in motion values: moving the cursor no longer
+    // re-renders the component, and the badge trails slightly on a spring.
+    const x = useMotionValue(0);
+    const y = useMotionValue(0);
+    const badgeX = useSpring(x, { stiffness: 500, damping: 40, mass: 0.4 });
+    const badgeY = useSpring(y, { stiffness: 500, damping: 40, mass: 0.4 });
+
     useEffect(() => {
-        if (hovered) return;
+        if (hovered || safePeople.length < 2) return undefined;
+        const id = setInterval(() => setActiveIndex((prev) => (prev + 1) % safePeople.length), interval);
+        return () => clearInterval(id);
+    }, [hovered, interval, safePeople.length]);
 
-        const autoInterval = setInterval(() => {
-            setActiveIndex((prev) => {
-                if (!people || people.length === 0) return 0;
-                return (prev + 1) % people.length;
-            });
-        }, interval);
-
-        return () => clearInterval(autoInterval);
-    }, [hovered, interval, people]);
-
-    // 🖱️ Mouse tracking
     useEffect(() => {
-        const container = containerRef.current;
-        if (!container) return;
+        setActiveIndex((idx) => idx % safePeople.length);
+    }, [safePeople.length]);
 
-        const handleMove = (e) => {
-            const rect = container.getBoundingClientRect();
-            setPos({
-                x: e.clientX - rect.left,
-                y: e.clientY - rect.top,
-            });
+    const handleMove = (e) => {
+        const rect = e.currentTarget.getBoundingClientRect();
+        x.set(e.clientX - rect.left);
+        y.set(e.clientY - rect.top);
+        if (!hovered) {
+            badgeX.jump(e.clientX - rect.left);
+            badgeY.jump(e.clientY - rect.top);
             setHovered(true);
-        };
-
-        const handleLeave = () => {
-            setHovered(false);
-        };
-
-        container.addEventListener("pointermove", handleMove);
-        container.addEventListener("pointerleave", handleLeave);
-
-        return () => {
-            container.removeEventListener("pointermove", handleMove);
-            container.removeEventListener("pointerleave", handleLeave);
-        };
-    }, []);
-
-    // Guard against empty people array
-    const safePeople = Array.isArray(people) && people.length > 0 ? people : defaultPeople;
-    const person = safePeople[activeIndex % safePeople.length]; // ✅ SYNCED HERE
-
-    // If the provided people list changes, ensure activeIndex is valid
-    useEffect(() => {
-        if (!Array.isArray(people) || people.length === 0) {
-            setActiveIndex(0);
-            return;
         }
-        setActiveIndex((idx) => idx % people.length);
-    }, [people]);
+    };
+
+    const person = safePeople[activeIndex % safePeople.length];
 
     return (
-        <div className="relative w-full h-fit flex items-center justify-center">
-            <div ref={containerRef} className="absolute flex items-center justify-center w-64  h-66 cursor-none">
-                {/* 🔁 Image stack with auto fade */}
+        <div className="relative w-full flex items-center justify-center">
+            <div
+                className="relative flex items-center justify-center w-64 h-66 cursor-none touch-none"
+                onPointerMove={handleMove}
+                onPointerLeave={() => setHovered(false)}
+            >
                 {safePeople.map((p, i) => (
                     <img
-                        key={i}
+                        key={p.id ?? i}
                         src={p.img}
                         alt={p.name}
-                        className={`absolute w-full h-full object-cover rounded-xl transition-opacity duration-1000 ease-in-out border border-white/10`}
+                        draggable="false"
+                        className="absolute w-full h-full object-cover rounded-xl transition-opacity duration-700 ease-in-out border border-white/10"
                         style={{
                             transform: `translate(${i * -2}px, ${i * -2}px)`,
                             zIndex: safePeople.length - i,
@@ -92,55 +72,51 @@ const PointerFollower = ({
                         }}
                     />
                 ))}
-                {/* 🖱️ Custom SVG Cursor */}
-                {hovered && (
-                    <>
-                        <div
-                            className="absolute z-50"
-                            style={{
-                                left: pos.x,
-                                top: pos.y,
-                                transform: "translate(-50%, -50%)",
-                                pointerEvents: "none",
-                            }}
-                        >
-                            <svg
-                                xmlns="http://www.w3.org/2000/svg"
-                                width="28"
-                                height="28"
-                                viewBox="0 0 24 24"
-                            >
-                                <path
-                                    fill={cursorColor}
-                                    stroke="#000"
-                                    strokeWidth="1.8"
-                                    d="M5.5 3.21V20.8c0 .45.54.67.85.35l4.86-4.86a.5.5 0 0 1 .35-.15h6.87a.5.5 0 0 0 .35-.85L6.35 2.85a.5.5 0 0 0-.85.35Z"
-                                />
-                            </svg>
-                        </div>
 
-                        {/* 🎯 Job Passion Label */}
-                        <div
-                            className="absolute z-40"
-                            style={{
-                                left: pos.x + 24,
-                                top: pos.y + 36,
-                                transform: "translate(-50%, -50%)",
-                                pointerEvents: "none",
-                                color: badgeTextColor,
-                            }}
-                        >
-                            <div className="px-4 py-3 rounded-full text-[11px] overflow-hidden font-semibold shadow-[0_2px_8px_rgba(0,0,0,0.25)] border border-black/10" style={{ backgroundColor: badgeColor }}>
-                                <span className="text-[12px] font-medium tracking-wide whitespace-nowrap drop-shadow" style={{ color: badgeTextColor }}>
-                                    {person.name} — {person.job}
-                                </span>
-                            </div>
-                        </div>
-                    </>
-                )}
+                <AnimatePresence>
+                    {hovered && (
+                        <>
+                            <motion.div
+                                className="absolute left-0 top-0 z-50 pointer-events-none"
+                                style={{ x, y }}
+                                initial={{ opacity: 0, scale: 0.6 }}
+                                animate={{ opacity: 1, scale: 1 }}
+                                exit={{ opacity: 0, scale: 0.6 }}
+                                transition={{ duration: 0.15 }}
+                            >
+                                <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" className="-translate-x-1 -translate-y-1">
+                                    <path
+                                        fill={cursorColor}
+                                        stroke="#000"
+                                        strokeWidth="1.8"
+                                        d="M5.5 3.21V20.8c0 .45.54.67.85.35l4.86-4.86a.5.5 0 0 1 .35-.15h6.87a.5.5 0 0 0 .35-.85L6.35 2.85a.5.5 0 0 0-.85.35Z"
+                                    />
+                                </svg>
+                            </motion.div>
+
+                            <motion.div
+                                className="absolute left-0 top-0 z-40 pointer-events-none"
+                                style={{ x: badgeX, y: badgeY }}
+                                initial={{ opacity: 0 }}
+                                animate={{ opacity: 1 }}
+                                exit={{ opacity: 0 }}
+                                transition={{ duration: 0.15 }}
+                            >
+                                <div
+                                    className="translate-x-6 translate-y-7 px-4 py-2.5 rounded-full shadow-[0_2px_8px_rgba(0,0,0,0.25)] border border-black/10"
+                                    style={{ backgroundColor: badgeColor }}
+                                >
+                                    <span className="text-[12px] font-medium tracking-wide whitespace-nowrap" style={{ color: badgeTextColor }}>
+                                        {person.name} — {person.job}
+                                    </span>
+                                </div>
+                            </motion.div>
+                        </>
+                    )}
+                </AnimatePresence>
             </div>
         </div>
     );
-}
+};
 
 export default PointerFollower;

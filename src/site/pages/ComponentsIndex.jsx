@@ -1,94 +1,118 @@
-import { useMemo, useState } from 'react';
-import { Link } from 'react-router-dom';
-import { ArrowUpRight, Search } from 'lucide-react';
+import { useEffect, useMemo, useState } from 'react';
+import { useSearchParams } from 'react-router-dom';
+import { LayoutGrid, List, Search, X } from 'lucide-react';
 import { CATEGORIES, componentPages } from '../config/navigation.js';
-import { NewBadge } from '../layout/DocsSidebar.jsx';
+import { ComponentGrid, ComponentList } from '../ui/ComponentIndex.jsx';
+import { DocHero } from '../docs/parts.jsx';
+import { PAD_X } from '../docs/style.js';
+import SiteFooter from '../layout/SiteFooter.jsx';
 
-export function ComponentCard({ item }) {
-    return (
-        <Link
-            to={item.path}
-            className="group flex flex-col overflow-hidden rounded-xl border border-[var(--border)] bg-[var(--surface)] transition duration-300 hover:-translate-y-0.5 hover:border-[var(--border-strong)] hover:shadow-[var(--shadow)]"
-        >
-            <div className="relative aspect-[16/10] overflow-hidden border-b border-[var(--border)] bg-[var(--preview-bg)]">
-                <img
-                    src={item.image}
-                    alt={`${item.name} preview`}
-                    loading="lazy"
-                    decoding="async"
-                    className="h-full w-full object-cover transition duration-500 group-hover:scale-[1.03]"
-                />
-                <span className="absolute right-3 top-3 inline-flex h-7 w-7 items-center justify-center rounded-full bg-black/50 text-white opacity-0 backdrop-blur transition group-hover:opacity-100">
-                    <ArrowUpRight className="h-3.5 w-3.5" />
-                </span>
-            </div>
-            <div className="flex flex-1 flex-col gap-1.5 p-4">
-                <div className="flex items-center gap-2">
-                    <h3 className="text-sm font-medium text-[var(--fg)]">{item.name}</h3>
-                    {item.badge && <NewBadge>{item.badge}</NewBadge>}
-                    <span className="ml-auto text-[11px] text-[var(--fg-subtle)]">{item.category}</span>
-                </div>
-                <p className="line-clamp-2 text-sm leading-6 text-[var(--fg-muted)]">{item.summary}</p>
-            </div>
-        </Link>
-    );
-}
+const VIEW_KEY = 'apexui:index-view';
 
 export default function ComponentsIndex() {
-    const [category, setCategory] = useState('All');
-    const [query, setQuery] = useState('');
+    // Category and search live in the URL, so filtered views can be shared and survive reloads.
+    const [params, setParams] = useSearchParams();
+    const category = params.get('category') ?? 'All';
+    const query = params.get('q') ?? '';
+    const [view, setView] = useState(() => {
+        try {
+            return localStorage.getItem(VIEW_KEY) || 'grid';
+        } catch {
+            return 'grid';
+        }
+    });
+
+    useEffect(() => {
+        try {
+            localStorage.setItem(VIEW_KEY, view);
+        } catch {
+            /* ignore */
+        }
+    }, [view]);
+
+    const update = (key, value) => {
+        const next = new URLSearchParams(params);
+        if (!value || value === 'All') next.delete(key);
+        else next.set(key, value);
+        setParams(next, { replace: true, preventScrollReset: true });
+    };
 
     const items = useMemo(() => {
         const q = query.trim().toLowerCase();
         return componentPages.filter(
-            (c) =>
-                (category === 'All' || c.category === category) &&
-                (!q || c.name.toLowerCase().includes(q) || c.summary.toLowerCase().includes(q))
+            (c) => (category === 'All' || c.category === category) && (!q || c.name.toLowerCase().includes(q) || c.summary.toLowerCase().includes(q))
         );
     }, [category, query]);
 
+    const counts = useMemo(() => Object.fromEntries(CATEGORIES.map((c) => [c, componentPages.filter((p) => p.category === c).length])), []);
+
     const chip = (active) =>
-        `rounded-full border px-3 py-1 text-sm transition-colors ${active
-            ? 'border-[var(--fg)] bg-[var(--fg)] text-[var(--bg)]'
-            : 'border-[var(--border)] text-[var(--fg-muted)] hover:border-[var(--border-strong)] hover:text-[var(--fg)]'}`;
+        `inline-flex items-center gap-2 rounded-full border px-3.5 py-1.5 text-[0.84rem] transition-colors ${active
+            ? 'border-[var(--lime)] bg-[var(--lime)] text-[var(--lime-ink)]'
+            : 'border-[var(--line)] text-[var(--ink-2)] hover:border-[var(--line-strong)] hover:text-[var(--ink)]'}`;
 
     return (
-        <div className="mx-auto max-w-6xl">
-            <header className="max-w-2xl">
-                <p className="text-sm font-medium text-[var(--accent-text)]">Library</p>
-                <h1 className="mt-2 text-3xl font-semibold tracking-tight text-[var(--fg)] sm:text-4xl">Components</h1>
-                <p className="mt-3 text-[var(--fg-muted)]">
-                    {componentPages.length} animated, production-ready components. Preview them live, copy the code or add them with one CLI command.
-                </p>
-            </header>
+        <div>
+            <DocHero
+                meta={<><span>Library</span><span>· {componentPages.length} components</span><span>· {CATEGORIES.length} categories</span></>}
+                title="The Component Index"
+                description="Every ApexUI component with a live playground, props and a one-line install. Filter by category or search by name."
+            />
 
-            <div className="mt-8 flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
-                <div className="flex flex-wrap gap-2">
+            <div className={`${PAD_X} sticky top-[calc(var(--pad)+3.5rem)] z-20 flex flex-col gap-3 border-y border-[var(--line)] bg-[var(--bg)]/90 py-3 backdrop-blur-xl lg:flex-row lg:items-center`}>
+                <div className="thin-scroll -mx-1 flex gap-2 overflow-x-auto px-1">
                     {['All', ...CATEGORIES].map((c) => (
-                        <button key={c} type="button" onClick={() => setCategory(c)} className={chip(category === c)}>
+                        <button key={c} type="button" onClick={() => update('category', c)} className={chip(category === c)}>
                             {c}
+                            <span className="font-mono text-[0.68rem] opacity-60">{c === 'All' ? componentPages.length : counts[c]}</span>
                         </button>
                     ))}
                 </div>
-                <label className="relative block md:w-64">
-                    <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-[var(--fg-subtle)]" />
-                    <input
-                        value={query}
-                        onChange={(e) => setQuery(e.target.value)}
-                        placeholder="Filter components"
-                        className="h-9 w-full rounded-lg border border-[var(--border)] bg-[var(--surface)] pl-9 pr-3 text-sm text-[var(--fg)] placeholder:text-[var(--fg-subtle)] focus:border-[var(--border-strong)] focus:outline-none"
-                    />
-                </label>
+                <div className="flex items-center gap-2 lg:ml-auto">
+                    <label className="relative block flex-1 lg:w-72 lg:flex-none">
+                        <Search className="pointer-events-none absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-[var(--ink-3)]" />
+                        <input
+                            value={query}
+                            onChange={(e) => update('q', e.target.value)}
+                            placeholder="Search components"
+                            className="h-10 w-full rounded-full border border-[var(--line)] bg-[var(--panel)] pl-10 pr-9 text-sm text-[var(--ink)] placeholder:text-[var(--ink-3)] focus:border-[var(--lime-line)] focus:outline-none"
+                        />
+                        {query && (
+                            <button type="button" onClick={() => update('q', '')} aria-label="Clear search" className="absolute right-3 top-1/2 -translate-y-1/2 text-[var(--ink-3)] hover:text-[var(--ink)]">
+                                <X className="h-4 w-4" />
+                            </button>
+                        )}
+                    </label>
+                    <div className="inline-flex rounded-full border border-[var(--line)] bg-[var(--panel)] p-0.5" role="group" aria-label="View">
+                        {[['grid', LayoutGrid], ['list', List]].map(([v, Icon]) => (
+                            <button
+                                key={v}
+                                type="button"
+                                onClick={() => setView(v)}
+                                aria-pressed={view === v}
+                                aria-label={`${v} view`}
+                                className={`inline-flex h-9 w-9 items-center justify-center rounded-full transition-colors ${view === v ? 'bg-[var(--lime)] text-[var(--lime-ink)]' : 'text-[var(--ink-3)] hover:text-[var(--ink)]'}`}
+                            >
+                                <Icon className="h-4 w-4" />
+                            </button>
+                        ))}
+                    </div>
+                </div>
             </div>
 
-            <div className="mt-8 grid gap-5 sm:grid-cols-2 xl:grid-cols-3">
-                {items.map((item) => (
-                    <ComponentCard key={item.path} item={item} />
-                ))}
+            <div className={`${PAD_X} py-[clamp(1.5rem,3vw,3rem)]`}>
+                {items.length === 0 ? (
+                    <div className="py-24 text-center">
+                        <p className="font-display text-2xl text-[var(--ink)]">Nothing found.</p>
+                        <p className="mt-2 text-sm text-[var(--ink-2)]">Try another name or clear the filters.</p>
+                    </div>
+                ) : view === 'grid' ? (
+                    <ComponentGrid items={items} />
+                ) : (
+                    <ComponentList items={items} />
+                )}
             </div>
-            {items.length === 0 && (
-                <p className="py-20 text-center text-sm text-[var(--fg-subtle)]">No components match your filters.</p>
-            )}
+            <SiteFooter />
         </div>
     );
 }

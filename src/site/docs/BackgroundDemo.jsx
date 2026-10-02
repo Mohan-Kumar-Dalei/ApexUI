@@ -5,7 +5,7 @@ import { motion } from 'framer-motion';
  * Wraps a full-bleed background component with sample page content and a
  * "Demo UI" switch, so visitors can see the effect with and without content.
  */
-export default function BackgroundDemo({ title, subtitle = 'A beautiful animated background for your UI.', children, height = 'h-[560px]' }) {
+export default function BackgroundDemo({ title, subtitle = 'A beautiful animated background for your UI.', children, height = 'self-stretch min-h-[clamp(26rem,64vh,60rem)]' }) {
     const [showDemo, setShowDemo] = useState(true);
     return (
         <div className={`relative flex w-full items-center justify-center overflow-hidden ${height}`}>

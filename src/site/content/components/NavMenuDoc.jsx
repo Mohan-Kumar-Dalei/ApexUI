@@ -8,8 +8,8 @@ const props = [
     { prop: 'backgroundColor', type: 'string', def: '"#1f1f1f"', desc: 'Background of the navbar.' },
     { prop: 'activeColor', type: 'string', def: '"#ffffff"', desc: 'Color of the active nav item.' },
     { prop: 'indicatorAnimation', type: "'elastic' | 'spring' | 'power'", def: '"elastic"', desc: 'Animation style of the indicator.' },
-    { prop: 'shrinkOnScroll', type: 'boolean', def: 'false', desc: 'Shrinks the navbar on scroll when true.' },
-    { prop: 'position', type: 'string', def: '"fixed"', desc: 'CSS position of the navbar.' },
+    { prop: 'items', type: 'string[]', def: "['Home', 'Docs', 'UI Kit', 'Contact']", desc: 'Labels of the nav items.' },
+    { prop: 'onNavItemClick', type: '(label, index) => void', def: '—', desc: 'Called when an item is selected (desktop and mobile).' },
 ];
 
 const dependencies = [

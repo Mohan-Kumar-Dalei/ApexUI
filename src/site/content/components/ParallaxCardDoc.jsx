@@ -36,11 +36,11 @@ const App = () => (
 export default App;`;
 
 const props = [
-    { prop: 'cardData', type: 'array', def: '[]', desc: 'Cards to render. Each item has title, subtitle, imageUrl, description and link.' },
-    { prop: 'tiltEnable', type: 'boolean', def: '—', desc: 'Enables the 3D tilt on hover.' },
-    { prop: 'glareEnable', type: 'boolean', def: '—', desc: 'Enables the glare highlight on hover.' },
-    { prop: 'perspective', type: 'number', def: '—', desc: 'CSS perspective used for the tilt, in px.' },
-    { prop: 'scale', type: 'number', def: '—', desc: 'Scale applied while hovering.' },
+    { prop: 'cardData', type: 'array', def: '[]', desc: 'Cards to render. Each item has title, subtitle, imageUrl, description, link and an optional buttonText.' },
+    { prop: 'tiltEnable', type: 'boolean', def: 'true', desc: 'Enables the 3D tilt on hover.' },
+    { prop: 'glareEnable', type: 'boolean', def: 'true', desc: 'Enables the glare highlight that follows the pointer.' },
+    { prop: 'perspective', type: 'number', def: '1000', desc: 'Perspective used for the tilt, in px.' },
+    { prop: 'scale', type: 'number', def: '1.05', desc: 'Scale applied while hovering.' },
 ];
 
 const dependencies = [
