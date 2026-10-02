@@ -1,11 +1,11 @@
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { AnimatePresence, motion, useReducedMotion } from 'framer-motion';
-import { ArrowRight, ArrowUpRight } from 'lucide-react';
+import { ArrowRight, ArrowUpRight, Code2, Gauge, MonitorSmartphone, Palette, Sparkles, Terminal } from 'lucide-react';
 import SiteFooter from '../../layout/SiteFooter.jsx';
 import CodeBlock, { CommandLine } from '../../ui/CodeBlock.jsx';
-import { ComponentList } from '../../ui/ComponentIndex.jsx';
-import { CliChip, Meta } from '../../docs/parts.jsx';
+import useSiteTheme from '../../ui/useSiteTheme.js';
+import { CliChip } from '../../docs/parts.jsx';
 import { PAD_X } from '../../docs/style.js';
 import { CATEGORIES, componentPages, prefetch, SITE } from '../../config/navigation.js';
 import { FramerIcon, GsapIcon, ReactIcon, TailwindIcon } from './BrandIcons.jsx';
@@ -15,15 +15,16 @@ import ToolTip from '../../../components/MainUI/ApexUI-Kit/ToolTip/ToolTip.jsx';
 import CardStack from '../../../components/MainUI/ApexUI-Kit/CardStack/CardStack.jsx';
 import HoverText from '../../../components/MainUI/ApexUI-Kit/HoverText/HoverText.jsx';
 import Avatar from '../../../components/MainUI/ApexUI-Kit/Avatar/Avatar.jsx';
-import WaterDropReveal from '../../../components/MainUI/ApexUI-Kit/WaterDropReveal/WaterDropReveal.jsx';
 
 const ease = [0.22, 1, 0.36, 1];
 const reveal = {
     initial: { opacity: 0, y: 24 },
     whileInView: { opacity: 1, y: 0 },
     viewport: { once: true, margin: '-60px' },
-    transition: { duration: 0.8, ease },
+    transition: { duration: 0.7, ease },
 };
+
+const CONTAINER = `${PAD_X} mx-auto w-full max-w-[110rem]`;
 
 const people = [
     { id: 1, name: 'Captain America', designation: 'Leader of the Avengers', image: '/assets/captainamerica.png' },
@@ -38,6 +39,7 @@ const avatars = [
     { name: 'Spider Man', imageUrl: '/assets/spiderman.png', color: '#ec4899' },
     { name: 'HULK', imageUrl: '/assets/hulk.png', color: '#22c55e' },
     { name: 'Doc Strange', imageUrl: '/assets/doctorStrange.png', color: '#f97316' },
+    { name: 'Captain', imageUrl: '/assets/captainamerica.png', color: '#06b6d4' },
 ];
 
 const stackCards = [
@@ -48,16 +50,6 @@ const stackCards = [
 
 const byPath = (path) => componentPages.find((c) => c.path === path);
 
-const wall = [
-    { page: byPath('/components/glare-card'), className: 'xl:row-span-2', node: <GlareCard /> },
-    { page: byPath('/components/hyper-card'), className: 'xl:row-span-2', node: <HyperCard text="Apex UI is Lightning" LastText="Speed" SubText="Hover to jump to warp speed." starColor="#b5ef3a" glow /> },
-    { page: byPath('/components/tool-tip'), className: 'md:col-span-2', node: <ToolTip items={people} /> },
-    { page: byPath('/components/hover-text'), className: '', node: <HoverText text="Hover me" effect="wave" effectColor="#b5ef3a" fontSize="clamp(1.8rem, 3vw, 2.6rem)" /> },
-    { page: byPath('/components/avatar'), className: '', node: <Avatar users={avatars} /> },
-    { page: byPath('/components/card-stack'), className: 'md:col-span-2', node: <CardStack cards={stackCards} cycleInterval={3200} /> },
-    { page: byPath('/components/water-drop-reveal'), className: 'md:col-span-2', node: <WaterDropReveal text={'Hover to reveal\nthe water drop effect.'} animationSpeed={0.5} /> },
-];
-
 const stack = [
     { name: 'React', icon: ReactIcon, href: 'https://react.dev' },
     { name: 'Tailwind CSS', icon: TailwindIcon, href: 'https://tailwindcss.com' },
@@ -65,158 +57,135 @@ const stack = [
     { name: 'GSAP', icon: GsapIcon, href: 'https://gsap.com' },
 ];
 
-const principles = [
-    { title: 'Copy, don’t depend', body: 'The CLI writes the component into your project. No runtime package to update, no black box.' },
-    { title: 'Motion first', body: 'GSAP and Framer Motion, tuned for 60fps and paused when off-screen.' },
-    { title: 'Own every line', body: 'Plain React + Tailwind. Change a prop, a class or rewrite the whole thing.' },
-    { title: `${CATEGORIES.length} families`, body: `${CATEGORIES.join(', ')}.` },
-];
+/* Real components shown in the hero showcase; `render` gets the site theme. */
+const showcase = [
+    { slug: 'hyper-card', render: () => <HyperCard text="Apex UI is Lightning" LastText="Speed" SubText="Hover to jump to warp speed." starColor="#b5ef3a" glow /> },
+    { slug: 'glare-card', render: () => <GlareCard /> },
+    { slug: 'card-stack', render: () => <CardStack cards={stackCards} cycleInterval={3200} /> },
+    { slug: 'tool-tip', render: () => <ToolTip items={people} /> },
+    { slug: 'hover-text', render: (theme) => <HoverText key={theme} text="Hover me" effect="wave" effectColor="#84cc16" textColor={theme === 'light' ? '#09090b' : '#fff'} fontSize="clamp(2.2rem, 4vw, 3.6rem)" /> },
+    { slug: 'avatar', render: () => <Avatar users={avatars} /> },
+].map((s) => ({ ...s, page: byPath(`/components/${s.slug}`) }));
 
-/* Components the hero console installs and renders live, one after another. */
-const consoleItems = [
-    { slug: 'hyper-card', file: 'HyperCard/HyperCard.jsx', node: <HyperCard text="Apex UI is Lightning" LastText="Speed" SubText="Hover to jump to warp speed." starColor="#b5ef3a" glow /> },
-    { slug: 'glare-card', file: 'GlareCard/GlareCard.jsx', node: <GlareCard /> },
-    { slug: 'tool-tip', file: 'ToolTip/ToolTip.jsx', node: <ToolTip items={people} /> },
-    { slug: 'hover-text', file: 'HoverText/HoverText.jsx', node: <HoverText text="Hover me" effect="wave" effectColor="#b5ef3a" fontSize="clamp(2rem, 3.4vw, 3.2rem)" /> },
-    { slug: 'avatar', file: 'Avatar/Avatar.jsx', node: <Avatar users={avatars} /> },
-];
-const CYCLE_MS = 6500;
+const CYCLE_MS = 7000;
 
-/*
- * "Live console": types the CLI command for a component, logs the install,
- * then renders the real component underneath. Cycles on its own, pauses on
- * hover, and the tabs jump straight to a component.
- */
-function HeroConsole() {
-    const [index, setIndex] = useState(0);
-    const [typed, setTyped] = useState(0);
-    const [paused, setPaused] = useState(false);
+/* Types `npx apex-ui-kit add <slug>` whenever the slug changes. */
+function useTyped(text) {
     const reduce = useReducedMotion();
-    const item = consoleItems[index];
-    const command = `npx apex-ui-kit add ${item.slug}`;
-    const done = typed >= command.length;
-    const page = byPath(`/components/${item.slug}`);
-
-    // Type the command one character at a time (instantly with reduced motion).
+    const [count, setCount] = useState(text.length);
     useEffect(() => {
         if (reduce) {
-            setTyped(command.length);
+            setCount(text.length);
             return undefined;
         }
-        setTyped(0);
+        setCount(0);
         const id = setInterval(() => {
-            setTyped((n) => {
-                if (n >= command.length) {
+            setCount((n) => {
+                if (n >= text.length) {
                     clearInterval(id);
                     return n;
                 }
                 return n + 1;
             });
-        }, 38);
+        }, 28);
         return () => clearInterval(id);
-    }, [command, reduce]);
+    }, [text, reduce]);
+    return text.slice(0, count);
+}
 
-    // Move on to the next component once this one has been on screen for a while.
+/*
+ * Hero showcase: a component list on the left and a live, theme-aware stage
+ * on the right. Cycles on its own, pauses while the pointer is over it.
+ */
+function Showcase() {
+    const theme = useSiteTheme();
+    const [index, setIndex] = useState(0);
+    const [paused, setPaused] = useState(false);
+    const item = showcase[index];
+    const command = `npx apex-ui-kit add ${item.slug}`;
+    const typed = useTyped(command);
+
     useEffect(() => {
-        if (!done || paused) return undefined;
-        const id = setTimeout(() => setIndex((i) => (i + 1) % consoleItems.length), CYCLE_MS);
+        if (paused) return undefined;
+        const id = setTimeout(() => setIndex((i) => (i + 1) % showcase.length), CYCLE_MS);
         return () => clearTimeout(id);
-    }, [done, paused, index]);
+    }, [index, paused]);
 
     return (
         <motion.div
-            initial={{ opacity: 0, y: 30, scale: 0.97 }}
-            animate={{ opacity: 1, y: 0, scale: 1 }}
-            transition={{ duration: 1, ease, delay: 0.15 }}
+            initial={{ opacity: 0, y: 40 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 1, ease, delay: 0.35 }}
             className="relative"
             onPointerEnter={() => setPaused(true)}
             onPointerLeave={() => setPaused(false)}
         >
-            <div className="pointer-events-none absolute -inset-6 -z-10 rounded-[3rem] bg-[var(--glow)] blur-[80px]" />
-            <div className="overflow-hidden rounded-[1.6rem] border border-[var(--line-strong)] bg-[var(--panel)] shadow-[var(--shadow)]">
-                {/* Title bar with component tabs */}
-                <div className="flex items-center gap-3 border-b border-[var(--line)] px-4 py-3">
-                    <span className="relative flex h-2.5 w-2.5 shrink-0">
-                        <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-[var(--lime)] opacity-50" />
-                        <span className="relative inline-flex h-2.5 w-2.5 rounded-full bg-[var(--lime)]" />
-                    </span>
-                    <span className="hidden font-mono text-[0.7rem] uppercase tracking-[0.18em] text-[var(--ink-3)] sm:inline">apexui · live</span>
-                    <div className="thin-scroll -my-1 ml-auto flex gap-1 overflow-x-auto py-1" role="tablist" aria-label="Components">
-                        {consoleItems.map((c, i) => (
-                            <button
-                                key={c.slug}
-                                type="button"
-                                role="tab"
-                                aria-selected={i === index}
-                                onClick={() => setIndex(i)}
-                                className={`relative shrink-0 rounded-full px-3 py-1 font-mono text-[0.7rem] transition-colors ${i === index ? 'text-[var(--lime-ink)]' : 'text-[var(--ink-3)] hover:text-[var(--ink)]'}`}
-                            >
-                                {i === index && <motion.span layoutId="console-tab" className="absolute inset-0 rounded-full bg-[var(--lime)]" transition={{ type: 'spring', stiffness: 500, damping: 38 }} />}
-                                <span className="relative">{c.slug}</span>
-                            </button>
-                        ))}
+            <div className="pointer-events-none absolute -inset-x-10 -top-10 bottom-10 -z-10 rounded-[3rem] bg-[var(--glow)] blur-[90px]" />
+            <div className="grid grid-cols-1 overflow-hidden rounded-[1.75rem] border border-[var(--line-strong)] bg-[var(--panel)] shadow-[var(--shadow)] lg:grid-cols-[minmax(15rem,19rem)_minmax(0,1fr)]">
+                {/* Component list */}
+                <div className="min-w-0 border-b border-[var(--line)] lg:border-b-0 lg:border-r">
+                    <p className="hidden px-5 pb-2 pt-5 font-mono text-[0.68rem] uppercase tracking-[0.18em] text-[var(--ink-3)] lg:block">Live components</p>
+                    <div className="thin-scroll flex gap-1 overflow-x-auto p-2 lg:flex-col lg:overflow-visible lg:px-3 lg:pb-4 lg:pt-1" role="tablist" aria-label="Showcase">
+                        {showcase.map((s, i) => {
+                            const active = i === index;
+                            return (
+                                <button
+                                    key={s.slug}
+                                    type="button"
+                                    role="tab"
+                                    aria-selected={active}
+                                    onClick={() => setIndex(i)}
+                                    onMouseEnter={() => prefetch(s.page)}
+                                    className={`relative flex shrink-0 items-center gap-3 overflow-hidden rounded-xl px-3 py-2.5 text-left transition-colors ${active ? 'bg-[var(--panel-2)] text-[var(--ink)]' : 'text-[var(--ink-2)] hover:bg-[var(--panel-2)]/60 hover:text-[var(--ink)]'}`}
+                                >
+                                    <span className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-lg font-mono text-[0.68rem] ${active ? 'bg-[var(--lime)] text-[var(--lime-ink)]' : 'bg-[var(--panel-2)] text-[var(--ink-3)]'}`}>{s.page.num}</span>
+                                    <span className="min-w-0">
+                                        <span className="block truncate text-[0.9rem] font-medium">{s.page.name}</span>
+                                        <span className="hidden truncate text-[0.72rem] text-[var(--ink-3)] lg:block">{s.page.category}</span>
+                                    </span>
+                                    {active && (
+                                        <motion.span
+                                            key={`${index}-${paused}`}
+                                            aria-hidden="true"
+                                            className="absolute inset-x-3 bottom-0 h-[2px] origin-left rounded-full bg-[var(--lime)]"
+                                            initial={{ scaleX: 0 }}
+                                            animate={{ scaleX: paused ? 0 : 1 }}
+                                            transition={{ duration: paused ? 0.2 : CYCLE_MS / 1000, ease: 'linear' }}
+                                        />
+                                    )}
+                                </button>
+                            );
+                        })}
                     </div>
                 </div>
 
-                {/* Terminal */}
-                <div className="border-b border-[var(--line)] bg-[var(--code-bg)] px-5 py-4 font-mono text-[0.8rem] leading-6">
-                    <p className="text-[#f2f1ea]">
-                        <span className="text-[#b5ef3a]">$</span> {command.slice(0, typed)}
-                        {!done && <span className="ml-0.5 inline-block h-4 w-2 translate-y-0.5 animate-pulse bg-[var(--lime)]" />}
-                    </p>
-                    <AnimatePresence initial={false} mode="wait">
-                        {done && (
-                            <motion.div key={item.slug} initial={{ opacity: 0, y: 4 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }} transition={{ duration: 0.3 }} className="text-white/45">
-                                <p><span className="text-[#b5ef3a]">✓</span> resolved {item.slug}</p>
-                                <p className="truncate"><span className="text-[#b5ef3a]">✓</span> wrote src/ApexUI-Kit/{item.file}</p>
-                            </motion.div>
-                        )}
-                    </AnimatePresence>
-                    {!done && <div className="h-12" aria-hidden="true" />}
-                </div>
-
-                {/* Live preview of the real component */}
-                <div className="relative isolate flex h-[clamp(22rem,46vh,34rem)] items-center justify-center overflow-hidden bg-[var(--stage)] p-6 text-white">
-                    <div aria-hidden="true" className="stage-dots pointer-events-none absolute inset-0 -z-10" />
-                    <AnimatePresence mode="wait">
-                        {done ? (
+                {/* Stage */}
+                <div className="flex min-w-0 flex-col">
+                    <div className="flex items-center gap-3 border-b border-[var(--line)] px-4 py-3">
+                        <div className="flex min-w-0 flex-1 items-center gap-2 rounded-lg bg-[var(--panel-2)] px-3 py-2 font-mono text-[0.78rem] text-[var(--ink)]">
+                            <span className="text-[var(--lime-text)]">$</span>
+                            <span className="truncate">{typed}</span>
+                            <span className="inline-block h-4 w-[2px] animate-pulse bg-[var(--lime)]" />
+                        </div>
+                        <Link to={item.page.path} className="group hidden shrink-0 items-center gap-1.5 text-[0.82rem] font-medium text-[var(--ink-2)] transition-colors hover:text-[var(--ink)] sm:inline-flex">
+                            Open docs <ArrowUpRight className="h-4 w-4 transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5" />
+                        </Link>
+                    </div>
+                    <div className="relative isolate flex h-[clamp(26rem,50vh,38rem)] items-center justify-center overflow-hidden bg-[var(--stage)] p-4 text-[var(--stage-ink)] sm:p-6">
+                        <div aria-hidden="true" className="stage-dots pointer-events-none absolute inset-0 -z-10" />
+                        <AnimatePresence mode="wait">
                             <motion.div
                                 key={item.slug}
-                                initial={{ opacity: 0, scale: 0.94, filter: 'blur(6px)' }}
-                                animate={{ opacity: 1, scale: 1, filter: 'blur(0px)' }}
-                                exit={{ opacity: 0, scale: 0.97, filter: 'blur(4px)' }}
-                                transition={{ duration: 0.5, ease }}
-                                className="flex max-h-full w-full items-center justify-center"
+                                initial={{ opacity: 0, y: 16, scale: 0.97 }}
+                                animate={{ opacity: 1, y: 0, scale: 1 }}
+                                exit={{ opacity: 0, y: -10, scale: 0.98 }}
+                                transition={{ duration: 0.45, ease }}
+                                className="flex w-full items-center justify-center"
                             >
-                                {item.node}
+                                {item.render(theme)}
                             </motion.div>
-                        ) : (
-                            <motion.p key="installing" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="font-mono text-[0.72rem] uppercase tracking-[0.25em] text-white/35">
-                                installing…
-                            </motion.p>
-                        )}
-                    </AnimatePresence>
-                </div>
-
-                {/* Footer: cycle progress + link to the docs */}
-                <div className="relative flex items-center justify-between gap-3 px-5 py-3 text-[0.8rem]">
-                    <span className="font-mono text-[0.7rem] text-[var(--ink-3)]">
-                        {String(index + 1).padStart(2, '0')} / {String(consoleItems.length).padStart(2, '0')} · {page?.category}
-                    </span>
-                    {page && (
-                        <Link to={page.path} onMouseEnter={() => prefetch(page)} className="group inline-flex items-center gap-1.5 font-medium text-[var(--ink)] transition-colors hover:text-[var(--lime-text)]">
-                            Open {page.name}
-                            <ArrowUpRight className="h-4 w-4 transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5" />
-                        </Link>
-                    )}
-                    <motion.span
-                        key={`${index}-${done}-${paused}`}
-                        aria-hidden="true"
-                        className="absolute inset-x-0 top-0 h-px origin-left bg-[var(--lime)]"
-                        initial={{ scaleX: 0 }}
-                        animate={{ scaleX: done && !paused ? 1 : 0 }}
-                        transition={{ duration: done && !paused ? CYCLE_MS / 1000 : 0.2, ease: 'linear' }}
-                    />
+                        </AnimatePresence>
+                    </div>
                 </div>
             </div>
         </motion.div>
@@ -224,127 +193,100 @@ function HeroConsole() {
 }
 
 function Hero() {
+    const latest = componentPages.find((p) => p.badge) ?? componentPages[0];
     return (
-        <section className="relative isolate overflow-hidden border-b border-[var(--line)]">
-            <div className="bg-grid pointer-events-none absolute inset-0 -z-10 [mask-image:radial-gradient(ellipse_80%_70%_at_30%_30%,#000_35%,transparent_85%)]" />
-            <div className={`${PAD_X} grid items-center lg:min-h-[calc(100dvh-3.5rem-2*var(--pad))] gap-10 py-[clamp(2.5rem,6vw,6rem)] lg:grid-cols-[minmax(0,1.15fr)_minmax(0,1fr)]`}>
-                <div>
+        <section className="relative isolate overflow-hidden">
+            <div className="bg-grid pointer-events-none absolute inset-0 -z-10 [mask-image:radial-gradient(ellipse_70%_55%_at_50%_0%,#000_30%,transparent_80%)]" />
+            <div className="pointer-events-none absolute left-1/2 top-[-18rem] -z-10 h-[34rem] w-[min(70rem,90%)] -translate-x-1/2 rounded-full bg-[var(--glow)] blur-[110px]" />
+            <div className={`${CONTAINER} pb-[clamp(3rem,6vw,6rem)] pt-[clamp(3rem,7vw,7rem)]`}>
+                <div className="mx-auto flex max-w-[64rem] flex-col items-center text-center">
                     <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, ease }}>
-                        <Meta>
-                            <span>ApexUI {SITE.version}</span>
-                            <span>· React component library</span>
-                            <span>· Open source</span>
-                        </Meta>
+                        <Link
+                            to={latest.path}
+                            className="group inline-flex items-center gap-2 rounded-full border border-[var(--line-strong)] bg-[var(--panel)] py-1 pl-1 pr-3 text-[0.8rem] text-[var(--ink-2)] shadow-[var(--shadow)] transition-colors hover:border-[var(--lime-line)] hover:text-[var(--ink)]"
+                        >
+                            <span className="rounded-full bg-[var(--lime)] px-2 py-0.5 text-[0.7rem] font-semibold text-[var(--lime-ink)]">New</span>
+                            {latest.name} is here
+                            <ArrowRight className="h-3.5 w-3.5 transition-transform group-hover:translate-x-0.5" />
+                        </Link>
                     </motion.div>
-                    <h1 className="font-display mt-6 text-[clamp(3.2rem,7.6vw,9.5rem)] font-semibold leading-[0.88] text-[var(--ink)]">
-                        {['Interfaces', 'that'].map((w, i) => (
-                            <motion.span key={w} className="mr-[0.22em] inline-block" initial={{ opacity: 0, y: '0.4em' }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.9, delay: 0.08 + i * 0.08, ease }}>
-                                {w}
-                            </motion.span>
-                        ))}
-                        <br className="hidden sm:block" />
-                        <motion.span className="font-serif-italic inline-block font-normal text-[var(--lime-text)]" initial={{ opacity: 0, y: '0.4em' }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.9, delay: 0.26, ease }}>
-                            move.
-                        </motion.span>
-                    </h1>
-                    <motion.p initial={{ opacity: 0, y: 14 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8, delay: 0.35, ease }} className="mt-7 max-w-[46ch] text-[clamp(1.02rem,1.2vw,1.25rem)] leading-relaxed text-[var(--ink-2)]">
-                        {componentPages.length} animated, copy-paste React components built with Tailwind CSS, GSAP and Framer Motion. Add one with a single command and own every line.
+
+                    <motion.h1
+                        initial={{ opacity: 0, y: 18 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ duration: 0.9, delay: 0.08, ease }}
+                        className="font-display mt-7 max-w-[20ch] text-[clamp(2.3rem,4.8vw,5.8rem)] font-semibold leading-[1.02] tracking-[-0.045em] text-[var(--ink)] [text-wrap:balance]"
+                    >
+                        Animated React components for interfaces that <span className="text-accent">move.</span>
+                    </motion.h1>
+
+                    <motion.p
+                        initial={{ opacity: 0, y: 14 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ duration: 0.8, delay: 0.18, ease }}
+                        className="mt-6 max-w-[56ch] text-[clamp(1.02rem,1.25vw,1.3rem)] leading-relaxed text-[var(--ink-2)]"
+                    >
+                        {componentPages.length} copy-paste components built with Tailwind CSS, GSAP and Framer Motion. Add one with a single command — the code lands in your project, yours to change.
                     </motion.p>
-                    <motion.div initial={{ opacity: 0, y: 14 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8, delay: 0.45, ease }} className="mt-9 flex flex-wrap items-center gap-3">
-                        <Link to="/components" className="group inline-flex h-12 items-center gap-2 rounded-full bg-[var(--lime)] pl-6 pr-2 text-[0.95rem] font-semibold text-[var(--lime-ink)] transition hover:brightness-105">
-                            Explore components
+
+                    <motion.div
+                        initial={{ opacity: 0, y: 14 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ duration: 0.8, delay: 0.26, ease }}
+                        className="mt-9 flex flex-wrap items-center justify-center gap-3"
+                    >
+                        <Link to="/components" className="group inline-flex h-12 items-center gap-2 rounded-full bg-[var(--lime)] pl-6 pr-2 text-[0.95rem] font-semibold text-[var(--lime-ink)] shadow-[0_10px_30px_-10px_var(--lime)] transition hover:brightness-105">
+                            Browse components
                             <span className="inline-flex h-8 w-8 items-center justify-center rounded-full bg-[var(--lime-ink)] text-[var(--lime)] transition-transform duration-300 group-hover:translate-x-0.5">
                                 <ArrowRight className="h-4 w-4" />
                             </span>
                         </Link>
-                        <Link to="/components/docs/getting-started/introduction" className="inline-flex h-12 items-center rounded-full border border-[var(--line-strong)] px-6 text-[0.95rem] font-medium text-[var(--ink)] transition hover:bg-[var(--panel-2)]">
+                        <Link to="/components/docs/getting-started/introduction" className="inline-flex h-12 items-center rounded-full border border-[var(--line-strong)] bg-[var(--panel)] px-6 text-[0.95rem] font-medium text-[var(--ink)] transition hover:bg-[var(--panel-2)]">
                             Read the docs
                         </Link>
                     </motion.div>
-                    <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.8, delay: 0.6 }} className="mt-5">
+                    <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.8, delay: 0.34 }} className="mt-5">
                         <CliChip command="npx apex-ui-kit add hyper-card" />
                     </motion.div>
-                    <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.8, delay: 0.75 }} className="mt-12 flex flex-wrap items-center gap-x-7 gap-y-3">
-                        <span className="font-mono text-[0.68rem] uppercase tracking-[0.18em] text-[var(--ink-3)]">Built with</span>
-                        {stack.map(({ name, icon: Icon, href }) => (
-                            <a key={name} href={href} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 text-sm text-[var(--ink-3)] transition-colors hover:text-[var(--ink)]">
-                                <Icon className="h-5 w-5" />
-                                {name}
-                            </a>
-                        ))}
-                    </motion.div>
                 </div>
-                <HeroConsole />
+
+                <div className="mx-auto mt-[clamp(3rem,6vw,5.5rem)] max-w-[92rem]">
+                    <Showcase />
+                </div>
+
+                <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.8, delay: 0.6 }} className="mt-12 flex flex-wrap items-center justify-center gap-x-8 gap-y-3">
+                    <span className="font-mono text-[0.68rem] uppercase tracking-[0.18em] text-[var(--ink-3)]">Built with</span>
+                    {stack.map(({ name, icon: Icon, href }) => (
+                        <a key={name} href={href} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 text-sm text-[var(--ink-3)] transition-colors hover:text-[var(--ink)]">
+                            <Icon className="h-5 w-5" />
+                            {name}
+                        </a>
+                    ))}
+                </motion.div>
             </div>
         </section>
     );
 }
 
-function Ticker() {
-    const row = (
-        <div className="flex shrink-0 items-center">
-            {componentPages.map((c) => (
-                <span key={c.path} className="font-display flex items-center whitespace-nowrap px-6 text-[clamp(1.2rem,2vw,2rem)] font-semibold">
-                    {c.name}
-                    <span className="ml-12 text-[0.7em]">✦</span>
-                </span>
-            ))}
-        </div>
-    );
+function Stats() {
+    const stats = [
+        { value: componentPages.length, label: 'Animated components' },
+        { value: CATEGORIES.length, label: 'Component families' },
+        { value: 1, label: 'Command to add one' },
+        { value: 'MIT', label: 'Free and open source' },
+    ];
     return (
-        <div className="ticker overflow-hidden border-b border-[var(--line)] bg-[var(--lime)] py-4 text-[var(--lime-ink)]" aria-hidden="true">
-            <div className="ticker-track flex w-max">
-                {row}
-                {row}
-            </div>
-        </div>
-    );
-}
-
-function SectionHead({ index, label, children, aside }) {
-    return (
-        <motion.div {...reveal} className="mb-12 flex flex-col justify-between gap-6 lg:flex-row lg:items-end">
-            <div>
-                <Meta><span>{index}</span><span>· {label}</span></Meta>
-                <h2 className="font-display mt-4 text-[clamp(2.4rem,5vw,5.5rem)] font-semibold leading-[0.92] text-[var(--ink)]">{children}</h2>
-            </div>
-            {aside}
-        </motion.div>
-    );
-}
-
-function LiveWall() {
-    return (
-        <section className={`${PAD_X} py-[clamp(4rem,8vw,8rem)]`}>
-            <SectionHead
-                index="01"
-                label="Live wall"
-                aside={<p className="max-w-[40ch] text-[1.02rem] leading-relaxed text-[var(--ink-2)]">Every tile is the real component running in your browser. Hover, click and play — then open its page for props and code.</p>}
-            >
-                Live, not <span className="font-serif-italic font-normal text-[var(--lime-text)]">screenshots.</span>
-            </SectionHead>
-
-            <div className="grid auto-rows-[minmax(20rem,auto)] gap-[clamp(0.75rem,1.2vw,1.25rem)] md:grid-cols-2 xl:grid-cols-4">
-                {wall.map(({ page, className, node }, i) => (
+        <section className="border-y border-[var(--line)] bg-[var(--panel)]">
+            <div className={`${CONTAINER} grid grid-cols-2 lg:grid-cols-4`}>
+                {stats.map((s, i) => (
                     <motion.div
-                        key={page.path}
-                        initial={{ opacity: 0, y: 30 }}
-                        whileInView={{ opacity: 1, y: 0 }}
-                        viewport={{ once: true, margin: '-40px' }}
-                        transition={{ duration: 0.7, delay: (i % 4) * 0.06, ease }}
-                        className={`group relative flex min-h-[20rem] items-center justify-center overflow-hidden rounded-[1.25rem] border border-[var(--line)] bg-[var(--stage)] stage-dots p-6 pt-16 text-white [transform:translateZ(0)] ${className}`}
+                        key={s.label}
+                        {...reveal}
+                        transition={{ ...reveal.transition, delay: i * 0.06 }}
+                        className={`py-8 lg:py-10 ${i % 2 ? 'pl-6' : ''} ${i > 0 ? 'lg:border-l lg:border-[var(--line)] lg:pl-8' : ''} ${i === 1 ? 'border-l border-[var(--line)]' : ''} ${i === 3 ? 'border-l border-[var(--line)]' : ''} ${i > 1 ? 'border-t border-[var(--line)] lg:border-t-0' : ''}`}
                     >
-                        <Link
-                            to={page.path}
-                            onMouseEnter={() => prefetch(page)}
-                            className="absolute inset-x-3 top-3 z-20 flex items-center justify-between rounded-full border border-white/10 bg-black/40 py-1 pl-3 pr-1 text-[0.78rem] text-white/80 backdrop-blur transition-colors hover:border-[var(--lime-line)] hover:text-white"
-                        >
-                            <span className="truncate"><span className="mr-2 font-mono text-[0.68rem] text-white/45">No. {page.num}</span>{page.name}</span>
-                            <span className="inline-flex h-7 w-7 items-center justify-center rounded-full bg-white/10 transition-colors group-hover:bg-[var(--lime)] group-hover:text-[var(--lime-ink)]">
-                                <ArrowUpRight className="h-3.5 w-3.5" />
-                            </span>
-                        </Link>
-                        <div className="flex h-full w-full items-center justify-center">{node}</div>
+                        <p className="font-display text-[clamp(2rem,3.4vw,3.4rem)] font-semibold leading-none tracking-[-0.04em] text-[var(--ink)]">{s.value}</p>
+                        <p className="mt-2 text-[0.9rem] text-[var(--ink-3)]">{s.label}</p>
                     </motion.div>
                 ))}
             </div>
@@ -352,21 +294,102 @@ function LiveWall() {
     );
 }
 
-function IndexPreview() {
+function SectionHead({ eyebrow, title, children }) {
     return (
-        <section className={`${PAD_X} border-t border-[var(--line)] py-[clamp(4rem,8vw,8rem)]`}>
-            <SectionHead
-                index="02"
-                label="The index"
-                aside={
-                    <Link to="/components" className="group inline-flex h-12 items-center gap-2 self-start rounded-full border border-[var(--line-strong)] px-6 text-sm font-medium text-[var(--ink)] transition hover:border-[var(--lime)] hover:bg-[var(--lime)] hover:text-[var(--lime-ink)] lg:self-auto">
-                        View all {componentPages.length} <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
-                    </Link>
-                }
-            >
-                {componentPages.length} pieces, <span className="font-serif-italic font-normal text-[var(--lime-text)]">one kit.</span>
+        <motion.div {...reveal} className="mx-auto mb-12 max-w-[48rem] text-center">
+            <p className="font-mono text-[0.72rem] uppercase tracking-[0.2em] text-[var(--lime-text)]">{eyebrow}</p>
+            <h2 className="font-display mt-4 text-[clamp(2rem,4vw,3.8rem)] font-semibold leading-[1.05] tracking-[-0.04em] text-[var(--ink)]">{title}</h2>
+            {children && <p className="mx-auto mt-4 max-w-[52ch] text-[1.02rem] leading-relaxed text-[var(--ink-2)]">{children}</p>}
+        </motion.div>
+    );
+}
+
+const categoryCover = {
+    Backgrounds: '/components/lens-flare-background',
+    Cards: '/components/hyper-card',
+    'Text & Motion': '/components/accordion-marquee',
+    Navigation: '/components/nav-drop-down',
+    Interactive: '/components/carousel',
+};
+
+const categoryBlurb = {
+    Backgrounds: 'WebGL, canvas and CSS backdrops that bring a page to life.',
+    Cards: 'Tilt, glare, stacks and grids for content that wants attention.',
+    'Text & Motion': 'Marquees, hover effects and reveals for headlines.',
+    Navigation: 'Menus and dropdowns with smooth animated indicators.',
+    Interactive: 'Carousels, tooltips, avatars and playful details.',
+};
+
+function Families() {
+    const groups = CATEGORIES.map((category) => {
+        const items = componentPages.filter((p) => p.category === category);
+        return { category, items, cover: byPath(categoryCover[category]) ?? items[0] };
+    });
+    return (
+        <section className={`${CONTAINER} py-[clamp(4rem,8vw,8rem)]`}>
+            <SectionHead eyebrow="The kit" title={<>Five families, <span className="text-accent">one kit.</span></>}>
+                Every component has a live playground, a props table and a one-line install.
             </SectionHead>
-            <ComponentList items={componentPages.slice(0, 10)} />
+            <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4 xl:grid-rows-2">
+                {groups.map(({ category, items, cover }, i) => (
+                    <motion.div key={category} {...reveal} transition={{ ...reveal.transition, delay: i * 0.06 }} className={i === 0 ? 'md:col-span-2 xl:row-span-2' : ''}>
+                        <Link
+                            to={`/components?category=${encodeURIComponent(category)}`}
+                            className="group flex h-full flex-col overflow-hidden rounded-[1.4rem] border border-[var(--line)] bg-[var(--panel)] transition duration-300 hover:-translate-y-1 hover:border-[var(--lime-line)] hover:shadow-[var(--shadow)]"
+                        >
+                            <div className={`relative overflow-hidden bg-[var(--stage)] ${i === 0 ? 'aspect-[16/10] xl:aspect-auto xl:flex-1' : 'aspect-[16/9]'}`}>
+                                <img src={cover.image} alt={`${cover.name} preview`} loading="lazy" decoding="async" className="h-full w-full object-cover transition duration-700 ease-[var(--ease-out)] group-hover:scale-[1.04]" />
+                                <span className="absolute left-3 top-3 rounded-full bg-black/55 px-2.5 py-1 font-mono text-[0.68rem] text-white backdrop-blur">{items.length} components</span>
+                            </div>
+                            <div className="flex items-start justify-between gap-4 p-5">
+                                <div className="min-w-0">
+                                    <h3 className="font-display text-[1.35rem] font-semibold tracking-[-0.02em] text-[var(--ink)]">{category}</h3>
+                                    <p className="mt-1 text-[0.9rem] leading-relaxed text-[var(--ink-2)]">{categoryBlurb[category]}</p>
+                                    <p className="mt-3 truncate text-[0.78rem] text-[var(--ink-3)]">{items.slice(0, 3).map((p) => p.name).join(' · ')}{items.length > 3 ? ' …' : ''}</p>
+                                </div>
+                                <span className="mt-1 inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-full border border-[var(--line-strong)] text-[var(--ink-2)] transition-colors group-hover:border-[var(--lime)] group-hover:bg-[var(--lime)] group-hover:text-[var(--lime-ink)]">
+                                    <ArrowUpRight className="h-4 w-4" />
+                                </span>
+                            </div>
+                        </Link>
+                    </motion.div>
+                ))}
+            </div>
+        </section>
+    );
+}
+
+const features = [
+    { icon: Terminal, title: 'One command', body: 'npx apex-ui-kit add <name> writes the component straight into your project.' },
+    { icon: Code2, title: 'You own the code', body: 'No runtime package or black box. Plain React and Tailwind you can edit freely.' },
+    { icon: Sparkles, title: 'Motion first', body: 'GSAP and Framer Motion animations, tuned to stay smooth at 60fps.' },
+    { icon: Palette, title: 'Easy to theme', body: 'Colours, speed and behaviour are props — match your brand in seconds.' },
+    { icon: Gauge, title: 'Lightweight', body: 'Each component pulls in only what it needs. Nothing global, nothing extra.' },
+    { icon: MonitorSmartphone, title: 'Responsive', body: 'From phones to 27" displays, layouts adapt without extra work.' },
+];
+
+function Features() {
+    return (
+        <section className="border-t border-[var(--line)] bg-[var(--panel)]/40">
+            <div className={`${CONTAINER} py-[clamp(4rem,8vw,8rem)]`}>
+                <SectionHead eyebrow="Why ApexUI" title={<>Built for developers who <span className="text-accent">ship.</span></>} />
+                <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
+                    {features.map(({ icon: Icon, title, body }, i) => (
+                        <motion.div
+                            key={title}
+                            {...reveal}
+                            transition={{ ...reveal.transition, delay: (i % 3) * 0.06 }}
+                            className="group rounded-[1.25rem] border border-[var(--line)] bg-[var(--panel)] p-6 transition-colors hover:border-[var(--lime-line)]"
+                        >
+                            <span className="inline-flex h-11 w-11 items-center justify-center rounded-xl bg-[var(--lime-soft)] text-[var(--lime-text)] transition-transform duration-300 group-hover:-rotate-6 group-hover:scale-105">
+                                <Icon className="h-5 w-5" />
+                            </span>
+                            <h3 className="font-display mt-5 text-[1.15rem] font-semibold tracking-[-0.01em] text-[var(--ink)]">{title}</h3>
+                            <p className="mt-1.5 text-[0.93rem] leading-relaxed text-[var(--ink-2)]">{body}</p>
+                        </motion.div>
+                    ))}
+                </div>
+            </div>
         </section>
     );
 }
@@ -377,33 +400,29 @@ export default function App() {
   return <HyperCard starColor="#b5ef3a" glow />;
 }`;
 
-function Workflow() {
+function Steps() {
     const steps = [
-        { title: 'Install', body: 'One package gives you the ApexUI CLI.', command: 'npm i apex-ui-kit' },
-        { title: 'Add', body: 'The source lands in src/ApexUI-Kit — yours to edit.', command: 'npx apex-ui-kit add hyper-card' },
-        { title: 'Ship', body: 'Import it like any other React component.', command: null },
+        { title: 'Install the CLI', body: 'One package gives you the ApexUI command.', node: <CommandLine command="npm i apex-ui-kit" /> },
+        { title: 'Add a component', body: 'The source lands in src/ApexUI-Kit — yours to edit.', node: <CommandLine command="npx apex-ui-kit add hyper-card" /> },
+        { title: 'Use it', body: 'Import it like any other React component.', node: <CodeBlock code={usage} title="src/App.jsx" /> },
     ];
     return (
-        <section className="border-t border-[var(--line)]">
-            <div className={`${PAD_X} pt-[clamp(4rem,8vw,8rem)]`}>
-                <SectionHead index="03" label="Workflow">
-                    From terminal to UI in <span className="font-serif-italic font-normal text-[var(--lime-text)]">a minute.</span>
-                </SectionHead>
-            </div>
-            <div className="grid border-t border-[var(--line)] lg:grid-cols-3">
+        <section className={`${CONTAINER} border-t border-[var(--line)] py-[clamp(4rem,8vw,8rem)]`}>
+            <SectionHead eyebrow="How it works" title={<>From terminal to UI <span className="text-accent">in a minute.</span></>} />
+            <div className="grid gap-4 lg:grid-cols-3">
                 {steps.map((s, i) => (
                     <motion.div
                         key={s.title}
                         {...reveal}
                         transition={{ ...reveal.transition, delay: i * 0.08 }}
-                        className={`${PAD_X} flex min-w-0 flex-col gap-5 border-b border-[var(--line)] py-10 lg:border-b-0 lg:border-r lg:last:border-r-0`}
+                        className="flex min-w-0 flex-col gap-5 rounded-[1.25rem] border border-[var(--line)] bg-[var(--panel)] p-6"
                     >
-                        <span className="font-display text-[clamp(3.5rem,6vw,6rem)] font-semibold leading-none text-transparent [-webkit-text-stroke:1px_var(--lime-line)]">0{i + 1}</span>
-                        <div>
-                            <h3 className="font-display text-2xl font-semibold text-[var(--ink)]">{s.title}</h3>
-                            <p className="mt-1.5 text-[0.95rem] text-[var(--ink-2)]">{s.body}</p>
+                        <div className="flex items-center gap-3">
+                            <span className="inline-flex h-8 w-8 items-center justify-center rounded-full bg-[var(--lime)] font-mono text-[0.75rem] font-semibold text-[var(--lime-ink)]">{i + 1}</span>
+                            <h3 className="font-display text-[1.15rem] font-semibold text-[var(--ink)]">{s.title}</h3>
                         </div>
-                        <div className="mt-auto min-w-0">{s.command ? <CommandLine command={s.command} /> : <CodeBlock code={usage} title="src/App.jsx" />}</div>
+                        <p className="-mt-2 text-[0.93rem] text-[var(--ink-2)]">{s.body}</p>
+                        <div className="mt-auto min-w-0">{s.node}</div>
                     </motion.div>
                 ))}
             </div>
@@ -411,40 +430,29 @@ function Workflow() {
     );
 }
 
-function Principles() {
-    return (
-        <section className="grid border-t border-[var(--line)] sm:grid-cols-2 2xl:grid-cols-4">
-            {principles.map((p, i) => (
-                <motion.div key={p.title} {...reveal} transition={{ ...reveal.transition, delay: i * 0.06 }} className={`${PAD_X} border-b border-[var(--line)] py-12 sm:border-r 2xl:border-b-0`}>
-                    <span className="font-mono text-[0.7rem] text-[var(--lime-text)]">P·0{i + 1}</span>
-                    <h3 className="font-display mt-4 text-[1.7rem] font-semibold leading-tight text-[var(--ink)]">{p.title}</h3>
-                    <p className="mt-2 max-w-[36ch] text-[0.95rem] leading-relaxed text-[var(--ink-2)]">{p.body}</p>
-                </motion.div>
-            ))}
-        </section>
-    );
-}
-
 function Cta() {
     return (
-        <section className="relative isolate overflow-hidden bg-[var(--lime)] text-[var(--lime-ink)]">
-            <div className="pointer-events-none absolute inset-0 -z-10 opacity-[0.12] [background-image:radial-gradient(#000_1px,transparent_1px)] [background-size:1.1rem_1.1rem]" />
-            <div className={`${PAD_X} flex flex-col items-start justify-between gap-10 py-[clamp(4rem,8vw,8rem)] lg:flex-row lg:items-end`}>
-                <motion.h2 {...reveal} className="font-display max-w-[14ch] text-[clamp(2.8rem,6.5vw,7.5rem)] font-semibold leading-[0.9]">
-                    Make your next interface feel <span className="font-serif-italic font-normal">alive.</span>
-                </motion.h2>
-                <motion.div {...reveal} className="flex flex-wrap gap-3">
-                    <Link to="/components/docs/getting-started/introduction" className="group inline-flex h-14 items-center gap-3 rounded-full bg-[var(--lime-ink)] pl-7 pr-2 text-base font-semibold text-[var(--lime)]">
-                        Get started
-                        <span className="inline-flex h-10 w-10 items-center justify-center rounded-full bg-[var(--lime)] text-[var(--lime-ink)] transition-transform duration-300 group-hover:rotate-[-45deg]">
-                            <ArrowRight className="h-5 w-5" />
-                        </span>
-                    </Link>
-                    <Link to="/templates-soon" className="inline-flex h-14 items-center rounded-full border border-[var(--lime-ink)]/25 px-7 text-base font-semibold transition hover:bg-[var(--lime-ink)]/10">
-                        Templates · soon
-                    </Link>
-                </motion.div>
-            </div>
+        <section className={`${CONTAINER} pb-[clamp(4rem,8vw,8rem)]`}>
+            <motion.div {...reveal} className="relative isolate overflow-hidden rounded-[2rem] bg-[var(--lime)] px-[clamp(1.5rem,5vw,5rem)] py-[clamp(3rem,6vw,6rem)] text-[var(--lime-ink)]">
+                <div className="pointer-events-none absolute inset-0 -z-10 opacity-[0.14] [background-image:radial-gradient(#000_1px,transparent_1px)] [background-size:1.1rem_1.1rem] [mask-image:radial-gradient(ellipse_at_80%_50%,#000,transparent_70%)]" />
+                <div className="flex flex-col items-start justify-between gap-10 lg:flex-row lg:items-end">
+                    <div>
+                        <h2 className="font-display max-w-[16ch] text-[clamp(2.2rem,5vw,5rem)] font-semibold leading-[1] tracking-[-0.045em]">Make your next interface feel alive.</h2>
+                        <p className="mt-4 max-w-[46ch] text-[1.02rem] text-[var(--lime-ink)]/75">Start with the docs, pick a component and drop it into your app — {SITE.version}, MIT licensed.</p>
+                    </div>
+                    <div className="flex flex-wrap gap-3">
+                        <Link to="/components/docs/getting-started/introduction" className="group inline-flex h-14 items-center gap-3 rounded-full bg-[var(--lime-ink)] pl-7 pr-2 text-base font-semibold text-[var(--lime)]">
+                            Get started
+                            <span className="inline-flex h-10 w-10 items-center justify-center rounded-full bg-[var(--lime)] text-[var(--lime-ink)] transition-transform duration-300 group-hover:-rotate-45">
+                                <ArrowRight className="h-5 w-5" />
+                            </span>
+                        </Link>
+                        <a href={SITE.github} target="_blank" rel="noopener noreferrer" className="inline-flex h-14 items-center rounded-full border border-[var(--lime-ink)]/25 px-7 text-base font-semibold transition hover:bg-[var(--lime-ink)]/10">
+                            Star on GitHub
+                        </a>
+                    </div>
+                </div>
+            </motion.div>
         </section>
     );
 }
@@ -453,11 +461,10 @@ export default function HomePage() {
     return (
         <div>
             <Hero />
-            <Ticker />
-            <LiveWall />
-            <IndexPreview />
-            <Workflow />
-            <Principles />
+            <Stats />
+            <Families />
+            <Features />
+            <Steps />
             <Cta />
             <SiteFooter />
         </div>

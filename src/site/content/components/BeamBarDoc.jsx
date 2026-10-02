@@ -42,8 +42,8 @@ export default function BeamBarDoc() {
                 <>
                     <BeamBar fromColor="#a855f7" viaColor="#38bdf8" toColor="#06b6d4" barWidth={320} barHeight={8} duration={1.2} pulseDuration={2.5} />
                     <div className="absolute left-1/2 w-full -translate-x-1/2 -translate-y-1/2 mt-12 flex flex-col items-center text-center sm:mt-16">
-                        <h3 className="mb-2 text-2xl font-extrabold text-white sm:text-4xl">Animated BeamBar Effect</h3>
-                        <p className="text-sm text-white/80 sm:text-lg">A perfect bar for modern dashboards.</p>
+                        <h3 className="mb-2 text-2xl font-extrabold text-[var(--stage-ink)] sm:text-4xl">Animated BeamBar Effect</h3>
+                        <p className="text-sm text-[var(--ink-2)] sm:text-lg">A perfect bar for modern dashboards.</p>
                     </div>
                 </>
             }

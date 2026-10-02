@@ -8,17 +8,17 @@
 .theme-dark {
   color-scheme: dark;
 
-  --frame: #050505;
-  --bg: #0c0c0b;
-  --panel: #111110;
-  --panel-2: #171715;
-  --panel-3: #22221f;
-  --line: rgba(255, 255, 235, 0.07);
-  --line-strong: rgba(255, 255, 235, 0.14);
+  --frame: #000000;
+  --bg: #09090b;
+  --panel: #0f0f12;
+  --panel-2: #16161a;
+  --panel-3: #232329;
+  --line: rgba(255, 255, 255, 0.07);
+  --line-strong: rgba(255, 255, 255, 0.13);
 
-  --ink: #f3f3ec;
-  --ink-2: #a5a59b;
-  --ink-3: #6c6c64;
+  --ink: #fafafa;
+  --ink-2: #a1a1aa;
+  --ink-3: #71717a;
 
   /* Brand lime, taken from the ApexUI logo. */
   --lime: #b5ef3a;
@@ -27,14 +27,22 @@
   --lime-soft: rgba(181, 239, 58, 0.11);
   --lime-line: rgba(181, 239, 58, 0.32);
   --ring: rgba(181, 239, 58, 0.5);
+  --accent-from: #d9fb7a;
+  --accent-to: #84cc16;
 
-  --stage: #0a0a0a;
-  --code-bg: #0a0a09;
-  --code-line: rgba(255, 255, 235, 0.08);
-  --grid-line: rgba(255, 255, 235, 0.06);
-  --dot: rgba(255, 255, 235, 0.13);
-  --glow: rgba(181, 239, 58, 0.16);
-  --shadow: 0 1px 0 rgba(255, 255, 255, 0.03) inset, 0 20px 50px -20px rgba(0, 0, 0, 0.7);
+  /* Live preview stage: follows the site theme. */
+  --stage: #0b0b0e;
+  --stage-ink: #fafafa;
+  --stage-dot: rgba(255, 255, 255, 0.18);
+  --stage-grid: rgba(255, 255, 255, 0.07);
+  --stage-grid-major: rgba(181, 239, 58, 0.14);
+
+  --code-bg: #0b0b0e;
+  --code-line: rgba(255, 255, 255, 0.08);
+  --grid-line: rgba(255, 255, 255, 0.06);
+  --dot: rgba(255, 255, 255, 0.13);
+  --glow: rgba(181, 239, 58, 0.14);
+  --shadow: 0 1px 0 rgba(255, 255, 255, 0.04) inset, 0 24px 60px -24px rgba(0, 0, 0, 0.8);
 
   --syntax-type: #8bd3ff;
   --syntax-value: #f5c37a;
@@ -43,32 +51,39 @@
 .theme-light {
   color-scheme: light;
 
-  --frame: #dcdad1;
-  --bg: #f5f4ef;
-  --panel: #fbfaf7;
-  --panel-2: #eeede6;
-  --panel-3: #e2e0d7;
-  --line: rgba(24, 24, 12, 0.09);
-  --line-strong: rgba(24, 24, 12, 0.16);
+  --frame: #e4e4e7;
+  --bg: #fafafa;
+  --panel: #ffffff;
+  --panel-2: #f4f4f5;
+  --panel-3: #e4e4e7;
+  --line: rgba(9, 9, 11, 0.08);
+  --line-strong: rgba(9, 9, 11, 0.15);
 
-  --ink: #141412;
-  --ink-2: #57564f;
-  --ink-3: #8e8d84;
+  --ink: #09090b;
+  --ink-2: #52525b;
+  --ink-3: #71717a;
 
-  --lime: #a6e22a;
+  --lime: #a3e635;
   --lime-ink: #0b1002;
-  --lime-text: #4b6b00;
-  --lime-soft: rgba(132, 190, 20, 0.14);
-  --lime-line: rgba(100, 150, 0, 0.35);
-  --ring: rgba(100, 150, 0, 0.45);
+  --lime-text: #4d7c0f;
+  --lime-soft: rgba(132, 204, 22, 0.14);
+  --lime-line: rgba(77, 124, 15, 0.35);
+  --ring: rgba(77, 124, 15, 0.45);
+  --accent-from: #65a30d;
+  --accent-to: #3f6212;
 
-  --stage: #0d0d0c;
-  --code-bg: #10100e;
-  --code-line: #1d1d1a;
-  --grid-line: rgba(24, 24, 12, 0.08);
-  --dot: rgba(24, 24, 12, 0.18);
-  --glow: rgba(150, 210, 30, 0.22);
-  --shadow: 0 1px 0 rgba(255, 255, 255, 0.6) inset, 0 20px 50px -24px rgba(40, 40, 20, 0.25);
+  --stage: #f4f4f5;
+  --stage-ink: #09090b;
+  --stage-dot: rgba(9, 9, 11, 0.2);
+  --stage-grid: rgba(9, 9, 11, 0.07);
+  --stage-grid-major: rgba(77, 124, 15, 0.2);
+
+  --code-bg: #0b0b0e;
+  --code-line: #1f1f24;
+  --grid-line: rgba(9, 9, 11, 0.07);
+  --dot: rgba(9, 9, 11, 0.16);
+  --glow: rgba(132, 204, 22, 0.2);
+  --shadow: 0 1px 0 rgba(255, 255, 255, 0.8) inset, 0 24px 60px -28px rgba(9, 9, 11, 0.22);
 
   --syntax-type: #0b6aa8;
   --syntax-value: #9a5b00;
@@ -105,10 +120,9 @@
   --vt-duration: 1.2s;
   --vt-ease: ease-in-out;
 
-  --font-display: "Bricolage Grotesque", "Inter", ui-sans-serif, system-ui, sans-serif;
-  --font-serif: "Instrument Serif", ui-serif, Georgia, serif;
-  --font-body: "Inter", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
-  --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+  --font-display: "Geist", "Inter", ui-sans-serif, system-ui, sans-serif;
+  --font-body: "Geist", "Inter", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-mono: "Geist Mono", "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
 
   --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
 }
@@ -148,11 +162,13 @@ pre,
   letter-spacing: -0.035em;
 }
 
-.font-serif-italic {
-  font-family: var(--font-serif);
-  font-style: italic;
-  font-weight: 400;
-  letter-spacing: -0.01em;
+/* Accent words in headings: brand lime gradient, same face and weight as the heading. */
+.text-accent {
+  background-image: linear-gradient(100deg, var(--accent-from), var(--accent-to));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  -webkit-text-fill-color: transparent;
 }
 
 ::selection {
@@ -197,16 +213,16 @@ pre,
   mask-image: radial-gradient(ellipse 85% 80% at 50% 50%, #000 45%, transparent 100%);
 }
 .stage-dots {
-  background-image: radial-gradient(rgba(255, 255, 255, 0.22) 1.2px, transparent 1.7px);
+  background-image: radial-gradient(var(--stage-dot) 1.2px, transparent 1.7px);
   background-size: 22px 22px;
   background-position: center;
 }
 .stage-grid {
   background-image:
-    linear-gradient(rgba(190, 242, 100, 0.12) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(190, 242, 100, 0.12) 1px, transparent 1px),
-    linear-gradient(rgba(255, 255, 255, 0.07) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(255, 255, 255, 0.07) 1px, transparent 1px);
+    linear-gradient(var(--stage-grid-major) 1px, transparent 1px),
+    linear-gradient(90deg, var(--stage-grid-major) 1px, transparent 1px),
+    linear-gradient(var(--stage-grid) 1px, transparent 1px),
+    linear-gradient(90deg, var(--stage-grid) 1px, transparent 1px);
   background-size: 160px 160px, 160px 160px, 32px 32px, 32px 32px;
   background-position: center;
 }

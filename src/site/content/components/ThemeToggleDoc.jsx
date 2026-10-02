@@ -88,8 +88,8 @@ export default function ThemeToggleDoc() {
                 <div className="flex flex-wrap items-center justify-center gap-3">
                     {toggles.map((t, i) => (
                         <div key={i} className="group relative">
-                            <span className="inline-flex h-11 w-11 items-center justify-center rounded-xl border border-white/10 bg-white/[0.03] text-zinc-300 transition hover:border-white/25 [&_button]:inline-flex [&_button]:items-center [&_button]:justify-center [&_svg]:h-5 [&_svg]:w-5">
-                                <ThemeToggle LightTheme="light" animation={{ type: t.animation, link: t.link }} duration="1.2s" ease="var(--vt-ease)" className="text-zinc-300" />
+                            <span className="inline-flex h-11 w-11 items-center justify-center rounded-xl border border-[var(--line-strong)] bg-[var(--panel)] text-[var(--ink-2)] transition hover:border-[var(--lime-line)] hover:text-[var(--ink)] [&_button]:inline-flex [&_button]:items-center [&_button]:justify-center [&_svg]:h-5 [&_svg]:w-5">
+                                <ThemeToggle LightTheme="light" animation={{ type: t.animation, link: t.link }} duration="1.2s" ease="var(--vt-ease)" className="text-[var(--ink-2)]" />
                             </span>
                             <span className="pointer-events-none absolute -bottom-7 left-1/2 z-20 -translate-x-1/2 whitespace-nowrap rounded bg-zinc-800 px-2 py-0.5 text-[11px] text-zinc-200 opacity-0 transition-opacity group-hover:opacity-100">
                                 {t.animation}

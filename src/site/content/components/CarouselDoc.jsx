@@ -111,6 +111,7 @@ export default function CarouselDoc() {
             title="Carousel"
             description="Three carousel styles — classic, parallax and draggable — for showcasing images or content."
             variants={variants}
+            wide
         />
     );
 }

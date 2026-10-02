@@ -6,7 +6,8 @@ const HoverText = ({
     fontSize = "2.5rem",
     className = "",
     effect, // if not passed, use 'defaultReveal'
-    effectColor = "#C27AFF"
+    effectColor = "#C27AFF",
+    textColor = "#fff" // resting colour of the letters
 }) => {
     const charsRef = useRef([]);
     const containerRef = useRef(null);
@@ -32,7 +33,7 @@ const HoverText = ({
         gsap.to(el, {
             scale: 1,
             rotate: 0,
-            color: "#fff",
+            color: textColor,
             filter: `drop-shadow(0 0px 0px ${effectColor})`,
             duration: 0.32,
             ease: "expo.inOut",
@@ -61,7 +62,7 @@ const HoverText = ({
             gsap.to(el, {
                 scale: 1,
                 rotate: 0,
-                color: "#fff",
+                color: textColor,
                 filter: `drop-shadow(0 0px 0px ${effectColor})`,
                 duration: 0.38,
                 ease: "expo.inOut",
@@ -79,11 +80,11 @@ const HoverText = ({
                     x: 0,
                     y: 0,
                     filter: `drop-shadow(0 0px 0px ${effectColor})`,
-                    color: "#fff",
+                    color: textColor,
                 });
             }
         });
-    }, [text, effectColor]);
+    }, [text, effectColor, textColor]);
 
     // Magnetic effect
     const handleMouseMove = (e) => {
@@ -126,7 +127,7 @@ const HoverText = ({
                 filter: isFocus
                     ? `drop-shadow(0 4px 32px ${effectColor})`
                     : `drop-shadow(0 2px 16px ${effectColor}44)`,
-                color: isFocus ? effectColor : "#fff",
+                color: isFocus ? effectColor : textColor,
                 zIndex: isFocus ? 10 : 2,
                 duration: 0.35,
                 ease: "expo.out",
@@ -156,7 +157,7 @@ const HoverText = ({
                         gsap.to(el, {
                             scaleX: 1,
                             scaleY: 1,
-                            color: "#fff",
+                            color: textColor,
                             filter: `drop-shadow(0 0px 0px ${effectColor})`,
                             duration: 0.18,
                             ease: "expo.inOut",
@@ -203,7 +204,7 @@ const HoverText = ({
                 y: 0,
                 scale: 1,
                 rotate: 0,
-                color: "#fff",
+                color: textColor,
                 filter: `drop-shadow(0 0px 0px ${effectColor})`,
                 duration: 0.32,
                 ease: "expo.inOut",
@@ -245,7 +246,7 @@ const HoverText = ({
             gsap.to(el, {
                 scale: 1,
                 rotate: 0,
-                color: "#fff",
+                color: textColor,
                 filter: `drop-shadow(0 0px 0px ${effectColor})`,
                 duration: 0.32,
                 ease: "expo.inOut",
@@ -279,7 +280,7 @@ const HoverText = ({
             gsap.to(el, {
                 y: 0,
                 scale: 1,
-                color: "#fff",
+                color: textColor,
                 filter: `drop-shadow(0 0px 0px ${effectColor})`,
                 duration: 0.38 + Math.abs(j) * 0.08,
                 ease: "expo.inOut",
@@ -297,7 +298,7 @@ const HoverText = ({
                         y: 0,
                         scale: 1,
                         rotate: 0,
-                        color: "#fff",
+                        color: textColor,
                         filter: `drop-shadow(0 0px 0px ${effectColor})`,
                         duration: 0.6,
                         ease: "expo.inOut",
@@ -309,7 +310,7 @@ const HoverText = ({
                 if (el) {
                     gsap.to(el, {
                         rotateY: 0,
-                        color: "#fff",
+                        color: textColor,
                         filter: `drop-shadow(0 0px 0px ${effectColor})`,
                         duration: 0.6,
                         ease: "expo.inOut",
@@ -356,7 +357,7 @@ const HoverText = ({
                         borderRadius: "0.18em",
                         position: "relative",
                         zIndex: 2,
-                        color: "#fff",
+                        color: textColor,
                         background: "none",
                         transition: "filter 0.3s, color 0.3s, background 0.3s, opacity 0.3s",
                     }}

@@ -121,7 +121,7 @@ const DragCarousel = ({ images }) => {
                 <div
                     key={index}
                     ref={el => cardsRef.current[index] = el}
-                    className="card-item absolute h-[480px] w-[300px] lg:h-[550px] lg:w-[350px] rounded-xl overflow-hidden shadow-2xl top-[25px] -left-4 md:left-36 lg:left-70"
+                    className="card-item absolute h-[480px] w-[300px] lg:h-[550px] lg:w-[350px] rounded-xl overflow-hidden shadow-2xl top-[25px] left-1/2 -ml-[150px] lg:-ml-[175px]"
                 >
                     <img
                         src={src}

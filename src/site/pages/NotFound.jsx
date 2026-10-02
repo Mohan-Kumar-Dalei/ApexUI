@@ -7,7 +7,7 @@ export default function NotFound() {
             <div className="bg-grid pointer-events-none absolute inset-0 -z-10 [mask-image:radial-gradient(ellipse_60%_60%_at_50%_50%,#000_30%,transparent_80%)]" />
             <p className="font-display select-none text-[clamp(7rem,22vw,18rem)] font-bold leading-none text-transparent [-webkit-text-stroke:1.5px_var(--line-strong)]">404</p>
             <h1 className="font-display -mt-4 text-[clamp(1.8rem,3vw,2.8rem)] font-semibold text-[var(--ink)]">
-                This page went <span className="font-serif-italic font-normal text-[var(--lime-text)]">off-grid.</span>
+                This page went <span className="text-accent">off-grid.</span>
             </h1>
             <p className="mt-3 max-w-md text-[var(--ink-2)]">It may have moved or been renamed. Search with Ctrl K, or jump back in below.</p>
             <div className="mt-8 flex flex-wrap justify-center gap-3">

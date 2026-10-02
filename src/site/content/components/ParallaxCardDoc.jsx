@@ -54,7 +54,7 @@ export default function ParallaxCardDoc() {
         <ComponentDoc
             title="Parallax Card"
             description="A card with a layered 3D parallax effect that reacts to mouse movement, creating a sense of depth."
-            preview={<ParallaxCard cardData={cardData} tiltEnable glareEnable perspective={500} scale={1.1} />}
+            preview={<div className="text-white"><ParallaxCard cardData={cardData} tiltEnable glareEnable perspective={500} scale={1.1} /></div>}
             code={code}
             cli="parallax-card"
             props={props}

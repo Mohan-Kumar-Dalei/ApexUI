@@ -7,11 +7,11 @@ import { PAD_X } from './style.js';
 /* "Glare Card" → Glare <i>Card</i>: the last word is set in the serif italic. */
 export function SplitTitle({ text }) {
     const words = text.split(' ');
-    if (words.length < 2) return <span className="font-serif-italic">{text}</span>;
+    if (words.length < 2) return <span>{text}</span>;
     const last = words.pop();
     return (
         <>
-            {words.join(' ')} <span className="font-serif-italic font-normal text-[var(--lime-text)]">{last}</span>
+            {words.join(' ')} <span className="text-accent">{last}</span>
         </>
     );
 }

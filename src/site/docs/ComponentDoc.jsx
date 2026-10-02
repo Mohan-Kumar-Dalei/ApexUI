@@ -117,7 +117,7 @@ function Stage({ variant, variants, activeVariant, onVariant }) {
                         animate={{ opacity: 1 }}
                         exit={{ opacity: 0 }}
                         transition={{ duration: 0.18 }}
-                        className={`relative isolate flex flex-1 items-center justify-center overflow-hidden bg-[var(--stage)] text-white [transform:translateZ(0)] ${full ? 'h-screen' : STAGE_H} ${variant.fullBleed ? '' : 'p-[clamp(1.25rem,3vw,3.5rem)]'} ${variant.previewClassName ?? ''}`}
+                        className={`relative isolate flex flex-1 items-center justify-center overflow-hidden [transform:translateZ(0)] ${variant.fullBleed ? 'bg-[#09090b] text-white' : 'bg-[var(--stage)] text-[var(--stage-ink)]'} ${full ? 'h-screen' : STAGE_H} ${variant.fullBleed ? '' : 'p-[clamp(1.25rem,3vw,3.5rem)]'} ${variant.previewClassName ?? ''}`}
                     >
                         {bgClass && <div aria-hidden="true" className={`pointer-events-none absolute inset-0 ${bgClass} ${variant.fullBleed ? 'stage-overlay z-20' : '-z-10'}`} />}
                         {variant.preview}
@@ -190,7 +190,7 @@ export function InstallSteps({ cli }) {
 }
 
 /* Right-hand panel: optional playground controls plus Props / Install / Deps tabs. */
-function Inspector({ variant }) {
+function Inspector({ variant, wide }) {
     const [tab, setTab] = useState('props');
     const tabs = [
         { value: 'props', label: `Props${variant.props?.length ? ` · ${variant.props.length}` : ''}` },
@@ -199,7 +199,7 @@ function Inspector({ variant }) {
     ];
 
     return (
-        <aside aria-label="Inspector" className="flex min-w-0 flex-col border-t border-[var(--line)] bg-[var(--panel)] xl:border-l xl:border-t-0">
+        <aside aria-label="Inspector" className={`flex min-w-0 flex-col border-t border-[var(--line)] bg-[var(--panel)] ${wide ? '' : 'xl:border-l xl:border-t-0'}`}>
             {variant.controls && (
                 <section className="border-b border-[var(--line)] p-5">
                     <h3 className="mb-4 font-mono text-[0.68rem] uppercase tracking-[0.18em] text-[var(--lime-text)]">Playground</h3>
@@ -209,7 +209,7 @@ function Inspector({ variant }) {
             <div className="border-b border-[var(--line)] px-5 py-3">
                 <Segmented size="sm" value={tab} onChange={setTab} options={tabs} />
             </div>
-            <div className="thin-scroll flex-1 overflow-y-auto p-5 xl:max-h-[clamp(26rem,64vh,60rem)]">
+            <div className={`thin-scroll flex-1 overflow-y-auto p-5 ${wide ? '' : 'xl:max-h-[clamp(26rem,64vh,60rem)]'}`}>
                 <AnimatePresence mode="wait" initial={false}>
                     <motion.div key={tab} initial={{ opacity: 0, y: 4 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }} transition={{ duration: 0.16 }}>
                         {tab === 'props' && <PropsList rows={variant.props} />}
@@ -248,7 +248,7 @@ export function DocSection({ id, title, description, children }) {
  * Several related components on one page (e.g. Carousel):
  *   <ComponentDoc title description variants={[{ name, description, ...same fields }]} />
  */
-export default function ComponentDoc({ title, description, variants, ...single }) {
+export default function ComponentDoc({ title, description, variants, wide = false, ...single }) {
     const { pathname } = useLocation();
     const page = findPage(pathname);
     const list = variants?.length ? variants : [single];
@@ -272,7 +272,8 @@ export default function ComponentDoc({ title, description, variants, ...single }
                 aside={variant.cli && <CliChip command={`npx apex-ui-kit add ${variant.cli}`} />}
             />
 
-            <div className="grid border-y border-[var(--line)] xl:grid-cols-[minmax(0,1fr)_clamp(22rem,24vw,30rem)]">
+            {/* wide: the stage takes the full width and the inspector moves below it (e.g. carousels). */}
+            <div className={`grid border-y border-[var(--line)] ${wide ? '' : 'xl:grid-cols-[minmax(0,1fr)_clamp(22rem,24vw,30rem)]'}`}>
                 <div className="flex min-w-0 flex-col">
                     {multi && variant.description && (
                         <p className={`${PAD_X} border-b border-[var(--line)] py-3 text-sm text-[var(--ink-2)]`}>
@@ -281,7 +282,7 @@ export default function ComponentDoc({ title, description, variants, ...single }
                     )}
                     <Stage variant={variant} variants={multi ? list : null} activeVariant={active} onVariant={setActive} />
                 </div>
-                <Inspector key={active} variant={variant} />
+                <Inspector key={active} variant={variant} wide={wide} />
             </div>
 
             {single.extra}
