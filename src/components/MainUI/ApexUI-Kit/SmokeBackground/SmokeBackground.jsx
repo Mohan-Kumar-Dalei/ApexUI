@@ -158,7 +158,7 @@ export const SmokeBackground = ({
             mouseNeedsUpdate = true;
         };
         if (mouseInteractive) {
-            mountNode.addEventListener("mousemove", handleMouseMove);
+            mountNode.addEventListener("mousemove", handleMouseMove, { passive: true });
         }
 
         const setSize = () => {
@@ -178,8 +178,12 @@ export const SmokeBackground = ({
         setSize();
 
         let raf = 0;
+        // Only render while the background is on screen.
+        let visible = true;
         const t0 = performance.now();
         const loop = (t) => {
+            raf = 0;
+            if (!visible) return;
             let timeValue = (t - t0) * 0.001;
 
             if (direction === "funny") {
@@ -199,9 +203,15 @@ export const SmokeBackground = ({
             raf = requestAnimationFrame(loop);
         };
         raf = requestAnimationFrame(loop);
+        const visibilityObserver = new IntersectionObserver(([entry]) => {
+            visible = entry.isIntersecting;
+            if (visible && !raf) raf = requestAnimationFrame(loop);
+        });
+        visibilityObserver.observe(mountNode);
 
         return () => {
             cancelAnimationFrame(raf);
+            visibilityObserver.disconnect();
             ro.disconnect();
             if (mouseInteractive && mountNode) {
                 mountNode.removeEventListener("mousemove", handleMouseMove);

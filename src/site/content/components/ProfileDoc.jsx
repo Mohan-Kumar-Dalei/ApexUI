@@ -1,4 +1,23 @@
 import ComponentDoc from '../../docs/ComponentDoc.jsx';
+import { cdn } from '../../ui/cdn.js';
+
+// Same data as ParallaxProfile's defaults, with the avatar served from the CDN.
+const parallaxProfile = {
+    avatarUrl: cdn('/assets/spiderman.png', { w: 480 }),
+    name: 'Spider Man',
+    username: 'spider_man',
+    dob: '10-08-2001',
+    title: 'PhotoGrapher',
+    status: 'Available for Hire',
+    socialLinks: {
+        github: 'https://github.com/',
+        linkedin: 'https://www.linkedin.com/',
+        twitter: 'https://twitter.com/',
+        instagram: 'https://www.instagram.com/',
+    },
+    onHireClick: () => alert('Hire Me button clicked!'),
+    onCvClick: () => alert('CV button clicked!'),
+};
 import FlipProfile from '../../../components/MainUI/ApexUI-Kit/FlipProfile/FlipProfile.jsx';
 import ParallaxProfile from '../../../components/MainUI/ApexUI-Kit/ParallaxProfile/ParallaxProfile.jsx';
 
@@ -8,7 +27,7 @@ const variants = [
         description: 'An animated profile card with a 3D flip, perfect for showcasing user details and social links.',
         preview: (
             <div className="flex w-full max-w-xs items-center justify-center">
-                <FlipProfile />
+                <FlipProfile avatar={cdn('/assets/ironman.png', { w: 320 })} />
             </div>
         ),
         code: `import FlipProfile from './ApexUI-Kit/FlipProfile/FlipProfile.jsx';
@@ -53,7 +72,7 @@ export default App;`,
         description: 'A profile card with a parallax hover effect that adds depth and interactivity.',
         preview: (
             <div className="flex w-full max-w-xs items-center justify-center">
-                <ParallaxProfile />
+                <ParallaxProfile profile={parallaxProfile} />
             </div>
         ),
         code: `import ParallaxProfile from './ApexUI-Kit/ParallaxProfile/ParallaxProfile.jsx';

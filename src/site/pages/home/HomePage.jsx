@@ -5,6 +5,7 @@ import { ArrowRight, ArrowUpRight, Code2, Gauge, MonitorSmartphone, Palette, Spa
 import SiteFooter from '../../layout/SiteFooter.jsx';
 import CodeBlock, { CommandLine } from '../../ui/CodeBlock.jsx';
 import useSiteTheme from '../../ui/useSiteTheme.js';
+import { withCdn } from '../../ui/cdn.js';
 import { CliChip } from '../../docs/parts.jsx';
 import { PAD_X } from '../../docs/style.js';
 import { CATEGORIES, componentPages, prefetch, SITE } from '../../config/navigation.js';
@@ -26,21 +27,21 @@ const reveal = {
 
 const CONTAINER = `${PAD_X} mx-auto w-full max-w-[110rem]`;
 
-const people = [
+const people = withCdn([
     { id: 1, name: 'Captain America', designation: 'Leader of the Avengers', image: '/assets/captainamerica.png' },
     { id: 2, name: 'Doctor Strange', designation: 'Sorcerer Supreme', image: '/assets/doctorStrange.png' },
     { id: 3, name: 'Iron Man', designation: 'Leader Of Stark Industries', image: '/assets/ironman.png' },
     { id: 4, name: 'HULK', designation: 'Scientist', image: '/assets/hulk.png' },
     { id: 5, name: 'Spider-Man', designation: 'Friendly Neighborhood Spider-Man', image: '/assets/spiderman.png' },
-];
+], { w: 192 });
 
-const avatars = [
+const avatars = withCdn([
     { name: 'Iron Man', imageUrl: '/assets/ironman.png', color: '#6366f1' },
     { name: 'Spider Man', imageUrl: '/assets/spiderman.png', color: '#ec4899' },
     { name: 'HULK', imageUrl: '/assets/hulk.png', color: '#22c55e' },
     { name: 'Doc Strange', imageUrl: '/assets/doctorStrange.png', color: '#f97316' },
     { name: 'Captain', imageUrl: '/assets/captainamerica.png', color: '#06b6d4' },
-];
+], { w: 192 });
 
 const stackCards = [
     { title: 'ApexUI Card Stack', subtitle: 'Modern glassmorphic stack', desc: 'Pause on hover, auto-cycling.', color: 'from-blue-500/60 to-blue-300/30', image: 'https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?auto=format&fit=crop&w=300&q=80' },
@@ -193,7 +194,6 @@ function Showcase() {
 }
 
 function Hero() {
-    const latest = componentPages.find((p) => p.badge) ?? componentPages[0];
     return (
         <section className="relative isolate overflow-hidden">
             <div className="bg-grid pointer-events-none absolute inset-0 -z-10 [mask-image:radial-gradient(ellipse_70%_55%_at_50%_0%,#000_30%,transparent_80%)]" />
@@ -201,14 +201,16 @@ function Hero() {
             <div className={`${CONTAINER} pb-[clamp(3rem,6vw,6rem)] pt-[clamp(3rem,7vw,7rem)]`}>
                 <div className="mx-auto flex max-w-[64rem] flex-col items-center text-center">
                     <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, ease }}>
-                        <Link
-                            to={latest.path}
-                            className="group inline-flex items-center gap-2 rounded-full border border-[var(--line-strong)] bg-[var(--panel)] py-1 pl-1 pr-3 text-[0.8rem] text-[var(--ink-2)] shadow-[var(--shadow)] transition-colors hover:border-[var(--lime-line)] hover:text-[var(--ink)]"
+                        <a
+                            href={SITE.github}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="group inline-flex items-center gap-2 rounded-full border border-[var(--line-strong)] bg-[var(--panel)] px-3.5 py-1.5 text-[0.8rem] text-[var(--ink-2)] shadow-[var(--shadow)] transition-colors hover:border-[var(--lime-line)] hover:text-[var(--ink)]"
                         >
-                            <span className="rounded-full bg-[var(--lime)] px-2 py-0.5 text-[0.7rem] font-semibold text-[var(--lime-ink)]">New</span>
-                            {latest.name} is here
-                            <ArrowRight className="h-3.5 w-3.5 transition-transform group-hover:translate-x-0.5" />
-                        </Link>
+                            <span className="h-1.5 w-1.5 rounded-full bg-[var(--lime)]" />
+                            ApexUI {SITE.version} · Open source on GitHub
+                            <ArrowUpRight className="h-3.5 w-3.5 transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5" />
+                        </a>
                     </motion.div>
 
                     <motion.h1

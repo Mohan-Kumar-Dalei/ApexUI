@@ -3,6 +3,7 @@ import { RouterProvider } from 'react-router-dom';
 import './index.css';
 import './site/styles/theme.css';
 import { router } from './site/router.jsx';
+import { installCdnFallback } from './site/ui/cdn.js';
 
 // Apply the saved theme before first paint so there is no flash.
 try {
@@ -11,5 +12,7 @@ try {
 } catch {
     document.documentElement.classList.add('theme-dark');
 }
+
+installCdnFallback();
 
 createRoot(document.getElementById('root')).render(<RouterProvider router={router} />);

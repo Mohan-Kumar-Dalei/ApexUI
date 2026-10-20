@@ -53,7 +53,7 @@ const PointerFollower = ({
             setHovered(false);
         };
 
-        container.addEventListener("pointermove", handleMove);
+        container.addEventListener("pointermove", handleMove, { passive: true });
         container.addEventListener("pointerleave", handleLeave);
 
         return () => {

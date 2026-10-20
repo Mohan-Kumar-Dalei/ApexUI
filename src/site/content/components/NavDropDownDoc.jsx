@@ -1,7 +1,8 @@
 import ComponentDoc from '../../docs/ComponentDoc.jsx';
+import { withCdn } from '../../ui/cdn.js';
 import NavDropDown from '../../../components/MainUI/ApexUI-Kit/NavDropDown/NavDropDown.jsx';
 
-const navigationData = [
+const navigationData = withCdn([
     {
         label: 'Features',
         type: 'services',
@@ -33,7 +34,7 @@ const navigationData = [
         ],
     },
     { label: 'Pricing', href: '#' },
-];
+], { w: 200 });
 
 const code = `import NavDropDown from './ApexUI-Kit/NavDropDown/NavDropDown.jsx';
 

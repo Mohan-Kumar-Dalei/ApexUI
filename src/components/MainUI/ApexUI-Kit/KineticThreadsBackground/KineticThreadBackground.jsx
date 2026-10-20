@@ -190,7 +190,7 @@ const KineticThreadsBackground = ({
             targetMouseRef.current.y = 0.5;
         };
         if (mouseInteraction) {
-            window.addEventListener('mousemove', handleMouseMove);
+            window.addEventListener('mousemove', handleMouseMove, { passive: true });
             window.addEventListener('mouseleave', handleMouseLeave);
         }
 
@@ -211,12 +211,19 @@ const KineticThreadsBackground = ({
             uniforms.uResolution.value.set(clientWidth, clientHeight);
         };
         window.addEventListener('resize', handleResize);
+        // Also follow the container itself (it can change size without a window resize).
+        const resizeObserver = new ResizeObserver(() => handleResize());
+        resizeObserver.observe(mountNode);
         handleResize(); // Initial call
 
         // Animation loop
         const clock = new THREE.Clock();
-        let animationFrameId;
+        let animationFrameId = 0;
+        // Only render while the background is on screen.
+        let visible = true;
         const animate = () => {
+            animationFrameId = 0;
+            if (!visible) return;
             uniforms.uTime.value = clock.getElapsedTime() * speed;
 
             // Smoothly update mouse position (lerping)
@@ -228,10 +235,17 @@ const KineticThreadsBackground = ({
             animationFrameId = requestAnimationFrame(animate);
         };
         animate();
+        const visibilityObserver = new IntersectionObserver(([entry]) => {
+            visible = entry.isIntersecting;
+            if (visible && !animationFrameId) animationFrameId = requestAnimationFrame(animate);
+        });
+        visibilityObserver.observe(mountNode);
 
         // Cleanup function
         return () => {
             cancelAnimationFrame(animationFrameId);
+            visibilityObserver.disconnect();
+            resizeObserver.disconnect();
             window.removeEventListener('resize', handleResize);
             window.removeEventListener('mousemove', handleMouseMove);
             window.removeEventListener('mouseleave', handleMouseLeave);

@@ -1,25 +1,26 @@
 import ComponentDoc from '../../docs/ComponentDoc.jsx';
+import { withCdn } from '../../ui/cdn.js';
 import Carousel from '../../../components/MainUI/ApexUI-Kit/Carousel/Carousel.jsx';
 import ParallaxCarousel from '../../../components/MainUI/ApexUI-Kit/ParallaxCarousel/ParallaxCarousel.jsx';
 import DragCarousel from '../../../components/MainUI/ApexUI-Kit/DragCarousel/DragCarousel.jsx';
 
-const slides = [
+const slides = withCdn([
     { imageUrl: '/assets/ironman.png', pngUrl: '/assets/png/iron-man.png', title: 'Iron Man', subtitle: 'Gain insights that matter.', text: 'Track your performance with our advanced analytics dashboard. Understand your users and make data-driven decisions.' },
     { imageUrl: '/assets/spiderman.png', pngUrl: '/assets/png/spider-man.png', title: 'Spider Man', subtitle: 'Swing into action.', text: 'Join Spider Man in an adventure through the city. Experience the thrill of web-slinging and crime-fighting.' },
     { imageUrl: '/assets/captainamerica.png', pngUrl: '/assets/png/captain-america.png', title: 'Captain America', subtitle: 'Stand tall and fight.', text: 'Join Captain America in the battle for justice. Experience the thrill of being a hero.' },
     { imageUrl: '/assets/hulk.png', pngUrl: '/assets/png/hulk.png', title: 'Hulk', subtitle: 'Unleash the beast within.', text: 'Join Hulk in a journey of strength and resilience. Experience the thrill of being the strongest Avenger.' },
     { imageUrl: '/assets/doctorStrange.png', pngUrl: '/assets/png/doctor-strange.png', title: 'Doctor Strange', subtitle: 'Master of the mystic arts.', text: 'Join Doctor Strange in a journey through the multiverse. Experience the thrill of bending reality.' },
     { imageUrl: '/assets/thanos.png', pngUrl: '/assets/png/thanos.png', title: 'Thanos', subtitle: 'The Mad Titan.', text: 'Join Thanos in his quest for the Infinity Stones. Experience the thrill of ultimate power.' },
-];
+], { w: 800 });
 
-const images = [
+const images = withCdn([
     '/assets/ironman.png',
     '/assets/captainamerica.png',
     '/assets/spiderman.png',
     '/assets/hulk.png',
     '/assets/doctorStrange.png',
     '/assets/thanos.png',
-];
+], { w: 800 });
 
 const slidesCode = (withPng) => `const slides = [
   {

@@ -1,14 +1,15 @@
 import ComponentDoc from '../../docs/ComponentDoc.jsx';
+import { withCdn } from '../../ui/cdn.js';
 import ToolTip from '../../../components/MainUI/ApexUI-Kit/ToolTip/ToolTip.jsx';
 
-const people = [
+const people = withCdn([
     { id: 1, name: 'Captain America', designation: 'Leader of the Avengers', image: '/assets/captainamerica.png' },
     { id: 2, name: 'Doctor Strange', designation: 'Sorcerer Supreme', image: '/assets/doctorStrange.png' },
     { id: 3, name: 'Iron Man', designation: 'Leader Of Stark Industries', image: '/assets/ironman.png' },
     { id: 4, name: 'HULK', designation: 'Scientist', image: '/assets/hulk.png' },
     { id: 5, name: 'Spider-Man', designation: 'Friendly Neighborhood Spider-Man', image: '/assets/spiderman.png' },
     { id: 6, name: 'Thanos', designation: 'The Mad Titan', image: '/assets/thanos.png' },
-];
+], { w: 192 });
 
 const code = `import ToolTip from './ApexUI-Kit/ToolTip/ToolTip.jsx';
 

@@ -207,6 +207,9 @@ const LensFlareBackground = ({
         };
         updatePlacement();
         window.addEventListener("resize", updatePlacement);
+        // Also follow the container itself (it can change size without a window resize).
+        const resizeObserver = new ResizeObserver(() => updatePlacement());
+        if (mountRef.current) resizeObserver.observe(mountRef.current);
 
         const handleMouseMove = (e) => {
             if (!mountRef.current) return;
@@ -215,9 +218,13 @@ const LensFlareBackground = ({
             const y = (e.clientY - rect.top) / rect.height;
             mouseRef.current = { x, y };
         };
-        window.addEventListener("mousemove", handleMouseMove);
+        window.addEventListener("mousemove", handleMouseMove, { passive: true });
 
+        // Only render while the background is on screen.
+        let visible = true;
         const animate = (now) => {
+            frameId = 0;
+            if (!visible) return;
             uniforms.iTime.value = now * 0.001;
             const smoothing = 0.92;
             smoothMouseRef.current.x =
@@ -229,9 +236,16 @@ const LensFlareBackground = ({
             frameId = requestAnimationFrame(animate);
         };
         frameId = requestAnimationFrame(animate);
+        const visibilityObserver = new IntersectionObserver(([entry]) => {
+            visible = entry.isIntersecting;
+            if (visible && !frameId) frameId = requestAnimationFrame(animate);
+        });
+        if (mountRef.current) visibilityObserver.observe(mountRef.current);
 
         return () => {
             if (frameId) cancelAnimationFrame(frameId);
+            visibilityObserver.disconnect();
+            resizeObserver.disconnect();
             window.removeEventListener("resize", updatePlacement);
             window.removeEventListener("mousemove", handleMouseMove);
             renderer.dispose();

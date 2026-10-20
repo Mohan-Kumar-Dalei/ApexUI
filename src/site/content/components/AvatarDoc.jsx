@@ -1,13 +1,14 @@
 import ComponentDoc from '../../docs/ComponentDoc.jsx';
+import { withCdn } from '../../ui/cdn.js';
 import Avatar from '../../../components/MainUI/ApexUI-Kit/Avatar/Avatar.jsx';
 
-const users = [
+const users = withCdn([
     { name: 'Iron Man', imageUrl: '/assets/ironman.png', color: '#6366f1' },
     { name: 'Spider Man', imageUrl: '/assets/spiderman.png', color: '#ec4899' },
     { name: 'HULK', imageUrl: '/assets/hulk.png', color: '#22c55e' },
     { name: 'Doc Strange', imageUrl: '/assets/doctorStrange.png', color: '#f97316' },
     { name: 'Captain', imageUrl: '/assets/captainamerica.png', color: '#06b6d4' },
-];
+], { w: 192 });
 
 const code = `import Avatar from './ApexUI-Kit/Avatar/Avatar.jsx';
 

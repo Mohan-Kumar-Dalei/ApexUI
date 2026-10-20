@@ -82,10 +82,22 @@ function BluePrintBackground({ color = '#9ae600', borderColor = 'rgb(98, 116, 14
             }
         };
 
-        window.addEventListener("mousemove", handleMouseMove);
+        // Hit-test at most once per frame instead of on every mousemove event.
+        let moveFrame = 0;
+        let lastMove = null;
+        const onMouseMove = (e) => {
+            lastMove = e;
+            if (moveFrame) return;
+            moveFrame = requestAnimationFrame(() => {
+                moveFrame = 0;
+                handleMouseMove(lastMove);
+            });
+        };
+        window.addEventListener("mousemove", onMouseMove, { passive: true });
 
         return () => {
-            window.removeEventListener("mousemove", handleMouseMove);
+            window.removeEventListener("mousemove", onMouseMove);
+            cancelAnimationFrame(moveFrame);
             if (scrollTween && typeof scrollTween.kill === "function") {
                 try { scrollTween.kill(); } catch { /* ignore */ }
             }

@@ -19,7 +19,10 @@ const columns = [
         title: 'Library',
         links: [
             { label: `All ${componentPages.length} components`, to: '/components' },
-            ...componentPages.filter((c) => c.badge).map((c) => ({ label: c.name, to: c.path })),
+            ...['/components/hyper-card', '/components/glare-card', '/components/lens-flare-background']
+                .map((path) => componentPages.find((c) => c.path === path))
+                .filter(Boolean)
+                .map((c) => ({ label: c.name, to: c.path })),
         ],
     },
     {

@@ -4,7 +4,7 @@ import { AnimatePresence, motion } from 'framer-motion';
 import { Code2, Eye, Grid3x3, Maximize2, Minimize2, Package, RotateCcw, Square, Sparkle } from 'lucide-react';
 import CodeBlock, { CommandLine } from '../ui/CodeBlock.jsx';
 import { findPage } from '../config/navigation.js';
-import { CliChip, DocFooter, DocHero, NewChip, Pager } from './parts.jsx';
+import { CliChip, DocFooter, DocHero, Pager } from './parts.jsx';
 import { PAD_X } from './style.js';
 
 const STAGE_BG = [
@@ -117,7 +117,7 @@ function Stage({ variant, variants, activeVariant, onVariant }) {
                         animate={{ opacity: 1 }}
                         exit={{ opacity: 0 }}
                         transition={{ duration: 0.18 }}
-                        className={`relative isolate flex flex-1 items-center justify-center overflow-hidden [transform:translateZ(0)] ${variant.fullBleed ? 'bg-[#09090b] text-white' : 'bg-[var(--stage)] text-[var(--stage-ink)]'} ${full ? 'h-screen' : STAGE_H} ${variant.fullBleed ? '' : 'p-[clamp(1.25rem,3vw,3.5rem)]'} ${variant.previewClassName ?? ''}`}
+                        className={`relative isolate flex flex-1 items-center justify-center overflow-hidden [transform:translateZ(0)] ${variant.fullBleed ? 'bg-[#09090b] text-white' : 'bg-[var(--stage)] text-[var(--stage-ink)]'} ${full ? 'h-screen' : STAGE_H} ${variant.fullBleed ? '' : 'p-[clamp(0.75rem,3vw,3.5rem)]'} ${variant.previewClassName ?? ''}`}
                     >
                         {bgClass && <div aria-hidden="true" className={`pointer-events-none absolute inset-0 ${bgClass} ${variant.fullBleed ? 'stage-overlay z-20' : '-z-10'}`} />}
                         {variant.preview}
@@ -199,17 +199,17 @@ function Inspector({ variant, wide }) {
     ];
 
     return (
-        <aside aria-label="Inspector" className={`flex min-w-0 flex-col border-t border-[var(--line)] bg-[var(--panel)] ${wide ? '' : 'xl:border-l xl:border-t-0'}`}>
+        <aside aria-label="Inspector" className={`flex min-w-0 flex-col border-t border-[var(--line)] bg-[var(--panel)] ${wide ? '' : '2xl:border-l 2xl:border-t-0'}`}>
             {variant.controls && (
                 <section className="border-b border-[var(--line)] p-5">
                     <h3 className="mb-4 font-mono text-[0.68rem] uppercase tracking-[0.18em] text-[var(--lime-text)]">Playground</h3>
-                    <div className="text-sm text-[var(--ink-2)] xl:[&_.grid]:!grid-cols-1">{variant.controls}</div>
+                    <div className="text-sm text-[var(--ink-2)] 2xl:[&_.grid]:!grid-cols-1">{variant.controls}</div>
                 </section>
             )}
             <div className="border-b border-[var(--line)] px-5 py-3">
                 <Segmented size="sm" value={tab} onChange={setTab} options={tabs} />
             </div>
-            <div className={`thin-scroll flex-1 overflow-y-auto p-5 ${wide ? '' : 'xl:max-h-[clamp(26rem,64vh,60rem)]'}`}>
+            <div className={`thin-scroll flex-1 overflow-y-auto p-5 ${wide ? '' : '2xl:max-h-[clamp(26rem,64vh,60rem)]'}`}>
                 <AnimatePresence mode="wait" initial={false}>
                     <motion.div key={tab} initial={{ opacity: 0, y: 4 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }} transition={{ duration: 0.16 }}>
                         {tab === 'props' && <PropsList rows={variant.props} />}
@@ -264,7 +264,6 @@ export default function ComponentDoc({ title, description, variants, wide = fals
                         {page?.num && <span>No. {page.num}</span>}
                         {page?.category && <span>· {page.category}</span>}
                         {multi && <span>· {list.length} variants</span>}
-                        {page?.badge && <NewChip />}
                     </>
                 }
                 title={title}
@@ -273,7 +272,7 @@ export default function ComponentDoc({ title, description, variants, wide = fals
             />
 
             {/* wide: the stage takes the full width and the inspector moves below it (e.g. carousels). */}
-            <div className={`grid border-y border-[var(--line)] ${wide ? '' : 'xl:grid-cols-[minmax(0,1fr)_clamp(22rem,24vw,30rem)]'}`}>
+            <div className={`grid border-y border-[var(--line)] ${wide ? '' : '2xl:grid-cols-[minmax(0,1fr)_clamp(22rem,22vw,30rem)]'}`}>
                 <div className="flex min-w-0 flex-col">
                     {multi && variant.description && (
                         <p className={`${PAD_X} border-b border-[var(--line)] py-3 text-sm text-[var(--ink-2)]`}>

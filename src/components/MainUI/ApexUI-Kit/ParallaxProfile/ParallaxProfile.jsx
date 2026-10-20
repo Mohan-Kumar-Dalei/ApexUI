@@ -44,7 +44,7 @@ const ParallaxProfileCard = ({ profile }) => {
             gsap.to(card, { duration: 1, rotationX: 0, rotationY: 0, scale: 1, ease: "elastic.out(1, 0.3)" });
         };
         gsap.set(card, { transformPerspective: 1000 });
-        card.addEventListener("mousemove", handleMouseMove);
+        card.addEventListener("mousemove", handleMouseMove, { passive: true });
         card.addEventListener("mouseleave", handleMouseLeave);
         return () => {
             card.removeEventListener("mousemove", handleMouseMove);

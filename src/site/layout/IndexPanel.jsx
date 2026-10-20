@@ -3,10 +3,6 @@ import { NavLink } from 'react-router-dom';
 import { Search, X } from 'lucide-react';
 import { componentPages, componentsByCategory, guidePages, prefetch } from '../config/navigation.js';
 
-export function NewDot() {
-    return <span className="h-1.5 w-1.5 shrink-0 rounded-full bg-[var(--lime)] shadow-[0_0_8px_var(--lime)]" title="New" />;
-}
-
 function Row({ page, onNavigate }) {
     return (
         <NavLink
@@ -25,7 +21,6 @@ function Row({ page, onNavigate }) {
                 <>
                     <span className={`w-5 shrink-0 font-mono text-[0.68rem] tabular-nums ${isActive ? 'text-[var(--lime-text)]' : 'text-[var(--ink-3)]'}`}>{page.num}</span>
                     <span className="truncate">{page.name}</span>
-                    {page.badge && <NewDot />}
                     {isActive && <span className="absolute -left-3 top-1.5 bottom-1.5 w-[2px] rounded-full bg-[var(--lime)]" />}
                 </>
             )}

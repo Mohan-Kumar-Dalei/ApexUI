@@ -1,4 +1,4 @@
-import React, { useRef, useMemo } from 'react';
+import React, { useRef, useMemo, useEffect, useState } from 'react';
 import { Canvas, useFrame } from '@react-three/fiber';
 import * as THREE from 'three';
 // Helper function to convert hex color to rgba for CSS
@@ -102,8 +102,20 @@ const LuminousParticleOcean = ({
 
     const lightColorRgba = useMemo(() => hexToRgba(sphereColor, 0.5), [sphereColor]);
 
+    // Pause the 3D scene while it is off screen.
+    const wrapperRef = useRef(null);
+    const [inView, setInView] = useState(true);
+    useEffect(() => {
+        const el = wrapperRef.current;
+        if (!el || typeof IntersectionObserver === 'undefined') return undefined;
+        const observer = new IntersectionObserver(([entry]) => setInView(entry.isIntersecting));
+        observer.observe(el);
+        return () => observer.disconnect();
+    }, []);
+
     return (
         <div
+            ref={wrapperRef}
             className="relative w-screen h-[60vh] lg:h-[80vh] overflow-hidden"
             style={{
                 background: `linear-gradient(to bottom, ${bgColor1}, ${bgColor2})`
@@ -130,6 +142,8 @@ const LuminousParticleOcean = ({
 
             <Canvas
                 camera={{ position: [0, 60, 150], fov: 55 }}
+                dpr={[1, 1.75]}
+                frameloop={inView ? 'always' : 'never'}
             >
                 {/* Sunlight: Also uses the sphereColor prop */}
                 <pointLight

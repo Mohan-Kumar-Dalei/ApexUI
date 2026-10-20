@@ -4,7 +4,7 @@ import { AnimatePresence, motion } from 'framer-motion';
 import { ArrowRight, Box, Check, CodeXml, Layers, Palette, Plus, Rocket, Zap } from 'lucide-react';
 import DocShell, { DocSection } from '../../docs/DocShell.jsx';
 import { CommandLine } from '../../ui/CodeBlock.jsx';
-import { LOGO_FULL } from '../../ui/Logo.jsx';
+import { LOGO_FULL } from '../../ui/logoSrc.js';
 import { CATEGORIES, componentPages, SITE } from '../../config/navigation.js';
 
 const features = [

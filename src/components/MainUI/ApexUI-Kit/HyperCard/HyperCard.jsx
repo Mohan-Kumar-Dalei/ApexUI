@@ -34,8 +34,10 @@ const HyperCard = ({
         const canvas = canvasRef.current;
         if (!canvas) return;
         const ctx = canvas.getContext("2d");
-        let animationFrame;
+        let animationFrame = 0;
         let w, h;
+        // Only draw while the card is on screen.
+        let visible = true;
 
         const init = () => {
             w = canvas.width = canvas.offsetWidth;
@@ -50,7 +52,8 @@ const HyperCard = ({
         };
 
         const draw = () => {
-            if (!ctx) return;
+            animationFrame = 0;
+            if (!ctx || !visible) return;
             ctx.clearRect(0, 0, w, h);
             ctx.fillStyle = starColor;
 
@@ -84,7 +87,18 @@ const HyperCard = ({
         init();
         draw();
         window.addEventListener("resize", init);
-        return () => { cancelAnimationFrame(animationFrame); window.removeEventListener("resize", init); };
+        const visibilityObserver = typeof IntersectionObserver !== "undefined"
+            ? new IntersectionObserver(([entry]) => {
+                visible = entry.isIntersecting;
+                if (visible && !animationFrame) animationFrame = requestAnimationFrame(draw);
+            })
+            : null;
+        visibilityObserver?.observe(canvas);
+        return () => {
+            cancelAnimationFrame(animationFrame);
+            visibilityObserver?.disconnect();
+            window.removeEventListener("resize", init);
+        };
     }, [starColor, starCount, baseSpeed]);
 
     // GSAP speed tween (cleaned up)

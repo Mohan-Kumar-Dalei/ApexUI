@@ -20,10 +20,6 @@ export function Meta({ children }) {
     return <div className="flex flex-wrap items-center gap-x-3 gap-y-1 font-mono text-[0.7rem] uppercase tracking-[0.18em] text-[var(--ink-3)]">{children}</div>;
 }
 
-export function NewChip() {
-    return <span className="rounded-full bg-[var(--lime)] px-2 py-0.5 text-[0.62rem] font-semibold tracking-[0.12em] text-[var(--lime-ink)]">New</span>;
-}
-
 export function CliChip({ command }) {
     return (
         <div className="inline-flex max-w-full items-center gap-3 rounded-full border border-[var(--line-strong)] bg-[var(--panel)] py-1.5 pl-4 pr-1.5 font-mono text-[0.78rem] text-[var(--ink-2)] shadow-[var(--shadow)]">

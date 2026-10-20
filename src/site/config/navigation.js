@@ -1,3 +1,4 @@
+import { cdn } from '../ui/cdn.js';
 /*
  * Single source of truth for the docs: the sidebar, search, the component
  * gallery, prev/next links and the router all read from here.
@@ -20,7 +21,7 @@ export const SITE = {
 
 export const CATEGORIES = ['Backgrounds', 'Cards', 'Text & Motion', 'Navigation', 'Interactive'];
 
-const shot = (file) => `/assets/componentsimage/${encodeURIComponent(file)}`;
+const shot = (file) => cdn(`/assets/componentsimage/${encodeURIComponent(file)}`, { w: 960 });
 
 export const guidePages = [
     {
@@ -54,7 +55,6 @@ export const componentPages = [
         name: 'Accordion Marquee',
         path: '/components/accordion-marquee',
         load: () => import('../content/components/AccordionMarqueeDoc.jsx'),
-        badge: 'New',
         category: 'Text & Motion',
         image: shot('accordion-marquee.png'),
         summary: 'An interactive accordion with a smooth marquee effect on hover.',
@@ -79,7 +79,6 @@ export const componentPages = [
         name: 'BluePrint Background',
         path: '/components/blueprint-background',
         load: () => import('../content/components/BluePrintBackgroundDoc.jsx'),
-        badge: 'New',
         category: 'Backgrounds',
         image: shot('blueprint-background.png'),
         summary: 'An animated blueprint-style grid background with interactive hover effects.',
@@ -88,7 +87,6 @@ export const componentPages = [
         name: 'Cards',
         path: '/components/cards',
         load: () => import('../content/components/CardsDoc.jsx'),
-        badge: 'New',
         category: 'Cards',
         image: shot('meteor-card.png'),
         summary: 'Basic and meteor-shower cards for showcasing content with motion.',

@@ -66,7 +66,7 @@ const ParallaxCard = ({ cardData = [], tiltEnable, glareEnable, scale, perspecti
                 }
             };
 
-            cardElement.addEventListener("mousemove", handleMouseMove);
+            cardElement.addEventListener("mousemove", handleMouseMove, { passive: true });
             cardElement.addEventListener("mouseleave", handleMouseLeave);
 
             cleanups.push(() => {

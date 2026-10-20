@@ -22,30 +22,29 @@ const WaterDropReveal = ({
             y: mouse.y,
             duration: animationSpeed,
             ease: "power2.out",
+            overwrite: true,
             onUpdate: () => {
                 if (dropRef.current) {
                     dropRef.current.setAttribute("data-x", mouseAnim.current.x);
                     dropRef.current.setAttribute("data-y", mouseAnim.current.y);
                 }
-                if (textRef.current) {
-                    const xShift = (mouseAnim.current.x - 0.5) * 20;
-                    const yShift = (mouseAnim.current.y - 0.5) * 10;
-                    const rotateX = -(mouseAnim.current.y - 0.5) * 10;
-                    const rotateY = (mouseAnim.current.x - 0.5) * 15;
-                    gsap.to(textRef.current, {
-                        x: xShift,
-                        y: yShift,
-                        rotateX,
-                        rotateY,
-                        scale: 1.08,
-                        transformPerspective: 600,
-                        transformOrigin: "center",
-                        duration: animationSpeed,
-                        ease: "power3.out",
-                    });
-                }
             },
         });
+        // One tween per pointer move (it used to start a new tween on every frame).
+        if (textRef.current) {
+            gsap.to(textRef.current, {
+                x: (mouse.x - 0.5) * 20,
+                y: (mouse.y - 0.5) * 10,
+                rotateX: -(mouse.y - 0.5) * 10,
+                rotateY: (mouse.x - 0.5) * 15,
+                scale: 1.08,
+                transformPerspective: 600,
+                transformOrigin: "center",
+                duration: animationSpeed,
+                ease: "power3.out",
+                overwrite: "auto",
+            });
+        }
     }, [mouse, hovered, animationSpeed]);
 
     const handleMouseMove = (e) => {

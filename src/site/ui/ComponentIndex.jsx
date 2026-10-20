@@ -29,7 +29,6 @@ export function ComponentTile({ item, index = 0 }) {
                         className="h-full w-full object-cover transition duration-700 ease-[var(--ease-out)] group-hover:scale-[1.05]"
                     />
                     <span className="absolute left-2.5 top-2.5 rounded-full bg-black/55 px-2 py-0.5 font-mono text-[0.65rem] text-white/80 backdrop-blur">No. {item.num}</span>
-                    {item.badge && <span className="absolute right-2.5 top-2.5 rounded-full bg-[var(--lime)] px-2 py-0.5 text-[0.62rem] font-semibold uppercase tracking-wider text-[var(--lime-ink)]">New</span>}
                     <span className="absolute bottom-2.5 right-2.5 inline-flex h-9 w-9 translate-y-2 items-center justify-center rounded-full bg-[var(--lime)] text-[var(--lime-ink)] opacity-0 transition duration-300 group-hover:translate-y-0 group-hover:opacity-100">
                         <ArrowUpRight className="h-4 w-4" />
                     </span>
@@ -89,10 +88,9 @@ export function ComponentList({ items }) {
                         >
                             <span className="font-mono text-[0.78rem] text-[var(--ink-3)] transition-colors group-hover:text-[var(--lime-text)]">{item.num}</span>
                             <span className="flex min-w-0 items-center gap-3">
-                                <span className="font-display truncate text-[clamp(1.4rem,2.6vw,2.7rem)] font-semibold leading-none text-[var(--ink)] transition-transform duration-500 ease-[var(--ease-out)] group-hover:translate-x-2">
+                                <span className="font-display truncate text-[clamp(1.05rem,2.6vw,2.7rem)] font-semibold leading-none text-[var(--ink)] transition-transform duration-500 ease-[var(--ease-out)] group-hover:translate-x-2">
                                     {item.name}
                                 </span>
-                                {item.badge && <span className="shrink-0 rounded-full bg-[var(--lime)] px-2 py-0.5 text-[0.6rem] font-semibold uppercase tracking-wider text-[var(--lime-ink)]">New</span>}
                             </span>
                             <span className="hidden font-mono text-[0.7rem] uppercase tracking-[0.16em] text-[var(--ink-3)] md:block">{item.category}</span>
                             <span className="inline-flex h-10 w-10 items-center justify-center justify-self-end rounded-full border border-[var(--line)] text-[var(--ink-3)] transition-all duration-300 group-hover:border-[var(--lime)] group-hover:bg-[var(--lime)] group-hover:text-[var(--lime-ink)]">

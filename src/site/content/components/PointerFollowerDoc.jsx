@@ -1,5 +1,16 @@
 import ComponentDoc from '../../docs/ComponentDoc.jsx';
 import PointerFollower from '../../../components/MainUI/ApexUI-Kit/PointerFollower/PointerFollower.jsx';
+import { withCdn } from '../../ui/cdn.js';
+
+// Same people as the component's defaults, served resized from the CDN.
+const previewPeople = withCdn([
+    { id: 1, name: 'Captain America', job: 'Leader of the Avengers', img: '/assets/captainamerica.png' },
+    { id: 2, name: 'Doctor Strange', job: 'Sorcerer Supreme', img: '/assets/doctorStrange.png' },
+    { id: 3, name: 'Iron Man', job: 'Leader Of Stark Industries', img: '/assets/ironman.png' },
+    { id: 4, name: 'HULK', job: 'Scientist', img: '/assets/hulk.png' },
+    { id: 5, name: 'Spider-Man', job: 'Friendly Neighborhood Spider-Man', img: '/assets/spiderman.png' },
+    { id: 6, name: 'Thanos', job: 'The Mad Titan', img: '/assets/thanos.png' },
+], { w: 480 });
 
 const code = `import PointerFollower from './ApexUI-Kit/PointerFollower/PointerFollower.jsx';
 
@@ -42,7 +53,7 @@ export default function PointerFollowerDoc() {
             description="A custom pointer that follows the cursor and reveals people, images and details as it moves."
             preview={
                 <div className="flex w-full flex-col items-center justify-evenly gap-10">
-                    <PointerFollower cursorColor="#a3e635" badgeColor="#a3e635" badgeTextColor="#0a0a0a" />
+                    <PointerFollower people={previewPeople} cursorColor="#a3e635" badgeColor="#a3e635" badgeTextColor="#0a0a0a" />
                     <p className="text-lg font-medium text-zinc-500">Move your cursor</p>
                 </div>
             }

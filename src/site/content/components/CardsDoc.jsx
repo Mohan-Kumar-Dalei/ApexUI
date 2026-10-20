@@ -1,24 +1,25 @@
 import ComponentDoc from '../../docs/ComponentDoc.jsx';
+import { withCdn } from '../../ui/cdn.js';
 import BasicCard from '../../../components/MainUI/ApexUI-Kit/Cards/BasicCard.jsx';
 import MeteorCard from '../../../components/MainUI/ApexUI-Kit/MeteorCard/MeteorCard.jsx';
 
-const basicData = [
+const basicData = withCdn([
     {
         title: 'Spider Man',
         summary: 'A superhero film based on the Marvel Comics character Spider-Man.',
         image: '/assets/spiderman.png',
         link: '',
     },
-];
+], { w: 800 });
 
-const meteorData = [
+const meteorData = withCdn([
     {
         imageUrl: '/assets/black-panther.png',
         title: 'Black Panther',
         description: 'Experience the power and grace of the Black Panther in the digital realm.',
         buttonText: 'Explore Mission',
     },
-];
+], { w: 800 });
 
 const dependencies = [
     { name: 'React', desc: 'A JavaScript library for building user interfaces.' },
