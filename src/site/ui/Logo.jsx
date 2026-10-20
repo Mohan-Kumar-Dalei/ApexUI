@@ -2,7 +2,7 @@ import { Link } from 'react-router-dom';
 import { SITE } from '../config/navigation.js';
 
 /* The official ApexUI logo files from /public — the images themselves are unchanged. */
-import { LOGO_FULL, LOGO_ICON } from './logoSrc.js';
+import { LOGO_ICON } from './logoSrc.js';
 
 export function LogoMark({ className = 'h-10 w-10' }) {
     return (

@@ -304,18 +304,7 @@ pre,
   animation-timing-function: var(--vt-ease);
 }
 
-/* App frame geometry: no gap on small screens, a thin bezel from lg up. */
-:root {
-  --pad: 0px;
-}
-@media (min-width: 1024px) {
-  :root {
-    --pad: 0.6rem;
-  }
-}
-.h-shell {
-  height: calc(100dvh - 2 * var(--pad));
-}
-.min-h-shell {
-  min-height: calc(100dvh - 2 * var(--pad));
+/* Anchored sections land below the sticky navbar. */
+html {
+  scroll-padding-top: 5rem;
 }

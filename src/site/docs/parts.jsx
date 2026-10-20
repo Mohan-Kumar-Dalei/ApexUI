@@ -48,46 +48,56 @@ export function DocHero({ meta, title, description, aside }) {
     );
 }
 
-/* Large previous / next cells at the bottom of every docs page. */
+/* Compact page header used inside the docs layout (guides and component pages). */
+export function PageHeader({ eyebrow, title, description, aside }) {
+    return (
+        <header className="flex flex-col gap-5 pb-8 lg:flex-row lg:items-end lg:justify-between">
+            <div className="min-w-0">
+                {eyebrow && <p className="text-[0.82rem] font-medium text-[var(--lime-text)]">{eyebrow}</p>}
+                <h1 className="font-display mt-2 text-[clamp(2rem,3.4vw,3.2rem)] font-semibold leading-[1.05] tracking-[-0.035em] text-[var(--ink)]">{title}</h1>
+                {description && <p className="mt-3 max-w-[62ch] text-[1.02rem] leading-relaxed text-[var(--ink-2)]">{description}</p>}
+            </div>
+            {aside && <div className="min-w-0 shrink-0">{aside}</div>}
+        </header>
+    );
+}
+
+/* Previous / next cards at the bottom of every docs page. */
 export function Pager({ path }) {
     const i = allDocPages.findIndex((p) => p.path === path);
     if (i === -1) return null;
     const prev = allDocPages[i - 1];
     const next = allDocPages[i + 1];
 
-    const cell = (page, dir) =>
+    const card = (page, dir) =>
         page ? (
             <Link
                 to={page.path}
                 onMouseEnter={() => prefetch(page)}
-                className={`group flex flex-1 flex-col gap-3 ${PAD_X} py-9 transition-colors hover:bg-[var(--panel)] ${dir === 'next' ? 'items-end text-right' : ''}`}
+                className={`group flex flex-col gap-1 rounded-xl border border-[var(--line)] p-4 transition-colors hover:border-[var(--lime-line)] hover:bg-[var(--panel)] ${dir === 'next' ? 'items-end text-right sm:col-start-2' : ''}`}
             >
-                <span className="flex items-center gap-2 font-mono text-[0.7rem] uppercase tracking-[0.18em] text-[var(--ink-3)]">
-                    {dir === 'prev' && <ArrowLeft className="h-3.5 w-3.5 transition-transform group-hover:-translate-x-1" />}
-                    {dir === 'prev' ? 'Previous' : 'Next'} · No. {page.num}
-                    {dir === 'next' && <ArrowRight className="h-3.5 w-3.5 transition-transform group-hover:translate-x-1" />}
+                <span className="flex items-center gap-1.5 text-[0.78rem] text-[var(--ink-3)]">
+                    {dir === 'prev' && <ArrowLeft className="h-3.5 w-3.5 transition-transform group-hover:-translate-x-0.5" />}
+                    {dir === 'prev' ? 'Previous' : 'Next'}
+                    {dir === 'next' && <ArrowRight className="h-3.5 w-3.5 transition-transform group-hover:translate-x-0.5" />}
                 </span>
-                <span className="font-display text-[clamp(1.5rem,2.4vw,2.4rem)] font-semibold leading-none text-[var(--ink)] transition-colors group-hover:text-[var(--lime-text)]">
-                    {page.name}
-                </span>
+                <span className="text-[0.98rem] font-semibold text-[var(--ink)] transition-colors group-hover:text-[var(--lime-text)]">{page.name}</span>
             </Link>
-        ) : (
-            <span className="hidden flex-1 sm:block" />
-        );
+        ) : null;
 
     return (
-        <nav aria-label="Pagination" className="mt-16 flex flex-col border-t border-[var(--line)] sm:flex-row sm:divide-x sm:divide-[var(--line)]">
-            {cell(prev, 'prev')}
-            {cell(next, 'next')}
+        <nav aria-label="Pagination" className="mt-16 grid gap-3 border-t border-[var(--line)] pt-8 sm:grid-cols-2">
+            {card(prev, 'prev')}
+            {card(next, 'next')}
         </nav>
     );
 }
 
 export function DocFooter() {
     return (
-        <footer className={`${PAD_X} flex flex-wrap items-center justify-between gap-3 border-t border-[var(--line)] py-6 font-mono text-[0.7rem] text-[var(--ink-3)]`}>
-            <span>© {new Date().getFullYear()} ApexUI · MIT</span>
-            <a href={SITE.github} target="_blank" rel="noopener noreferrer" className="hover:text-[var(--ink)]">Edit on GitHub ↗</a>
+        <footer className="mt-10 flex flex-wrap items-center justify-between gap-3 border-t border-[var(--line)] py-6 text-[0.8rem] text-[var(--ink-3)]">
+            <span>© {new Date().getFullYear()} ApexUI · MIT licensed</span>
+            <a href={SITE.github} target="_blank" rel="noopener noreferrer" className="hover:text-[var(--ink)]">Edit this page on GitHub ↗</a>
         </footer>
     );
 }

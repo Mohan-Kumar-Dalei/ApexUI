@@ -2,10 +2,9 @@ import { useEffect } from 'react';
 import { ScrollRestoration, useLocation, useMatches, useNavigation, useOutlet } from 'react-router-dom';
 import { AnimatePresence, motion } from 'framer-motion';
 import { Toaster } from 'sonner';
-import Dock from './Dock.jsx';
-import IndexPanel from './IndexPanel.jsx';
-import TopBar from './TopBar.jsx';
-import MobileBar from './MobileBar.jsx';
+import Navbar from './Navbar.jsx';
+import Sidebar from './Sidebar.jsx';
+import MobileDrawer from './MobileDrawer.jsx';
 import CommandMenu from './CommandMenu.jsx';
 import FeedbackDialog from './FeedbackDialog.jsx';
 
@@ -28,9 +27,9 @@ function NavProgress() {
 }
 
 /*
- * The whole site lives in one framed "window": dock on the left, the docs
- * index next to it on docs pages, and a fluid main column that fills any
- * screen width (no max-width cap), from phones to 27" displays.
+ * Classic docs layout: a sticky top navbar on every page; docs pages add a
+ * left sidebar (desktop) or a slide-in drawer (mobile). Other pages use the
+ * full width under the navbar.
  */
 export default function AppShell() {
     const matches = useMatches();
@@ -39,7 +38,7 @@ export default function AppShell() {
     // own content while it fades out.
     const outlet = useOutlet();
     const handle = [...matches].reverse().find((m) => m.handle)?.handle ?? {};
-    const showIndex = Boolean(handle.page);
+    const showSidebar = Boolean(handle.page);
 
     useEffect(() => {
         document.title = handle.title ?? 'ApexUI';
@@ -54,27 +53,32 @@ export default function AppShell() {
         }
     }, []);
 
+    const page = (
+        <AnimatePresence mode="wait" initial={false}>
+            <motion.div
+                key={pathname}
+                initial={{ opacity: 0, y: 6 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0 }}
+                transition={{ duration: 0.2, ease: [0.22, 1, 0.36, 1] }}
+            >
+                {outlet}
+            </motion.div>
+        </AnimatePresence>
+    );
+
     return (
-        <div className="min-h-dvh bg-[var(--frame)] p-[var(--pad)] text-[var(--ink)]">
-            <div className="min-h-shell flex overflow-clip bg-[var(--bg)] lg:rounded-[1.25rem] lg:border lg:border-[var(--line)]">
-                <Dock />
-                {showIndex && <IndexPanel />}
-                <main id="main" className="relative min-w-0 flex-1 pb-24 lg:pb-0">
-                    <TopBar showIndexToggle={showIndex} />
-                    <AnimatePresence mode="wait" initial={false}>
-                        <motion.div
-                            key={pathname}
-                            initial={{ opacity: 0, y: 6 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            exit={{ opacity: 0 }}
-                            transition={{ duration: 0.22, ease: [0.22, 1, 0.36, 1] }}
-                        >
-                            {outlet}
-                        </motion.div>
-                    </AnimatePresence>
-                </main>
-            </div>
-            <MobileBar />
+        <div className="min-h-dvh bg-[var(--bg)] text-[var(--ink)]">
+            <Navbar />
+            {showSidebar ? (
+                <div className="mx-auto flex w-full max-w-[100rem]">
+                    <Sidebar />
+                    <main id="main" className="min-w-0 flex-1">{page}</main>
+                </div>
+            ) : (
+                <main id="main" className="min-w-0">{page}</main>
+            )}
+            <MobileDrawer />
             <CommandMenu />
             <FeedbackDialog />
             <NavProgress />

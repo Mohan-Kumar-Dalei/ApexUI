@@ -25,7 +25,7 @@ const reveal = {
     transition: { duration: 0.7, ease },
 };
 
-const CONTAINER = `${PAD_X} mx-auto w-full max-w-[110rem]`;
+const CONTAINER = `${PAD_X} mx-auto w-full max-w-[100rem]`;
 
 const people = withCdn([
     { id: 1, name: 'Captain America', designation: 'Leader of the Avengers', image: '/assets/captainamerica.png' },
@@ -332,9 +332,9 @@ function Families() {
             <SectionHead eyebrow="The kit" title={<>Five families, <span className="text-accent">one kit.</span></>}>
                 Every component has a live playground, a props table and a one-line install.
             </SectionHead>
-            <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4 xl:grid-rows-2">
+            <div className="grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-4 xl:grid-rows-2">
                 {groups.map(({ category, items, cover }, i) => (
-                    <motion.div key={category} {...reveal} transition={{ ...reveal.transition, delay: i * 0.06 }} className={i === 0 ? 'md:col-span-2 xl:row-span-2' : ''}>
+                    <motion.div key={category} {...reveal} transition={{ ...reveal.transition, delay: i * 0.06 }} className={`min-w-0 ${i === 0 ? 'md:col-span-2 xl:row-span-2' : ''}`}>
                         <Link
                             to={`/components?category=${encodeURIComponent(category)}`}
                             className="group flex h-full flex-col overflow-hidden rounded-[1.4rem] border border-[var(--line)] bg-[var(--panel)] transition duration-300 hover:-translate-y-1 hover:border-[var(--lime-line)] hover:shadow-[var(--shadow)]"

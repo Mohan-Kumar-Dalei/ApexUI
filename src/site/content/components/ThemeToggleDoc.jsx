@@ -102,6 +102,7 @@ export default function ThemeToggleDoc() {
             cli="theme-toggle"
             props={props}
             dependencies={dependencies}
+            extraToc={[{ id: 'setup', label: 'Setup' }]}
             extra={
                 <DocSection id="setup" title="Setup" description="Add your own themes and reveal animations.">
                     <div className="space-y-4">

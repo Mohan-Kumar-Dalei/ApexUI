@@ -52,14 +52,14 @@ export default function ComponentsIndex() {
             : 'border-[var(--line)] text-[var(--ink-2)] hover:border-[var(--line-strong)] hover:text-[var(--ink)]'}`;
 
     return (
-        <div>
+        <div className="mx-auto w-full max-w-[100rem]">
             <DocHero
                 meta={<><span>Library</span><span>· {componentPages.length} components</span><span>· {CATEGORIES.length} categories</span></>}
                 title="The Component Index"
                 description="Every ApexUI component with a live playground, props and a one-line install. Filter by category or search by name."
             />
 
-            <div className={`${PAD_X} sticky top-[calc(var(--pad)+3.5rem)] z-20 flex flex-col gap-3 border-y border-[var(--line)] bg-[var(--bg)]/90 py-3 backdrop-blur-xl xl:flex-row xl:items-center`}>
+            <div className={`${PAD_X} sticky top-16 z-20 flex flex-col gap-3 border-y border-[var(--line)] bg-[var(--bg)]/90 py-3 backdrop-blur-xl xl:flex-row xl:items-center`}>
                 <div className="thin-scroll -mx-1 flex min-w-0 gap-2 overflow-x-auto px-1">
                     {['All', ...CATEGORIES].map((c) => (
                         <button key={c} type="button" onClick={() => update('category', c)} className={chip(category === c)}>

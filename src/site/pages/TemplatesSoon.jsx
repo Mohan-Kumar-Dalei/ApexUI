@@ -14,7 +14,7 @@ const upcoming = [
 
 export default function TemplatesSoon() {
     return (
-        <div>
+        <div className="mx-auto w-full max-w-[100rem]">
             <DocHero
                 meta={
                     <>

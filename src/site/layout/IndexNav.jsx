@@ -12,16 +12,15 @@ function Row({ page, onNavigate }) {
             onMouseEnter={() => prefetch(page)}
             onFocus={() => prefetch(page)}
             className={({ isActive }) =>
-                `group relative flex items-center gap-3 rounded-lg px-2.5 py-[0.4rem] text-[0.86rem] transition-colors ${isActive
-                    ? 'bg-[var(--panel-2)] text-[var(--ink)]'
-                    : 'text-[var(--ink-2)] hover:bg-[var(--panel-2)]/60 hover:text-[var(--ink)]'}`
+                `relative flex items-center rounded-md px-3 py-[0.42rem] text-[0.875rem] transition-colors ${isActive
+                    ? 'bg-[var(--lime-soft)] font-medium text-[var(--ink)]'
+                    : 'text-[var(--ink-2)] hover:bg-[var(--panel-2)] hover:text-[var(--ink)]'}`
             }
         >
             {({ isActive }) => (
                 <>
-                    <span className={`w-5 shrink-0 font-mono text-[0.68rem] tabular-nums ${isActive ? 'text-[var(--lime-text)]' : 'text-[var(--ink-3)]'}`}>{page.num}</span>
+                    {isActive && <span className="absolute inset-y-1.5 left-0 w-[3px] rounded-full bg-[var(--lime)]" />}
                     <span className="truncate">{page.name}</span>
-                    {isActive && <span className="absolute -left-3 top-1.5 bottom-1.5 w-[2px] rounded-full bg-[var(--lime)]" />}
                 </>
             )}
         </NavLink>
@@ -31,9 +30,9 @@ function Row({ page, onNavigate }) {
 function Group({ title, count, children }) {
     return (
         <div>
-            <h4 className="mb-1.5 flex items-center justify-between px-2.5 font-mono text-[0.66rem] uppercase tracking-[0.16em] text-[var(--ink-3)]">
+            <h4 className="mb-1 flex items-center justify-between px-3 text-[0.78rem] font-semibold text-[var(--ink)]">
                 {title}
-                {count != null && <span>{String(count).padStart(2, '0')}</span>}
+                {count != null && <span className="font-mono text-[0.68rem] font-normal text-[var(--ink-3)]">{count}</span>}
             </h4>
             <div className="space-y-px">{children}</div>
         </div>
@@ -54,7 +53,7 @@ export function IndexNav({ onNavigate, autoFocus = false }) {
     const guides = guidePages.filter((p) => !q || p.name.toLowerCase().includes(q));
 
     return (
-        <div className="space-y-6">
+        <div className="space-y-7">
             <label className="relative block">
                 <Search className="pointer-events-none absolute left-3 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-[var(--ink-3)]" />
                 <input
@@ -85,17 +84,5 @@ export function IndexNav({ onNavigate, autoFocus = false }) {
                 <p className="px-2.5 text-sm text-[var(--ink-3)]">Nothing matches “{query}”.</p>
             )}
         </div>
-    );
-}
-
-export default function IndexPanel() {
-    return (
-        <aside className="thin-scroll sticky top-[var(--pad)] z-30 hidden h-shell w-[17.5rem] shrink-0 overflow-y-auto border-r border-[var(--line)] px-4 pb-10 pt-5 xl:block">
-            <div className="mb-5 flex items-baseline justify-between px-2.5">
-                <span className="font-display text-lg font-semibold text-[var(--ink)]">Index</span>
-                <span className="font-mono text-[0.68rem] text-[var(--ink-3)]">{componentPages.length} items</span>
-            </div>
-            <IndexNav />
-        </aside>
     );
 }
