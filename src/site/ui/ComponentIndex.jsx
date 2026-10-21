@@ -2,6 +2,7 @@ import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { ArrowRight, ArrowUpRight } from 'lucide-react';
 import { prefetch } from '../config/navigation.js';
+import NewBadge from './NewBadge.jsx';
 
 const ease = [0.22, 1, 0.36, 1];
 
@@ -42,7 +43,7 @@ export function ComponentCard({ item, index = 0, showCategory = true }) {
                 </div>
                 <div className="flex flex-1 flex-col px-3 pb-3 pt-3.5">
                     <div className="flex items-center justify-between gap-3">
-                        <h3 className="truncate text-[0.98rem] font-semibold text-[var(--ink)]">{item.name}</h3>
+                        <h3 className="flex min-w-0 items-center gap-2 text-[0.98rem] font-semibold text-[var(--ink)]"><span className="truncate">{item.name}</span>{item.isNew && <NewBadge />}</h3>
                         {showCategory && <span className="shrink-0 rounded-full border border-[var(--line)] px-2 py-0.5 text-[0.68rem] text-[var(--ink-3)]">{item.category}</span>}
                     </div>
                     <p className="mt-1.5 line-clamp-2 text-[0.85rem] leading-relaxed text-[var(--ink-2)]">{item.summary}</p>
@@ -76,7 +77,7 @@ export function ComponentList({ items, showCategory = true }) {
                             <Thumb src={item.image} />
                         </span>
                         <span className="min-w-0 flex-1">
-                            <span className="block truncate text-[0.95rem] font-semibold text-[var(--ink)]">{item.name}</span>
+                            <span className="flex min-w-0 items-center gap-2 text-[0.95rem] font-semibold text-[var(--ink)]"><span className="truncate">{item.name}</span>{item.isNew && <NewBadge />}</span>
                             <span className="mt-0.5 block truncate text-[0.84rem] text-[var(--ink-2)]">{item.summary}</span>
                         </span>
                         {showCategory && <span className="hidden shrink-0 rounded-full border border-[var(--line)] px-2 py-0.5 text-[0.7rem] text-[var(--ink-3)] md:inline">{item.category}</span>}

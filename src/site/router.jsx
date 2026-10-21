@@ -2,7 +2,7 @@ import { createBrowserRouter, Navigate } from 'react-router-dom';
 import AppShell from './layout/AppShell.jsx';
 import RouteError from './layout/RouteError.jsx';
 import NotFound from './pages/NotFound.jsx';
-import { allDocPages } from './config/navigation.js';
+import { allDocPages, componentPages } from './config/navigation.js';
 
 const INTRO = '/components/docs/getting-started/introduction';
 
@@ -26,7 +26,7 @@ export const router = createBrowserRouter([
                         lazy: async () => ({ Component: (await import('./pages/home/HomePage.jsx')).default }),
                         handle: {
                             title: 'ApexUI – Animated React Components for Tailwind CSS',
-                            description: 'Free, copy-paste animated React components built with Tailwind CSS, GSAP and Framer Motion. Add any of 29 components with one CLI command.',
+                            description: `Free, copy-paste animated React components built with Tailwind CSS, GSAP and Framer Motion. Add any of ${componentPages.length} components with one CLI command.`,
                         },
                     },
                     {
@@ -43,7 +43,7 @@ export const router = createBrowserRouter([
                                 lazy: async () => ({ Component: (await import('./pages/ComponentsIndex.jsx')).default }),
                                 handle: {
                                     title: 'All Components – ApexUI React Component Library',
-                                    description: 'Browse 29 animated React components — backgrounds, cards, text effects, navigation and interactive UI — each with a live preview, props and a one-line install.',
+                                    description: `Browse ${componentPages.length} animated React components — backgrounds, cards, text effects, navigation and interactive UI — each with a live preview, props and a one-line install.`,
                                     index: true,
                                     sidebar: true,
                                 },

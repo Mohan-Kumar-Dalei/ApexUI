@@ -1,12 +1,13 @@
 import { useEffect, useId, useRef, useState } from 'react';
 import { useLocation } from 'react-router-dom';
 import { AnimatePresence, motion } from 'framer-motion';
-import { Code2, Eye, Grid3x3, Maximize2, Minimize2, Package, RotateCcw, Square, Sparkle } from 'lucide-react';
+import { ChevronDown, Code2, Eye, Grid3x3, Maximize2, Minimize2, Package, RotateCcw, Square, Sparkle } from 'lucide-react';
 import CodeBlock, { CommandLine } from '../ui/CodeBlock.jsx';
 import { findPage } from '../config/navigation.js';
 import { CliChip, DocFooter, PageHeader, Pager } from './parts.jsx';
 import { DOC_PAD } from './style.js';
 import TableOfContents from './TableOfContents.jsx';
+import NewBadge from '../ui/NewBadge.jsx';
 
 const STAGE_BG = [
     { id: 'dots', icon: Sparkle, label: 'Dots', className: 'stage-dots' },
@@ -136,32 +137,51 @@ function Stage({ variant, variants, activeVariant, onVariant }) {
     );
 }
 
+// Long props tables start collapsed to this many rows, with a "See more" toggle.
+const PROPS_PREVIEW = 5;
+
 function PropsTable({ rows }) {
+    const [expanded, setExpanded] = useState(false);
     if (!rows?.length) return <p className="text-sm text-[var(--ink-3)]">This component takes no props.</p>;
+    const hidden = rows.length - PROPS_PREVIEW;
+    const visible = expanded || hidden <= 0 ? rows : rows.slice(0, PROPS_PREVIEW);
     return (
-        <div className="thin-scroll overflow-x-auto rounded-xl border border-[var(--line)]">
-            <table className="w-full min-w-[40rem] text-left text-[0.86rem]">
-                <thead className="bg-[var(--panel-2)] text-[0.78rem] text-[var(--ink-2)]">
-                    <tr>
-                        <th className="px-4 py-2.5 font-medium">Prop</th>
-                        <th className="px-4 py-2.5 font-medium">Type</th>
-                        <th className="px-4 py-2.5 font-medium">Default</th>
-                        <th className="px-4 py-2.5 font-medium">Description</th>
-                    </tr>
-                </thead>
-                <tbody className="divide-y divide-[var(--line)]">
-                    {rows.map((row) => (
-                        <tr key={row.prop} className="align-top">
-                            <td className="px-4 py-3">
-                                <code className="whitespace-nowrap rounded-md bg-[var(--lime-soft)] px-1.5 py-0.5 text-[0.8rem] font-medium text-[var(--lime-text)]">{row.prop}</code>
-                            </td>
-                            <td className="px-4 py-3"><code className="text-[0.78rem] text-[var(--syntax-type)]">{row.type}</code></td>
-                            <td className="px-4 py-3"><code className="text-[0.78rem] text-[var(--ink-3)]">{row.def != null && row.def !== '' ? row.def : '—'}</code></td>
-                            <td className="px-4 py-3 leading-relaxed text-[var(--ink-2)]">{row.desc}</td>
+        <div className="overflow-hidden rounded-xl border border-[var(--line)]">
+            <div className="thin-scroll overflow-x-auto">
+                <table className="w-full min-w-[40rem] text-left text-[0.86rem]">
+                    <thead className="bg-[var(--panel-2)] text-[0.78rem] text-[var(--ink-2)]">
+                        <tr>
+                            <th className="px-4 py-2.5 font-medium">Prop</th>
+                            <th className="px-4 py-2.5 font-medium">Type</th>
+                            <th className="px-4 py-2.5 font-medium">Default</th>
+                            <th className="px-4 py-2.5 font-medium">Description</th>
                         </tr>
-                    ))}
-                </tbody>
-            </table>
+                    </thead>
+                    <tbody className="divide-y divide-[var(--line)]">
+                        {visible.map((row) => (
+                            <tr key={row.prop} className="align-top">
+                                <td className="px-4 py-3">
+                                    <code className="whitespace-nowrap rounded-md bg-[var(--lime-soft)] px-1.5 py-0.5 text-[0.8rem] font-medium text-[var(--lime-text)]">{row.prop}</code>
+                                </td>
+                                <td className="px-4 py-3"><code className="text-[0.78rem] text-[var(--syntax-type)]">{row.type}</code></td>
+                                <td className="px-4 py-3"><code className="text-[0.78rem] text-[var(--ink-3)]">{row.def != null && row.def !== '' ? row.def : '—'}</code></td>
+                                <td className="px-4 py-3 leading-relaxed text-[var(--ink-2)]">{row.desc}</td>
+                            </tr>
+                        ))}
+                    </tbody>
+                </table>
+            </div>
+            {hidden > 0 && (
+                <button
+                    type="button"
+                    onClick={() => setExpanded((open) => !open)}
+                    aria-expanded={expanded}
+                    className="flex w-full items-center justify-center gap-1.5 border-t border-[var(--line)] bg-[var(--panel-2)] py-2.5 text-[0.8rem] font-medium text-[var(--ink-2)] transition-colors hover:text-[var(--ink)]"
+                >
+                    {expanded ? 'Show less' : `See ${hidden} more prop${hidden === 1 ? '' : 's'}`}
+                    <ChevronDown className={`h-3.5 w-3.5 transition-transform duration-200 ${expanded ? 'rotate-180' : ''}`} />
+                </button>
+            )}
         </div>
     );
 }
@@ -247,7 +267,12 @@ export default function ComponentDoc({ title, description, variants, extraToc = 
         <article className={`${DOC_PAD} mx-auto grid w-full max-w-[84rem] gap-12 pb-4 pt-[clamp(1.75rem,4vw,3rem)] xl:grid-cols-[minmax(0,1fr)_12.5rem]`}>
             <div className="min-w-0">
                 <PageHeader
-                    eyebrow={[page?.category, multi ? `${list.length} variants` : null].filter(Boolean).join(' · ')}
+                    eyebrow={
+                        <span className="inline-flex items-center gap-2">
+                            {[page?.category, multi ? `${list.length} variants` : null].filter(Boolean).join(' · ')}
+                            {page?.isNew && <NewBadge />}
+                        </span>
+                    }
                     title={title}
                     description={description}
                     aside={variant.cli && <CliChip command={`npx apex-ui-kit add ${variant.cli}`} />}
@@ -268,7 +293,8 @@ export default function ComponentDoc({ title, description, variants, extraToc = 
                     </DocSection>
                 )}
                 <DocSection id="props" title="Props">
-                    <PropsTable rows={variant.props} />
+                    {/* Keyed by variant so switching tabs collapses the table again. */}
+                    <PropsTable key={active} rows={variant.props} />
                 </DocSection>
                 <DocSection id="installation" title="Installation" description="Add the component with the ApexUI CLI. The source is copied into your project.">
                     <InstallSteps cli={variant.cli} />

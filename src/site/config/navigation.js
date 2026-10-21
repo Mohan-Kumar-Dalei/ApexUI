@@ -280,6 +280,15 @@ export const componentPages = [
         summary: 'Animated tooltips with smooth, physics-based positioning.',
     },
     {
+        name: 'Receipt Printer',
+        path: '/components/receipt-printer',
+        load: () => import('../content/components/ReceiptPrinterDoc.jsx'),
+        category: 'Interactive',
+        image: shot('receipt-printer.png'),
+        summary: 'A thermal printer that processes a payment and feeds a receipt out line by line.',
+        isNew: true,
+    },
+    {
         name: 'Mask View',
         path: '/components/mask-view',
         load: () => import('../content/components/MaskViewDoc.jsx'),

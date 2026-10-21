@@ -4,6 +4,7 @@ import { AnimatePresence, motion } from 'framer-motion';
 import { ArrowRight, BookOpen, Box, Search } from 'lucide-react';
 import { componentPages, guidePages, prefetch } from '../config/navigation.js';
 import { OPEN_SEARCH_EVENT, backdropMotion } from './overlays.js';
+import NewBadge from '../ui/NewBadge.jsx';
 
 const groups = [
     { label: 'Guides', icon: BookOpen, items: guidePages },
@@ -136,7 +137,7 @@ export default function CommandMenu() {
                                             >
                                                 <span className="w-6 font-mono text-[0.68rem] text-[var(--ink-3)]">{item.num}</span>
                                                 <group.icon className="h-4 w-4 shrink-0 text-[var(--ink-3)]" />
-                                                <span className="flex-1 truncate">{item.name}</span>
+                                                <span className="flex min-w-0 flex-1 items-center gap-2"><span className="truncate">{item.name}</span>{item.isNew && <NewBadge />}</span>
                                                 {item.category && <span className="text-xs text-[var(--ink-3)]">{item.category}</span>}
                                                 <ArrowRight className={`h-3.5 w-3.5 transition-opacity ${isActive ? 'opacity-100' : 'opacity-0'}`} />
                                             </button>

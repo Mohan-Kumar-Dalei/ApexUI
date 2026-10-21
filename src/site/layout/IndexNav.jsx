@@ -2,6 +2,7 @@ import { useMemo, useState } from 'react';
 import { NavLink } from 'react-router-dom';
 import { Search, X } from 'lucide-react';
 import { componentPages, componentsByCategory, guidePages, prefetch } from '../config/navigation.js';
+import NewBadge from '../ui/NewBadge.jsx';
 
 function Row({ page, onNavigate }) {
     return (
@@ -21,6 +22,7 @@ function Row({ page, onNavigate }) {
                 <>
                     {isActive && <span className="absolute inset-y-1.5 left-0 w-[3px] rounded-full bg-[var(--lime)]" />}
                     <span className="truncate">{page.name}</span>
+                    {page.isNew && <NewBadge className="ml-auto" />}
                 </>
             )}
         </NavLink>

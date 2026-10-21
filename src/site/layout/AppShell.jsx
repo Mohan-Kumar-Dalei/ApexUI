@@ -27,6 +27,9 @@ function NavProgress() {
     );
 }
 
+// Shared fallback, so a route without a handle doesn't re-run the SEO effect every render.
+const NO_HANDLE = {};
+
 /*
  * Classic docs layout: a sticky top navbar on every page; docs pages add a
  * left sidebar (desktop) or a slide-in drawer (mobile). Other pages use the
@@ -36,7 +39,7 @@ export default function AppShell() {
     const matches = useMatches();
     const { pathname } = useLocation();
     const outlet = useOutlet();
-    const handle = [...matches].reverse().find((m) => m.handle)?.handle ?? {};
+    const handle = [...matches].reverse().find((m) => m.handle)?.handle ?? NO_HANDLE;
     const showSidebar = Boolean(handle.page || handle.sidebar);
 
     // Title, description, canonical, social tags and breadcrumbs for this route.
