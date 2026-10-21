@@ -69,7 +69,8 @@ const FlipProfile = ({
     return (
         <div className="w-full flex items-center justify-center p-4" style={{ perspective: "1200px" }}>
             <motion.div
-                className="relative w-[300px] max-w-full h-[420px] cursor-pointer"
+                // Sized in rem (300×420 at a 16px root) so the card grows with its rem-based content.
+                className="relative w-[18.75rem] max-w-full h-[26.25rem] cursor-pointer"
                 style={{ transformStyle: "preserve-3d" }}
                 variants={cardVariants}
                 animate={isFlipped ? "flipped" : "initial"}

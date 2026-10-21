@@ -9,8 +9,8 @@ import {
     LaptopMinimal,
 } from "lucide-react";
 
-const CARD_HEIGHT = 250;
-const CARD_EXPANDED_HEIGHT = 510;
+const CARD_HEIGHT = 264;
+const CARD_EXPANDED_HEIGHT = 2 * CARD_HEIGHT + 10; // two rows plus the grid gap
 
 const SmartGridCard = ({
     cards = defaultCards(),
@@ -157,20 +157,21 @@ const SmartGridCard = ({
                         />
 
                         {/* Card Content */}
-                        <div className="relative z-10 flex flex-col items-start justify-between h-full w-full p-6 rounded-2xl bg-zinc-900 text-white space-y-4">
-                            <div className="text-4xl border border-dashed p-2 rounded-lg border-purple-600">{card.icon}</div>
-                            <div>
-                                <h3 className="text-xl md:text-xl font-bold mb-2 break-words leading-tight">{card.title}</h3>
-                                <p className="text-sm md:text-base w-full text-white/70 break-words">{card.description}</p>
+                        {/* Compact enough that the button always fits inside the fixed card height */}
+                        <div className="relative z-10 flex flex-col items-start h-full w-full p-5 rounded-2xl bg-zinc-900 text-white gap-3">
+                            <div className="flex h-11 w-11 shrink-0 items-center justify-center border border-dashed rounded-lg border-purple-600">{card.icon}</div>
+                            <div className="min-h-0">
+                                <h3 className="text-lg font-bold mb-1.5 break-words leading-tight">{card.title}</h3>
+                                <p className="text-sm leading-relaxed w-full text-white/70 break-words line-clamp-3">{card.description}</p>
                             </div>
                             <button
                                 type="button"
-                                className="mt-auto relative overflow-hidden whitespace-nowrap px-4 py-3 rounded-lg border border-purple-400/60 text-white transition hover:text-white bg-black/20 group flex items-center gap-2 text-xs md:text-base"
+                                className="mt-auto shrink-0 relative overflow-hidden whitespace-nowrap px-4 py-2 rounded-lg border border-purple-400/60 text-white transition hover:text-white bg-black/20 group flex items-center gap-2 text-sm"
                             >
                                 <span className="relative z-10 flex items-center gap-2">
                                     {card.buttonText}
                                     <span className="arrow-icon transition-transform duration-200 group-hover:translate-x-2 flex items-center">
-                                        <svg width="20" height="20" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                                        <svg width="16" height="16" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
                                             <path d="M5 12h14M13 6l6 6-6 6" />
                                         </svg>
                                     </span>

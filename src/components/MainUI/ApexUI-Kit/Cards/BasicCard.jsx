@@ -9,10 +9,10 @@ const ProfileCard = ({ title, summary, image, link }) => {
             initial={{ y: 20, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
             transition={{ type: "spring", stiffness: 300, damping: 20 }}
-            className="w-[280px] max-w-full rounded-2xl bg-slate-950 border border-gray-800 shadow-2xl overflow-hidden p-2 shadow-lime-700/20"
+            className="w-[17.5rem] max-w-full rounded-2xl bg-slate-950 border border-gray-800 shadow-2xl overflow-hidden p-2 shadow-lime-700/20"
         >
-            {/* Image: fixed px size so the card keeps its shape on every screen */}
-            <div className="h-[200px] w-full rounded-b-4xl rounded-t-lg  overflow-hidden">
+            {/* Image: fixed size (in rem, like the text) so the card keeps its shape on every screen */}
+            <div className="h-[12.5rem] w-full rounded-b-4xl rounded-t-lg  overflow-hidden">
                 <motion.img
                     src={image}
                     alt={title}

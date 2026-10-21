@@ -26,7 +26,7 @@ const variants = [
         name: 'Flip Profile',
         description: 'An animated profile card with a 3D flip, perfect for showcasing user details and social links.',
         preview: (
-            <div className="flex w-full max-w-xs items-center justify-center">
+            <div className="flex w-full max-w-sm items-center justify-center">
                 <FlipProfile avatar={cdn('/assets/ironman.png', { w: 320 })} />
             </div>
         ),
@@ -71,7 +71,7 @@ export default App;`,
         name: 'Parallax Profile',
         description: 'A profile card with a parallax hover effect that adds depth and interactivity.',
         preview: (
-            <div className="flex w-full max-w-xs items-center justify-center">
+            <div className="flex w-full max-w-sm items-center justify-center">
                 <ParallaxProfile profile={parallaxProfile} />
             </div>
         ),

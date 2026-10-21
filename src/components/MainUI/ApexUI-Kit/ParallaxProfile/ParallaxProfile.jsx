@@ -57,7 +57,7 @@ const ParallaxProfileCard = ({ profile }) => {
     return (
         <div
             ref={cardRef}
-            className="relative w-[300px] max-w-full bg-[#1D2B3A] rounded-3xl p-6 border border-cyan-400/30 shadow-2xl shadow-cyan-900/40"
+            className="relative w-[18.75rem] max-w-full bg-[#1D2B3A] rounded-3xl p-6 border border-cyan-400/30 shadow-2xl shadow-cyan-900/40"
             style={{ transformStyle: "preserve-3d" }}
         >
             <div className="absolute inset-0 bg-gradient-to-br from-[#1D2B3A] to-[#0b1220] rounded-3xl"></div>

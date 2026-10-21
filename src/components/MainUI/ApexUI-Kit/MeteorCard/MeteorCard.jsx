@@ -42,7 +42,7 @@ const MeteorCard = ({ data, particleNumber, particleColor, particleSpeed }) => {
     return (
         <div className="flex flex-wrap justify-center gap-6">
             {data.map((item, index) => (
-                <div key={index} className="relative w-[320px] max-w-full bg-slate-800/80 p-0.5 rounded-2xl moving-border-card">
+                <div key={index} className="relative w-[20rem] max-w-full bg-slate-800/80 p-0.5 rounded-2xl moving-border-card">
                     {/* Card ka content container */}
                     <div className="relative bg-slate-900 rounded-[calc(1rem-2px)] p-3 flex flex-col overflow-hidden">
                         {/* Background Effects */}
@@ -59,7 +59,7 @@ const MeteorCard = ({ data, particleNumber, particleColor, particleSpeed }) => {
                         <div className="absolute -top-1/4 -left-1/4 w-3/4 h-1/2 bg-blue-400/60 rounded-full blur-[90px] pointer-events-none z-0"></div>
 
                         {/* Image */}
-                        <div className="relative h-[220px] w-full rounded-xl overflow-hidden z-10 ring-1 ring-white/10">
+                        <div className="relative h-[13.75rem] w-full rounded-xl overflow-hidden z-10 ring-1 ring-white/10">
                             <img src={item.imageUrl} alt={item.title} className="w-full h-full object-cover object-[center_25%]" />
                         </div>
 

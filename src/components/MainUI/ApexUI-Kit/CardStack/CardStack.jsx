@@ -63,7 +63,7 @@ export default function CardStack({
     return (
         <div
             ref={containerRef}
-            className="relative flex justify-center items-end h-[440px] w-full max-w-lg mx-auto pb-2"
+            className="relative flex justify-center items-end h-[27.5rem] w-full max-w-lg mx-auto pb-2"
             onMouseEnter={() => setIsHovered(true)}
             onMouseLeave={() => setIsHovered(false)}
         >
@@ -78,7 +78,7 @@ export default function CardStack({
                     <div
                         key={idx}
                         onClick={isTop ? next : undefined}
-                        className={`card-item group absolute bottom-2 left-0 right-0 mx-auto h-[360px] w-[280px] max-w-[calc(100%-1rem)] origin-bottom overflow-hidden rounded-[1.75rem] border border-white/15 bg-slate-950 shadow-[0_24px_60px_-20px_rgba(0,0,0,0.8)] select-none ${isTop ? "cursor-pointer" : "pointer-events-none"}`}
+                        className={`card-item group absolute bottom-2 left-0 right-0 mx-auto h-[22.5rem] w-[17.5rem] max-w-[calc(100%-1rem)] origin-bottom overflow-hidden rounded-[1.75rem] border border-white/15 bg-slate-950 shadow-[0_24px_60px_-20px_rgba(0,0,0,0.8)] select-none ${isTop ? "cursor-pointer" : "pointer-events-none"}`}
                         style={{ opacity: 0 }}
                     >
                         {/* Full-bleed image */}
