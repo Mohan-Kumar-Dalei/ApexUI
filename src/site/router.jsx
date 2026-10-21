@@ -38,7 +38,7 @@ export const router = createBrowserRouter([
                             {
                                 index: true,
                                 lazy: async () => ({ Component: (await import('./pages/ComponentsIndex.jsx')).default }),
-                                handle: { title: 'Components – ApexUI', index: true },
+                                handle: { title: 'Components – ApexUI', index: true, sidebar: true },
                             },
                             // Short and legacy entry points.
                             { path: 'docs', element: <Navigate to={INTRO} replace /> },

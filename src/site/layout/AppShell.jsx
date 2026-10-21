@@ -36,7 +36,7 @@ export default function AppShell() {
     const { pathname } = useLocation();
     const outlet = useOutlet();
     const handle = [...matches].reverse().find((m) => m.handle)?.handle ?? {};
-    const showSidebar = Boolean(handle.page);
+    const showSidebar = Boolean(handle.page || handle.sidebar);
 
     useEffect(() => {
         document.title = handle.title ?? 'ApexUI';

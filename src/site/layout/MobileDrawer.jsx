@@ -6,6 +6,17 @@ import Logo from '../ui/Logo.jsx';
 import { IndexNav } from './IndexNav.jsx';
 import { NAV_ITEMS } from './navItems.js';
 import { OPEN_INDEX_EVENT, openFeedback } from './overlays.js';
+import useActiveInView from './useActiveInView.js';
+
+/* Scrollable docs index inside the drawer; opens scrolled to the current page. */
+function DrawerList({ onNavigate }) {
+    const listRef = useActiveInView();
+    return (
+        <div ref={listRef} className="thin-scroll flex-1 overflow-y-auto overscroll-contain px-3 py-5">
+            <IndexNav onNavigate={onNavigate} />
+        </div>
+    );
+}
 
 /* Slide-in menu for phones and tablets (below lg): primary links plus the docs index. */
 export default function MobileDrawer() {
@@ -65,9 +76,7 @@ export default function MobileDrawer() {
                                 Feedback
                             </button>
                         </nav>
-                        <div className="thin-scroll flex-1 overflow-y-auto px-3 py-5">
-                            <IndexNav onNavigate={() => setOpen(false)} />
-                        </div>
+                        <DrawerList onNavigate={() => setOpen(false)} />
                     </motion.div>
                 </div>
             )}

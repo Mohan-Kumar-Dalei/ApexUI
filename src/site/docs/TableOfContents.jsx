@@ -6,17 +6,41 @@ export default function TableOfContents({ items }) {
     const [active, setActive] = useState(items[0]?.id);
 
     useEffect(() => {
-        const els = ids.split('|').map((id) => document.getElementById(id)).filter(Boolean);
-        if (!els.length) return undefined;
-        const observer = new IntersectionObserver(
-            (entries) => {
-                const visible = entries.filter((e) => e.isIntersecting).sort((a, b) => a.boundingClientRect.top - b.boundingClientRect.top);
-                if (visible[0]) setActive(visible[0].target.id);
-            },
-            { rootMargin: '-96px 0px -60% 0px' }
-        );
-        els.forEach((el) => observer.observe(el));
-        return () => observer.disconnect();
+        const list = ids.split('|');
+        let frame = 0;
+        // The active section is the last one whose top has passed the line under the sticky header.
+        // Reading positions (instead of intersection events) stays right when the layout changes size.
+        const update = () => {
+            frame = 0;
+            const line = window.innerHeight * 0.3;
+            let current = list[0];
+            for (const id of list) {
+                const el = document.getElementById(id);
+                if (el && el.getBoundingClientRect().top <= line) current = id;
+            }
+            if (window.innerHeight + window.scrollY >= document.documentElement.scrollHeight - 4) {
+                current = list.findLast((id) => document.getElementById(id)?.getBoundingClientRect().top < window.innerHeight) ?? current;
+            }
+            setActive(current);
+        };
+        const schedule = () => {
+            if (!frame) frame = requestAnimationFrame(update);
+        };
+        update();
+        window.addEventListener('scroll', schedule, { passive: true });
+        window.addEventListener('resize', schedule);
+        // Sections grow as lazy previews load, which moves the ones below without any scroll.
+        const resize = new ResizeObserver(schedule);
+        list.forEach((id) => {
+            const el = document.getElementById(id);
+            if (el) resize.observe(el);
+        });
+        return () => {
+            cancelAnimationFrame(frame);
+            window.removeEventListener('scroll', schedule);
+            window.removeEventListener('resize', schedule);
+            resize.disconnect();
+        };
     }, [ids]);
 
     return (
