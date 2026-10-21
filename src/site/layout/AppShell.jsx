@@ -34,8 +34,6 @@ function NavProgress() {
 export default function AppShell() {
     const matches = useMatches();
     const { pathname } = useLocation();
-    // useOutlet() captures this render's page, so the exiting page keeps its
-    // own content while it fades out.
     const outlet = useOutlet();
     const handle = [...matches].reverse().find((m) => m.handle)?.handle ?? {};
     const showSidebar = Boolean(handle.page);
@@ -53,18 +51,17 @@ export default function AppShell() {
         }
     }, []);
 
+    // New pages fade in straight away; there is no exit animation to wait for,
+    // so navigating from the sidebar feels instant.
     const page = (
-        <AnimatePresence mode="wait" initial={false}>
-            <motion.div
-                key={pathname}
-                initial={{ opacity: 0, y: 6 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0 }}
-                transition={{ duration: 0.2, ease: [0.22, 1, 0.36, 1] }}
-            >
-                {outlet}
-            </motion.div>
-        </AnimatePresence>
+        <motion.div
+            key={pathname}
+            initial={{ opacity: 0.4 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.18, ease: 'easeOut' }}
+        >
+            {outlet}
+        </motion.div>
     );
 
     return (

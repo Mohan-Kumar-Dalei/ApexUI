@@ -1,5 +1,4 @@
 import { NavLink, useLocation } from 'react-router-dom';
-import { motion } from 'framer-motion';
 import { Github, Menu, MessageSquare, Search } from 'lucide-react';
 import Logo from '../ui/Logo.jsx';
 import { SITE } from '../config/navigation.js';
@@ -30,12 +29,11 @@ export default function Navbar() {
                                 key={label}
                                 to={to}
                                 aria-current={active ? 'page' : undefined}
-                                className={`relative rounded-lg px-3 py-1.5 text-[0.9rem] font-medium transition-colors ${active ? 'text-[var(--ink)]' : 'text-[var(--ink-2)] hover:text-[var(--ink)]'}`}
+                                // Plain CSS highlight: a shared-layout animation here re-ran on every
+                                // page change (scroll reset) and made the pill fly in from below.
+                                className={`rounded-lg px-3 py-1.5 text-[0.9rem] font-medium transition-colors duration-150 ${active ? 'bg-[var(--panel-2)] text-[var(--ink)]' : 'text-[var(--ink-2)] hover:bg-[var(--panel-2)]/60 hover:text-[var(--ink)]'}`}
                             >
-                                {active && (
-                                    <motion.span layoutId="nav-active" className="absolute inset-0 rounded-lg bg-[var(--panel-2)]" transition={{ type: 'spring', stiffness: 500, damping: 40 }} />
-                                )}
-                                <span className="relative">{label}</span>
+                                {label}
                             </NavLink>
                         );
                     })}
