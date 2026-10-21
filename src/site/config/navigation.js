@@ -96,7 +96,7 @@ export const componentPages = [
         path: '/components/card-stack',
         load: () => import('../content/components/CardStackDoc.jsx'),
         category: 'Cards',
-        image: shot('CardStack.png'),
+        image: shot('card-stack.png'),
         summary: 'A stack of cards that cycles automatically and pauses on hover.',
     },
     {
@@ -112,7 +112,7 @@ export const componentPages = [
         path: '/components/edge-glow-form',
         load: () => import('../content/components/EdgeGlowFormDoc.jsx'),
         category: 'Interactive',
-        image: shot('EdgeGlow Form.png'),
+        image: shot('edge-glow-form.png'),
         summary: 'A form container that emits a soft gradient glow from its edges.',
     },
     {
@@ -168,7 +168,7 @@ export const componentPages = [
         path: '/components/nav-drop-down',
         load: () => import('../content/components/NavDropDownDoc.jsx'),
         category: 'Navigation',
-        image: shot('DropMenu.png'),
+        image: shot('nav-dropdown.png'),
         summary: 'A floating navbar with one dropdown panel that morphs between menus.',
     },
     {
@@ -272,7 +272,7 @@ export const componentPages = [
         path: '/components/tool-tip',
         load: () => import('../content/components/ToolTipDoc.jsx'),
         category: 'Interactive',
-        image: shot('ToolTip.png'),
+        image: shot('tool-tip.png'),
         summary: 'Animated tooltips with smooth, physics-based positioning.',
     },
     {
@@ -280,7 +280,7 @@ export const componentPages = [
         path: '/components/mask-view',
         load: () => import('../content/components/MaskViewDoc.jsx'),
         category: 'Text & Motion',
-        image: 'https://ik.imagekit.io/ny6yinyut/apexui/assets/ironman.png?updatedAt=1792562203671&tr=f-auto,q-80,w-960',
+        image: shot('mask-view.png'),
         summary: 'Reveal content through a mask: a text window onto an image, a spotlight, or glass you wipe clear.',
     },
 ];
