@@ -1,5 +1,4 @@
 import { useState } from 'react';
-import { Monitor } from 'lucide-react';
 import ComponentDoc from '../../docs/ComponentDoc.jsx';
 import SmartGridCard from '../../../components/MainUI/ApexUI-Kit/SmartGridCard/SmartGridCard.jsx';
 
@@ -42,16 +41,10 @@ export default App;`;
             title="Smart Grid Card"
             description="A responsive grid of cards that can merge into each other to create unique layouts."
             preview={
-                <>
-                    <div className="hidden w-full shrink-0 items-center justify-center lg:flex lg:scale-[0.82]">
-                        <SmartGridCard mergeMap={mergeMap} />
-                    </div>
-                    <div className="flex flex-col items-center py-10 text-center lg:hidden">
-                        <Monitor className="mb-4 h-10 w-10 text-lime-300" />
-                        <h4 className="mb-1 text-lg font-semibold text-white">Best viewed on a larger screen</h4>
-                        <p className="max-w-xs text-sm text-zinc-400">This interactive grid needs a wider viewport to preview.</p>
-                    </div>
-                </>
+                // Stacks into one column on phones and two on tablets; merging kicks in on wide screens.
+                <div className="flex w-full shrink-0 items-center justify-center">
+                    <SmartGridCard mergeMap={mergeMap} />
+                </div>
             }
             controls={
                 <div className="flex flex-wrap items-center gap-2">

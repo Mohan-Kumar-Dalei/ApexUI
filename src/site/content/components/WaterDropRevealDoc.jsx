@@ -1,24 +1,20 @@
 import ComponentDoc from '../../docs/ComponentDoc.jsx';
 import WaterDropReveal from '../../../components/MainUI/ApexUI-Kit/WaterDropReveal/WaterDropReveal.jsx';
 
-const code = `import WaterDropReveal from './ApexUI-Kit/WaterDropReveal/WaterDropReveal.jsx';
+const snippet = (props) => `import WaterDropReveal from './ApexUI-Kit/WaterDropReveal/WaterDropReveal.jsx';
 
 const App = () => (
   <WaterDropReveal
-    text={"Discover the Water Drop Reveal Effect!\\nHover to experience the reveal."}
-    dropCount={3}
-    dropColor="#a855f7"
-    animationSpeed={0.4}
+${props}
   />
 );
 
 export default App;`;
 
-const props = [
-    { prop: 'text', type: 'string', def: '"Discover the Water Drop…"', desc: 'Text to reveal. Use \\n for line breaks.' },
-    { prop: 'dropCount', type: 'number', def: '3', desc: 'Number of water drops (1–10).' },
-    { prop: 'dropColor', type: 'string', def: '"#a855f7"', desc: 'Color of the water drops.' },
-    { prop: 'animationSpeed', type: 'number', def: '0.4', desc: 'Speed of the drop animation.' },
+const sharedProps = [
+    { prop: 'variant', type: "'window' | 'spotlight' | 'wipe'", def: "'spotlight'", desc: 'Which mask effect to use.' },
+    { prop: 'text', type: 'string', def: 'per variant', desc: 'Text to reveal. Use \\n for line breaks.' },
+    { prop: 'dropColor', type: 'string', def: '"#a855f7"', desc: 'Accent color (label dot).' },
 ];
 
 const dependencies = [
@@ -27,16 +23,54 @@ const dependencies = [
     { name: 'Tailwind CSS', desc: 'A utility-first CSS framework.' },
 ];
 
+const variants = [
+    {
+        name: 'Text Window',
+        description: 'Big letters act as a window onto an image that pans with the pointer; tap to open the whole picture.',
+        preview: <WaterDropReveal variant="window" image="https://ik.imagekit.io/ny6yinyut/apexui/assets/ironman.png?updatedAt=1792562203671" />,
+        code: snippet(`    variant="window"
+    text={"MASK\\nVIEW"}
+    image="https://ik.imagekit.io/ny6yinyut/apexui/assets/ironman.png?updatedAt=1792562203671"`),
+        cli: 'water-drop-reveal',
+        props: [
+            ...sharedProps,
+            { prop: 'image', type: 'string', def: 'Iron Man', desc: 'Image seen through the letters (window variant).' },
+            { prop: 'animationSpeed', type: 'number', def: '0.4', desc: 'How quickly the image pans after the pointer, in seconds.' },
+        ],
+        dependencies,
+    },
+    {
+        name: 'Spotlight',
+        description: 'Near-hidden text lit by a soft spotlight that follows the pointer, and drifts on its own when idle.',
+        preview: <WaterDropReveal variant="spotlight" animationSpeed={0.5} />,
+        code: snippet(`    variant="spotlight"
+    text={"Look through the mask.\\nOnly what sits under the light\\ncomes into focus."}
+    animationSpeed={0.4}`),
+        cli: 'water-drop-reveal',
+        props: [
+            ...sharedProps,
+            { prop: 'animationSpeed', type: 'number', def: '0.4', desc: 'How quickly the light follows the pointer, in seconds.' },
+        ],
+        dependencies,
+    },
+    {
+        name: 'Wipe Reveal',
+        description: 'Text behind steamed-up glass: wipe it clear with the pointer or a finger, and it slowly fogs back over.',
+        preview: <WaterDropReveal variant="wipe" />,
+        code: snippet(`    variant="wipe"
+    text={"Wipe the glass.\\nThe words underneath\\nare waiting for you."}`),
+        cli: 'water-drop-reveal',
+        props: sharedProps,
+        dependencies,
+    },
+];
+
 export default function WaterDropRevealDoc() {
     return (
         <ComponentDoc
-            title="Water Drop Reveal"
-            description="Water drops fall and merge to reveal the text underneath when you hover."
-            preview={<WaterDropReveal animationSpeed={0.6} />}
-            code={code}
-            cli="water-drop-reveal"
-            props={props}
-            dependencies={dependencies}
+            title="Mask View"
+            description="Reveal content through a mask — letters as a window onto an image, a spotlight in the dark, or steamed-up glass you wipe clear."
+            variants={variants}
         />
     );
 }

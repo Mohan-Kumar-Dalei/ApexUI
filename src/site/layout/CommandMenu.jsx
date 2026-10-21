@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { AnimatePresence, motion } from 'framer-motion';
 import { ArrowRight, BookOpen, Box, Search } from 'lucide-react';
 import { componentPages, guidePages, prefetch } from '../config/navigation.js';
-import { OPEN_SEARCH_EVENT } from './overlays.js';
+import { OPEN_SEARCH_EVENT, backdropMotion } from './overlays.js';
 
 const groups = [
     { label: 'Guides', icon: BookOpen, items: guidePages },
@@ -84,10 +84,8 @@ export default function CommandMenu() {
         <AnimatePresence>
             {open && (
                 <motion.div
-                    className="fixed inset-0 z-[2000] flex items-start justify-center bg-black/50 px-4 pt-[12vh] backdrop-blur-sm"
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    exit={{ opacity: 0 }}
+                    className="fixed inset-0 z-[2000] flex items-start justify-center px-4 pt-[12vh]"
+                    {...backdropMotion}
                     transition={{ duration: 0.15 }}
                     onMouseDown={(e) => e.target === e.currentTarget && setOpen(false)}
                 >

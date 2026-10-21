@@ -319,7 +319,9 @@ img[data-ik-loading] {
   animation-timing-function: var(--vt-ease);
 }
 
-/* Anchored sections land below the sticky navbar. */
+/* Anchored sections land below the sticky navbar. The gutter stays reserved so
+   locking scroll for an overlay doesn't drop the scrollbar and shift the page. */
 html {
   scroll-padding-top: 5rem;
+  scrollbar-gutter: stable;
 }

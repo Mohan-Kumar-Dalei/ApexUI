@@ -5,6 +5,20 @@ import { prefetch } from '../config/navigation.js';
 
 const ease = [0.22, 1, 0.36, 1];
 
+/*
+ * A component screenshot shown whole: the screenshots come in every aspect
+ * ratio, so the image is contained (never cropped) over a blurred copy of
+ * itself that fills the rest of the frame. Place it in a relative box.
+ */
+export function Thumb({ src, alt = '', className = '' }) {
+    return (
+        <>
+            <img src={src} alt="" aria-hidden="true" loading="lazy" decoding="async" className="absolute inset-0 h-full w-full scale-110 object-cover opacity-50 blur-2xl" />
+            <img src={src} alt={alt} loading="lazy" decoding="async" className={`relative h-full w-full object-contain ${className}`} />
+        </>
+    );
+}
+
 /* Gallery card: framed screenshot, name, category and a two-line summary. */
 export function ComponentCard({ item, index = 0, showCategory = true }) {
     return (
@@ -21,13 +35,7 @@ export function ComponentCard({ item, index = 0, showCategory = true }) {
                 className="group flex h-full flex-col rounded-2xl border border-[var(--line)] bg-[var(--panel)] p-1.5 transition duration-300 hover:border-[var(--lime-line)] hover:shadow-[var(--shadow)]"
             >
                 <div className="relative aspect-[16/10] overflow-hidden rounded-xl bg-[var(--stage)]">
-                    <img
-                        src={item.image}
-                        alt={`${item.name} preview`}
-                        loading="lazy"
-                        decoding="async"
-                        className="h-full w-full object-cover transition duration-700 ease-[var(--ease-out)] group-hover:scale-[1.04]"
-                    />
+                    <Thumb src={item.image} alt={`${item.name} preview`} className="transition duration-700 ease-[var(--ease-out)] group-hover:scale-[1.04]" />
                     <span className="absolute right-2.5 top-2.5 inline-flex h-8 w-8 translate-y-1 items-center justify-center rounded-full bg-[var(--lime)] text-[var(--lime-ink)] opacity-0 shadow-lg transition duration-300 group-hover:translate-y-0 group-hover:opacity-100">
                         <ArrowUpRight className="h-4 w-4" />
                     </span>
@@ -65,7 +73,7 @@ export function ComponentList({ items, showCategory = true }) {
                         className="group flex items-center gap-4 px-3 py-3 transition-colors hover:bg-[var(--panel-2)] sm:px-4"
                     >
                         <span className="relative aspect-[16/10] w-20 shrink-0 overflow-hidden rounded-lg bg-[var(--stage)] sm:w-28">
-                            <img src={item.image} alt="" loading="lazy" decoding="async" className="h-full w-full object-cover" />
+                            <Thumb src={item.image} />
                         </span>
                         <span className="min-w-0 flex-1">
                             <span className="block truncate text-[0.95rem] font-semibold text-[var(--ink)]">{item.name}</span>

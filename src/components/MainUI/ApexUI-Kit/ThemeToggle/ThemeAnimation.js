@@ -1,14 +1,42 @@
 // config/animations.js
 
-// Small utility to escape quotes in data-URIs
-const esc = (s = "") => s.replace(/#/g, "%23").replace(/\n/g, "");
+// Soft-edged circle that grows from `at` until it covers the screen. It animates
+// a radial-gradient mask through a registered property, which stays smooth;
+// scaling a blurred SVG mask to screen size re-rasterises every frame and flickers.
+const circleReveal = (at) => `
+  @property --vt-r { syntax: '<length>'; inherits: false; initial-value: 0px; }
+  ::view-transition-new(root) {
+    -webkit-mask-image: radial-gradient(circle at ${at}, #000 var(--vt-r), transparent calc(var(--vt-r) + 12vmax));
+    mask-image: radial-gradient(circle at ${at}, #000 var(--vt-r), transparent calc(var(--vt-r) + 12vmax));
+    animation: vt-circle var(--vt-duration) var(--vt-ease);
+  }
+  ::view-transition-old(root) { animation: none; }
+  @keyframes vt-circle {
+    from { --vt-r: -12vmax; }
+    to   { --vt-r: 150vmax; }
+  }
+`;
+
+// Holds the last frame until the transition ends (no flash of the old theme)
+// and keeps the browser's default plus-lighter blending out of the reveal.
+const footer = `
+  ::view-transition-old(root), ::view-transition-new(root) {
+    animation-fill-mode: both;
+    mix-blend-mode: normal;
+  }
+`;
 
 export function buildAnimationCSS(animation, opts = {}) {
+  return presetCSS(animation, opts) + footer;
+}
+
+function presetCSS(animation, opts = {}) {
   const duration = opts.duration || "1.5s";
   const ease = opts.ease || "var(--vt-ease)";
 
+  // `var(--vt-ease)` would refer to itself here, so only set a real easing.
   const header = `
-    :root { --vt-duration: ${duration}; --vt-ease: ${ease}; }
+    :root { --vt-duration: ${duration};${ease === "var(--vt-ease)" ? "" : ` --vt-ease: ${ease};`} }
     ::view-transition-group(root){ animation-timing-function: var(--vt-ease); }
   `;
 
@@ -37,72 +65,15 @@ export function buildAnimationCSS(animation, opts = {}) {
   const preset = typeof animation === "string" ? animation : animation?.type;
 
   switch (preset) {
-    case "circle": {
-      const circleSVG = esc(
-        `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 40 40"><circle cx="20" cy="20" r="20" fill="white"/></svg>`
-      );
-      return header + `
-        ::view-transition-new(root) {
-          mask: url('data:image/svg+xml,${circleSVG}') center / 0 no-repeat;
-          -webkit-mask: url('data:image/svg+xml,${circleSVG}') center / 0 no-repeat;
-          animation: vt-scale var(--vt-duration);
-        }
-        ::view-transition-old(root), .dark::view-transition-old(root) {
-          animation: vt-scale var(--vt-duration);
-        }
-        @keyframes vt-scale {
-          to { mask-size: 200vmax; -webkit-mask-size: 200vmax; }
-        }
-      `;
-    }
+    case "circle":
+      // Grows from the clicked button (ThemeToggle sets --cx / --cy).
+      return header + circleReveal("var(--cx, 50%) var(--cy, 50%)");
 
-    case "circle-left": {
-      const svg = esc(
-        `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 40 40"><defs><filter id="b"><feGaussianBlur stdDeviation="2"/></filter></defs><circle cx="0" cy="0" r="18" fill="white" filter="url(%23b)"/></svg>`
-      );
-      return header + `
-        ::view-transition-new(root) {
-          mask: url('data:image/svg+xml,${svg}') top left / 0 no-repeat;
-          -webkit-mask: url('data:image/svg+xml,${svg}') top left / 0 no-repeat;
-          transform-origin: top left;
-          animation: vt-scale-tl var(--vt-duration);
-        }
-        ::view-transition-old(root), .dark::view-transition-old(root) {
-          transform-origin: top left;
-          animation: vt-scale-tl var(--vt-duration);
-        }
-        @keyframes vt-scale-tl { to { mask-size: 350vmax; -webkit-mask-size: 350vmax; } }
-      `;
-    }
-    case "circle-right": {
-      const svg = esc(
-        `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 40 40">
-       <defs><filter id="b"><feGaussianBlur stdDeviation="2"/></filter></defs>
-       <circle cx="40" cy="0" r="18" fill="white" filter="url(%23b)"/>
-     </svg>`
-      );
+    case "circle-left":
+      return header + circleReveal("0 0");
 
-      return header + `
-    ::view-transition-new(root) {
-      mask: url('data:image/svg+xml,${svg}') top right / 0 no-repeat;
-      -webkit-mask: url('data:image/svg+xml,${svg}') top right / 0 no-repeat;
-      transform-origin: top right;
-      animation: vt-scale-tr var(--vt-duration);
-    }
-
-    ::view-transition-old(root), .dark::view-transition-old(root) {
-      transform-origin: top right;
-      animation: vt-scale-tr var(--vt-duration);
-    }
-
-    @keyframes vt-scale-tr {
-      to {
-        mask-size: 350vmax;
-        -webkit-mask-size: 350vmax;
-      }
-    }
-  `;
-    }
+    case "circle-right":
+      return header + circleReveal("100% 0");
     case "split-reveal-horizontal": {
       return header + `
     ::view-transition-new(root) {

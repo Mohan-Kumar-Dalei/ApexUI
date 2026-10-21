@@ -51,18 +51,9 @@ export default function AppShell() {
         }
     }, []);
 
-    // New pages fade in straight away; there is no exit animation to wait for,
-    // so navigating from the sidebar feels instant.
-    const page = (
-        <motion.div
-            key={pathname}
-            initial={{ opacity: 0.4 }}
-            animate={{ opacity: 1 }}
-            transition={{ duration: 0.18, ease: 'easeOut' }}
-        >
-            {outlet}
-        </motion.div>
-    );
+    // New pages swap in at once: dimming them in on every navigation read as a
+    // flicker, and the top progress bar already covers slow loads.
+    const page = <div key={pathname}>{outlet}</div>;
 
     return (
         <div className="min-h-dvh bg-[var(--bg)] text-[var(--ink)]">

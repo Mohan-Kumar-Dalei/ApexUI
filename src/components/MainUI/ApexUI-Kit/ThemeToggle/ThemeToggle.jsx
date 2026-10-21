@@ -1,6 +1,14 @@
 import { useState, useEffect, useRef, useId } from "react";
+import { flushSync } from "react-dom";
 import { FiSun, FiMoon } from "react-icons/fi";
 import { buildAnimationCSS } from "./ThemeAnimation.js";
+
+// Swaps the theme-* class on <html>.
+function applyThemeClass(theme) {
+    const html = document.documentElement;
+    [...html.classList].forEach((c) => c.startsWith("theme-") && html.classList.remove(c));
+    html.classList.add(`theme-${theme}`);
+}
 
 export default function ThemeToggle({
     animation = "circle",
@@ -29,12 +37,19 @@ export default function ThemeToggle({
     // ------------------------------
     useEffect(() => {
         const rawCSS = buildAnimationCSS(animation, { duration, ease });
+        const suffix = uid.replace(/[^\w-]/g, "");
 
-        // ✅ Scope selectors with html[vt-owner]
+        // ✅ Scope selectors with html[vt-owner]; :root variables and keyframe names
+        // too, so several toggles on one page don't override each other's settings.
         const scopedCSS = rawCSS
+            .replace(/(?<![-\w])vt-(?=[a-z])/g, `vt-${suffix}-`)
+            .replace(/:root\b/g, `html[vt-owner="${uid}"]`)
             .replaceAll("::view-transition-new", `html[vt-owner="${uid}"]::view-transition-new`)
             .replaceAll("::view-transition-old", `html[vt-owner="${uid}"]::view-transition-old`)
-            .replaceAll("::view-transition-group", `html[vt-owner="${uid}"]::view-transition-group`);
+            .replaceAll("::view-transition-group", `html[vt-owner="${uid}"]::view-transition-group`)
+            // No CSS transitions while the view transition runs, otherwise elements are
+            // captured mid-fade in the old colours and snap to the new ones afterwards.
+            + `html[vt-owner="${uid}"] *, html[vt-owner="${uid}"] *::before, html[vt-owner="${uid}"] *::after { transition: none !important; }`;
 
         let styleEl = document.getElementById(`vt-style-${uid}`);
         if (!styleEl) {
@@ -49,9 +64,7 @@ export default function ThemeToggle({
     // Apply theme globally + notify
     // ------------------------------
     useEffect(() => {
-        const html = document.documentElement;
-        html.classList.forEach((c) => c.startsWith("theme-") && html.classList.remove(c));
-        html.classList.add(`theme-${theme}`);
+        applyThemeClass(theme);
 
         try {
             localStorage.setItem("apexui-theme", theme);
@@ -88,7 +101,12 @@ export default function ThemeToggle({
         // ✅ Use html instead of body
         document.documentElement.setAttribute("vt-owner", uid);
 
-        const run = () => setTheme(nextTheme);
+        // Apply the theme synchronously: the browser takes the transition's "new"
+        // snapshot as soon as this returns, before a normal React update would land.
+        const run = () => {
+            applyThemeClass(nextTheme);
+            flushSync(() => setTheme(nextTheme));
+        };
 
         if (document.startViewTransition) {
             const vt = document.startViewTransition(run);

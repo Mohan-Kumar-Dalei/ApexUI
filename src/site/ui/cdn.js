@@ -46,11 +46,17 @@ export function withCdn(value, options) {
  * Marks every ImageKit <img> that is still loading with data-ik-loading, which
  * theme.css draws as a shimmering skeleton. The mark is dropped once the image
  * (or its local fallback) has loaded, so components need no changes.
+ * Images that are ready within a moment (cached) never get the mark, so they
+ * don't flash a skeleton for a frame.
  */
 export function installImageSkeletons() {
     if (!ENDPOINT || typeof window === 'undefined') return;
+    const isLoading = (img) => !img.complete && (img.currentSrc || img.src).startsWith(ENDPOINT);
     const mark = (img) => {
-        if (!img.complete && (img.currentSrc || img.src).startsWith(ENDPOINT)) img.dataset.ikLoading = '';
+        if (!isLoading(img)) return;
+        setTimeout(() => {
+            if (isLoading(img)) img.dataset.ikLoading = '';
+        }, 120);
     };
     const scan = (node) => {
         if (node instanceof HTMLImageElement) mark(node);

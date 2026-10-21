@@ -171,20 +171,20 @@ const NavDropDown = ({ navData = [], className = '' }) => {
         <MotionConfig reducedMotion="user">
             <div
                 ref={rootRef}
-                className={`relative inline-block ${className}`}
+                className={`relative inline-block max-w-full ${className}`}
                 style={{ zIndex: 4000 }}
                 onPointerLeave={(e) => e.pointerType === 'mouse' && hideSoon()}
                 onPointerEnter={() => clearTimeout(closeTimer.current)}
                 onBlur={(e) => !rootRef.current?.contains(e.relatedTarget) && hide()}
             >
-                <nav aria-label="Main" ref={barRef} className="max-w-[calc(100vw-1rem)] overflow-x-auto rounded-full border border-white/10 bg-zinc-950/85 p-1 [scrollbar-width:none] sm:p-1.5 shadow-[0_10px_40px_-12px_rgba(0,0,0,0.7)] backdrop-blur-xl">
+                <nav aria-label="Main" ref={barRef} className="max-w-full overflow-x-auto rounded-full border border-white/10 bg-zinc-950/85 p-1 [scrollbar-width:none] sm:p-1.5 shadow-[0_10px_40px_-12px_rgba(0,0,0,0.7)] backdrop-blur-xl">
                     <LayoutGroup id={uid}>
                         <ul className="flex items-center gap-0.5" onPointerLeave={() => setHovered(null)}>
                             {navData.map((item, index) => {
                                 const hasMenu = Boolean(item.submenu?.length);
                                 const isOpen = open === index;
                                 const lit = hovered === index || (hovered === null && isOpen);
-                                const base = `relative flex items-center gap-1 whitespace-nowrap rounded-full px-2.5 py-1.5 text-[0.8rem] font-medium sm:px-3.5 sm:py-2 sm:text-sm outline-none transition-colors duration-200 focus-visible:ring-2 focus-visible:ring-lime-400/60 ${isOpen ? 'text-lime-300' : 'text-zinc-300 hover:text-white'}`;
+                                const base = `relative flex items-center gap-0.5 whitespace-nowrap rounded-full px-2 py-1.5 text-[0.78rem] font-medium sm:gap-1 sm:px-3.5 sm:py-2 sm:text-sm outline-none transition-colors duration-200 focus-visible:ring-2 focus-visible:ring-lime-400/60 ${isOpen ? 'text-lime-300' : 'text-zinc-300 hover:text-white'}`;
                                 const highlight = lit && (
                                     <motion.span layoutId="hover" className="absolute inset-0 -z-10 rounded-full bg-white/[0.07]" transition={{ type: 'spring', stiffness: 500, damping: 40 }} />
                                 );

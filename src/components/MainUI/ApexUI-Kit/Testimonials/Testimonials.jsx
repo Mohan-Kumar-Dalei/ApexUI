@@ -24,12 +24,12 @@ const Testimonials = ({ testimonials }) => {
     };
 
     return (
-        <div className="w-full max-w-4xl mx-auto bg-slate-950 rounded-2xl p-8 md:p-12 border border-slate-800 grid md:grid-cols-2 gap-12 items-center overflow-hidden">
+        <div className="w-full max-w-4xl mx-auto bg-slate-950 rounded-2xl p-6 sm:p-8 md:p-12 border border-slate-800 grid md:grid-cols-2 gap-8 md:gap-12 items-center overflow-hidden">
 
             {/* Left Part: Text Content and Navigation */}
             <div className="flex flex-col justify-center h-full text-center md:text-left order-2 md:order-1">
-                {/* Title and Subtitle with Animation */}
-                <div className="relative h-32">
+                {/* Title, subtitle and quote with animation; the min height keeps the buttons from jumping. */}
+                <div className="relative min-h-[13rem] sm:min-h-[12rem]">
                     <AnimatePresence initial={false} mode="wait">
                         <motion.div
                             key={activeIndex}
@@ -38,11 +38,11 @@ const Testimonials = ({ testimonials }) => {
                             animate="center"
                             exit="exit"
                             transition={{ duration: 0.4, ease: "easeInOut" }}
-                            className="absolute w-full"
+                            className="w-full"
                         >
-                            <h2 className="text-3xl font-bold text-white tracking-tight">{testimonials[activeIndex].author}</h2>
+                            <h2 className="text-2xl sm:text-3xl font-bold text-white tracking-tight">{testimonials[activeIndex].author}</h2>
                             <p className="mt-2 text-lime-400 font-medium">{testimonials[activeIndex].title}</p>
-                            <p className="mt-4 text-slate-400 text-sm leading-relaxed hidden md:block">"{testimonials[activeIndex].text}"</p>
+                            <p className="mt-4 text-slate-400 text-sm leading-relaxed">"{testimonials[activeIndex].text}"</p>
                         </motion.div>
                     </AnimatePresence>
                 </div>
@@ -71,7 +71,9 @@ const Testimonials = ({ testimonials }) => {
             </div>
 
             {/* Right Part: Stacked Images */}
-            <div className="relative h-80 w-full flex items-center justify-center order-1 md:order-2">
+            <div className="flex w-full items-center justify-center order-1 md:order-2">
+                {/* Sized to the card plus the fan, so the stack stays centred and inside the panel. */}
+                <div className="relative h-[calc(16rem+30px)] w-[calc(12rem+60px)] sm:h-[calc(20rem+30px)] sm:w-[calc(16rem+60px)]">
                 {testimonials.map((testimonial, index) => {
                     // Determine the position of the card in the stack
                     const position = (index - activeIndex + testimonials.length) % testimonials.length;
@@ -82,7 +84,7 @@ const Testimonials = ({ testimonials }) => {
                     return (
                         <motion.div
                             key={testimonial.id || index}
-                            className="absolute w-64 h-80 bg-slate-800 rounded-xl shadow-2xl overflow-hidden border-2 border-slate-700"
+                            className="absolute w-48 h-64 sm:w-64 sm:h-80 bg-slate-800 rounded-xl shadow-2xl overflow-hidden border-2 border-slate-700"
                             initial={false}
                             animate={{
                                 scale: 1 - position * 0.08,
@@ -107,6 +109,7 @@ const Testimonials = ({ testimonials }) => {
                         </motion.div>
                     );
                 })}
+                </div>
             </div>
         </div>
     );

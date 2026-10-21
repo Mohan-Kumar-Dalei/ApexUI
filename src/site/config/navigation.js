@@ -276,12 +276,13 @@ export const componentPages = [
         summary: 'Animated tooltips with smooth, physics-based positioning.',
     },
     {
-        name: 'Water Drop Reveal',
+        // Shown as "Mask View"; the path and CLI slug keep the old name so existing installs still work.
+        name: 'Mask View',
         path: '/components/water-drop-reveal',
         load: () => import('../content/components/WaterDropRevealDoc.jsx'),
         category: 'Text & Motion',
         image: shot('WaterDrop hover.png'),
-        summary: 'Text that reveals itself with a liquid water-drop effect.',
+        summary: 'Frosted text that comes into focus under a lens that follows the pointer.',
     },
 ];
 

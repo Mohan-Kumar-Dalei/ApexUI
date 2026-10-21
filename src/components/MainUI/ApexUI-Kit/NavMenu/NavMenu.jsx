@@ -121,7 +121,13 @@ const ResponsiveNavMenu = (props) => {
             </div>
 
             <div className="md:hidden flex w-full justify-end">
-                <button onClick={() => setIsOpen(!isOpen)} className="text-white focus:outline-none">
+                {/* Same backdrop as the desktop bar, so the icon stays visible on light pages too. */}
+                <button
+                    onClick={() => setIsOpen(!isOpen)}
+                    aria-label={isOpen ? "Close menu" : "Open menu"}
+                    className="rounded-full border border-white/10 p-2.5 text-white shadow-lg focus:outline-none"
+                    style={{ backdropFilter: 'blur(16px)', WebkitBackdropFilter: 'blur(16px)', background: props.backgroundColor ?? 'rgba(17, 24, 39, 0.7)' }}
+                >
                     <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d={isOpen ? "M6 18L18 6M6 6l12 12" : "M4 6h16M4 12h16m-7 6h7"} />
                     </svg>

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import './MeteorCard.css';
 const ArrowRightIcon = () => (
     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
@@ -11,51 +11,40 @@ const ArrowRightIcon = () => (
 );
 
 // Meteor Effect Component
+// Positions are picked once (useMemo), so re-renders don't make the meteors jump.
 const Meteors = ({ number = 20 }) => {
-    const meteors = [...Array(number)].map((_, i) => (
-        <span
-            key={i}
-            className="meteor-bg"
-            style={{
-                top: `${Math.random() * 100}%`,
-                left: `${Math.random() * 100}%`,
-                animationDelay: `${Math.random() * 8}s`,
-                animationDuration: `${Math.floor(Math.random() * 6) + 4}s`,
-            }}
-        ></span>
-    ));
-    return <>{meteors}</>;
+    const meteors = useMemo(() => [...Array(number)].map(() => ({
+        top: `${Math.random() * 100}%`,
+        left: `${Math.random() * 100}%`,
+        animationDelay: `${Math.random() * 8}s`,
+        animationDuration: `${Math.floor(Math.random() * 6) + 4}s`,
+    })), [number]);
+    return <>{meteors.map((style, i) => <span key={i} className="meteor-bg" style={style}></span>)}</>;
 };
 
 // Particle Effect Component
 const Particles = ({ number = 50, color = '#ffffff', speed = 1 }) => {
-    const particles = [...Array(number)].map((_, i) => {
+    const particles = useMemo(() => [...Array(number)].map(() => {
         const animationDuration = (Math.random() * 5 + 3) / speed;
-        return (
-            <span
-                key={i}
-                className="particle-bg"
-                style={{
-                    '--particle-color': color,
-                    top: `${Math.random() * 100}%`,
-                    left: `${Math.random() * 100}%`,
-                    animationDelay: `${Math.random() * animationDuration}s`,
-                    animationDuration: `${animationDuration}s`,
-                }}
-            ></span>
-        );
-    });
-    return <>{particles}</>;
+        return {
+            top: `${Math.random() * 100}%`,
+            left: `${Math.random() * 100}%`,
+            animationDelay: `${Math.random() * animationDuration}s`,
+            animationDuration: `${animationDuration}s`,
+        };
+    }), [number, speed]);
+    return <>{particles.map((style, i) => <span key={i} className="particle-bg" style={{ '--particle-color': color, ...style }}></span>)}</>;
 };
 
 // Main MeteorCard Component
+// A fixed-size card (image on top, content below) so it looks the same on every screen.
 const MeteorCard = ({ data, particleNumber, particleColor, particleSpeed }) => {
     return (
-        <>
+        <div className="flex flex-wrap justify-center gap-6">
             {data.map((item, index) => (
-                <div key={index} className="relative w-full lg:w-[30vw] max-w-4xl mx-auto bg-slate-800/80 p-0.5 rounded-lg moving-border-card">
+                <div key={index} className="relative w-[320px] max-w-full bg-slate-800/80 p-0.5 rounded-2xl moving-border-card">
                     {/* Card ka content container */}
-                    <div className="relative bg-slate-900 rounded-lg p-4 md:p-8 flex flex-col md:flex-row items-center gap-6 md:gap-8 overflow-hidden">
+                    <div className="relative bg-slate-900 rounded-[calc(1rem-2px)] p-3 flex flex-col overflow-hidden">
                         {/* Background Effects */}
                         <div className="absolute inset-0 w-full h-full z-0">
                             <Meteors number={5} />
@@ -66,27 +55,27 @@ const MeteorCard = ({ data, particleNumber, particleColor, particleSpeed }) => {
                             />
                         </div>
 
-                        {/* Spotlight Effect (hide on small screens to reduce visual noise) */}
-                        <div className="hidden md:block absolute -top-1/3 -left-1/3 w-2/3 h-2/3 bg-blue-400/90 rounded-full blur-[120px] pointer-events-none z-0"></div>
+                        {/* Spotlight Effect */}
+                        <div className="absolute -top-1/4 -left-1/4 w-3/4 h-1/2 bg-blue-400/60 rounded-full blur-[90px] pointer-events-none z-0"></div>
 
-                        {/* Left Side: Image */}
-                        <div className="relative w-full md:w-1/2 h-64 md:h-full rounded-md overflow-hidden z-10">
-                            <img src={item.imageUrl} alt={item.title} className="w-full h-full object-cover lg:aspect-square" />
+                        {/* Image */}
+                        <div className="relative h-[220px] w-full rounded-xl overflow-hidden z-10 ring-1 ring-white/10">
+                            <img src={item.imageUrl} alt={item.title} className="w-full h-full object-cover object-[center_25%]" />
                         </div>
 
-                        {/* Right Side: Content */}
-                        <div className="relative w-full md:w-2/3 text-center md:text-left z-10">
-                            <h3 className="text-3xl font-bold mb-2 text-white">{item.title}</h3>
-                            <p className="text-gray-400 mb-6">{item.description}</p>
-                            <button className="group relative inline-flex md:inline-flex w-full md:w-auto items-center justify-center px-6 py-2 bg-lime-600 text-white font-semibold rounded-md overflow-hidden transition-all duration-300 hover:bg-lime-700">
-                                <span className="mx-auto">{item.buttonText}</span>
+                        {/* Content */}
+                        <div className="relative z-10 px-2 pt-4 pb-2 text-center">
+                            <h3 className="text-2xl font-bold mb-2 text-white tracking-tight">{item.title}</h3>
+                            <p className="text-sm leading-relaxed text-gray-400 mb-5">{item.description}</p>
+                            <button className="group relative inline-flex w-full items-center justify-center whitespace-nowrap px-6 py-2.5 bg-lime-600 text-white font-semibold rounded-lg overflow-hidden transition-all duration-300 hover:bg-lime-700">
+                                <span>{item.buttonText}</span>
                                 <ArrowRightIcon />
                             </button>
                         </div>
                     </div>
                 </div>
             ))}
-        </>
+        </div>
     );
 };
 

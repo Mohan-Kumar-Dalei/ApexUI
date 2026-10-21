@@ -5,7 +5,7 @@ import { MessageSquare, X } from 'lucide-react';
 import Logo from '../ui/Logo.jsx';
 import { IndexNav } from './IndexNav.jsx';
 import { NAV_ITEMS } from './navItems.js';
-import { OPEN_INDEX_EVENT, openFeedback } from './overlays.js';
+import { OPEN_INDEX_EVENT, backdropMotion, openFeedback } from './overlays.js';
 import useActiveInView from './useActiveInView.js';
 
 /* Scrollable docs index inside the drawer; opens scrolled to the current page. */
@@ -44,7 +44,7 @@ export default function MobileDrawer() {
         <AnimatePresence>
             {open && (
                 <div className="fixed inset-0 z-[1200] lg:hidden">
-                    <motion.div className="absolute inset-0 bg-black/50 backdrop-blur-sm" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} onClick={() => setOpen(false)} />
+                    <motion.div className="absolute inset-0" {...backdropMotion} onClick={() => setOpen(false)} />
                     <motion.div
                         role="dialog"
                         aria-modal="true"

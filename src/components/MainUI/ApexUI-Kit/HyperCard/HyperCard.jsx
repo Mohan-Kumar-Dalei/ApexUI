@@ -126,7 +126,7 @@ const HyperCard = ({
         <div
             className="w-full mx-auto rounded-2xl overflow-hidden text-white
                        border border-slate-700 bg-slate-900 shadow-2xl shadow-black/50
-                       max-w-[13rem] sm:max-w-[16rem] md:max-w-[20rem] lg:max-w-xs"
+                       max-w-[20rem]"
             style={{
                 backgroundImage: 'linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px), linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px)',
                 backgroundSize: '2rem 2rem'
@@ -135,7 +135,7 @@ const HyperCard = ({
             {/* Top animated HyperCard */}
             <div
                 className="relative w-full overflow-hidden group cursor-pointer
-                           h-36 sm:h-40 md:h-48 lg:h-50"
+                           h-52 md:h-56"
                 onMouseEnter={() => setHovered(true)}
                 onMouseLeave={() => setHovered(false)}
             >
@@ -166,10 +166,10 @@ const HyperCard = ({
             </div>
 
             {/* Bottom content section */}
-            <div className="px-4 sm:px-5 pt-4 pb-5 w-full text-left flex flex-col items-start">
+            <div className="px-4 sm:px-5 pt-5 pb-6 w-full text-left flex flex-col items-start">
                 <div className="flex items-center gap-2 mb-2">
                     <FontAwesomeIcon icon={faCube} style={{ color: starColor }} className="text-lg sm:text-xl" />
-                    <h3 className="text-lg sm:text-xl md:text-2xl lg:text-2xl font-extrabold text-white tracking-tight">{title}</h3>
+                    <h3 className="text-xl md:text-2xl font-extrabold text-white tracking-tight leading-tight">{title}</h3>
                 </div>
                 <p className="text-xs sm:text-sm text-gray-400 mb-4 max-w-full leading-relaxed">{description}</p>
 

@@ -1,24 +1,12 @@
 import { useState } from 'react';
 import ComponentDoc from '../../docs/ComponentDoc.jsx';
-import ColorControl from '../../docs/controls.jsx';
+import ColorControl, { ControlGrid } from '../../docs/controls.jsx';
 import EdgeGlowForm from '../../../components/MainUI/ApexUI-Kit/EdgeGlowForm/EdgeGlowFrom.jsx';
 
-const code = `import EdgeGlowForm from './ApexUI-Kit/EdgeGlowForm/EdgeGlowForm.jsx';
-
-const App = () => (
-  <EdgeGlowForm
-    GlowColor="#a855f7"
-    borderGlowColor="#a78bfa88"
-    borderGlowShadow="#a78bfa33"
-  />
-);
-
-export default App;`;
-
 const props = [
-    { prop: 'GlowColor', type: 'string', def: "'violet'", desc: 'Color of the glow around the form.' },
-    { prop: 'borderGlowColor', type: 'string', def: "'#a78bfa88'", desc: 'Color of the focused field border.' },
-    { prop: 'borderGlowShadow', type: 'string', def: "'#a78bfa33'", desc: 'Shadow color of the focused field border.' },
+    { prop: 'GlowColor', type: 'string', def: "'violet'", desc: 'Color of the edge glow that follows the pointer around the form.' },
+    { prop: 'borderGlowColor', type: 'string', def: "'#a78bfa88'", desc: 'Edge color (hex) of focused fields, floating labels, the checkbox and the button.' },
+    { prop: 'borderGlowShadow', type: 'string', def: "'#a78bfa33'", desc: 'Shadow color of the focused field edges.' },
 ];
 
 const dependencies = [
@@ -29,12 +17,29 @@ const dependencies = [
 
 export default function EdgeGlowFormDoc() {
     const [glowColor, setGlowColor] = useState('#a855f7');
+    const [edgeColor, setEdgeColor] = useState('#a78bfa');
+    const code = `import EdgeGlowForm from './ApexUI-Kit/EdgeGlowForm/EdgeGlowForm.jsx';
+
+const App = () => (
+  <EdgeGlowForm
+    GlowColor="${glowColor}"
+    borderGlowColor="${edgeColor}88"
+    borderGlowShadow="${edgeColor}33"
+  />
+);
+
+export default App;`;
     return (
         <ComponentDoc
             title="Edge Glow Form"
-            description="A form container that emits a soft, blurred gradient glow from its edges, with animated validation."
-            preview={<EdgeGlowForm GlowColor={glowColor} />}
-            controls={<ColorControl label="Glow color" value={glowColor} onChange={setGlowColor} />}
+            description="A form whose edge glows where the pointer is, with floating labels, glowing field edges and animated validation."
+            preview={<EdgeGlowForm GlowColor={glowColor} borderGlowColor={`${edgeColor}88`} borderGlowShadow={`${edgeColor}33`} />}
+            controls={
+                <ControlGrid>
+                    <ColorControl label="Glow color" value={glowColor} onChange={setGlowColor} />
+                    <ColorControl label="Edge color" value={edgeColor} onChange={setEdgeColor} />
+                </ControlGrid>
+            }
             code={code}
             cli="edge-glow-form"
             props={props}

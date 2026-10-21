@@ -20,6 +20,10 @@ const TwitterIcon = () => (
 );
 
 
+const ACCENT = "#B0DC3C";
+const stop = (e) => e.stopPropagation();
+const socialBtn = "flex h-10 w-10 items-center justify-center rounded-xl border border-white/10 bg-white/[0.04] text-white/70 transition-colors hover:border-[#B0DC3C]/50 hover:text-[#B0DC3C]";
+
 const FlipProfile = ({
     name = "Iron Man",
     role = "AI Engineer",
@@ -30,7 +34,7 @@ const FlipProfile = ({
     twitter = "#",
     resumeLink = "/Iron-Man-Resume.pdf",
     hireLink = "#",
-    bgColor = "#0F172B" 
+    bgColor = "#0F172B"
 }) => {
     const [isFlipped, setIsFlipped] = useState(false);
 
@@ -44,19 +48,28 @@ const FlipProfile = ({
         hidden: { opacity: 0 },
         visible: {
             opacity: 1,
-            transition: { staggerChildren: 0.1, delayChildren: 0.3 }
+            transition: { staggerChildren: 0.08, delayChildren: 0.3 }
         }
     };
 
     const itemVariants = {
-        hidden: { opacity: 0, y: 20 },
+        hidden: { opacity: 0, y: 16 },
         visible: { opacity: 1, y: 0 }
     };
 
+    // Shared face styles: accent glow at the top and a faint grid
+    const faceStyle = {
+        backgroundColor: bgColor,
+        backgroundImage: `radial-gradient(120% 60% at 50% 0%, ${ACCENT}26, transparent 60%), linear-gradient(rgba(255,255,255,0.035) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.035) 1px, transparent 1px)`,
+        backgroundSize: "auto, 22px 22px, 22px 22px",
+        backfaceVisibility: "hidden",
+        WebkitBackfaceVisibility: "hidden",
+    };
+
     return (
-        <div className="w-full flex items-center justify-center p-4 min-h-[450px]" style={{ perspective: "1200px" }}>
+        <div className="w-full flex items-center justify-center p-4" style={{ perspective: "1200px" }}>
             <motion.div
-                className="relative w-full max-w-sm h-[420px] cursor-pointer"
+                className="relative w-[300px] max-w-full h-[420px] cursor-pointer"
                 style={{ transformStyle: "preserve-3d" }}
                 variants={cardVariants}
                 animate={isFlipped ? "flipped" : "initial"}
@@ -64,59 +77,78 @@ const FlipProfile = ({
                 onClick={() => setIsFlipped(!isFlipped)}
             >
                 {/* --- FRONT OF THE CARD --- */}
-                <motion.div
-                    className="absolute w-full h-full rounded-3xl overflow-hidden shadow-2xl border border-[#B0DC3C] backdrop-blur-md flex flex-col items-center justify-center p-6 text-center text-white"
-                    style={{
-                        background: bgColor,
-                        backfaceVisibility: "hidden"
-                    }}
+                <div
+                    className="absolute inset-0 rounded-[1.75rem] overflow-hidden border border-white/10 shadow-2xl shadow-black/50 flex flex-col items-center p-6 text-center text-white"
+                    style={faceStyle}
                 >
-                    <div className="absolute inset-0 w-full h-full border-2 border-[#B0DC3C] rounded-3xl animate-pulse pointer-events-none opacity-30"></div>
-                    <img src={avatar} alt="Avatar" className="w-32 h-32 rounded-full border-4 border-[#B0DC3C] object-cover shadow-lg shadow-fuchsia-900/50 mb-4" />
-                    <h2 className="text-3xl font-bold bg-gradient-to-r from-gray-500 to-white bg-clip-text text-transparent">{name}</h2>
-                    <p className="text-lg font-medium text-green-200/90">{role}</p>
-                    <p className="mt-4 text-xs text-gray-100">Click to flip</p>
-                </motion.div>
+                    <div className="flex w-full items-center justify-between">
+                        <span className="rounded-full border border-[#B0DC3C]/30 bg-[#B0DC3C]/10 px-2.5 py-1 text-[10px] font-semibold uppercase tracking-[0.16em] text-[#B0DC3C]">Profile</span>
+                        <span className="flex h-8 w-8 items-center justify-center rounded-full border border-white/10 bg-white/5 text-white/60" aria-hidden="true">
+                            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 12a9 9 0 1 1-3-6.7L21 8" /><path d="M21 3v5h-5" /></svg>
+                        </span>
+                    </div>
+
+                    {/* Avatar with a slowly spinning accent ring */}
+                    <div className="relative mt-6 h-36 w-36">
+                        <div className="absolute inset-0 rounded-full animate-[spin_6s_linear_infinite]" style={{ background: `conic-gradient(from 0deg, ${ACCENT}, transparent 35%, ${ACCENT}55 60%, transparent 80%, ${ACCENT})` }} />
+                        <div className="absolute inset-[3px] rounded-full" style={{ backgroundColor: bgColor }} />
+                        <img src={avatar} alt={name} className="absolute inset-[7px] h-[calc(100%-14px)] w-[calc(100%-14px)] rounded-full object-cover" />
+                    </div>
+
+                    <h2 className="mt-5 text-3xl font-bold tracking-tight">{name}</h2>
+                    <p className="mt-1.5 rounded-full bg-white/5 px-3 py-1 text-sm font-medium text-[#B0DC3C]">{role}</p>
+
+                    <p className="mt-auto flex items-center gap-1.5 text-xs text-white/50">
+                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M9 11V6a3 3 0 0 1 6 0v8" /><path d="M5 15a7 7 0 0 0 14 0v-1a2 2 0 0 0-4 0" /></svg>
+                        Tap to flip
+                    </p>
+                </div>
 
                 {/* --- BACK OF THE CARD --- */}
-                <motion.div
-                    className="absolute w-full h-full rounded-3xl overflow-hidden shadow-2xl border border-cyan-500/40 backdrop-blur-md flex flex-col items-center justify-center p-6 text-center text-white"
-                    style={{
-                        background: bgColor,
-                        backfaceVisibility: "hidden",
-                        transform: "rotateY(180deg)"
-                    }}
+                <div
+                    className="absolute inset-0 rounded-[1.75rem] overflow-hidden border border-[#B0DC3C]/30 shadow-2xl shadow-black/50 p-6 text-white"
+                    style={{ ...faceStyle, transform: "rotateY(180deg)" }}
                 >
                     <AnimatePresence>
                         {isFlipped && (
                             <motion.div
-                                className="flex flex-col items-center justify-center w-full h-full"
+                                className="flex h-full w-full flex-col"
                                 variants={backContentVariants}
                                 initial="hidden"
                                 animate="visible"
                                 exit="hidden"
                             >
-                                <motion.p variants={itemVariants} className="text-sm text-cyan-300">DOB: {dob}</motion.p>
-                                <motion.div variants={itemVariants} className="w-1/2 h-px bg-cyan-400/30 my-4" />
-
-                                <motion.div variants={itemVariants} className="flex gap-5 items-center justify-center text-cyan-300">
-                                    <a href={github} target="_blank" rel="noopener noreferrer" className="hover:text-white transition-colors"><GitHubIcon /></a>
-                                    <a href={linkedin} target="_blank" rel="noopener noreferrer" className="hover:text-white transition-colors"><LinkedInIcon /></a>
-                                    <a href={twitter} target="_blank" rel="noopener noreferrer" className="hover:text-white transition-colors"><TwitterIcon /></a>
+                                <motion.div variants={itemVariants} className="flex items-center gap-3">
+                                    <img src={avatar} alt="" className="h-12 w-12 rounded-full border-2 border-[#B0DC3C] object-cover" />
+                                    <div className="min-w-0 text-left">
+                                        <p className="truncate text-lg font-bold leading-tight">{name}</p>
+                                        <p className="truncate text-xs text-[#B0DC3C]">{role}</p>
+                                    </div>
                                 </motion.div>
 
-                                <motion.div variants={itemVariants} className="mt-6 flex flex-col gap-3 w-full items-center">
-                                    <motion.a whileTap={{ scale: 0.95 }} href={hireLink} className="w-full max-w-xs text-center px-6 py-2.5 bg-cyan-600/80 hover:bg-cyan-500 text-white rounded-full font-semibold shadow-lg shadow-cyan-900/40 transition-all">
+                                <motion.div variants={itemVariants} className="mt-5 rounded-2xl border border-white/10 bg-white/[0.04] p-4 text-left">
+                                    <p className="text-[10px] font-semibold uppercase tracking-[0.16em] text-white/40">Born</p>
+                                    <p className="mt-1 text-sm font-medium text-white/90">{dob}</p>
+                                </motion.div>
+
+                                <motion.div variants={itemVariants} className="mt-4 flex items-center gap-2.5">
+                                    <a href={github} target="_blank" rel="noopener noreferrer" onClick={stop} aria-label="GitHub" className={socialBtn}><GitHubIcon /></a>
+                                    <a href={linkedin} target="_blank" rel="noopener noreferrer" onClick={stop} aria-label="LinkedIn" className={socialBtn}><LinkedInIcon /></a>
+                                    <a href={twitter} target="_blank" rel="noopener noreferrer" onClick={stop} aria-label="X (Twitter)" className={socialBtn}><TwitterIcon /></a>
+                                </motion.div>
+
+                                <motion.div variants={itemVariants} className="mt-auto flex flex-col gap-2.5">
+                                    <motion.a whileTap={{ scale: 0.97 }} href={hireLink} onClick={stop} className="w-full rounded-xl bg-[#B0DC3C] py-2.5 text-center text-sm font-bold text-slate-950 transition hover:brightness-110">
                                         Hire Me
                                     </motion.a>
-                                    <motion.a whileTap={{ scale: 0.95 }} href={resumeLink} download className="w-full max-w-xs text-center px-6 py-2.5 bg-white/10 hover:bg-white/20 text-white rounded-full font-semibold backdrop-blur-md transition-all">
+                                    <motion.a whileTap={{ scale: 0.97 }} href={resumeLink} download onClick={stop} className="w-full rounded-xl border border-white/15 bg-white/5 py-2.5 text-center text-sm font-semibold text-white transition hover:bg-white/10">
                                         Download CV
                                     </motion.a>
                                 </motion.div>
                             </motion.div>
                         )}
                     </AnimatePresence>
-                </motion.div>
+                </div>
             </motion.div>
         </div>
     );

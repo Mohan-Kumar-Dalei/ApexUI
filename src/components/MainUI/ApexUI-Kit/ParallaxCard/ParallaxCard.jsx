@@ -78,7 +78,7 @@ const ParallaxCard = ({ cardData = [], tiltEnable, glareEnable, scale, perspecti
     }, [cardData, tiltEnable, scale]);
 
     return (
-        <div className="flex flex-wrap gap-8 justify-center">
+        <div className="flex w-full flex-wrap gap-8 justify-center">
             {cardData.map((card, idx) => (
                 <div
                     key={idx}
@@ -86,7 +86,7 @@ const ParallaxCard = ({ cardData = [], tiltEnable, glareEnable, scale, perspecti
                     className="w-full max-w-md rounded-2xl"
                     style={{ transformStyle: 'preserve-3d', perspective: `${perspective}px` }}
                 >
-                    <div className="relative md:w-full w-70 h-[50vh] md:h-full  bg-stone-950 rounded-2xl p-8 border border-lime-500/20 shadow-2 shadow-lime-900/40 overflow-hidden"
+                    <div className="relative w-full md:h-full bg-stone-950 rounded-2xl p-6 sm:p-8 border border-lime-500/20 shadow-2 shadow-lime-900/40 overflow-hidden"
                         style={{ transformStyle: 'preserve-3d' }}
                     >
                         {glareEnable && (

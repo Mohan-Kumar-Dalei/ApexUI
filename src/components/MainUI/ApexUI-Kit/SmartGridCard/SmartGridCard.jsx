@@ -123,10 +123,11 @@ const SmartGridCard = ({
         <div
             className={`grid gap-2 justify-center p-4 w-full ${screenWidth >= 1024 ? 'grid-cols-3' : screenWidth >= 768 ? 'grid-cols-2' : 'grid-cols-1'}`}
             style={screenWidth >= 1024 ? {
-                gridTemplateColumns: "repeat(3, minmax(300px, 1fr))",
+                // minmax(0, …): columns share the container's width instead of overflowing it.
+                gridTemplateColumns: "repeat(3, minmax(0, 1fr))",
                 gridTemplateRows: `repeat(2, ${CARD_HEIGHT}px)`
             } : screenWidth >= 768 ? {
-                gridTemplateColumns: "repeat(2, minmax(300px, 1fr))",
+                gridTemplateColumns: "repeat(2, minmax(0, 1fr))",
                 gridTemplateRows: `repeat(3, ${CARD_HEIGHT}px)`
             } : {}}
         >
@@ -164,7 +165,7 @@ const SmartGridCard = ({
                             </div>
                             <button
                                 type="button"
-                                className="mt-auto relative overflow-hidden px-5 py-3 rounded-lg border border-purple-400/60 text-white transition hover:text-white bg-black/20 group flex items-center gap-2 text-xs md:text-base"
+                                className="mt-auto relative overflow-hidden whitespace-nowrap px-4 py-3 rounded-lg border border-purple-400/60 text-white transition hover:text-white bg-black/20 group flex items-center gap-2 text-xs md:text-base"
                             >
                                 <span className="relative z-10 flex items-center gap-2">
                                     {card.buttonText}

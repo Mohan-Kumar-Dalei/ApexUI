@@ -34,7 +34,8 @@ function Segmented({ value, onChange, options, size = 'md' }) {
                     >
                         {active && <motion.span layoutId={`seg-${id}`} className="absolute inset-0 rounded-full bg-[var(--lime)]" transition={{ type: 'spring', stiffness: 500, damping: 38 }} />}
                         {o.icon && <o.icon className="relative h-3.5 w-3.5" />}
-                        {o.label && <span className="relative whitespace-nowrap">{o.label}</span>}
+                        {/* Icon + label pairs show just the icon on phones so the toolbar fits. */}
+                        {o.label && <span className={`relative whitespace-nowrap ${o.icon ? 'hidden sm:inline' : ''}`}>{o.label}</span>}
                     </button>
                 );
             })}
@@ -103,8 +104,8 @@ function Stage({ variant, variants, activeVariant, onVariant }) {
                         value={view}
                         onChange={setView}
                         options={[
-                            { value: 'preview', label: 'Preview', icon: Eye },
-                            { value: 'code', label: 'Code', icon: Code2 },
+                            { value: 'preview', label: 'Preview', icon: Eye, title: 'Preview' },
+                            { value: 'code', label: 'Code', icon: Code2, title: 'Code' },
                         ]}
                     />
                 </div>

@@ -52,51 +52,54 @@ const ParallaxProfileCard = ({ profile }) => {
         };
     }, []);
 
+    const iconBtn = "flex h-9 w-9 items-center justify-center rounded-full border border-cyan-400/20 bg-cyan-400/5 text-cyan-300 transition-colors duration-200 hover:border-cyan-300/60 hover:text-white [&_svg]:h-[18px] [&_svg]:w-[18px]";
+
     return (
         <div
             ref={cardRef}
-            className="relative w-[300px] h-[440px] bg-[#1D2B3A] rounded-3xl p-6 border border-cyan-400/30 shadow-2xl shadow-cyan-900/40 flex flex-col"
+            className="relative w-[300px] max-w-full bg-[#1D2B3A] rounded-3xl p-6 border border-cyan-400/30 shadow-2xl shadow-cyan-900/40"
             style={{ transformStyle: "preserve-3d" }}
         >
-            <div className="absolute inset-0 bg-gradient-to-br from-[#1D2B3A] to-[#111827] rounded-3xl"></div>
-            <div className="absolute top-0 left-0 w-full h-full" style={{ background: "radial-gradient(circle at 50% 50%, rgba(34, 211, 238, 0.08), transparent 70%)", transform: "translateZ(20px)" }}></div>
+            <div className="absolute inset-0 bg-gradient-to-br from-[#1D2B3A] to-[#0b1220] rounded-3xl"></div>
+            <div className="absolute inset-x-0 top-0 h-28 rounded-t-3xl" style={{ background: "radial-gradient(120% 100% at 50% 0%, rgba(34, 211, 238, 0.22), transparent 70%)", transform: "translateZ(20px)" }}></div>
 
-            <div className="relative z-10 flex flex-col items-center justify-between h-full" style={{ transform: "translateZ(50px)" }}>
-                {/* Top Part */}
-                <div className="text-center">
-                    <img src={avatarUrl} alt="Profile" className="w-28 h-28 rounded-full mx-auto mb-3 border-4 border-cyan-400 shadow-lg object-cover" onError={(e) => { e.target.onerror = null; e.target.src = "https://placehold.co/128x128/1D2B3A/A5F3FC?text=ERR"; }} />
-                    <h2 className="text-2xl font-bold text-cyan-300 tracking-wide">{name}</h2>
-                    <div className="flex flex-col items-center mt-1">
-                        <span className="text-xs font-semibold text-slate-300 bg-slate-700 px-2 py-0.5 rounded-full mb-1">@{username}</span>
-                        <span className="text-xs font-medium text-cyan-400 bg-slate-700 px-2 py-0.5 rounded-full">DOB: {dob}</span>
-                    </div>
+            <div className="relative z-10 flex flex-col items-center text-center" style={{ transform: "translateZ(50px)" }}>
+                {/* Avatar with status dot */}
+                <div className="relative">
+                    <img src={avatarUrl} alt="Profile" className="w-24 h-24 rounded-full border-[3px] border-cyan-400 shadow-lg shadow-cyan-500/30 object-cover" onError={(e) => { e.target.onerror = null; e.target.src = "https://placehold.co/128x128/1D2B3A/A5F3FC?text=ERR"; }} />
+                    {status && <span className="absolute bottom-1 right-1 h-4 w-4 rounded-full border-[3px] border-[#1D2B3A] bg-green-500" />}
+                </div>
+                <h2 className="mt-3 text-2xl font-bold text-cyan-300 tracking-wide">{name}</h2>
+                <p className="text-sm text-slate-400">{title}</p>
+                <div className="mt-3 flex flex-wrap items-center justify-center gap-1.5">
+                    <span className="text-[11px] font-semibold text-slate-300 bg-slate-700/70 px-2.5 py-1 rounded-full">@{username}</span>
+                    <span className="text-[11px] font-medium text-cyan-300 bg-slate-700/70 px-2.5 py-1 rounded-full">DOB: {dob}</span>
                 </div>
 
-                {/* Bottom Part */}
-                <div className="w-full text-center">
-                    <p className="text-slate-400 text-lg">{title}</p>
-                    {status && (
-                        <div className="flex items-center justify-center gap-2 mt-2">
-                            <span className="relative flex h-3 w-3"><span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span><span className="relative inline-flex rounded-full h-3 w-3 bg-green-500"></span></span>
-                            <span className="text-green-300 text-sm">{status}</span>
-                        </div>
-                    )}
-                    <div className="flex justify-center gap-4 my-4">
-                        {socialLinks?.github && (<a href={socialLinks.github} target="_blank" rel="noopener noreferrer" title="GitHub" className="text-cyan-400 hover:text-white transition-colors duration-200"><GitHubIcon /></a>)}
-                        {socialLinks?.linkedin && (<a href={socialLinks.linkedin} target="_blank" rel="noopener noreferrer" title="LinkedIn" className="text-cyan-400 hover:text-white transition-colors duration-200"><LinkedInIcon /></a>)}
-                        {socialLinks?.twitter && (<a href={socialLinks.twitter} target="_blank" rel="noopener noreferrer" title="Twitter" className="text-cyan-400 hover:text-white transition-colors duration-200"><TwitterIcon /></a>)}
-                        {socialLinks?.instagram && (<a href={socialLinks.instagram} target="_blank" rel="noopener noreferrer" title="Instagram" className="text-cyan-400 hover:text-white transition-colors duration-200"><InstagramIcon /></a>)}
+                {status && (
+                    <div className="mt-4 inline-flex items-center gap-2 rounded-full border border-green-400/20 bg-green-400/5 px-3 py-1">
+                        <span className="relative flex h-2 w-2"><span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span><span className="relative inline-flex rounded-full h-2 w-2 bg-green-500"></span></span>
+                        <span className="text-green-300 text-xs font-medium">{status}</span>
                     </div>
+                )}
 
-                    {/* Buttons Section */}
-                    <div className="flex justify-center gap-3">
-                        <button onClick={onHireClick} className="w-1/2 bg-cyan-500 text-slate-900 font-bold py-2 px-4 rounded-lg hover:bg-cyan-400 transition-colors duration-300">
-                            Hire Me
-                        </button>
-                        <button onClick={onCvClick} className="w-1/2 bg-slate-700 text-cyan-300 font-bold py-2 px-4 rounded-lg hover:bg-slate-600 transition-colors duration-300">
-                            CV
-                        </button>
-                    </div>
+                <div className="my-5 h-px w-full bg-gradient-to-r from-transparent via-cyan-400/25 to-transparent" />
+
+                <div className="flex justify-center gap-2.5">
+                    {socialLinks?.github && (<a href={socialLinks.github} target="_blank" rel="noopener noreferrer" title="GitHub" className={iconBtn}><GitHubIcon /></a>)}
+                    {socialLinks?.linkedin && (<a href={socialLinks.linkedin} target="_blank" rel="noopener noreferrer" title="LinkedIn" className={iconBtn}><LinkedInIcon /></a>)}
+                    {socialLinks?.twitter && (<a href={socialLinks.twitter} target="_blank" rel="noopener noreferrer" title="Twitter" className={iconBtn}><TwitterIcon /></a>)}
+                    {socialLinks?.instagram && (<a href={socialLinks.instagram} target="_blank" rel="noopener noreferrer" title="Instagram" className={iconBtn}><InstagramIcon /></a>)}
+                </div>
+
+                {/* Buttons Section */}
+                <div className="mt-5 flex w-full gap-3">
+                    <button onClick={onHireClick} className="flex-1 whitespace-nowrap bg-cyan-500 text-slate-900 text-sm font-bold py-2.5 px-3 rounded-xl hover:bg-cyan-400 transition-colors duration-300">
+                        Hire Me
+                    </button>
+                    <button onClick={onCvClick} className="flex-1 whitespace-nowrap bg-slate-700/80 text-cyan-300 text-sm font-bold py-2.5 px-3 rounded-xl hover:bg-slate-600 transition-colors duration-300">
+                        Download CV
+                    </button>
                 </div>
             </div>
         </div>
@@ -106,7 +109,7 @@ const ParallaxProfileCard = ({ profile }) => {
 const ParallaxProfile = ({ profiles = [defaultProfile], className = '' }) => {
     const safe = Array.isArray(profiles) && profiles.length > 0 ? profiles : [defaultProfile];
     return (
-        <div className={`flex flex-wrap gap-6 justify-center ${className}`}>
+        <div className={`flex w-full flex-wrap gap-6 justify-center ${className}`}>
             {safe.map((p, i) => (
                 <ParallaxProfileCard key={p.id || p.username || i} profile={p} />
             ))}

@@ -6,6 +6,7 @@ import SiteFooter from '../../layout/SiteFooter.jsx';
 import CodeBlock, { CommandLine } from '../../ui/CodeBlock.jsx';
 import useSiteTheme from '../../ui/useSiteTheme.js';
 import { withCdn } from '../../ui/cdn.js';
+import { Thumb } from '../../ui/ComponentIndex.jsx';
 import { CliChip } from '../../docs/parts.jsx';
 import { PAD_X } from '../../docs/style.js';
 import { CATEGORIES, componentPages, prefetch, SITE } from '../../config/navigation.js';
@@ -43,11 +44,11 @@ const avatars = withCdn([
     { name: 'Captain', imageUrl: '/assets/captainamerica.png', color: '#06b6d4' },
 ], { w: 192 });
 
-const stackCards = [
-    { title: 'ApexUI Card Stack', subtitle: 'Modern glassmorphic stack', desc: 'Pause on hover, auto-cycling.', color: 'from-blue-500/60 to-blue-300/30', image: 'https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?auto=format&fit=crop&w=300&q=80' },
-    { title: 'React Modern Card', subtitle: 'Responsive, animated, clean', desc: 'Stacked with smooth transitions.', color: 'from-pink-500/60 to-pink-300/30', image: 'https://images.unsplash.com/photo-1519125323398-675f0ddb6308?auto=format&fit=crop&w=300&q=80' },
-    { title: 'Pause & Cycle', subtitle: 'Auto-cycling, pause on hover', desc: 'Click the top card to cycle.', color: 'from-yellow-500/60 to-yellow-300/30', image: 'https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=300&q=80' },
-];
+const stackCards = withCdn([
+    { title: 'Iron Man', subtitle: 'Leader of Stark Industries', desc: 'Pause on hover, auto-cycling.', color: 'from-red-500/70 to-amber-400/40', image: '/assets/ironman.png' },
+    { title: 'Spider-Man', subtitle: 'Friendly neighbourhood hero', desc: 'Stacked with smooth transitions.', color: 'from-rose-500/70 to-blue-500/40', image: '/assets/spiderman.png' },
+    { title: 'Doctor Strange', subtitle: 'Sorcerer Supreme', desc: 'Click the top card to cycle.', color: 'from-orange-500/70 to-teal-400/40', image: '/assets/doctorStrange.png' },
+], { w: 640 });
 
 const byPath = (path) => componentPages.find((c) => c.path === path);
 
@@ -340,7 +341,7 @@ function Families() {
                             className="group flex h-full flex-col overflow-hidden rounded-[1.4rem] border border-[var(--line)] bg-[var(--panel)] transition duration-300 hover:-translate-y-1 hover:border-[var(--lime-line)] hover:shadow-[var(--shadow)]"
                         >
                             <div className={`relative overflow-hidden bg-[var(--stage)] ${i === 0 ? 'aspect-[16/10] xl:aspect-auto xl:flex-1' : 'aspect-[16/9]'}`}>
-                                <img src={cover.image} alt={`${cover.name} preview`} loading="lazy" decoding="async" className="h-full w-full object-cover transition duration-700 ease-[var(--ease-out)] group-hover:scale-[1.04]" />
+                                <Thumb src={cover.image} alt={`${cover.name} preview`} className="transition duration-700 ease-[var(--ease-out)] group-hover:scale-[1.04]" />
                                 <span className="absolute left-3 top-3 rounded-full bg-black/55 px-2.5 py-1 font-mono text-[0.68rem] text-white backdrop-blur">{items.length} components</span>
                             </div>
                             <div className="flex items-start justify-between gap-4 p-5">

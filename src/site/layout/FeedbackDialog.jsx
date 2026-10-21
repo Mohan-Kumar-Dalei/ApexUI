@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
 import { Loader2, X } from 'lucide-react';
 import { toast } from 'sonner';
-import { OPEN_FEEDBACK_EVENT } from './overlays.js';
+import { OPEN_FEEDBACK_EVENT, backdropMotion } from './overlays.js';
 
 const ACCESS_KEY = '17a68c11-3e40-4879-ba02-65457533f959';
 
@@ -46,10 +46,9 @@ export default function FeedbackDialog() {
             <AnimatePresence>
                 {open && (
                     <motion.div
-                        className="fixed inset-0 z-[2000] flex items-end justify-center bg-black/50 p-4 backdrop-blur-sm sm:items-center"
-                        initial={{ opacity: 0 }}
-                        animate={{ opacity: 1 }}
-                        exit={{ opacity: 0 }}
+                        className="fixed inset-0 z-[2000] flex items-end justify-center p-4 sm:items-center"
+                        {...backdropMotion}
+                        transition={{ duration: 0.2 }}
                         onMouseDown={(e) => e.target === e.currentTarget && setOpen(false)}
                     >
                         <motion.div
