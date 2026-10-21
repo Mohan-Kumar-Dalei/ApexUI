@@ -25,7 +25,7 @@
   "module": "dist/index.js",
   "scripts": {
     "dev": "vite --host",
-    "build": "vite build",
+    "build": "node scripts/generate-sitemap.mjs && vite build",
     "lint": "eslint .",
     "preview": "vite preview",
     "images:upload": "node scripts/imagekit-upload.mjs"

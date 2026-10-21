@@ -24,12 +24,15 @@ export const router = createBrowserRouter([
                     {
                         index: true,
                         lazy: async () => ({ Component: (await import('./pages/home/HomePage.jsx')).default }),
-                        handle: { title: 'ApexUI – Animated React components' },
+                        handle: {
+                            title: 'ApexUI – Animated React Components for Tailwind CSS',
+                            description: 'Free, copy-paste animated React components built with Tailwind CSS, GSAP and Framer Motion. Add any of 29 components with one CLI command.',
+                        },
                     },
                     {
                         path: 'templates-soon',
                         lazy: async () => ({ Component: (await import('./pages/TemplatesSoon.jsx')).default }),
-                        handle: { title: 'Templates – ApexUI' },
+                        handle: { title: 'Templates – ApexUI', description: 'Ready-made ApexUI page templates for React and Tailwind CSS are on the way.' },
                     },
                     {
                         path: 'components',
@@ -38,7 +41,12 @@ export const router = createBrowserRouter([
                             {
                                 index: true,
                                 lazy: async () => ({ Component: (await import('./pages/ComponentsIndex.jsx')).default }),
-                                handle: { title: 'Components – ApexUI', index: true, sidebar: true },
+                                handle: {
+                                    title: 'All Components – ApexUI React Component Library',
+                                    description: 'Browse 29 animated React components — backgrounds, cards, text effects, navigation and interactive UI — each with a live preview, props and a one-line install.',
+                                    index: true,
+                                    sidebar: true,
+                                },
                             },
                             // Short and legacy entry points.
                             { path: 'docs', element: <Navigate to={INTRO} replace /> },
@@ -52,7 +60,7 @@ export const router = createBrowserRouter([
                         ],
                     },
                     { path: 'docs', element: <Navigate to={INTRO} replace /> },
-                    { path: '*', element: <NotFound />, handle: { title: 'Not found – ApexUI' } },
+                    { path: '*', element: <NotFound />, handle: { title: 'Not found – ApexUI', noindex: true } },
                 ],
             },
         ],

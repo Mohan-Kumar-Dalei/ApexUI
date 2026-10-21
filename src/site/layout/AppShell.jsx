@@ -7,6 +7,7 @@ import Sidebar from './Sidebar.jsx';
 import MobileDrawer from './MobileDrawer.jsx';
 import CommandMenu from './CommandMenu.jsx';
 import FeedbackDialog from './FeedbackDialog.jsx';
+import { applySeo, seoForRoute } from '../seo.js';
 
 function NavProgress() {
     const busy = useNavigation().state !== 'idle';
@@ -38,9 +39,10 @@ export default function AppShell() {
     const handle = [...matches].reverse().find((m) => m.handle)?.handle ?? {};
     const showSidebar = Boolean(handle.page || handle.sidebar);
 
+    // Title, description, canonical, social tags and breadcrumbs for this route.
     useEffect(() => {
-        document.title = handle.title ?? 'ApexUI';
-    }, [handle.title]);
+        applySeo(seoForRoute(handle, pathname));
+    }, [handle, pathname]);
 
     // A page rendered fine, so a later stale-chunk error may reload once again.
     useEffect(() => {

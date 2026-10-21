@@ -28,24 +28,28 @@ export const guidePages = [
         name: 'Introduction',
         path: '/components/docs/getting-started/introduction',
         load: () => import('../content/guides/Introduction.jsx'),
+        summary: 'What ApexUI is: free, copy-paste animated React components built with Tailwind CSS, GSAP and Framer Motion.',
         section: 'Getting Started',
     },
     {
         name: 'React + Vite Setup',
         path: '/components/docs/getting-started/installation/react-setup',
         load: () => import('../content/guides/ReactViteSetup.jsx'),
+        summary: 'Create a React + Vite project ready for ApexUI components, step by step.',
         section: 'Installation',
     },
     {
         name: 'Tailwind Setup',
         path: '/components/docs/getting-started/installation/tailwind-setup',
         load: () => import('../content/guides/TailwindSetup.jsx'),
+        summary: 'Install and configure Tailwind CSS so ApexUI components render correctly.',
         section: 'Installation',
     },
     {
         name: 'ApexUI CLI Setup',
         path: '/components/docs/getting-started/installation/apexui-cli',
         load: () => import('../content/guides/CLISetup.jsx'),
+        summary: 'Add any ApexUI component to your project with one command: npx apex-ui-kit add <name>.',
         section: 'Installation',
     },
 ];
