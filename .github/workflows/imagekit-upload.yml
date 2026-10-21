@@ -1,0 +1,41 @@
+# Uploads public/assets to ImageKit (same folder layout), so the cdn() URLs in
+# src/site/ui/cdn.js resolve. Needs the IMAGEKIT_PRIVATE_KEY repository secret
+# (Settings → Secrets and variables → Actions). Without it the run is skipped.
+name: Upload images to ImageKit
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - 'public/assets/**'
+      - 'scripts/imagekit-upload.mjs'
+      - '.github/workflows/imagekit-upload.yml'
+
+permissions:
+  contents: read
+
+concurrency:
+  group: imagekit-upload
+  cancel-in-progress: false
+
+jobs:
+  upload:
+    runs-on: ubuntu-latest
+    env:
+      IMAGEKIT_PRIVATE_KEY: ${{ secrets.IMAGEKIT_PRIVATE_KEY }}
+    steps:
+      - name: Skip when the secret is missing
+        if: env.IMAGEKIT_PRIVATE_KEY == ''
+        run: echo "::warning::Add the IMAGEKIT_PRIVATE_KEY repository secret, then re-run this workflow."
+
+      - uses: actions/checkout@v4
+        if: env.IMAGEKIT_PRIVATE_KEY != ''
+
+      - uses: actions/setup-node@v4
+        if: env.IMAGEKIT_PRIVATE_KEY != ''
+        with:
+          node-version: 22
+
+      - name: Upload public/assets
+        if: env.IMAGEKIT_PRIVATE_KEY != ''
+        run: node scripts/imagekit-upload.mjs

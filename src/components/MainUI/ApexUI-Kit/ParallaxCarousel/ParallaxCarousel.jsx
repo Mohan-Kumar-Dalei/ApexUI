@@ -47,10 +47,10 @@ const CarouselCard = ({ slide, isCenter, isScrolling }) => {
                 <img src={slide.imageUrl} alt={slide.title} className="w-full h-full object-cover group-hover:opacity-30 transition-all duration-300 ease-in-out rounded-2xl" />
                 <img src={slide.pngUrl} alt={slide.title} className="absolute inset-0 w-full h-full object-cover group-hover:translate-z-15 transition-all duration-300 ease-in-out rounded-2xl" />
             </div>
-            <div className="relative flex flex-col justify-end h-full text-white p-8" style={{ transformStyle: 'preserve-3d', perspective: '1500px' }}>
-                <h2 className="text-3xl font-bold group-hover:translate-z-18 transition-all duration-300 ease-in-out">{slide.title}</h2>
+            <div className="relative flex flex-col justify-end h-full text-white p-5 sm:p-8" style={{ transformStyle: 'preserve-3d', perspective: '1500px' }}>
+                <h2 className="text-2xl sm:text-3xl font-bold group-hover:translate-z-18 transition-all duration-300 ease-in-out">{slide.title}</h2>
                 <p className="text-lime-400 mt-1 group-hover:translate-z-18 transition-all duration-300 ease-in-out">{slide.subtitle}</p>
-                <p className="text-slate-300 mt-4 text-sm leading-relaxed group-hover:translate-z-18 transition-all duration-300 ease-in-out">{slide.text}</p>
+                <p className="text-slate-300 mt-3 sm:mt-4 text-xs sm:text-sm leading-relaxed line-clamp-3 sm:line-clamp-none group-hover:translate-z-18 transition-all duration-300 ease-in-out">{slide.text}</p>
             </div>
         </motion.div>
     );
@@ -109,7 +109,7 @@ const ParallaxCarousel = ({ slides }) => {
     return (
         <div className="relative w-full flex flex-col items-center px-2">
             <div
-                className="relative w-full h-[480px] portrait:h-[480px] portrait:px-0"
+                className="relative w-full h-[380px] sm:h-[480px]"
                 style={{ perspective: '1200px', transformStyle: 'preserve-3d' }}
             >
                 {slides.map((slide, index) => {
@@ -125,7 +125,7 @@ const ParallaxCarousel = ({ slides }) => {
                     return (
                         <motion.div
                             key={index}
-                            className={`absolute w-full h-[340px] portrait:w-full portrait:h-[480px] top-0 left-0 portrait:left-0 portrait:top-0 ${positionOffset === 0 ? '' : ' pointer-events-none'} md:w-[50%] md:h-[400px] md:top-[50px] md:left-1/2 lg:-translate-x-1/2`}
+                            className={`absolute left-1/2 top-1/2 aspect-[25/26] w-[min(80%,25rem)] sm:w-[min(88%,25rem)] -translate-x-1/2 -translate-y-1/2 ${positionOffset === 0 ? '' : 'pointer-events-none'}`}
                             initial={false}
                             style={{ transformStyle: 'preserve-3d', willChange: 'transform, opacity' }}
                             animate={{
@@ -141,11 +141,11 @@ const ParallaxCarousel = ({ slides }) => {
                 })}
             </div>
 
-            <motion.button onClick={handlePrev} className="absolute -left-10 lg:left-0 top-1/2 -translate-y-1/2 z-30 p-3 rounded-full text-slate-400 hover:text-lime-400 transition-colors" whileTap={{ scale: 0.9 }}>
-                <ArrowLeft size={32} />
+            <motion.button onClick={handlePrev} className="absolute left-0 top-1/2 -translate-y-1/2 z-30 p-1.5 sm:p-3 rounded-full text-slate-400 hover:text-lime-400 transition-colors" whileTap={{ scale: 0.9 }}>
+                <ArrowLeft size={32} className="h-5 w-5 sm:h-8 sm:w-8" />
             </motion.button>
-            <motion.button onClick={handleNext} className="absolute -right-10 lg:right-0 top-1/2 -translate-y-1/2 z-30 p-3 rounded-full text-slate-400 hover:text-lime-400 transition-colors" whileTap={{ scale: 0.9 }}>
-                <ArrowRight size={32} />
+            <motion.button onClick={handleNext} className="absolute right-0 top-1/2 -translate-y-1/2 z-30 p-1.5 sm:p-3 rounded-full text-slate-400 hover:text-lime-400 transition-colors" whileTap={{ scale: 0.9 }}>
+                <ArrowRight size={32} className="h-5 w-5 sm:h-8 sm:w-8" />
             </motion.button>
         </div>
     );

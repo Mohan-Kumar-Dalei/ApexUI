@@ -4,6 +4,9 @@
  *
  *   IMAGEKIT_PRIVATE_KEY=private_xxx npm run images:upload
  *
+ * Or let GitHub do it: add the IMAGEKIT_PRIVATE_KEY repository secret and run
+ * the "Upload images to ImageKit" workflow (.github/workflows/imagekit-upload.yml).
+ *
  * The private key is read from the environment only — never commit it.
  */
 import { readdir, readFile } from 'node:fs/promises';
