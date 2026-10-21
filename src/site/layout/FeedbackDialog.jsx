@@ -46,7 +46,7 @@ export default function FeedbackDialog() {
             <AnimatePresence>
                 {open && (
                     <motion.div
-                        className="fixed inset-0 z-[2000] flex items-end justify-center p-4 sm:items-center"
+                        className="fixed inset-0 z-[2000] flex items-center justify-center p-4"
                         {...backdropMotion}
                         transition={{ duration: 0.2 }}
                         onMouseDown={(e) => e.target === e.currentTarget && setOpen(false)}
