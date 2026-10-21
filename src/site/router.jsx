@@ -43,6 +43,7 @@ export const router = createBrowserRouter([
                             // Short and legacy entry points.
                             { path: 'docs', element: <Navigate to={INTRO} replace /> },
                             { path: 'docs/getting-started', element: <Navigate to={INTRO} replace /> },
+                            { path: 'water-drop-reveal', element: <Navigate to="/components/mask-view" replace /> },
                             ...allDocPages.map((page) => ({
                                 path: page.path.replace('/components/', ''),
                                 lazy: async () => ({ Component: (await page.load()).default }),

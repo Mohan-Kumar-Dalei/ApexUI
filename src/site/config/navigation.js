@@ -276,13 +276,12 @@ export const componentPages = [
         summary: 'Animated tooltips with smooth, physics-based positioning.',
     },
     {
-        // Shown as "Mask View"; the path and CLI slug keep the old name so existing installs still work.
         name: 'Mask View',
-        path: '/components/water-drop-reveal',
-        load: () => import('../content/components/WaterDropRevealDoc.jsx'),
+        path: '/components/mask-view',
+        load: () => import('../content/components/MaskViewDoc.jsx'),
         category: 'Text & Motion',
-        image: shot('WaterDrop hover.png'),
-        summary: 'Frosted text that comes into focus under a lens that follows the pointer.',
+        image: 'https://ik.imagekit.io/ny6yinyut/apexui/assets/ironman.png?updatedAt=1792562203671&tr=f-auto,q-80,w-960',
+        summary: 'Reveal content through a mask: a text window onto an image, a spotlight, or glass you wipe clear.',
     },
 ];
 

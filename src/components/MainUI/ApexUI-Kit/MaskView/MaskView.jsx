@@ -326,18 +326,20 @@ const WipeReveal = ({ text, accent }) => {
     );
 };
 
-const WaterDropReveal = ({
+const MaskView = ({
     variant = "spotlight",
     text,
     image = DEFAULT_IMAGE,
-    dropColor = "#a855f7",
+    accentColor,
+    dropColor, // older name for accentColor, still accepted
     animationSpeed = 0.4,
 }) => {
     const kind = DEFAULT_TEXT[variant] ? variant : "spotlight";
     const content = text ?? DEFAULT_TEXT[kind];
-    if (kind === "window") return <TextWindow text={content} image={image} accent={dropColor} speed={animationSpeed} />;
-    if (kind === "wipe") return <WipeReveal text={content} accent={dropColor} />;
-    return <Spotlight text={content} accent={dropColor} speed={animationSpeed} />;
+    const accent = accentColor ?? dropColor ?? "#a855f7";
+    if (kind === "window") return <TextWindow text={content} image={image} accent={accent} speed={animationSpeed} />;
+    if (kind === "wipe") return <WipeReveal text={content} accent={accent} />;
+    return <Spotlight text={content} accent={accent} speed={animationSpeed} />;
 };
 
-export default WaterDropReveal;
+export default MaskView;
