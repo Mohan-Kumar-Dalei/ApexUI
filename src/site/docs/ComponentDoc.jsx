@@ -111,7 +111,9 @@ function Stage({ variant, variants, activeVariant, onVariant }) {
                 </div>
             </div>
 
-            <AnimatePresence mode="wait" initial={false}>
+            {/* No initial={false} here: it would block the first-mount animations of every
+                motion component inside the preview (e.g. Orbs stayed still until "Replay"). */}
+            <AnimatePresence mode="wait">
                 {view === 'preview' ? (
                     <motion.div
                         key={`preview-${activeVariant}-${replayKey}`}
