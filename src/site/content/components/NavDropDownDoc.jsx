@@ -66,17 +66,20 @@ const navigationData = [
   { label: "Pricing", href: "#" },
 ];
 
+// Pin it to the top of the page with className, e.g. "fixed top-4 left-1/2 -translate-x-1/2".
 const App = () => <NavDropDown navData={navigationData} />;
 
 export default App;`;
 
 const props = [
-    { prop: 'navData', type: 'array', def: '[...]', desc: 'Menu items: label, href, and an optional type ("services", "products", "links") with a submenu.' },
+    { prop: 'navData', type: 'array', def: '[...]', desc: 'Menu items: label, href, and an optional type ("services", "products", "links") with a submenu. Service items accept an optional icon component.' },
+    { prop: 'className', type: 'string', def: "''", desc: 'Extra classes for the wrapper, e.g. to make it fixed at the top of the page.' },
 ];
 
 const dependencies = [
     { name: 'React', desc: 'Modern React library for UI building.' },
-    { name: 'Framer Motion', desc: 'Animation library for smooth dropdown effects.' },
+    { name: 'Framer Motion', desc: 'Animates the shared panel, the hover highlight and the sliding content.' },
+    { name: 'Lucide React', desc: 'Chevron and arrow icons.' },
     { name: 'Tailwind CSS', desc: 'Utility-first CSS framework for rapid styling.' },
 ];
 
@@ -84,7 +87,7 @@ export default function NavDropDownDoc() {
     return (
         <ComponentDoc
             title="Nav DropDown"
-            description="A clean, accessible dropdown menu for navigation bars, powered by smooth animations."
+            description="A floating pill navbar with one shared dropdown that morphs between menus. Works with mouse, touch and keyboard."
             preview={<NavDropDown navData={navigationData} />}
             previewClassName="!items-start min-h-[520px]"
             code={code}

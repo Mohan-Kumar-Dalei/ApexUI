@@ -169,7 +169,7 @@ export const componentPages = [
         load: () => import('../content/components/NavDropDownDoc.jsx'),
         category: 'Navigation',
         image: shot('DropMenu.png'),
-        summary: 'A clean, accessible dropdown menu for navigation bars.',
+        summary: 'A floating navbar with one dropdown panel that morphs between menus.',
     },
     {
         name: 'Nav Menu',
