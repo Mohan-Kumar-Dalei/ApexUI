@@ -282,8 +282,23 @@ pre,
   }
 }
 
+/* Skeleton shimmer on ImageKit images until they load (see installImageSkeletons in ui/cdn.js). */
+@keyframes apex-skeleton {
+  to {
+    background-position: -200% 0;
+  }
+}
+img[data-ik-loading] {
+  background: linear-gradient(100deg, var(--panel-2) 30%, var(--panel-3) 50%, var(--panel-2) 70%) 0 0 / 200% 100%;
+  animation: apex-skeleton 1.2s linear infinite;
+  color: transparent;
+}
+
 @media (prefers-reduced-motion: reduce) {
   .ticker-track {
+    animation: none;
+  }
+  img[data-ik-loading] {
     animation: none;
   }
 }

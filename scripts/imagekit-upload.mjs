@@ -1,6 +1,7 @@
 /*
- * Uploads everything in public/assets to ImageKit, keeping the folder layout,
- * so cdn('/assets/…') URLs in src/site/ui/cdn.js resolve.
+ * Uploads every image in public/ to ImageKit under the /apexui folder, keeping
+ * the folder layout, so cdn('/assets/…') URLs in src/site/ui/cdn.js resolve.
+ * Set IMAGEKIT_FOLDER to upload somewhere else.
  *
  *   IMAGEKIT_PRIVATE_KEY=private_xxx npm run images:upload
  *
@@ -19,7 +20,7 @@ if (!key) {
 }
 
 const ROOT = path.resolve('public');
-const START = path.join(ROOT, 'assets');
+const FOLDER = (process.env.IMAGEKIT_FOLDER ?? '/apexui').replace(/\/+$/, '');
 const IMAGE = /\.(png|jpe?g|webp|gif|svg|avif)$/i;
 const auth = 'Basic ' + Buffer.from(`${key}:`).toString('base64');
 // Same rule ImageKit applies to file names (see ikPath in src/site/ui/cdn.js).
@@ -35,10 +36,10 @@ async function* walk(dir) {
 
 let ok = 0;
 let failed = 0;
-for await (const file of walk(START)) {
+for await (const file of walk(ROOT)) {
     const rel = path.relative(ROOT, file).split(path.sep);
     const fileName = clean(rel.pop());
-    const folder = '/' + rel.map(clean).join('/');
+    const folder = [FOLDER, ...rel.map(clean)].join('/') || '/';
     const form = new FormData();
     form.append('file', new Blob([await readFile(file)]), fileName);
     form.append('fileName', fileName);

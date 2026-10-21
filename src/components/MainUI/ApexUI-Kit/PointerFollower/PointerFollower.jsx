@@ -1,12 +1,12 @@
 import React, { useRef, useEffect, useState } from "react";
 
 const defaultPeople = [
-    { id: 1, name: "Captain America", job: "Leader of the Avengers", img: "/assets/captainamerica.png" },
-    { id: 2, name: "Doctor Strange", job: "Sorcerer Supreme", img: "/assets/doctorStrange.png" },
-    { id: 3, name: "Iron Man", job: "Leader Of Stark Industries", img: "/assets/ironman.png" },
-    { id: 4, name: "HULK", job: "Scientist", img: "/assets/hulk.png" },
-    { id: 5, name: "Spider-Man", job: "Friendly Neighborhood Spider-Man", img: "/assets/spiderman.png" },
-    { id: 6, name: "Thanos", job: "The Mad Titan", img: "/assets/thanos.png" },
+    { id: 1, name: "Captain America", job: "Leader of the Avengers", img: "https://ik.imagekit.io/ny6yinyut/apexui/assets/captainamerica.png?tr=f-auto,q-80,w-480" },
+    { id: 2, name: "Doctor Strange", job: "Sorcerer Supreme", img: "https://ik.imagekit.io/ny6yinyut/apexui/assets/doctorStrange.png?tr=f-auto,q-80,w-480" },
+    { id: 3, name: "Iron Man", job: "Leader Of Stark Industries", img: "https://ik.imagekit.io/ny6yinyut/apexui/assets/ironman.png?tr=f-auto,q-80,w-480" },
+    { id: 4, name: "HULK", job: "Scientist", img: "https://ik.imagekit.io/ny6yinyut/apexui/assets/hulk.png?tr=f-auto,q-80,w-480" },
+    { id: 5, name: "Spider-Man", job: "Friendly Neighborhood Spider-Man", img: "https://ik.imagekit.io/ny6yinyut/apexui/assets/spiderman.png?tr=f-auto,q-80,w-480" },
+    { id: 6, name: "Thanos", job: "The Mad Titan", img: "https://ik.imagekit.io/ny6yinyut/apexui/assets/thanos.png?tr=f-auto,q-80,w-480" },
 ];
 
 const PointerFollower = ({

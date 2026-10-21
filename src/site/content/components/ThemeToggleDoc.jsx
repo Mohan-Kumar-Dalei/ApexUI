@@ -1,6 +1,7 @@
 import ComponentDoc, { DocSection } from '../../docs/ComponentDoc.jsx';
 import CodeBlock from '../../ui/CodeBlock.jsx';
 import ThemeToggle from '../../../components/MainUI/ApexUI-Kit/ThemeToggle/ThemeToggle.jsx';
+import { cdn } from '../../ui/cdn.js';
 
 const toggles = [
     { animation: 'circle' },
@@ -9,7 +10,7 @@ const toggles = [
     { animation: 'split-reveal-horizontal' },
     { animation: 'chevron-wipe-right' },
     { animation: 'blur-fade' },
-    { animation: 'gif', link: '/assets/ApexUI.gif' },
+    { animation: 'gif', link: cdn('/assets/ApexUI.gif') },
     { animation: 'gif', link: 'https://media.tenor.com/azoiEHypBKYAAAAi/ketawa-love.gif' },
     { animation: 'gif', link: 'https://media.tenor.com/6fO1ClbWx6YAAAAi/raamking.gif' },
 ];

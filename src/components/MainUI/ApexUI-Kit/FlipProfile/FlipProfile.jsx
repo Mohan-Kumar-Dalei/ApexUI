@@ -24,7 +24,7 @@ const FlipProfile = ({
     name = "Iron Man",
     role = "AI Engineer",
     dob = "5th March, 1999",
-    avatar = "/assets/ironman.png",
+    avatar = "https://ik.imagekit.io/ny6yinyut/apexui/assets/ironman.png?tr=f-auto,q-80,w-480",
     github = "#",
     linkedin = "#",
     twitter = "#",
