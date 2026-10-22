@@ -76,7 +76,15 @@ const AnimatedTabs = ({ tabs = DEFAULT_TABS, defaultTab, variant = "pill", accen
                     );
                 })}
             </div>
-            <div id={`${id}-panel`} role="tabpanel" aria-labelledby={`${id}-tab-${active}`} className="relative mt-4 min-h-[6rem] overflow-hidden">
+            <div id={`${id}-panel`} role="tabpanel" aria-labelledby={`${id}-tab-${active}`} className="relative mt-4 grid min-h-[6rem] overflow-hidden">
+                {/* Invisible copies of every panel reserve the tallest height, so the
+                    tab bar never jumps when panels of different lengths swap. */}
+                {tabs.map((t) => (
+                    <div key={t.id} aria-hidden="true" className="invisible col-start-1 row-start-1 p-5 text-[0.92rem] leading-relaxed">
+                        <p className="mb-1.5 text-[1rem] font-semibold">{t.label}</p>
+                        {t.content}
+                    </div>
+                ))}
                 <AnimatePresence mode="popLayout" initial={false} custom={dir}>
                     <motion.div
                         key={active}
@@ -85,7 +93,7 @@ const AnimatedTabs = ({ tabs = DEFAULT_TABS, defaultTab, variant = "pill", accen
                         animate={{ opacity: 1, x: 0, filter: "blur(0px)" }}
                         exit={{ opacity: 0, x: dir * -24, filter: "blur(4px)" }}
                         transition={{ duration: 0.28, ease: [0.22, 1, 0.36, 1] }}
-                        className={`rounded-2xl p-5 text-[0.92rem] leading-relaxed ${dark ? "bg-white/[0.04] text-white/75" : "bg-black/[0.03] text-neutral-600"}`}
+                        className={`col-start-1 row-start-1 h-full rounded-2xl p-5 text-[0.92rem] leading-relaxed ${dark ? "bg-white/[0.04] text-white/75" : "bg-black/[0.03] text-neutral-600"}`}
                     >
                         <p className={`mb-1.5 text-[1rem] font-semibold ${dark ? "text-white" : "text-neutral-900"}`}>{current?.label}</p>
                         {current?.content}
