@@ -70,13 +70,13 @@ export function LoaderCard({ progress, status }) {
                     </div>
                 }
             >
-                <LoadingScreen variant="runner" theme={theme} title="Loading page" progress={progress} statusText={status} loop={false} />
+                <LoadingScreen variant="runner" theme={theme} title="Loading page" progress={progress} statusText={status} autoHide={false} />
             </Suspense>
         </div>
     );
 }
 
-const statusFor = ({ loaded, total }) => `${loaded} of ${total} file${total === 1 ? '' : 's'} loaded`;
+const statusFor = ({ progress }) => (progress < 85 ? 'Loading page…' : 'Almost ready…');
 
 /* First visit: the loader centered on screen while the first page's code arrives. */
 export default function PageLoader() {

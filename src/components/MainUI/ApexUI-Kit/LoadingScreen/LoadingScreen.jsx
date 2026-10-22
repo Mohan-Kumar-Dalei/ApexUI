@@ -1,5 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import { AnimatePresence, motion, useAnimationControls, useReducedMotion } from "framer-motion";
+import { usePageProgress } from "./usePageProgress.js";
 
 /*
  * Loading Screen: five ways to wait.
@@ -9,50 +10,27 @@ import { AnimatePresence, motion, useAnimationControls, useReducedMotion } from 
  *  catch    – a mini game: tap the orb before its ring runs out and build a combo
  *  runner   – a mini game: jump the neon pillars (Space / ↑ / tap) while things load
  *  racer    – a mini game: steer through traffic (← → / tap a side) while things load
- * Pass `progress` (0–100) yourself, or leave it out and it runs on its own.
+ * By default it shows the real page load: the bar and the count follow the
+ * images, scripts, styles and fonts the page is actually loading, and it
+ * hides itself once everything has loaded (autoHide). Pass `progress`
+ * (0 to 100) to drive it yourself instead.
  */
 
-const MESSAGES = ["Warming up the engines", "Fetching your components", "Polishing pixels", "Almost there"];
+const MESSAGES = ["Starting up", "Loading page", "Loading content", "Almost ready"];
 const messageFor = (v) => MESSAGES[Math.min(MESSAGES.length - 1, Math.floor(v / (100 / MESSAGES.length)))];
 
-// Simulated progress that eases toward 100 over `duration` ms, then calls onComplete.
-function useProgress(progress, duration, loop, onComplete) {
-    const [auto, setAuto] = useState(0);
+// Real progress: your own `progress` when given, otherwise the page's real load.
+function useProgress(progress, onComplete) {
+    const controlled = typeof progress === "number";
+    const page = usePageProgress(!controlled);
+    const value = Math.round(Math.max(0, Math.min(100, controlled ? progress : page.progress)));
     const doneRef = useRef(onComplete);
     doneRef.current = onComplete;
-    const controlled = typeof progress === "number";
-
+    const complete = value >= 100 && (controlled || page.done);
     useEffect(() => {
-        if (controlled) return undefined;
-        let raf = 0;
-        let start = performance.now();
-        let fired = false;
-        const tick = (now) => {
-            const t = Math.min(1, Math.max(0, (now - start) / duration));
-            // Fast start, slow middle, quick finish — the way real loads feel.
-            const eased = t < 0.85 ? 0.92 * (1 - Math.pow(1 - t / 0.85, 2.2)) : 0.92 + 0.08 * ((t - 0.85) / 0.15);
-            setAuto(Math.round(eased * 100));
-            if (t >= 1) {
-                if (!fired) {
-                    fired = true;
-                    doneRef.current?.();
-                }
-                if (loop) {
-                    start = now + 900;
-                    fired = false;
-                } else return;
-            }
-            raf = requestAnimationFrame(tick);
-        };
-        raf = requestAnimationFrame(tick);
-        return () => cancelAnimationFrame(raf);
-    }, [controlled, duration, loop]);
-
-    useEffect(() => {
-        if (controlled && progress >= 100) doneRef.current?.();
-    }, [controlled, progress]);
-
-    return Math.round(Math.max(0, Math.min(100, controlled ? progress : auto)));
+        if (complete) doneRef.current?.();
+    }, [complete]);
+    return { value, complete };
 }
 
 function Bar({ value, color, track }) {
@@ -108,8 +86,8 @@ function Orbit({ value, color, moving }) {
     );
 }
 
-function ProgressView({ value, color, track, moving }) {
-    const message = messageFor(value);
+function ProgressView({ value, color, track, moving, statusText }) {
+    const message = statusText ?? `${messageFor(value)}…`;
     return (
         <div className="w-[min(22rem,80vw)]">
             <p className="font-mono text-[clamp(3.5rem,12vw,5.5rem)] font-bold leading-none tabular-nums tracking-tight">
@@ -122,7 +100,7 @@ function ProgressView({ value, color, track, moving }) {
             <div className="mt-3 h-5 overflow-hidden text-sm opacity-70">
                 <AnimatePresence mode="wait" initial={false}>
                     <motion.p key={message} initial={{ y: 14, opacity: 0 }} animate={{ y: 0, opacity: 1 }} exit={{ y: -14, opacity: 0 }} transition={{ duration: moving ? 0.25 : 0 }}>
-                        {message}…
+                        {message}
                     </motion.p>
                 </AnimatePresence>
             </div>
@@ -760,30 +738,39 @@ function RacerGame({ value, color, track, dark, statusText }) {
 const LoadingScreen = ({
     variant = "orbit",
     progress,
-    duration = 6000,
-    loop = true,
     accentColor = "#a3e635",
     theme = "dark",
     title = "Loading",
     fullScreen = false,
+    autoHide = true,
     onComplete,
     statusText,
     className = "",
 }) => {
     const moving = !useReducedMotion();
-    const value = useProgress(progress, duration, loop, onComplete);
+    const { value, complete } = useProgress(progress, onComplete);
+    const [gone, setGone] = useState(false);
     const dark = theme !== "light";
     const track = dark ? "rgba(255,255,255,0.1)" : "rgba(0,0,0,0.08)";
-    const shared = { value, color: accentColor, track, moving, dark, statusText };
+    // Page-style status ("Loading page…", "Almost ready…"), or your own text.
+    const status = statusText ?? (complete ? "Page ready" : undefined);
+    const shared = { value, color: accentColor, track, moving, dark, statusText: status };
     const game = variant === "catch" || variant === "runner" || variant === "racer";
+    const hiding = autoHide && complete;
 
+    if (gone) return null;
     return (
-        <div
+        <motion.div
             data-loading-screen=""
             role="status"
             aria-live="polite"
+            aria-busy={!complete}
             aria-label={`${title} ${value}%`}
-            className={`flex flex-col items-center justify-center gap-6 p-6 sm:p-8 ${fullScreen ? "fixed inset-0 z-[100]" : "relative h-full w-full"} ${dark ? "bg-neutral-950 text-white" : "bg-white text-neutral-900"} ${className}`}
+            initial={false}
+            animate={{ opacity: hiding ? 0 : 1 }}
+            transition={{ duration: 0.45, delay: hiding ? 0.35 : 0 }}
+            onAnimationComplete={() => hiding && setGone(true)}
+            className={`flex flex-col items-center justify-center gap-6 p-6 sm:p-8 ${fullScreen ? "fixed inset-0 z-[100]" : "relative h-full w-full"} ${hiding ? "pointer-events-none" : ""} ${dark ? "bg-neutral-950 text-white" : "bg-white text-neutral-900"} ${className}`}
             style={dark ? { backgroundImage: `radial-gradient(60% 50% at 50% 40%, ${accentColor}14, transparent 70%)` } : undefined}
         >
             {game && (
@@ -798,8 +785,13 @@ const LoadingScreen = ({
             {variant === "catch" && <CatchGame {...shared} />}
             {variant === "runner" && <RunnerGame {...shared} />}
             {variant === "racer" && <RacerGame {...shared} />}
-            {!game && variant !== "progress" && <p className="text-[0.7rem] font-semibold uppercase tracking-[0.3em] opacity-50">{title}</p>}
-        </div>
+            {!game && variant !== "progress" && (
+                <p className="text-center">
+                    <span className="block text-[0.7rem] font-semibold uppercase tracking-[0.3em] opacity-50">{title}</span>
+                    <span className="mt-1.5 block text-[0.75rem] opacity-60">{status ?? `${messageFor(value)}…`}</span>
+                </p>
+            )}
+        </motion.div>
     );
 };
 
