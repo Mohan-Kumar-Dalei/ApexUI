@@ -1,7 +1,8 @@
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import ComponentDoc from '../../docs/ComponentDoc.jsx';
 import ColorControl, { ControlGrid, RangeControl, SelectControl } from '../../docs/controls.jsx';
 import LoadingScreen from '../../../components/MainUI/ApexUI-Kit/LoadingScreen/LoadingScreen.jsx';
+import { useLoadProgress } from '../../../components/MainUI/ApexUI-Kit/LoadingScreen/useLoadProgress.js';
 import useSiteTheme from '../../ui/useSiteTheme.js';
 
 const props = [
@@ -14,8 +15,69 @@ const props = [
     { prop: 'title', type: 'string', def: '"Loading"', desc: 'Label under the loader (and for screen readers).' },
     { prop: 'fullScreen', type: 'boolean', def: 'false', desc: 'Cover the whole viewport (fixed) instead of filling the parent.' },
     { prop: 'onComplete', type: '() => void', def: 'none', desc: 'Called when progress reaches 100.' },
+    { prop: 'statusText', type: 'string', def: 'none', desc: 'Text next to the percentage in the game variants, e.g. "3 of 8 files loaded".' },
     { prop: 'className', type: 'string', def: '""', desc: 'Extra classes.' },
 ];
+
+const realProps = [
+    { prop: 'useLoadProgress(items)', type: '(string | (() => Promise) | Promise)[]', def: 'none', desc: 'Loads every item in parallel: image URLs are decoded, other URLs fetched, functions called. Pass a stable list.' },
+    { prop: 'progress', type: 'number', def: '0', desc: 'Returned: share of items finished, 0 to 100. Pass it to LoadingScreen.' },
+    { prop: 'loaded / total', type: 'number', def: '0 / items.length', desc: 'Returned: counts for your status text.' },
+    { prop: 'done', type: 'boolean', def: 'false', desc: 'Returned: true when every item has finished.' },
+    { prop: 'errors', type: 'number', def: '0', desc: 'Returned: items that failed (they still count as finished, so the screen never sticks).' },
+    { prop: '{ enabled }', type: 'boolean', def: 'true', desc: 'Option: set false to wait before starting.' },
+];
+
+const IK = 'https://ik.imagekit.io/ny6yinyut/apexui/assets';
+const HEROES = ['spiderman', 'black-panther', 'hulk', 'thanos', 'captainamerica', 'doctorStrange', 'ironman'];
+
+/* Downloads real images (fresh each run) and feeds the true progress to the Runner game. */
+function RealProgressDemo({ accent, theme }) {
+    const [run, setRun] = useState(1);
+    const items = useMemo(() => Array.from({ length: 14 }, (_, i) => `${IK}/${HEROES[i % HEROES.length]}.png?tr=w-${700 + i * 37}&run=${run}`), [run]);
+    const { progress, loaded, total, done } = useLoadProgress(items);
+    return (
+        <div className="flex w-full flex-col items-center gap-3">
+            <div className="h-[24rem] w-full overflow-hidden rounded-2xl">
+                <LoadingScreen variant="runner" accentColor={accent} theme={theme} progress={progress} statusText={done ? `All ${total} images loaded` : `${loaded} of ${total} images loaded`} title="Real progress" />
+            </div>
+            <button type="button" onClick={() => setRun((r) => r + 1)} className="rounded-full bg-[var(--panel-2)] px-4 py-1.5 text-sm font-medium text-[var(--ink)] hover:bg-[var(--panel-3)]">
+                Load again
+            </button>
+        </div>
+    );
+}
+
+const REAL_CODE = (accent, theme) => `import LoadingScreen from './ApexUI-Kit/LoadingScreen/LoadingScreen.jsx';
+import { useLoadProgress } from './ApexUI-Kit/LoadingScreen/useLoadProgress.js';
+
+// Everything the page needs before it can show. Keep this list stable.
+const ASSETS = [
+  "/images/hero.jpg",
+  "/images/product.png",
+  "/data/products.json",
+  () => import("./Dashboard.jsx"),
+];
+
+const App = () => {
+  const { progress, loaded, total, done } = useLoadProgress(ASSETS);
+
+  if (!done) {
+    return (
+      <LoadingScreen
+        variant="runner"
+        accentColor="${accent}"
+        theme="${theme}"
+        progress={progress}
+        statusText={loaded + " of " + total + " files loaded"}
+        fullScreen
+      />
+    );
+  }
+  return <main>Your app</main>;
+};
+
+export default App;`;
 
 const dependencies = [
     { name: 'React', desc: 'A JavaScript library for building user interfaces.' },
@@ -83,11 +145,27 @@ export default App;`,
         dependencies,
     }));
 
+    const real = {
+        name: 'Real progress',
+        description: 'Show the true progress of your own load. useLoadProgress downloads what your page needs (images, files or code) and returns the real percentage and counts, so the bar and the number match what actually finished. This preview downloads 14 real images each time.',
+        preview: <RealProgressDemo accent={accent} theme={theme} />,
+        controls: (
+            <ControlGrid>
+                <ColorControl label="Accent" value={accent} onChange={setAccent} />
+                <SelectControl label="Theme" value={themeChoice} onChange={setThemeChoice} options={[{ value: 'site', label: 'Match site' }, { value: 'dark', label: 'Dark' }, { value: 'light', label: 'Light' }]} />
+            </ControlGrid>
+        ),
+        code: REAL_CODE(accent, theme),
+        cli: 'loading-screen',
+        props: [...realProps, ...props],
+        dependencies,
+    };
+
     return (
         <ComponentDoc
             title="Loading Screens"
-            description="Six ways to wait, orbit, progress and blocks loaders, plus three mini games (catch the orb, endless runner, racing) so visitors stay busy until your app is ready."
-            variants={variants}
+            description="Six ways to wait, orbit, progress and blocks loaders, plus three mini games (catch the orb, endless runner, racing). Pass real progress with useLoadProgress so the bar and the number show what actually loaded."
+            variants={[real, ...variants]}
         />
     );
 }

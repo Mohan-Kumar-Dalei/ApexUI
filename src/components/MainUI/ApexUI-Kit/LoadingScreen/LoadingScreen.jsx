@@ -52,7 +52,7 @@ function useProgress(progress, duration, loop, onComplete) {
         if (controlled && progress >= 100) doneRef.current?.();
     }, [controlled, progress]);
 
-    return Math.max(0, Math.min(100, controlled ? progress : auto));
+    return Math.round(Math.max(0, Math.min(100, controlled ? progress : auto)));
 }
 
 function Bar({ value, color, track }) {
@@ -64,11 +64,11 @@ function Bar({ value, color, track }) {
 }
 
 // Progress row shared by the game variants.
-function Footer({ value, color, track }) {
+function Footer({ value, color, track, statusText }) {
     return (
         <div className="mt-5 w-full">
             <div className="mb-2 flex items-center justify-between text-[0.75rem]">
-                <span className="opacity-60">{messageFor(value)}…</span>
+                <span className="opacity-60">{statusText ?? `${messageFor(value)}…`}</span>
                 <span className="font-mono font-semibold tabular-nums">{value}%</span>
             </div>
             <Bar value={value} color={color} track={track} />
@@ -160,7 +160,7 @@ function Blocks({ value, color, track, moving }) {
 
 const ORB_LIFE = 1.5; // seconds before an orb escapes
 
-function CatchGame({ value, color, track, dark }) {
+function CatchGame({ value, color, track, dark, statusText }) {
     const [score, setScore] = useState(0);
     const [best, setBest] = useState(0);
     const [combo, setCombo] = useState(0);
@@ -287,14 +287,14 @@ function CatchGame({ value, color, track, dark }) {
                     </div>
                 ))}
             </motion.div>
-            <Footer value={value} color={color} track={track} />
+            <Footer value={value} color={color} track={track} statusText={statusText} />
         </div>
     );
 }
 
 /* --------------------------------------------------------------- Runner game */
 
-function RunnerGame({ value, color, track, dark }) {
+function RunnerGame({ value, color, track, dark, statusText }) {
     const canvasRef = useRef(null);
     const jumpRef = useRef(() => {});
     const [score, setScore] = useState(0);
@@ -542,7 +542,7 @@ function RunnerGame({ value, color, track, dark }) {
                     )}
                 </AnimatePresence>
             </div>
-            <Footer value={value} color={color} track={track} />
+            <Footer value={value} color={color} track={track} statusText={statusText} />
         </div>
     );
 }
@@ -552,7 +552,7 @@ function RunnerGame({ value, color, track, dark }) {
 const LANES = 3;
 const TRAFFIC = ["#f43f5e", "#38bdf8", "#f59e0b", "#a78bfa", "#e5e7eb"];
 
-function RacerGame({ value, color, track, dark }) {
+function RacerGame({ value, color, track, dark, statusText }) {
     const canvasRef = useRef(null);
     const moveRef = useRef(() => {});
     const [score, setScore] = useState(0);
@@ -752,7 +752,7 @@ function RacerGame({ value, color, track, dark }) {
                     )}
                 </AnimatePresence>
             </div>
-            <Footer value={value} color={color} track={track} />
+            <Footer value={value} color={color} track={track} statusText={statusText} />
         </div>
     );
 }
@@ -767,13 +767,14 @@ const LoadingScreen = ({
     title = "Loading",
     fullScreen = false,
     onComplete,
+    statusText,
     className = "",
 }) => {
     const moving = !useReducedMotion();
     const value = useProgress(progress, duration, loop, onComplete);
     const dark = theme !== "light";
     const track = dark ? "rgba(255,255,255,0.1)" : "rgba(0,0,0,0.08)";
-    const shared = { value, color: accentColor, track, moving, dark };
+    const shared = { value, color: accentColor, track, moving, dark, statusText };
     const game = variant === "catch" || variant === "runner" || variant === "racer";
 
     return (

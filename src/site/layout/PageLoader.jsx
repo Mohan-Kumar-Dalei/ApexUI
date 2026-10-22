@@ -2,109 +2,100 @@ import { lazy, Suspense, useEffect, useState } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
 import useSiteTheme from '../ui/useSiteTheme.js';
 
-// The mini games live in the LoadingScreen component; its code is warmed while idle (AppShell).
+// The Runner game lives in the LoadingScreen component; its code is warmed while idle (AppShell).
 const LoadingScreen = lazy(() => import('../../components/MainUI/ApexUI-Kit/LoadingScreen/LoadingScreen.jsx'));
 
-const GAMES = [
-    { value: 'runner', label: 'Runner' },
-    { value: 'racer', label: 'Racer' },
-    { value: 'catch', label: 'Catch' },
-];
-const STORE = 'apexui:loader-game';
-
-const readGame = () => {
-    try {
-        return localStorage.getItem(STORE) || 'runner';
-    } catch {
-        return 'runner';
-    }
-};
-
-function Bars() {
-    return (
-        <div className="flex h-8 items-end gap-1.5" aria-hidden="true">
-            {[0, 1, 2].map((i) => (
-                <motion.span
-                    key={i}
-                    className="w-1.5 rounded-full bg-[var(--lime)]"
-                    animate={{ height: ['30%', '100%', '30%'] }}
-                    transition={{ duration: 0.8, repeat: Infinity, delay: i * 0.12, ease: 'easeInOut' }}
-                />
-            ))}
-        </div>
-    );
-}
-
 /*
- * Centered loading card: three bouncing bars plus a mini game, so a slow
- * connection isn't boring. The game can be switched (or hidden) and the
- * choice is remembered.
+ * Real progress for a page load. When a page's code is requested, Vite adds
+ * a <link rel="modulepreload"> (or stylesheet) to <head> for every file it
+ * still needs. A watcher that runs from the start records each of those
+ * links and when it finishes, so the bar counts files actually downloaded
+ * (plus the page chunk itself), not a timer.
  */
-export function LoaderCard() {
-    const theme = useSiteTheme();
-    const [game, setGame] = useState(readGame);
-    const pick = (g) => {
-        setGame(g);
-        try {
-            localStorage.setItem(STORE, g);
-        } catch {
-            /* ignore */
-        }
+const files = [];
+const listeners = new Set();
+const emit = () => listeners.forEach((fn) => fn());
+if (typeof document !== 'undefined') {
+    const track = (node) => {
+        if (node.tagName !== 'LINK' || !/modulepreload|stylesheet/.test(node.rel)) return;
+        const file = { t: performance.now(), done: false };
+        files.push(file);
+        const finish = () => {
+            file.done = true;
+            emit();
+        };
+        node.addEventListener('load', finish, { once: true });
+        node.addEventListener('error', finish, { once: true });
+        emit();
     };
+    new MutationObserver((list) => list.forEach((m) => m.addedNodes.forEach(track))).observe(document.head, { childList: true });
+}
 
+function useFileProgress(active) {
+    const [, bump] = useState(0);
+    // Files requested from slightly before the load began count toward it.
+    const [since, setSince] = useState(() => performance.now() - 300);
+
+    useEffect(() => {
+        if (active) setSince(performance.now() - 300);
+    }, [active]);
+    useEffect(() => {
+        const fn = () => bump((n) => n + 1);
+        listeners.add(fn);
+        return () => listeners.delete(fn);
+    }, []);
+
+    const mine = files.filter((f) => f.t >= since);
+    const loaded = mine.filter((f) => f.done).length;
+    const total = mine.length + 1; // + the page chunk, done when the route resolves
+    const progress = active ? Math.min(99, Math.round((loaded / total) * 100)) : 100;
+    return { progress, loaded, total };
+}
+
+/* Centered card: the Runner game with a progress bar and file count that follow the real load. */
+export function LoaderCard({ progress, status }) {
+    const theme = useSiteTheme();
     return (
-        <div role="status" aria-live="polite" aria-label="Loading the page" className="w-[min(30rem,calc(100vw-2rem))] overflow-hidden rounded-3xl border border-[var(--line)] bg-[var(--panel)] shadow-[0_30px_80px_-30px_rgba(0,0,0,0.6)]">
-            <div className="flex items-center justify-between gap-3 px-4 py-3">
-                <div className="flex items-center gap-3">
-                    <Bars />
-                    <span className="text-sm font-medium text-[var(--ink-2)]">Loading…</span>
-                </div>
-                <div className="flex rounded-full bg-[var(--panel-2)] p-0.5" role="group" aria-label="Game">
-                    {[...GAMES, { value: 'none', label: 'Hide' }].map((g) => (
-                        <button
-                            key={g.value}
-                            type="button"
-                            onClick={() => pick(g.value)}
-                            aria-pressed={game === g.value}
-                            className={`rounded-full px-2.5 py-1 text-[0.72rem] font-medium transition-colors ${game === g.value ? 'bg-[var(--lime)] text-black' : 'text-[var(--ink-3)] hover:text-[var(--ink)]'}`}
-                        >
-                            {g.label}
-                        </button>
-                    ))}
-                </div>
-            </div>
-            {game !== 'none' && (
-                <div className="h-[19rem] border-t border-[var(--line)]">
-                    <Suspense
-                        fallback={
-                            <div className="grid h-full place-items-center text-[0.8rem] text-[var(--ink-3)]">
-                                <span className="animate-pulse">Starting the game…</span>
-                            </div>
-                        }
-                    >
-                        <LoadingScreen key={game} variant={game} theme={theme} title="Loading page" />
-                    </Suspense>
-                </div>
-            )}
+        <div className="h-[22rem] w-[min(30rem,calc(100vw-2rem))] overflow-hidden rounded-3xl border border-[var(--line)] bg-[var(--panel)] shadow-[0_30px_80px_-30px_rgba(0,0,0,0.6)]">
+            <Suspense
+                fallback={
+                    <div role="status" aria-live="polite" className="flex h-full flex-col justify-end gap-2 p-6">
+                        <div className="flex justify-between text-[0.75rem] text-[var(--ink-3)]">
+                            <span>{status}</span>
+                            <span className="font-mono font-semibold tabular-nums text-[var(--ink)]">{progress}%</span>
+                        </div>
+                        <div className="h-1.5 overflow-hidden rounded-full bg-[var(--panel-3)]">
+                            <div className="h-full rounded-full bg-[var(--lime)] transition-[width] duration-300" style={{ width: `${progress}%` }} />
+                        </div>
+                    </div>
+                }
+            >
+                <LoadingScreen variant="runner" theme={theme} title="Loading page" progress={progress} statusText={status} loop={false} />
+            </Suspense>
         </div>
     );
 }
 
-/* First visit: a full-screen centered loader while the first page's code arrives. */
+const statusFor = ({ loaded, total }) => `${loaded} of ${total} file${total === 1 ? '' : 's'} loaded`;
+
+/* First visit: the loader centered on screen while the first page's code arrives. */
 export default function PageLoader() {
+    const files = useFileProgress(true);
     return (
         <div className="fixed inset-0 grid place-items-center bg-[var(--bg)] p-4">
-            <LoaderCard />
+            <LoaderCard progress={files.progress} status={statusFor(files)} />
         </div>
     );
 }
 
 /*
- * Navigations keep the current page up while the next one loads; if that
- * takes more than a moment, this overlay centers the loader on screen.
+ * Navigations keep the current page up while the next one loads. If that
+ * takes more than a moment, the loader card appears in the middle of the
+ * screen (no blur or dimming), and the page swaps in as soon as it is ready.
  */
 export function NavigationLoader({ loading }) {
     const [show, setShow] = useState(false);
+    const files = useFileProgress(loading);
     useEffect(() => {
         if (!loading) {
             setShow(false);
@@ -118,14 +109,14 @@ export function NavigationLoader({ loading }) {
         <AnimatePresence>
             {show && (
                 <motion.div
-                    className="fixed inset-0 z-[90] grid place-items-center bg-[color-mix(in_srgb,var(--bg)_70%,transparent)] p-4 backdrop-blur-sm"
+                    className="pointer-events-none fixed inset-0 z-[90] grid place-items-center p-4"
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
                     exit={{ opacity: 0 }}
-                    transition={{ duration: 0.2 }}
+                    transition={{ duration: 0.18 }}
                 >
-                    <motion.div initial={{ scale: 0.96, y: 8 }} animate={{ scale: 1, y: 0 }} transition={{ type: 'spring', stiffness: 320, damping: 28 }}>
-                        <LoaderCard />
+                    <motion.div className="pointer-events-auto" initial={{ scale: 0.96, y: 8 }} animate={{ scale: 1, y: 0 }} transition={{ type: 'spring', stiffness: 320, damping: 28 }}>
+                        <LoaderCard progress={files.progress} status={statusFor(files)} />
                     </motion.div>
                 </motion.div>
             )}

@@ -30,8 +30,8 @@ export const router = createBrowserRouter([
                         index: true,
                         ...lazyRoute(() => import('./pages/home/HomePage.jsx')),
                         handle: {
-                            title: 'ApexUI | Animated React Components for Tailwind CSS',
-                            description: `Free, copy-paste animated React components built with Tailwind CSS, GSAP and Framer Motion. Add any of ${componentPages.length} components with one CLI command.`,
+                            title: 'ApexUI | Animated UI Components for React',
+                            description: `Free, copy-paste animated UI components for React, styled with Tailwind CSS and powered by Framer Motion, GSAP and Three.js. Add any of ${componentPages.length} components with one CLI command.`,
                         },
                     },
                     // Dev-only: preview the page loader at /loader-demo.

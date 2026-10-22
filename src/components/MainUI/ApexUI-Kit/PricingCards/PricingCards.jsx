@@ -16,14 +16,21 @@ const DEFAULT_PLANS = [
 
 function Price({ value, currency }) {
     return (
-        <span className="relative inline-flex h-[1.1em] overflow-hidden align-bottom tabular-nums">
-            <AnimatePresence mode="popLayout" initial={false}>
+        // Old and new numbers share one grid cell (no layout popping, no flicker);
+        // an invisible copy of the current value sets the width.
+        <span className="relative inline-grid h-[1.1em] overflow-hidden align-bottom tabular-nums">
+            <span aria-hidden="true" className="invisible col-start-1 row-start-1">
+                {currency}
+                {value}
+            </span>
+            <AnimatePresence initial={false}>
                 <motion.span
                     key={value}
+                    className="col-start-1 row-start-1"
                     initial={{ y: "100%", opacity: 0 }}
-                    animate={{ y: 0, opacity: 1 }}
+                    animate={{ y: "0%", opacity: 1 }}
                     exit={{ y: "-100%", opacity: 0 }}
-                    transition={{ type: "spring", stiffness: 380, damping: 30 }}
+                    transition={{ type: "spring", stiffness: 380, damping: 32 }}
                 >
                     {currency}
                     {value}

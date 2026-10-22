@@ -837,6 +837,33 @@ export const componentPages = [
         summary: 'A liquid active pill that bursts droplets between links.',
         isNew: true,
     },
+    {
+        name: 'Liquid Blob 3D',
+        path: '/components/liquid-blob-3d',
+        load: () => import('../content/components/LiquidBlob3DDoc.jsx'),
+        category: 'Interactive',
+        image: shot('liquid-blob-3d.png'),
+        summary: 'A glossy three.js blob whose surface flows and ripples toward the pointer.',
+        isNew: true,
+    },
+    {
+        name: 'Particle Morph',
+        path: '/components/particle-morph',
+        load: () => import('../content/components/ParticleMorphDoc.jsx'),
+        category: 'Interactive',
+        image: shot('particle-morph.png'),
+        summary: 'Thousands of three.js particles that swarm between 3D shapes.',
+        isNew: true,
+    },
+    {
+        name: 'Retro Grid 3D',
+        path: '/components/retro-grid-3d',
+        load: () => import('../content/components/RetroGrid3DDoc.jsx'),
+        category: 'Backgrounds',
+        image: shot('retro-grid-3d.png'),
+        summary: 'A synthwave three.js landscape with scrolling hills and a striped sun.',
+        isNew: true,
+    },
 ];
 
 // Keep components in the same order everywhere (index panel, grid, prev / next):
