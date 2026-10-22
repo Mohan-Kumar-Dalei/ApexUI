@@ -9,7 +9,6 @@ import { DOC_PAD } from './style.js';
 import TableOfContents from './TableOfContents.jsx';
 import NewBadge from '../ui/NewBadge.jsx';
 import PromptButton from './PromptButton.jsx';
-import ViewportFrame from './ViewportFrame.jsx';
 
 const STAGE_BG = [
     { id: 'dots', icon: Sparkle, label: 'Dots', className: 'stage-dots' },
@@ -19,7 +18,8 @@ const STAGE_BG = [
 
 const STAGE_H = 'min-h-[clamp(26rem,64vh,60rem)]';
 
-// Responsive check: tablet / mobile render the preview in a real iframe of that width.
+// Responsive check: tablet / mobile narrow the live preview to that width (no iframe,
+// so nothing reloads). The box is a CSS container, so @container styles respond.
 const DEVICES = [
     { id: 'desktop', icon: Monitor, label: 'Desktop' },
     { id: 'tablet', icon: Tablet, label: 'Tablet', width: 768 },
@@ -63,6 +63,12 @@ function Stage({ title, description, variant, variants, activeVariant, onVariant
     const [full, setFull] = useState(false);
     const [device, setDevice] = useState('desktop');
     const stageRef = useRef(null);
+    // The preview shows at once when a page opens; it only fades on replay,
+    // variant, view or device changes (a fade on every page switch read as a flicker).
+    const firstPaint = useRef(true);
+    useEffect(() => {
+        firstPaint.current = false;
+    }, []);
 
     useEffect(() => {
         const onChange = () => setFull(document.fullscreenElement === stageRef.current);
@@ -132,8 +138,8 @@ function Stage({ title, description, variant, variants, activeVariant, onVariant
             <AnimatePresence mode="wait">
                 {view === 'preview' ? (
                     <motion.div
-                        key={`preview-${activeVariant}-${replayKey}-${frame ? device : 'desktop'}`}
-                        initial={{ opacity: 0 }}
+                        key={`preview-${activeVariant}-${replayKey}-${frame ? 'frame' : 'desktop'}`}
+                        initial={{ opacity: firstPaint.current ? 1 : 0 }}
                         animate={{ opacity: 1 }}
                         exit={{ opacity: 0 }}
                         transition={{ duration: 0.18 }}
@@ -141,9 +147,17 @@ function Stage({ title, description, variant, variants, activeVariant, onVariant
                     >
                         {bgClass && <div aria-hidden="true" className={`pointer-events-none absolute inset-0 ${bgClass} ${variant.fullBleed ? 'stage-overlay z-20' : '-z-10'}`} />}
                         {frame ? (
-                            <ViewportFrame width={frame.width} label={frame.label} bodyClassName={variant.fullBleed ? '!p-0 !bg-[#09090b] !text-white' : variant.previewClassName ?? ''}>
-                                {variant.preview}
-                            </ViewportFrame>
+                            <div className="absolute inset-0 z-10 flex flex-col items-center justify-center gap-2 px-3 py-3">
+                                <div
+                                    className={`@container relative isolate flex min-h-0 w-full flex-1 items-center justify-center overflow-hidden rounded-[1.4rem] border-[6px] border-[var(--panel-3)] shadow-[0_20px_60px_-25px_rgba(0,0,0,0.6)] transition-[max-width] duration-300 ease-out ${variant.fullBleed ? 'bg-[#09090b] text-white' : 'bg-[var(--stage)] p-4 text-[var(--stage-ink)]'} ${variant.previewClassName ?? ''}`}
+                                    style={{ maxWidth: frame.width }}
+                                >
+                                    {variant.preview}
+                                </div>
+                                <span className="font-mono text-[0.68rem] text-[var(--ink-3)]">
+                                    {frame.label} · {frame.width}px
+                                </span>
+                            </div>
                         ) : (
                             variant.preview
                         )}
