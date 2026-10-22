@@ -74,7 +74,7 @@ export default function Introduction() {
                     <div>
                         <p className="font-mono text-[0.68rem] uppercase tracking-[0.18em] text-[var(--lime-text)]">ApexUI {SITE.version}</p>
                         <h2 className="font-display mt-3 text-[clamp(1.2rem,1.5vw,1.7rem)] font-semibold leading-snug text-[var(--ink)]">
-                            {componentPages.length} components across {CATEGORIES.length} families — backgrounds, cards, text effects, navigation and more.
+                            {componentPages.length} components across {CATEGORIES.length} families — backgrounds, cards, text effects, navigation, buttons, maps and more.
                         </h2>
                         <div className="mt-6 flex flex-wrap gap-3">
                             <Link to="/components" className="inline-flex h-10 items-center gap-2 rounded-full bg-[var(--lime)] px-5 text-sm font-semibold text-[var(--lime-ink)] transition hover:brightness-105">

@@ -313,6 +313,9 @@ const categoryCover = {
     'Text & Motion': '/components/accordion-marquee',
     Navigation: '/components/nav-drop-down',
     Interactive: '/components/carousel',
+    Buttons: '/components/animated-buttons',
+    Loaders: '/components/loading-screens',
+    Maps: '/components/dot-globe',
 };
 
 const categoryBlurb = {
@@ -320,7 +323,10 @@ const categoryBlurb = {
     Cards: 'Tilt, glare, stacks and grids for content that wants attention.',
     'Text & Motion': 'Marquees, hover effects and reveals for headlines.',
     Navigation: 'Menus and dropdowns with smooth animated indicators.',
+    Buttons: 'Buttons with hover, press and loading animations.',
     Interactive: 'Carousels, tooltips, avatars and playful details.',
+    Loaders: 'Loading screens and mini games that keep visitors busy while your app loads.',
+    Maps: 'Globes and world maps with pins, arcs and live pings.',
 };
 
 function Families() {

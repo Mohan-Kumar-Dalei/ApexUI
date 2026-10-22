@@ -12,6 +12,7 @@ function Row({ page, onNavigate }) {
             onClick={onNavigate}
             onMouseEnter={() => prefetch(page)}
             onFocus={() => prefetch(page)}
+            onTouchStart={() => prefetch(page)}
             className={({ isActive }) =>
                 `relative flex items-center rounded-md px-3 py-[0.42rem] text-[0.875rem] transition-colors ${isActive
                     ? 'bg-[var(--lime-soft)] font-medium text-[var(--ink)]'

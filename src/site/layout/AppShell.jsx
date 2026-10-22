@@ -1,6 +1,5 @@
 import { useEffect } from 'react';
-import { ScrollRestoration, useLocation, useMatches, useNavigation, useOutlet } from 'react-router-dom';
-import { AnimatePresence, motion } from 'framer-motion';
+import { ScrollRestoration, useLocation, useMatches, useOutlet } from 'react-router-dom';
 import { Toaster } from 'sonner';
 import Navbar from './Navbar.jsx';
 import Sidebar from './Sidebar.jsx';
@@ -8,24 +7,6 @@ import MobileDrawer from './MobileDrawer.jsx';
 import CommandMenu from './CommandMenu.jsx';
 import FeedbackDialog from './FeedbackDialog.jsx';
 import { applySeo, seoForRoute } from '../seo.js';
-
-function NavProgress() {
-    const busy = useNavigation().state !== 'idle';
-    return (
-        <AnimatePresence>
-            {busy && (
-                <motion.div
-                    className="fixed inset-x-0 top-0 z-[3000] h-[2px] overflow-hidden"
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1, transition: { delay: 0.12 } }}
-                    exit={{ opacity: 0 }}
-                >
-                    <div className="h-full w-1/3 bg-[var(--lime)] shadow-[0_0_12px_var(--lime)]" style={{ animation: 'apex-progress 1s var(--ease-out) infinite' }} />
-                </motion.div>
-            )}
-        </AnimatePresence>
-    );
-}
 
 // Shared fallback, so a route without a handle doesn't re-run the SEO effect every render.
 const NO_HANDLE = {};
@@ -47,6 +28,19 @@ export default function AppShell() {
         applySeo(seoForRoute(handle, pathname));
     }, [handle, pathname]);
 
+    // Warm the shared docs code (page layout, code blocks, playground controls)
+    // while the browser is idle, so the first component page opens quickly.
+    useEffect(() => {
+        const warm = () => {
+            import('../docs/ComponentDoc.jsx').catch(() => {});
+            import('../docs/controls.jsx').catch(() => {});
+            import('../docs/BackgroundDemo.jsx').catch(() => {});
+        };
+        const idle = window.requestIdleCallback;
+        const id = idle ? idle(warm, { timeout: 3000 }) : window.setTimeout(warm, 1500);
+        return () => (idle ? window.cancelIdleCallback(id) : window.clearTimeout(id));
+    }, []);
+
     // A page rendered fine, so a later stale-chunk error may reload once again.
     useEffect(() => {
         try {
@@ -57,7 +51,7 @@ export default function AppShell() {
     }, []);
 
     // New pages swap in at once: dimming them in on every navigation read as a
-    // flicker, and the top progress bar already covers slow loads.
+    // flicker, and the centered PageLoader covers slow loads.
     const page = <div key={pathname}>{outlet}</div>;
 
     return (
@@ -74,7 +68,6 @@ export default function AppShell() {
             <MobileDrawer />
             <CommandMenu />
             <FeedbackDialog />
-            <NavProgress />
             <Toaster richColors closeButton position="bottom-center" />
             <ScrollRestoration />
         </div>

@@ -1,5 +1,10 @@
+import { useState } from 'react';
 import ComponentDoc from '../../docs/ComponentDoc.jsx';
+import ColorControl, { ControlGrid, RangeControl, SelectControl } from '../../docs/controls.jsx';
 import { cdn } from '../../ui/cdn.js';
+import FlipProfile from '../../../components/MainUI/ApexUI-Kit/FlipProfile/FlipProfile.jsx';
+import ParallaxProfile from '../../../components/MainUI/ApexUI-Kit/ParallaxProfile/ParallaxProfile.jsx';
+import ProfileCard from '../../../components/MainUI/ApexUI-Kit/ProfileCard/ProfileCard.jsx';
 
 // Same data as ParallaxProfile's defaults, with the avatar served from the CDN.
 const parallaxProfile = {
@@ -18,10 +23,8 @@ const parallaxProfile = {
     onHireClick: () => alert('Hire Me button clicked!'),
     onCvClick: () => alert('CV button clicked!'),
 };
-import FlipProfile from '../../../components/MainUI/ApexUI-Kit/FlipProfile/FlipProfile.jsx';
-import ParallaxProfile from '../../../components/MainUI/ApexUI-Kit/ParallaxProfile/ParallaxProfile.jsx';
 
-const variants = [
+const baseVariants = [
     {
         name: 'Flip Profile',
         description: 'An animated profile card with a 3D flip, perfect for showcasing user details and social links.',
@@ -110,11 +113,83 @@ export default App;`,
     },
 ];
 
+const cardProps = [
+    { prop: 'variant', type: "'card' | 'lanyard'", def: '"card"', desc: 'Profile card, or the same profile as an ID badge on a ribbon.' },
+    { prop: 'profile', type: '{ name, role, company, location, bio, avatar, id, stats, socials }', def: 'demo profile', desc: 'Profile details; anything left out falls back to the demo.' },
+    { prop: 'color', type: 'string', def: '"#a3e635"', desc: 'Accent color (cover glow, Follow button, ribbon, badge header).' },
+    { prop: 'theme', type: "'dark' | 'light'", def: '"dark"', desc: 'Card colors.' },
+    { prop: 'className', type: 'string', def: '""', desc: 'Extra classes for the wrapper.' },
+];
+
+const cardDependencies = [
+    { name: 'React', desc: 'A JavaScript library for building user interfaces.' },
+    { name: 'Framer Motion', desc: 'Tilt, drag and pendulum springs.' },
+    { name: 'Lucide React', desc: 'Icons.' },
+    { name: 'Tailwind CSS', desc: 'A utility-first CSS framework.' },
+];
+
+const themeOptions = [{ value: 'dark', label: 'Dark' }, { value: 'light', label: 'Light' }];
+
+const cardSnippet = (extra) => `import ProfileCard from './ApexUI-Kit/ProfileCard/ProfileCard.jsx';
+
+const profile = {
+  name: "Mohan Dalei",
+  role: "Frontend Engineer",
+  company: "ApexUI",
+  location: "Bhubaneswar, India",
+  avatar: "/me.png",
+  id: "APX-0042",
+};
+
+const App = () => <ProfileCard profile={profile}${extra} />;
+
+export default App;`;
+
 export default function ProfileDoc() {
+    const [color, setColor] = useState('#a3e635');
+    const [theme, setTheme] = useState('dark');
+    const [strap, setStrap] = useState(10);
+
+    const variants = [
+        ...baseVariants,
+        {
+            name: 'Profile Card',
+            description: 'Cover, avatar with online dot, bio, stats, socials and a Follow toggle, with a soft 3D tilt under the pointer.',
+            preview: <ProfileCard variant="card" color={color} theme={theme} />,
+            controls: (
+                <ControlGrid>
+                    <ColorControl label="Accent" value={color} onChange={setColor} />
+                    <SelectControl label="Theme" value={theme} onChange={setTheme} options={themeOptions} />
+                </ControlGrid>
+            ),
+            code: cardSnippet(` variant="card" color="${color}" theme="${theme}"`),
+            cli: 'profile-card',
+            props: cardProps,
+            dependencies: cardDependencies,
+        },
+        {
+            name: 'ID Lanyard',
+            description: 'The same profile as an ID badge on a printed ribbon. It drops in, and when you drag it and let go it swings back like a pendulum.',
+            preview: <ProfileCard key={`${strap}-${theme}`} variant="lanyard" color={color} theme={theme} strapLength={strap} />,
+            previewClassName: '!items-start',
+            controls: (
+                <ControlGrid>
+                    <ColorControl label="Ribbon" value={color} onChange={setColor} />
+                    <SelectControl label="Theme" value={theme} onChange={setTheme} options={themeOptions} />
+                    <RangeControl label="Strap length" value={strap} onChange={setStrap} min={6} max={14} step={0.5} format={(v) => `${v}rem`} />
+                </ControlGrid>
+            ),
+            code: cardSnippet(` variant="lanyard" color="${color}" theme="${theme}" strapLength={${strap}}`),
+            cli: 'profile-card',
+            props: [...cardProps, { prop: 'strapLength', type: 'number', def: '10', desc: 'Ribbon length in rem (lanyard).' }],
+            dependencies: cardDependencies,
+        },
+    ];
+
     return (
         <ComponentDoc
             title="Profile"
-            description="Animated profile cards for portfolios and team pages, in flip and parallax styles."
+            description="Animated profile cards for portfolios and team pages — flip, parallax, a tilting profile card, or an ID badge swinging on a ribbon."
             variants={variants}
         />
     );

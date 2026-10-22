@@ -64,8 +64,7 @@ const ToolTip = ({ items }) => {
                             <div className={`pointer-events-none absolute bottom-full mb-4 z-50 ${box}`}>
                                 {/* The card and its arrow animate together, so the arrow follows every swing. */}
                                 <div ref={(el) => (tooltipRefs.current[idx] = el)} className="relative origin-bottom">
-                                    <div className="relative overflow-hidden rounded-xl border border-white/10 bg-zinc-950 px-3.5 py-2.5 shadow-[0_16px_40px_-12px_rgba(0,0,0,0.7)]">
-                                        <span className="absolute inset-x-3 top-0 h-px bg-gradient-to-r from-transparent via-lime-400 to-cyan-400" />
+                                    <div className="relative overflow-hidden rounded-xl border border-white/10 bg-zinc-950/95 px-3.5 py-2.5 shadow-[inset_0_1px_0_rgba(255,255,255,0.08),0_16px_40px_-12px_rgba(0,0,0,0.7)] backdrop-blur">
                                         <span className="flex items-center gap-1.5 whitespace-nowrap text-sm font-semibold text-white">
                                             <span className="h-1.5 w-1.5 rounded-full bg-lime-400 shadow-[0_0_8px_#a3e635]" />
                                             {item.name}
@@ -80,7 +79,10 @@ const ToolTip = ({ items }) => {
                                 </div>
                             </div>
                         )}
-                        <div ref={(el) => (avatarRefs.current[idx] = el)} className="rounded-full bg-gradient-to-br from-lime-400 via-emerald-400 to-cyan-400 p-[2px] shadow-lg shadow-black/30">
+                        <div
+                            ref={(el) => (avatarRefs.current[idx] = el)}
+                            className={`rounded-full p-[2px] shadow-lg shadow-black/30 transition-[background-color,box-shadow] duration-300 ${hoveredIndex === idx ? "bg-lime-400 shadow-[0_0_20px_-4px_#a3e635]" : "bg-zinc-700"}`}
+                        >
                             <img
                                 src={item.image}
                                 alt={item.name}
