@@ -864,6 +864,33 @@ export const componentPages = [
         summary: 'A synthwave three.js landscape with scrolling hills and a striped sun.',
         isNew: true,
     },
+    {
+        name: 'Distortion Image',
+        path: '/components/distortion-image',
+        load: () => import('../content/components/DistortionImageDoc.jsx'),
+        category: 'Cards',
+        image: shot('distortion-image.png'),
+        summary: 'A WebGL image that ripples and splits into RGB fringes under the pointer.',
+        isNew: true,
+    },
+    {
+        name: 'Galaxy 3D',
+        path: '/components/galaxy-3d',
+        load: () => import('../content/components/Galaxy3DDoc.jsx'),
+        category: 'Backgrounds',
+        image: shot('galaxy-3d.png'),
+        summary: 'A turning three.js spiral galaxy with pointer parallax.',
+        isNew: true,
+    },
+    {
+        name: 'Warp Tunnel',
+        path: '/components/warp-tunnel',
+        load: () => import('../content/components/WarpTunnelDoc.jsx'),
+        category: 'Backgrounds',
+        image: shot('warp-tunnel.png'),
+        summary: 'A WebGL hyperspace tunnel that bends to the pointer; hold to boost.',
+        isNew: true,
+    },
 ];
 
 // Keep components in the same order everywhere (index panel, grid, prev / next):
