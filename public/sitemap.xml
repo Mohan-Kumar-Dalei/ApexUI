@@ -421,6 +421,18 @@
     <priority>0.8</priority>
   </url>
   <url>
+    <loc>https://apex-ui.in/components/ai-model-prompt</loc>
+    <lastmod>2026-10-22</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://apex-ui.in/components/hold-to-confirm</loc>
+    <lastmod>2026-10-22</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
     <loc>https://apex-ui.in/components/dot-globe</loc>
     <lastmod>2026-10-22</lastmod>
     <changefreq>monthly</changefreq>

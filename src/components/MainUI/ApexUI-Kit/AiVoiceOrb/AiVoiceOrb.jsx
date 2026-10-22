@@ -36,16 +36,17 @@ const AiVoiceOrb = ({ state: stateProp, onStateChange, colors = ["#a3e635", "#22
                     [0, 1, 2].map((i) => (
                         <motion.span key={`${state}-${i}`} className="absolute inset-0 rounded-full border" style={{ borderColor: colors[i % colors.length] }} initial={{ scale: 1, opacity: 0.5 }} animate={{ scale: 1.6, opacity: 0 }} transition={{ duration: 2, repeat: Infinity, delay: i * 0.6, ease: "easeOut" }} />
                     ))}
-                {/* Outer glow */}
-                <motion.span className="absolute inset-[-12%] rounded-full blur-2xl" style={{ background: `conic-gradient(${colors.join(",")},${colors[0]})`, opacity: 0.35 }} animate={{ rotate: 360 }} transition={{ duration: s.spin * 1.5, repeat: Infinity, ease: "linear" }} />
+                {/* Outer glow: a soft gradient that only pulses (no blur filter, so it stays cheap). */}
+                <motion.span className="absolute inset-[-22%] rounded-full" style={{ background: `radial-gradient(circle, ${colors[0]}55 0%, ${colors[2 % colors.length]}33 35%, transparent 68%)` }} animate={{ opacity: [0.6, 1, 0.6], scale: [0.96, 1.04, 0.96] }} transition={{ duration: s.speed * 1.4, repeat: Infinity, ease: "easeInOut" }} />
                 {/* The sphere */}
                 <motion.span className="relative block h-full w-full overflow-hidden rounded-full bg-neutral-950 shadow-[inset_0_0_40px_rgba(255,255,255,0.08)]" animate={{ scale: s.scale }} transition={{ duration: s.speed, repeat: Infinity, ease: "easeInOut" }}>
-                    <motion.span className="absolute inset-0" animate={{ rotate: 360 }} transition={{ duration: s.spin, repeat: Infinity, ease: "linear" }}>
+                    <motion.span className="absolute inset-0 will-change-transform" animate={{ rotate: 360 }} transition={{ duration: s.spin, repeat: Infinity, ease: "linear" }}>
                         {colors.map((c, i) => (
                             <motion.span
                                 key={c}
-                                className="absolute h-3/4 w-3/4 rounded-full mix-blend-screen blur-xl"
-                                style={{ background: c, opacity: 0.6, left: `${[0, 30, 10, 35][i % 4]}%`, top: `${[5, 0, 35, 30][i % 4]}%` }}
+                                className="absolute h-3/4 w-3/4 rounded-full will-change-transform"
+                                // Soft-edged blobs from gradients instead of a blur filter.
+                                style={{ background: `radial-gradient(circle, ${c} 0%, ${c}aa 30%, transparent 68%)`, mixBlendMode: "screen", left: `${[0, 30, 10, 35][i % 4]}%`, top: `${[5, 0, 35, 30][i % 4]}%` }}
                                 animate={{ x: ["0%", `${(i % 2 ? -1 : 1) * 12}%`, "0%"], y: ["0%", `${(i % 3 ? 1 : -1) * 14}%`, "0%"] }}
                                 transition={{ duration: s.speed * (2 + i * 0.4), repeat: Infinity, ease: "easeInOut" }}
                             />
