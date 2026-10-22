@@ -73,7 +73,8 @@ const AiThinking = ({ steps = DEFAULT_STEPS, step: stepProp, stepDuration = 1400
             <AnimatePresence initial={false}>
                 {open && (
                     <motion.ol initial={{ height: 0, opacity: 0 }} animate={{ height: "auto", opacity: 1 }} exit={{ height: 0, opacity: 0 }} transition={{ duration: 0.28, ease: [0.22, 1, 0.36, 1] }} className="relative mt-4 overflow-hidden pl-3">
-                        <span aria-hidden="true" className={`absolute bottom-3 left-[1.15rem] top-2 w-px ${dark ? "bg-white/10" : "bg-black/10"}`} />
+                        {/* Through the circle centres: list padding (0.75rem) + half a circle (0.575rem). */}
+                        <span aria-hidden="true" className={`absolute bottom-3 left-[calc(1.325rem-0.5px)] top-3 w-px ${dark ? "bg-white/10" : "bg-black/10"}`} />
                         {steps.map((s, i) => {
                             const state = i < current ? "done" : i === current && !done ? "active" : "todo";
                             return (
