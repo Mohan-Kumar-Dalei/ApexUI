@@ -4,15 +4,15 @@ import ColorControl, { ControlGrid } from '../../docs/controls.jsx';
 import FlipBook from '../../../components/MainUI/ApexUI-Kit/FlipBook/FlipBook.jsx';
 
 const props = [
-    { prop: 'pages', type: '{ title, body, cover? }[]', def: '6 demo pages', desc: 'Pages in reading order; two pages share a sheet (front and back).' },
-    { prop: 'width', type: 'number', def: '13', desc: 'Width of one page in rem.' },
+    { prop: 'pages', type: '{ title, body, image?, cover? }[]', def: '8 demo pages', desc: 'Pages in reading order; two pages share a sheet (front and back).' },
+    { prop: 'width', type: 'number', def: '12', desc: 'Width of one page in rem.' },
     { prop: 'accentColor', type: 'string', def: '"#a3e635"', desc: 'Cover and chapter colors.' },
     { prop: 'className', type: 'string', def: '""', desc: 'Extra classes.' },
 ];
 
 const dependencies = [
     { name: 'React', desc: 'A JavaScript library for building user interfaces.' },
-    { name: 'Framer Motion', desc: 'Spring page turns.' },
+    { name: 'Framer Motion', desc: 'Spring page turns, lift and shading.' },
     { name: 'Lucide React', desc: 'Arrow icons.' },
     { name: 'Tailwind CSS', desc: 'A utility-first CSS framework.' },
 ];
@@ -22,7 +22,7 @@ export default function FlipBookDoc() {
     return (
         <ComponentDoc
             title="Flip Book"
-            description="A small 3D book whose pages turn around the spine — click a page, use the buttons or the arrow keys, and read content on both sides of every sheet."
+            description="A 3D hardcover book — pages lift and turn around the spine with a sweeping shadow. Drag a page to turn it by hand, click it, or use the arrows; page edges thicken on the heavier side."
             preview={<FlipBook accentColor={accent} className="py-6 text-[var(--ink)]" />}
             controls={
                 <ControlGrid>
@@ -34,7 +34,7 @@ export default function FlipBookDoc() {
 const pages = [
   { title: "My book", body: "A short story", cover: true },
   { title: "Chapter 1", body: "Once upon a time…" },
-  { title: "Chapter 2", body: "…and then." },
+  { title: "Chapter 2", body: "…and then.", image: "/photo.jpg" },
   { title: "The end", body: "Thanks for reading", cover: true },
 ];
 

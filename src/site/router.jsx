@@ -55,6 +55,7 @@ export const router = createBrowserRouter([
                             { path: 'water-drop-reveal', element: <Navigate to="/components/mask-view" replace /> },
                             { path: 'profile-card', element: <Navigate to="/components/profile" replace /> },
                             { path: 'webgl-carousel', element: <Navigate to="/components/3d-carousel" replace /> },
+                            { path: 'hold-to-confirm', element: <Navigate to="/components/animated-buttons" replace /> },
                             ...allDocPages.map((page) => ({
                                 path: page.path.replace('/components/', ''),
                                 element: lazyPage(page.load),

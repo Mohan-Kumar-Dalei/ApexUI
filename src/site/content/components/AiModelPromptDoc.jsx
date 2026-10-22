@@ -1,11 +1,11 @@
 import { useState } from 'react';
 import ComponentDoc from '../../docs/ComponentDoc.jsx';
 import ColorControl, { ControlGrid } from '../../docs/controls.jsx';
-import AiModelPrompt from '../../../components/MainUI/ApexUI-Kit/AiModelPrompt/AiModelPrompt.jsx';
+import { AiModelPrompt, DEFAULT_LLM_MODELS } from '../../../components/MainUI/ApexUI-Kit/AiModelPrompt/index.js';
 import useSiteTheme from '../../ui/useSiteTheme.js';
 
 const props = [
-    { prop: 'models', type: '{ value, label, provider, description, tags?, settings }[]', def: '4 demo models', desc: 'Models grouped by provider. settings: { temperature?, maxTokens?, reasoning?: string[] } decides which controls show.' },
+    { prop: 'models', type: '{ value, label, provider, description, tags?, settings }[]', def: 'DEFAULT_LLM_MODELS', desc: 'Models grouped by provider. settings: { temperature?, maxTokens?, reasoning?: string[] } decides which controls show.' },
     { prop: 'value', type: 'string', def: '—', desc: 'Selected model value (controlled).' },
     { prop: 'onModelChange', type: '(model) => void', def: '—', desc: 'Called when a model is picked.' },
     { prop: 'configurations', type: 'Record<model, config>', def: '—', desc: 'Settings per model (controlled).' },
@@ -30,14 +30,28 @@ export default function AiModelPromptDoc() {
     const theme = useSiteTheme();
     const [accent, setAccent] = useState('#a3e635');
     const [last, setLast] = useState(null);
+    const [modelValue, setModelValue] = useState('claude-fable-5');
+    const [configurations, setConfigurations] = useState({});
+    const [prompt, setPrompt] = useState('');
 
     return (
         <ComponentDoc
             title="AI Model Prompt"
             description="A prompt composer with a model picker grouped by provider and per-model settings — temperature, max tokens and reasoning effort — remembered for every model. Works controlled or on its own."
             preview={
-                <div className="flex w-full flex-col items-center gap-3 pt-40">
-                    <AiModelPrompt theme={theme} accentColor={accent} onSubmit={(payload) => setLast(payload)} />
+                <div className="flex w-full flex-col items-center gap-3 pt-[23rem]">
+                    <AiModelPrompt
+                        configurations={configurations}
+                        models={DEFAULT_LLM_MODELS}
+                        onConfigurationChange={(_, __, next) => setConfigurations(next)}
+                        onModelChange={(model) => setModelValue(model.value)}
+                        onPromptChange={setPrompt}
+                        onSubmit={(payload) => setLast(payload)}
+                        prompt={prompt}
+                        value={modelValue}
+                        theme={theme}
+                        accentColor={accent}
+                    />
                     <p className="h-5 max-w-2xl truncate font-mono text-[0.72rem] text-[var(--ink-3)]">
                         {last ? `sent → ${last.model.label} · ${JSON.stringify(last.configuration)}` : 'Pick a model, open the sliders, type and press Enter'}
                     </p>
@@ -49,31 +63,33 @@ export default function AiModelPromptDoc() {
                     <ColorControl label="Accent" value={accent} onChange={setAccent} />
                 </ControlGrid>
             }
-            code={`import { useState } from 'react';
-import AiModelPrompt from './ApexUI-Kit/AiModelPrompt/AiModelPrompt.jsx';
-
-const models = [
-  { value: "claude-sonnet", label: "Claude Sonnet", provider: "Anthropic", description: "Writing and code.",
-    settings: { temperature: true, maxTokens: true, reasoning: ["low", "medium", "high"] } },
-  { value: "gpt-mini", label: "GPT Mini", provider: "OpenAI", description: "Small and quick.",
-    settings: { temperature: true, maxTokens: true } },
-];
+            code={`import { useState } from "react";
+import {
+  DEFAULT_LLM_MODELS,
+  AiModelPrompt,
+} from "./ApexUI-Kit/AiModelPrompt";
 
 export function PromptComposer() {
-  const [model, setModel] = useState("claude-sonnet");
+  const [modelValue, setModelValue] = useState("claude-fable-5");
   const [configurations, setConfigurations] = useState({});
   const [prompt, setPrompt] = useState("");
 
   return (
     <AiModelPrompt
-      models={models}
-      value={model}
-      onModelChange={(m) => setModel(m.value)}
       configurations={configurations}
-      onConfigurationChange={(_, __, next) => setConfigurations(next)}
-      prompt={prompt}
+      models={DEFAULT_LLM_MODELS}
+      onConfigurationChange={(_, __, nextConfigurations) => {
+        setConfigurations(nextConfigurations);
+      }}
+      onModelChange={(model) => {
+        setModelValue(model.value);
+      }}
       onPromptChange={setPrompt}
-      onSubmit={({ model, configuration, prompt }) => sendToYourApi({ model, configuration, prompt })}
+      onSubmit={({ model, configuration, prompt }) => {
+        submitPrompt({ model, configuration, prompt });
+      }}
+      prompt={prompt}
+      value={modelValue}
       accentColor="${accent}"
       theme="${theme}"
     />

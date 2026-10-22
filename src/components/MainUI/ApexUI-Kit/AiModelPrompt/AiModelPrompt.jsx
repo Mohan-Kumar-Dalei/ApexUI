@@ -1,6 +1,7 @@
 import React, { useEffect, useId, useRef, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { ArrowUp, Brain, Check, ChevronDown, Eye, SlidersHorizontal, Sparkles, Zap } from "lucide-react";
+import { DEFAULT_LLM_MODELS } from "./models.js";
 
 /*
  * AI Model Prompt: a prompt composer with a model picker and per-model
@@ -8,13 +9,6 @@ import { ArrowUp, Brain, Check, ChevronDown, Eye, SlidersHorizontal, Sparkles, Z
  * max tokens, reasoning effort); the settings panel only shows those and
  * remembers a configuration per model. Works controlled or on its own.
  */
-
-const DEFAULT_MODELS = [
-    { value: "apex-pro", label: "Apex Pro", provider: "Apex", description: "Best quality for hard problems.", tags: ["reasoning", "vision"], settings: { temperature: true, maxTokens: true, reasoning: ["low", "medium", "high"] } },
-    { value: "apex-flash", label: "Apex Flash", provider: "Apex", description: "Fast and cheap for everyday tasks.", tags: ["fast"], settings: { temperature: true, maxTokens: true } },
-    { value: "claude-sonnet", label: "Claude Sonnet", provider: "Anthropic", description: "Great at writing and code.", tags: ["reasoning", "vision"], settings: { temperature: true, maxTokens: true, reasoning: ["low", "medium", "high"] } },
-    { value: "gpt-mini", label: "GPT Mini", provider: "OpenAI", description: "Small, quick and capable.", tags: ["fast", "vision"], settings: { temperature: true, maxTokens: true } },
-];
 
 const TAG_ICON = { reasoning: Brain, vision: Eye, fast: Zap };
 const TOKEN_OPTIONS = [1024, 4096, 8192, 32000];
@@ -40,7 +34,7 @@ function useDismiss(open, setMenu, ref) {
 }
 
 const AiModelPrompt = ({
-    models = DEFAULT_MODELS,
+    models = DEFAULT_LLM_MODELS,
     value,
     onModelChange,
     configurations,
@@ -129,7 +123,7 @@ const AiModelPrompt = ({
                     </button>
                     <AnimatePresence>
                         {menu === "models" && (
-                            <motion.div {...pop} role="listbox" aria-label="Models" className={`absolute bottom-full left-0 z-30 mb-2 w-[min(19rem,80vw)] origin-bottom-left rounded-2xl border p-1.5 ${panel}`}>
+                            <motion.div {...pop} role="listbox" aria-label="Models" className={`absolute bottom-full left-0 z-30 mb-2 max-h-[min(21rem,60vh)] w-[min(19rem,80vw)] origin-bottom-left overflow-y-auto overscroll-contain rounded-2xl border p-1.5 ${panel}`}>
                                 {groups.map((g) => (
                                     <div key={g} className="py-1">
                                         <p className={`px-2.5 pb-1 text-[0.65rem] font-semibold uppercase tracking-[0.16em] ${muted}`}>{g}</p>
