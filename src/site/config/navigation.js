@@ -10,7 +10,7 @@ import { cdn } from '../ui/cdn.js';
 
 export const SITE = {
     name: 'ApexUI',
-    version: 'v2.0.7',
+    version: 'v2.2.0',
     github: 'https://github.com/Mohan-Kumar-Dalei/ApexUI',
     npm: 'https://www.npmjs.com/package/apex-ui-kit',
     linkedin: 'https://www.linkedin.com/in/mohan-kumar-dalei/',
