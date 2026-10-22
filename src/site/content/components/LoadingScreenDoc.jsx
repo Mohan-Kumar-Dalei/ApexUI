@@ -5,7 +5,7 @@ import LoadingScreen from '../../../components/MainUI/ApexUI-Kit/LoadingScreen/L
 import useSiteTheme from '../../ui/useSiteTheme.js';
 
 const props = [
-    { prop: 'variant', type: "'orbit' | 'progress' | 'blocks' | 'catch' | 'runner'", def: '"orbit"', desc: 'Loader style; catch and runner are mini games to play while waiting.' },
+    { prop: 'variant', type: "'orbit' | 'progress' | 'blocks' | 'catch' | 'runner' | 'racer'", def: '"orbit"', desc: 'Loader style; catch, runner and racer are mini games to play while waiting.' },
     { prop: 'progress', type: 'number', def: '—', desc: 'Real progress 0–100. Leave it out to run a simulated load.' },
     { prop: 'duration', type: 'number', def: '6000', desc: 'Length of the simulated load, in ms.' },
     { prop: 'loop', type: 'boolean', def: 'true', desc: 'Restart the simulated load when it finishes.' },
@@ -29,6 +29,7 @@ const VARIANTS = [
     { id: 'blocks', name: 'Blocks', description: 'A grid of tiles fills in like a wave as the load moves along.' },
     { id: 'catch', name: 'Catch Game', description: 'A mini game while you wait: tap the orb before it fades to build a streak.' },
     { id: 'runner', name: 'Runner Game', description: 'A tiny endless runner: press Space, ↑ or tap to jump the blocks while things load.' },
+    { id: 'racer', name: 'Racing Game', description: 'A top-down racer: steer through oncoming traffic with ← → or a tap on either side while things load.' },
 ];
 
 export default function LoadingScreenDoc() {
@@ -85,7 +86,7 @@ export default App;`,
     return (
         <ComponentDoc
             title="Loading Screens"
-            description="Five ways to wait — orbit, progress and blocks loaders, plus two mini games (catch the orb, endless runner) so visitors stay busy until your app is ready."
+            description="Six ways to wait — orbit, progress and blocks loaders, plus three mini games (catch the orb, endless runner, racing) so visitors stay busy until your app is ready."
             variants={variants}
         />
     );

@@ -8,6 +8,7 @@ import { CliChip, DocFooter, PageHeader, Pager } from './parts.jsx';
 import { DOC_PAD } from './style.js';
 import TableOfContents from './TableOfContents.jsx';
 import NewBadge from '../ui/NewBadge.jsx';
+import PromptButton from './PromptButton.jsx';
 
 const STAGE_BG = [
     { id: 'dots', icon: Sparkle, label: 'Dots', className: 'stage-dots' },
@@ -47,7 +48,7 @@ function Segmented({ value, onChange, options, size = 'md' }) {
 const toolBtn = 'inline-flex h-8 w-8 items-center justify-center rounded-full text-[var(--ink-3)] transition-colors hover:bg-[var(--panel-2)] hover:text-[var(--ink)]';
 
 /* The live preview: a dark canvas with view / background / replay / fullscreen controls. */
-function Stage({ variant, variants, activeVariant, onVariant }) {
+function Stage({ title, description, variant, variants, activeVariant, onVariant }) {
     const [view, setView] = useState('preview');
     const [bg, setBg] = useState(variant.fullBleed ? 'plain' : 'dots');
     const [replayKey, setReplayKey] = useState(0);
@@ -101,6 +102,7 @@ function Stage({ variant, variants, activeVariant, onVariant }) {
                             </button>
                         </>
                     )}
+                    <PromptButton title={title} description={description} variant={variant} />
                     <Segmented
                         value={view}
                         onChange={setView}
@@ -284,7 +286,7 @@ export default function ComponentDoc({ title, description, variants, extraToc = 
                             <span className="font-medium text-[var(--ink)]">{variant.name}.</span> {variant.description}
                         </p>
                     )}
-                    <Stage variant={variant} variants={multi ? list : null} activeVariant={active} onVariant={setActive} />
+                    <Stage title={title} description={description} variant={variant} variants={multi ? list : null} activeVariant={active} onVariant={setActive} />
                 </section>
 
                 {variant.controls && (

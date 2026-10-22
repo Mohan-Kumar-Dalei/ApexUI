@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { Github, Instagram, Twitter } from 'lucide-react';
 import ComponentDoc from '../../docs/ComponentDoc.jsx';
-import ColorControl, { ControlGrid, RangeControl, SelectControl, ToggleControl } from '../../docs/controls.jsx';
+import ColorControl, { ControlGrid, RangeControl, ToggleControl } from '../../docs/controls.jsx';
 import MagneticCursor from '../../../components/MainUI/ApexUI-Kit/MagneticCursor/MagneticCursor.jsx';
 
 const props = [
@@ -11,7 +11,6 @@ const props = [
     { prop: 'padding', type: 'number', def: '6', desc: 'Space between a hovered element and the ring, in px.' },
     { prop: 'magnetStrength', type: 'number', def: '0.35', desc: 'How far data-magnetic elements follow the pointer (0–1).' },
     { prop: 'blend', type: 'boolean', def: 'false', desc: 'Use mix-blend-mode: difference for the ring.' },
-    { prop: 'trail', type: "'none' | 'comet' | 'dots' | 'sparkles' | 'ghost'", def: '"none"', desc: 'A tail that follows the cursor.' },
     { prop: 'className', type: 'string', def: '""', desc: 'Extra classes for the wrapper.' },
     { prop: 'data-cursor-text', type: 'attribute', def: '—', desc: 'Put on any child to show a labelled bubble, e.g. "View".' },
     { prop: 'data-magnetic', type: 'attribute', def: '—', desc: 'Put on any child to make it lean toward the pointer.' },
@@ -30,12 +29,11 @@ export default function MagneticCursorDoc() {
     const [ringSize, setRingSize] = useState(2.25);
     const [magnet, setMagnet] = useState(0.35);
     const [blend, setBlend] = useState(false);
-    const [trail, setTrail] = useState('comet');
 
     const code = `import MagneticCursor from './ApexUI-Kit/MagneticCursor/MagneticCursor.jsx';
 
 const App = () => (
-  <MagneticCursor color="${color}" trail="${trail}" ringSize={${ringSize}} magnetStrength={${magnet}}${blend ? ' blend' : ''}>
+  <MagneticCursor color="${color}" ringSize={${ringSize}} magnetStrength={${magnet}}${blend ? ' blend' : ''}>
     <nav>
       <a href="#">Work</a>
       <a href="#">About</a>
@@ -50,9 +48,9 @@ export default App;`;
     return (
         <ComponentDoc
             title="Magnetic Cursor"
-            description="A dot-and-ring cursor with a following tail (comet, dots, sparkles or ghost rings) — it wraps links and buttons, grows into a labelled bubble over images and pulls magnetic elements toward the pointer."
+            description="A dot-and-ring cursor that wraps links and buttons, grows into a labelled bubble over images and pulls magnetic elements toward the pointer."
             preview={
-                <MagneticCursor color={color} trail={trail} ringSize={ringSize} magnetStrength={magnet} blend={blend} className="w-full max-w-xl rounded-2xl">
+                <MagneticCursor color={color} ringSize={ringSize} magnetStrength={magnet} blend={blend} className="w-full max-w-xl rounded-2xl">
                     <div className="flex flex-col gap-6 rounded-2xl border border-[var(--line)] bg-[var(--panel)] p-6">
                         <nav className="flex items-center justify-between">
                             <span className="font-display text-lg font-semibold">studio.</span>
@@ -81,7 +79,6 @@ export default App;`;
             }
             controls={
                 <ControlGrid>
-                    <SelectControl label="Trail" value={trail} onChange={setTrail} options={[{ value: 'none', label: 'None' }, { value: 'comet', label: 'Comet' }, { value: 'dots', label: 'Dots' }, { value: 'sparkles', label: 'Sparkles' }, { value: 'ghost', label: 'Ghost rings' }]} />
                     <ColorControl label="Color" value={color} onChange={setColor} />
                     <RangeControl label="Ring size" value={ringSize} onChange={setRingSize} min={1.25} max={4} step={0.25} format={(v) => `${v}rem`} />
                     <RangeControl label="Magnet" value={magnet} onChange={setMagnet} min={0} max={0.8} step={0.05} format={(v) => v.toFixed(2)} />
