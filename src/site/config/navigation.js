@@ -833,7 +833,7 @@ export const componentPages = [
         path: '/components/gooey-nav',
         load: () => import('../content/components/GooeyNavDoc.jsx'),
         category: 'Navigation',
-        image: shot('gooey-nav-v2.png'),
+        image: shot('gooey-nav-v3.png'),
         summary: 'A liquid active pill that bursts droplets between links.',
         isNew: true,
     },
