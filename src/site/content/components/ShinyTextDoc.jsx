@@ -24,14 +24,16 @@ const dependencies = [
 
 export default function ShinyTextDoc() {
     const [speed, setSpeed] = useState(2.8);
-    const [shine, setShine] = useState('#ffffff');
     const theme = useSiteTheme();
+    const [picked, setShine] = useState(null);
+    // Until a color is picked, the shine follows the site theme.
+    const shine = picked ?? (theme === 'light' ? '#18181b' : '#ffffff');
     return (
         <ComponentDoc
             title="Shiny Text"
             description="A bright band of light sweeps across the text on a loop, like light catching metal, great for badges, waitlist lines and subtle headings."
             preview={
-                <ShinyText text="✨ Shipping soon, join the waitlist" speed={speed} shineColor={theme === 'light' ? '#18181b' : shine} color={theme === 'light' ? '#a1a1aa' : '#71717a'} className="text-3xl font-semibold tracking-tight sm:text-4xl" />
+                <ShinyText text="✨ Shipping soon, join the waitlist" speed={speed} shineColor={shine} color={theme === 'light' ? '#a1a1aa' : '#71717a'} className="text-3xl font-semibold tracking-tight sm:text-4xl" />
             }
             controls={
                 <ControlGrid>

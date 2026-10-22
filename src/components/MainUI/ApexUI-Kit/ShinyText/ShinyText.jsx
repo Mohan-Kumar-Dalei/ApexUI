@@ -17,6 +17,8 @@ const ShinyText = ({ text = "Shipping soon, join the waitlist", as = "span", spe
     const band = Math.min(16, Math.max(4, spread));
     return (
         <Tag
+            // A new key restarts the loop, so speed / pause changes apply right away.
+            key={`${speed}-${pause}-${still}`}
             className={`inline-block bg-clip-text text-transparent ${className}`}
             style={{
                 backgroundImage: `linear-gradient(100deg, ${color} ${50 - band}%, ${shineColor} 50%, ${color} ${50 + band}%)`,
