@@ -11,7 +11,7 @@ const props = [
     { prop: 'defaultCollapsed', type: 'boolean', def: 'false', desc: 'Start as the icon rail.' },
     { prop: 'accentColor', type: 'string', def: '"#a3e635"', desc: 'Active marker, icon, badge and logo color.' },
     { prop: 'theme', type: "'dark' | 'light'", def: '"dark"', desc: 'Panel colors.' },
-    { prop: 'onSelect', type: '(item) => void', def: '—', desc: 'Called when an item is chosen.' },
+    { prop: 'onSelect', type: '(item) => void', def: 'none', desc: 'Called when an item is chosen.' },
     { prop: 'className', type: 'string', def: '""', desc: 'Extra classes for the sidebar.' },
 ];
 
@@ -61,7 +61,7 @@ export default App;`;
     return (
         <ComponentDoc
             title="Sidebar Nav"
-            description="An app sidebar that collapses to an icon rail — a sliding active pill, opening groups, badges, rail tooltips and a profile footer."
+            description="An app sidebar that collapses to an icon rail, a sliding active pill, opening groups, badges, rail tooltips and a profile footer."
             preview={
                 <div className={`flex h-[30rem] w-full max-w-3xl overflow-visible rounded-2xl border ${dark ? 'border-white/10 bg-neutral-900' : 'border-black/10 bg-neutral-50'}`}>
                     <SidebarNav key={`${theme}-${collapsed}`} theme={theme} accentColor={accent} defaultCollapsed={collapsed} onSelect={(item) => setCurrent(item.label)} className="rounded-l-2xl" />

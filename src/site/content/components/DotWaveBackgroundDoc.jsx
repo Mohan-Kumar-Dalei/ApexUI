@@ -5,7 +5,7 @@ import ColorControl, { ControlGrid, RangeControl, ToggleControl } from '../../do
 import DotWaveBackground from '../../../components/MainUI/ApexUI-Kit/DotWaveBackground/DotWaveBackground.jsx';
 
 const props = [
-    { prop: 'children', type: 'ReactNode', def: '—', desc: 'Content rendered above the dots.' },
+    { prop: 'children', type: 'ReactNode', def: 'none', desc: 'Content rendered above the dots.' },
     { prop: 'colors', type: '[string, string]', def: '["#38bdf8", "#a78bfa"]', desc: 'Wave highlight colors, blended left to right (hex).' },
     { prop: 'dotColor', type: 'string', def: '"#ffffff"', desc: 'Color of the resting dots (hex).' },
     { prop: 'background', type: 'string', def: '"#09090b"', desc: 'Background behind the dots.' },
@@ -50,7 +50,7 @@ export default App;`;
     return (
         <ComponentDoc
             title="Dot Wave Background"
-            description="A calm grid of dots with a wave of color rolling through it — dots near the pointer swell, glow and lean away."
+            description="A calm grid of dots with a wave of color rolling through it, dots near the pointer swell, glow and lean away."
             preview={
                 <BackgroundDemo title="Dot Wave Background">
                     <DotWaveBackground

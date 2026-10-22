@@ -7,7 +7,7 @@ const props = [
     { prop: 'value', type: 'number', def: '0', desc: 'The number to show. Change it and the digits roll to the new value.' },
     { prop: 'locale', type: 'string', def: '"en-US"', desc: 'Locale for separators and currency format.' },
     { prop: 'decimals', type: 'number', def: '0', desc: 'Digits after the decimal point.' },
-    { prop: 'currency', type: 'string', def: '—', desc: 'ISO currency code (e.g. "USD", "INR") to format as money.' },
+    { prop: 'currency', type: 'string', def: 'none', desc: 'ISO currency code (e.g. "USD", "INR") to format as money.' },
     { prop: 'prefix', type: 'string', def: '""', desc: 'Text before the number.' },
     { prop: 'suffix', type: 'string', def: '""', desc: 'Text after the number (e.g. "+", "%").' },
     { prop: 'fontSize', type: 'number', def: '4', desc: 'Font size, in rem.' },
@@ -66,7 +66,7 @@ export default App;`;
     return (
         <ComponentDoc
             title="Rolling Counter"
-            description="An odometer-style number — every digit is a wheel that rolls to its new value and carries into the next, with locale, currency and decimals built in."
+            description="An odometer-style number, every digit is a wheel that rolls to its new value and carries into the next, with locale, currency and decimals built in."
             preview={
                 <div className="flex w-full flex-col items-center gap-7">
                     <RollingCounter value={value} decimals={decimals} fontSize={size} color={color} {...f} />

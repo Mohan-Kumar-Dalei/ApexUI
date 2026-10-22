@@ -13,10 +13,10 @@ const PRESETS = {
 };
 
 const props = [
-    { prop: 'children', type: 'ReactNode', def: '—', desc: 'Content rendered above the gradient.' },
+    { prop: 'children', type: 'ReactNode', def: 'none', desc: 'Content rendered above the gradient.' },
     { prop: 'colors', type: '[string, string, string, string]', def: 'dusk palette', desc: 'Four hex colors, from the deepest base to the brightest highlight.' },
     { prop: 'speed', type: 'number', def: '1', desc: 'Flow speed multiplier.' },
-    { prop: 'scale', type: 'number', def: '1.6', desc: 'Size of the folds — higher means smaller, busier shapes.' },
+    { prop: 'scale', type: 'number', def: '1.6', desc: 'Size of the folds, higher means smaller, busier shapes.' },
     { prop: 'grain', type: 'number', def: '0.06', desc: 'Film grain amount (0 turns it off).' },
     { prop: 'mouseInteractive', type: 'boolean', def: 'true', desc: 'Colors lean toward the pointer.' },
     { prop: 'quality', type: 'number', def: '1', desc: 'Render resolution scale (0.5 halves the pixels for weaker devices).' },
@@ -26,7 +26,7 @@ const props = [
 
 const dependencies = [
     { name: 'React', desc: 'A JavaScript library for building user interfaces.' },
-    { name: 'OGL', desc: 'A tiny WebGL library (~25 kB) — one triangle, one shader.' },
+    { name: 'OGL', desc: 'A tiny WebGL library (~25 kB), one triangle, one shader.' },
     { name: 'Tailwind CSS', desc: 'A utility-first CSS framework.' },
 ];
 
@@ -56,7 +56,7 @@ export default App;`;
     return (
         <ComponentDoc
             title="Liquid Gradient"
-            description="A slow, flowing four-color mesh gradient with film grain, drawn by a single lightweight OGL shader — it leans toward the pointer and pauses off screen."
+            description="A slow, flowing four-color mesh gradient with film grain, drawn by a single lightweight OGL shader, it leans toward the pointer and pauses off screen."
             preview={
                 <BackgroundDemo title="Liquid Gradient">
                     <LiquidGradient containerClassName="!h-full" colors={colors} speed={speed} scale={scale} grain={grain} mouseInteractive={mouse} />

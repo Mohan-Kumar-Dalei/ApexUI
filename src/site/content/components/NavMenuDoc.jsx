@@ -38,7 +38,7 @@ export default App;`;
     return (
         <ComponentDoc
             title="Nav Menu"
-            description="Navigation with an animated active indicator — perfect for dashboards and landing pages."
+            description="Navigation with an animated active indicator, perfect for dashboards and landing pages."
             preview={
                 <NavMenu
                     indicatorColor={indicatorColor}

@@ -5,10 +5,10 @@ import AnimatedSwitch from '../../../components/MainUI/ApexUI-Kit/AnimatedSwitch
 
 const props = [
     { prop: 'variant', type: "'classic' | 'icon' | 'daynight' | 'neon'", def: '"classic"', desc: 'Switch style.' },
-    { prop: 'checked', type: 'boolean', def: '—', desc: 'Controlled value (pair it with onChange).' },
+    { prop: 'checked', type: 'boolean', def: 'none', desc: 'Controlled value (pair it with onChange).' },
     { prop: 'defaultChecked', type: 'boolean', def: 'false', desc: 'Starting value when uncontrolled.' },
-    { prop: 'onChange', type: '(checked) => void', def: '—', desc: 'Called with the new value.' },
-    { prop: 'label', type: 'string', def: '—', desc: 'Text next to the switch.' },
+    { prop: 'onChange', type: '(checked) => void', def: 'none', desc: 'Called with the new value.' },
+    { prop: 'label', type: 'string', def: 'none', desc: 'Text next to the switch.' },
     { prop: 'accentColor', type: 'string', def: '"#a3e635"', desc: 'On color (classic, icon, neon).' },
     { prop: 'size', type: 'number', def: '1', desc: 'Size multiplier.' },
     { prop: 'disabled', type: 'boolean', def: 'false', desc: 'Disable the switch.' },
@@ -50,7 +50,7 @@ export default App;`;
     return (
         <ComponentDoc
             title="Animated Switches"
-            description="Toggles with personality — a classic pill whose knob stretches as it moves, icon knobs, a day-to-night sky and a glowing neon track."
+            description="Toggles with personality, a classic pill whose knob stretches as it moves, icon knobs, a day-to-night sky and a glowing neon track."
             preview={
                 <div className="grid gap-6 text-[var(--ink)] sm:grid-cols-2">
                     {DEMOS.map((d, i) => (

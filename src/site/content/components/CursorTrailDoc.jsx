@@ -9,7 +9,7 @@ const props = [
     { prop: 'size', type: 'number', def: '1', desc: 'Thickness multiplier.' },
     { prop: 'length', type: 'number', def: '1', desc: 'Tail length multiplier.' },
     { prop: 'global', type: 'boolean', def: 'false', desc: 'Follow the mouse across the whole page instead of one area.' },
-    { prop: 'children', type: 'ReactNode', def: '—', desc: 'The area the tail lives in (when not global).' },
+    { prop: 'children', type: 'ReactNode', def: 'none', desc: 'The area the tail lives in (when not global).' },
     { prop: 'className', type: 'string', def: '""', desc: 'Classes for the wrapper.' },
 ];
 
@@ -81,7 +81,7 @@ export default App;`,
     return (
         <ComponentDoc
             title="Cursor Trail"
-            description="A tail that follows the mouse — comet, rainbow, dots, ribbon, sparkles or ghost rings — around one area or across the whole page."
+            description="A tail that follows the mouse, comet, rainbow, dots, ribbon, sparkles or ghost rings, around one area or across the whole page."
             variants={variants}
         />
     );

@@ -72,7 +72,7 @@ const props = [
     { prop: 'duration', type: 'string', def: "'1.5s'", desc: 'Duration of the reveal animation.' },
     { prop: 'ease', type: 'string', def: "'var(--vt-ease)'", desc: 'Easing of the reveal animation.' },
     { prop: 'className', type: 'string', def: "''", desc: 'Classes for the toggle button.' },
-    { prop: 'onApplied', type: '(theme) => void', def: '—', desc: 'Called after a theme has been applied.' },
+    { prop: 'onApplied', type: '(theme) => void', def: 'none', desc: 'Called after a theme has been applied.' },
 ];
 
 const dependencies = [
@@ -84,7 +84,7 @@ export default function ThemeToggleDoc() {
     return (
         <ComponentDoc
             title="Theme Toggle"
-            description="A light/dark switch with view-transition reveal animations — including custom GIF reveals. Try them: each one switches this site's theme."
+            description="A light/dark switch with view-transition reveal animations, including custom GIF reveals. Try them: each one switches this site's theme."
             preview={
                 <div className="flex flex-wrap items-center justify-center gap-3">
                     {toggles.map((t, i) => (

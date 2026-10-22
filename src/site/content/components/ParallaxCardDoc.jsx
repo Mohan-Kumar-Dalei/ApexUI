@@ -37,10 +37,10 @@ export default App;`;
 
 const props = [
     { prop: 'cardData', type: 'array', def: '[]', desc: 'Cards to render. Each item has title, subtitle, imageUrl, description and link.' },
-    { prop: 'tiltEnable', type: 'boolean', def: '—', desc: 'Enables the 3D tilt on hover.' },
-    { prop: 'glareEnable', type: 'boolean', def: '—', desc: 'Enables the glare highlight on hover.' },
-    { prop: 'perspective', type: 'number', def: '—', desc: 'CSS perspective used for the tilt, in px.' },
-    { prop: 'scale', type: 'number', def: '—', desc: 'Scale applied while hovering.' },
+    { prop: 'tiltEnable', type: 'boolean', def: 'none', desc: 'Enables the 3D tilt on hover.' },
+    { prop: 'glareEnable', type: 'boolean', def: 'none', desc: 'Enables the glare highlight on hover.' },
+    { prop: 'perspective', type: 'number', def: 'none', desc: 'CSS perspective used for the tilt, in px.' },
+    { prop: 'scale', type: 'number', def: 'none', desc: 'Scale applied while hovering.' },
 ];
 
 const dependencies = [

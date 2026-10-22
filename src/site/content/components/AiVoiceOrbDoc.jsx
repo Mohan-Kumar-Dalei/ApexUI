@@ -4,8 +4,8 @@ import { ControlGrid, SelectControl } from '../../docs/controls.jsx';
 import AiVoiceOrb from '../../../components/MainUI/ApexUI-Kit/AiVoiceOrb/AiVoiceOrb.jsx';
 
 const props = [
-    { prop: 'state', type: "'idle' | 'listening' | 'thinking' | 'speaking'", def: '—', desc: 'Control the state yourself; leave it out and a tap cycles through them.' },
-    { prop: 'onStateChange', type: '(state) => void', def: '—', desc: 'Called when the orb is tapped.' },
+    { prop: 'state', type: "'idle' | 'listening' | 'thinking' | 'speaking'", def: 'none', desc: 'Control the state yourself; leave it out and a tap cycles through them.' },
+    { prop: 'onStateChange', type: '(state) => void', def: 'none', desc: 'Called when the orb is tapped.' },
     { prop: 'colors', type: 'string[]', def: 'lime / cyan / violet / pink', desc: 'Colors swirling inside the orb.' },
     { prop: 'size', type: 'number', def: '12', desc: 'Orb size in rem.' },
     { prop: 'showLabel', type: 'boolean', def: 'true', desc: 'Show the state under the orb.' },
@@ -31,7 +31,7 @@ export default function AiVoiceOrbDoc() {
     return (
         <ComponentDoc
             title="AI Voice Orb"
-            description="The face of a voice assistant — colour blobs swirl inside a glass sphere that breathes when idle, pulses while listening, spins while thinking and ripples while speaking."
+            description="The face of a voice assistant, colour blobs swirl inside a glass sphere that breathes when idle, pulses while listening, spins while thinking and ripples while speaking."
             preview={
                 <div className="text-[var(--ink)]">
                     <AiVoiceOrb key={state} state={state === 'auto' ? undefined : state} colors={PALETTES[palette]} />

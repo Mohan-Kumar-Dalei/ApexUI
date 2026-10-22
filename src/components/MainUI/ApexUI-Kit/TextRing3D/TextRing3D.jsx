@@ -38,6 +38,8 @@ const TextRing3D = ({ text = "APEX UI · 3D TYPE · ", radius = 9, speed = 30, t
             className={`grid cursor-grab touch-none select-none place-items-center active:cursor-grabbing [perspective:900px] ${className}`}
             style={{ width: `${radius * 2.4}rem`, maxWidth: "100%", height: `${fontSize * 3.2 + 4}rem`, color }}
             onPointerDown={(e) => {
+                // Block text selection / native drag, which cancel the drag midway.
+                e.preventDefault();
                 e.currentTarget.setPointerCapture(e.pointerId);
                 drag.current = { x: e.clientX, a: angle.current, t: performance.now() };
             }}

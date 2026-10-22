@@ -110,7 +110,7 @@ export default function CarouselDoc() {
     return (
         <ComponentDoc
             title="Carousel"
-            description="Three carousel styles — classic, parallax and draggable — for showcasing images or content."
+            description="Three carousel styles, classic, parallax and draggable, for showcasing images or content."
             variants={variants}
             wide
         />

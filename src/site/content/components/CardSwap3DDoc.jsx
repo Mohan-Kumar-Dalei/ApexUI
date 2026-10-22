@@ -54,7 +54,7 @@ const App = () => (
       cards={[
         { title: "Smooth", body: "Springs tuned to feel natural." },
         { title: "Composable", body: "Style it with Tailwind." },
-        { title: "Fast", body: "Transforms only — 60fps." },
+        { title: "Fast", body: "Transforms only, 60fps." },
       ]}
     />
   </div>

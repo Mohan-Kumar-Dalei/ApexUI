@@ -10,7 +10,7 @@ const props = [
     { prop: 'variant', type: "'pill' | 'underline' | 'segmented'", def: '"pill"', desc: 'Indicator style.' },
     { prop: 'accentColor', type: 'string', def: '"#a3e635"', desc: 'Pill / underline color.' },
     { prop: 'theme', type: "'dark' | 'light'", def: '"dark"', desc: 'Text and surface colors.' },
-    { prop: 'onChange', type: '(id) => void', def: '—', desc: 'Called when the tab changes.' },
+    { prop: 'onChange', type: '(id) => void', def: 'none', desc: 'Called when the tab changes.' },
     { prop: 'className', type: 'string', def: '""', desc: 'Extra classes.' },
 ];
 
@@ -40,7 +40,7 @@ export default App;`;
     return (
         <ComponentDoc
             title="Animated Tabs"
-            description="Tabs with a sliding indicator — pill, underline or segmented — and panels that slide in from the side you moved toward. Keyboard friendly."
+            description="Tabs with a sliding indicator, pill, underline or segmented, and panels that slide in from the side you moved toward. Keyboard friendly."
             preview={<AnimatedTabs key={variant} variant={variant} accentColor={accent} theme={theme} />}
             controls={
                 <ControlGrid>

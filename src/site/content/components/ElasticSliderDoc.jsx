@@ -11,7 +11,7 @@ const props = [
     { prop: 'leftIcon', type: "ReactNode", def: "Volume1", desc: "Icon at the start." },
     { prop: 'rightIcon', type: "ReactNode", def: "Volume2", desc: "Icon at the end." },
     { prop: 'accentColor', type: "string", def: "\"#a3e635\"", desc: "Filled track color." },
-    { prop: 'onChange', type: "(value) => void", def: "—", desc: "Called as the value changes." },
+    { prop: 'onChange', type: "(value) => void", def: "none", desc: "Called as the value changes." },
     { prop: 'showValue', type: "boolean", def: "true", desc: "Show the value below." },
     { prop: 'className', type: "string", def: "\"\"", desc: "Extra classes." },
 ];

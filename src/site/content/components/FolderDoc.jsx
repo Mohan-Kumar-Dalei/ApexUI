@@ -23,7 +23,7 @@ export default function FolderDoc() {
     return (
         <ComponentDoc
             title="Folder"
-            description="A little folder that opens on click — the front flap tilts down and up to three papers fan out, each leaning toward the pointer. Click again to tuck them back in."
+            description="A little folder that opens on click, the front flap tilts down and up to three papers fan out, each leaning toward the pointer. Click again to tuck them back in."
             preview={
                 <Folder color={color} size={size} className="pt-20 text-[var(--ink)]" />
             }

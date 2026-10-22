@@ -69,7 +69,7 @@ export default function MaskViewDoc() {
     return (
         <ComponentDoc
             title="Mask View"
-            description="Reveal content through a mask — letters as a window onto an image, a spotlight in the dark, or steamed-up glass you wipe clear."
+            description="Reveal content through a mask, letters as a window onto an image, a spotlight in the dark, or steamed-up glass you wipe clear."
             variants={variants}
         />
     );

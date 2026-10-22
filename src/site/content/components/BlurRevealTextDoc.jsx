@@ -53,7 +53,7 @@ export default App;`;
             preview={
                 <div className="max-w-2xl text-center">
                     <BlurRevealText key={key} as="h2" by={by} stagger={stagger} blur={blur} accentColor={accent} highlight={['moves', 'minutes.']} once={false} className="text-[clamp(2rem,5.5vw,3.75rem)] font-bold leading-[1.08] tracking-tight" />
-                    <BlurRevealText key={`sub-${key}`} by="word" stagger={0.025} blur={6} once={false} text="Copy-paste animated components for React and Tailwind CSS — free, fast and accessible." className="mx-auto mt-5 max-w-lg text-[1rem] text-[var(--ink-2)]" />
+                    <BlurRevealText key={`sub-${key}`} by="word" stagger={0.025} blur={6} once={false} text="Copy-paste animated components for React and Tailwind CSS, free, fast and accessible." className="mx-auto mt-5 max-w-lg text-[1rem] text-[var(--ink-2)]" />
                 </div>
             }
             controls={

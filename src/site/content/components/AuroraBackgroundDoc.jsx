@@ -12,7 +12,7 @@ const PALETTES = {
 };
 
 const props = [
-    { prop: 'children', type: 'ReactNode', def: '—', desc: 'Content above the aurora.' },
+    { prop: 'children', type: 'ReactNode', def: 'none', desc: 'Content above the aurora.' },
     { prop: 'colors', type: 'string[]', def: 'polar palette', desc: 'Colors of the light bands.' },
     { prop: 'theme', type: "'dark' | 'light'", def: '"dark"', desc: 'Night sky or a light page.' },
     { prop: 'speed', type: 'number', def: '1', desc: 'Drift speed multiplier.' },
@@ -23,7 +23,7 @@ const props = [
 
 const dependencies = [
     { name: 'React', desc: 'A JavaScript library for building user interfaces.' },
-    { name: 'CSS only', desc: 'Blurred, masked gradients with a keyframe drift — no canvas or WebGL.' },
+    { name: 'CSS only', desc: 'Blurred, masked gradients with a keyframe drift, no canvas or WebGL.' },
     { name: 'Tailwind CSS', desc: 'A utility-first CSS framework.' },
 ];
 
@@ -46,7 +46,7 @@ export default App;`;
     return (
         <ComponentDoc
             title="Aurora Background"
-            description="Soft northern-light bands that drift and shimmer, made only of blurred CSS gradients — tiny, smooth and friendly to light and dark pages."
+            description="Soft northern-light bands that drift and shimmer, made only of blurred CSS gradients, tiny, smooth and friendly to light and dark pages."
             preview={
                 <BackgroundDemo title="Aurora Background">
                     <AuroraBackground containerClassName="!h-full" colors={colors} speed={speed} intensity={intensity} />

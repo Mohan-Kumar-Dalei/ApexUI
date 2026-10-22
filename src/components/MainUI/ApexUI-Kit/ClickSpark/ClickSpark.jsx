@@ -16,15 +16,17 @@ const ClickSpark = ({ sparkColor = "#a3e635", sparkCount = 10, sparkRadius = 26,
 
     useEffect(() => {
         const c = canvas.current;
+        // Hold the element itself: the ref is cleared on unmount before cleanup runs.
+        const el = wrap.current;
         const resize = () => {
-            const r = wrap.current.getBoundingClientRect();
+            const r = el.getBoundingClientRect();
             const dpr = Math.min(window.devicePixelRatio || 1, 2);
             c.width = r.width * dpr;
             c.height = r.height * dpr;
             c.getContext("2d").setTransform(dpr, 0, 0, dpr, 0, 0);
         };
         const ro = new ResizeObserver(resize);
-        ro.observe(wrap.current);
+        ro.observe(el);
         resize();
         return () => {
             ro.disconnect();

@@ -45,6 +45,9 @@ const ImageCompare = ({
         <div
             ref={ref}
             onPointerDown={(e) => {
+                // Block text selection / native drag, which cancel the drag midway.
+                e.preventDefault();
+                e.currentTarget.focus?.({ preventScroll: true });
                 e.currentTarget.setPointerCapture(e.pointerId);
                 setHeld(true);
                 fromPointer(e);
@@ -81,8 +84,8 @@ const ImageCompare = ({
                     aria-valuenow={Math.round(pos)}
                     aria-orientation={vertical ? "vertical" : "horizontal"}
                     onKeyDown={onKeyDown}
-                    className={`pointer-events-auto absolute left-1/2 top-1/2 grid h-10 w-10 -translate-x-1/2 -translate-y-1/2 place-items-center rounded-full text-black shadow-[0_6px_20px_-4px_rgba(0,0,0,0.6)] outline-none transition-transform duration-200 focus-visible:ring-4 focus-visible:ring-white/50 ${held ? "scale-110" : "group-hover:scale-105"}`}
-                    style={{ background: accentColor }}
+                    className={`pointer-events-auto absolute left-1/2 top-1/2 grid h-10 w-10 -translate-x-1/2 -translate-y-1/2 place-items-center rounded-full bg-white text-neutral-800 shadow-[0_6px_20px_-4px_rgba(0,0,0,0.55)] outline-none transition-transform duration-200 focus-visible:ring-4 focus-visible:ring-white/50 ${held ? "scale-110" : "group-hover:scale-105"}`}
+                    style={{ boxShadow: `0 0 0 2px ${accentColor}, 0 6px 20px -4px rgba(0,0,0,0.55)` }}
                 >
                     <ChevronsLeftRight className={`h-5 w-5 ${vertical ? "rotate-90" : ""}`} />
                 </button>

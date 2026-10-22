@@ -26,7 +26,7 @@ export default function RotatingTextDoc() {
     return (
         <ComponentDoc
             title="Rotating Text"
-            description="A headline whose last word swaps on a timer — letters spring up one by one while the highlight pill resizes to fit."
+            description="A headline whose last word swaps on a timer, letters spring up one by one while the highlight pill resizes to fit."
             preview={
                 <RotatingText from={from} accentColor={accent} className="text-4xl text-[var(--ink)] sm:text-5xl" />
             }

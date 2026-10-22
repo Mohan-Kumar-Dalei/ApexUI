@@ -26,7 +26,7 @@ export default function HoloCardDoc() {
     return (
         <ComponentDoc
             title="Holo Card"
-            description="A collectible-style card that tilts in 3D — a rainbow foil and glare follow the light, and the title and badges float above the art."
+            description="A collectible-style card that tilts in 3D, a rainbow foil and glare follow the light, and the title and badges float above the art."
             preview={<HoloCard maxTilt={tilt} accentColor={accent} />}
             controls={
                 <ControlGrid>

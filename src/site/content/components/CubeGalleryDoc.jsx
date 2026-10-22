@@ -8,7 +8,7 @@ const props = [
     { prop: 'size', type: 'number', def: '13', desc: 'Cube edge in rem (shrinks to fit small screens).' },
     { prop: 'autoRotate', type: 'boolean', def: 'true', desc: 'Spin slowly on its own (pauses on hover).' },
     { prop: 'speed', type: 'number', def: '12', desc: 'Auto spin speed in degrees per second.' },
-    { prop: 'tilt', type: 'number', def: '-24', desc: 'Camera tilt in degrees — negative looks down on the top face.' },
+    { prop: 'tilt', type: 'number', def: '-24', desc: 'Camera tilt in degrees, negative looks down on the top face.' },
     { prop: 'accentColor', type: 'string', def: '"#a3e635"', desc: 'Active dot color.' },
     { prop: 'className', type: 'string', def: '""', desc: 'Extra classes.' },
 ];

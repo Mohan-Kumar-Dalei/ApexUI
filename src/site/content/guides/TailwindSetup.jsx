@@ -46,7 +46,7 @@ export default function TailwindSetup() {
             toc={stepsToc(steps)}
         >
             <GuideSteps steps={steps} />
-            <Callout>All set! You can now use Tailwind’s utility classes — and add ApexUI components with the CLI.</Callout>
+            <Callout>All set! You can now use Tailwind’s utility classes, and add ApexUI components with the CLI.</Callout>
         </DocShell>
     );
 }

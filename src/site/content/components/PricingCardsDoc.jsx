@@ -10,7 +10,7 @@ const props = [
     { prop: 'yearlyNote', type: 'string', def: '"Save 20%"', desc: 'Badge next to the billing switch.' },
     { prop: 'accentColor', type: 'string', def: '"#a3e635"', desc: 'Switch, featured plan and checkmarks.' },
     { prop: 'theme', type: "'dark' | 'light'", def: '"dark"', desc: 'Card colors.' },
-    { prop: 'onSelect', type: "(plan, period) => void", def: '—', desc: 'Called when a plan button is clicked.' },
+    { prop: 'onSelect', type: "(plan, period) => void", def: 'none', desc: 'Called when a plan button is clicked.' },
     { prop: 'className', type: 'string', def: '""', desc: 'Extra classes.' },
 ];
 
@@ -40,7 +40,7 @@ export default App;`;
     return (
         <ComponentDoc
             title="Pricing Cards"
-            description="Plans side by side with a monthly / yearly switch — prices slide to their new value, the featured plan glows and every card lifts on hover."
+            description="Plans side by side with a monthly / yearly switch, prices slide to their new value, the featured plan glows and every card lifts on hover."
             preview={<PricingCards accentColor={accent} theme={theme} currency={currency} className="max-w-4xl py-4" />}
             controls={
                 <ControlGrid>

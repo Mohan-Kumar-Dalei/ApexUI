@@ -13,7 +13,7 @@ const IK = "https://ik.imagekit.io/ny6yinyut/apexui/assets";
 const DEFAULT_PAGES = [
     { title: "ApexUI", body: "A field guide to motion", cover: true },
     { title: "Chapter 1", body: "Start small. One spring, one easing, one idea per interaction." },
-    { title: "Chapter 2", body: "Motion should explain — where things come from and where they go.", image: `${IK}/spiderman.png?tr=f-auto,q-80,w-500` },
+    { title: "Chapter 2", body: "Motion should explain, where things come from and where they go.", image: `${IK}/spiderman.png?tr=f-auto,q-80,w-500` },
     { title: "Chapter 3", body: "Keep it fast. Animate transform and opacity, never layout." },
     { title: "Chapter 4", body: "Respect reduced motion. Calm is a feature too.", image: `${IK}/doctorStrange.png?tr=f-auto,q-80,w-500` },
     { title: "Chapter 5", body: "Details compound. Tiny shadows and easing make it feel real." },

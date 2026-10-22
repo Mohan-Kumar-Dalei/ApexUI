@@ -32,6 +32,8 @@ const ElasticSlider = ({
     const [hover, setHover] = useState(false);
     const track = useRef(null);
     const drag = useRef(false);
+    // Latest value, readable synchronously from pointer handlers (state lags a render).
+    const valueRef = useRef(clamp(defaultValue));
 
     const pct = useMotionValue(((clamp(defaultValue) - min) / (max - min)) * 100);
     const overflow = useMotionValue(0); // px past an end, negative = left
@@ -44,10 +46,11 @@ const ElasticSlider = ({
 
     const commit = (raw) => {
         const v = clamp(Math.round(raw / step) * step);
-        setValue((prev) => {
-            if (prev !== v) onChange?.(v);
-            return v;
-        });
+        if (v !== valueRef.current) {
+            valueRef.current = v;
+            setValue(v);
+            onChange?.(v);
+        }
         return v;
     };
 
@@ -66,7 +69,7 @@ const ElasticSlider = ({
         setDragging(false);
         animate(overflow, 0, { type: "spring", stiffness: 380, damping: 12 });
         // Snap the fill to the stepped value.
-        animate(pct, ((value - min) / (max - min)) * 100, { duration: 0.15 });
+        animate(pct, ((valueRef.current - min) / (max - min)) * 100, { duration: 0.12 });
     };
 
     // Keep the fill in sync for keyboard changes.
@@ -74,7 +77,7 @@ const ElasticSlider = ({
         if (!drag.current) animate(pct, ((value - min) / (max - min)) * 100, { type: "spring", stiffness: 500, damping: 40 });
     }, [value, min, max, pct]);
 
-    const nudge = (delta) => commit(value + delta);
+    const nudge = (delta) => commit(valueRef.current + delta);
     const big = Math.max(step, (max - min) / 10);
     const thick = dragging || hover;
 
@@ -98,7 +101,13 @@ const ElasticSlider = ({
                     onPointerLeave={() => setHover(false)}
                     onPointerDown={(e) => {
                         if (e.button !== 0) return;
+                        // No text selection / native drag: those fire pointercancel mid-drag.
+                        e.preventDefault();
+                        e.currentTarget.focus({ preventScroll: true });
                         e.currentTarget.setPointerCapture(e.pointerId);
+                        // Stop any spring still settling from the last drag.
+                        pct.stop();
+                        overflow.stop();
                         drag.current = true;
                         setDragging(true);
                         fromPointer(e.clientX);

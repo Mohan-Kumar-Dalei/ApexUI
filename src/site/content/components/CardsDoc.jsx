@@ -99,7 +99,7 @@ export default function CardsDoc() {
     return (
         <ComponentDoc
             title="Cards"
-            description="Content cards for profiles, products and features — from a simple basic card to an animated meteor card."
+            description="Content cards for profiles, products and features, from a simple basic card to an animated meteor card."
             variants={variants}
         />
     );

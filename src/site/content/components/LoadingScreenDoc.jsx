@@ -6,14 +6,14 @@ import useSiteTheme from '../../ui/useSiteTheme.js';
 
 const props = [
     { prop: 'variant', type: "'orbit' | 'progress' | 'blocks' | 'catch' | 'runner' | 'racer'", def: '"orbit"', desc: 'Loader style; catch, runner and racer are mini games to play while waiting.' },
-    { prop: 'progress', type: 'number', def: '—', desc: 'Real progress 0–100. Leave it out to run a simulated load.' },
+    { prop: 'progress', type: 'number', def: 'none', desc: 'Real progress 0 to 100. Leave it out to run a simulated load.' },
     { prop: 'duration', type: 'number', def: '6000', desc: 'Length of the simulated load, in ms.' },
     { prop: 'loop', type: 'boolean', def: 'true', desc: 'Restart the simulated load when it finishes.' },
     { prop: 'accentColor', type: 'string', def: '"#a3e635"', desc: 'Main color.' },
     { prop: 'theme', type: "'dark' | 'light'", def: '"dark"', desc: 'Background and text colors.' },
     { prop: 'title', type: 'string', def: '"Loading"', desc: 'Label under the loader (and for screen readers).' },
     { prop: 'fullScreen', type: 'boolean', def: 'false', desc: 'Cover the whole viewport (fixed) instead of filling the parent.' },
-    { prop: 'onComplete', type: '() => void', def: '—', desc: 'Called when progress reaches 100.' },
+    { prop: 'onComplete', type: '() => void', def: 'none', desc: 'Called when progress reaches 100.' },
     { prop: 'className', type: 'string', def: '""', desc: 'Extra classes.' },
 ];
 
@@ -24,7 +24,7 @@ const dependencies = [
 ];
 
 const VARIANTS = [
-    { id: 'orbit', name: 'Orbit', description: 'Dots orbit a breathing core around the percentage — a calm, animated loader.' },
+    { id: 'orbit', name: 'Orbit', description: 'Dots orbit a breathing core around the percentage, a calm, animated loader.' },
     { id: 'progress', name: 'Progress', description: 'A big counting percentage with a sliding bar and status lines that change as it loads.' },
     { id: 'blocks', name: 'Blocks', description: 'A grid of tiles fills in like a wave as the load moves along.' },
     { id: 'catch', name: 'Catch Game', description: 'A mini game while you wait: tap the orb before it fades to build a streak.' },
@@ -86,7 +86,7 @@ export default App;`,
     return (
         <ComponentDoc
             title="Loading Screens"
-            description="Six ways to wait — orbit, progress and blocks loaders, plus three mini games (catch the orb, endless runner, racing) so visitors stay busy until your app is ready."
+            description="Six ways to wait, orbit, progress and blocks loaders, plus three mini games (catch the orb, endless runner, racing) so visitors stay busy until your app is ready."
             variants={variants}
         />
     );

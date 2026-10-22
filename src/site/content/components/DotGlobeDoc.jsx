@@ -20,7 +20,7 @@ const props = [
 
 const dependencies = [
     { name: 'React', desc: 'A JavaScript library for building user interfaces.' },
-    { name: 'Canvas 2D', desc: 'No map library and no WebGL — the land data is a 2 kB built-in mask.' },
+    { name: 'Canvas 2D', desc: 'No map library and no WebGL, the land data is a 2 kB built-in mask.' },
 ];
 
 export default function DotGlobeDoc() {
@@ -54,7 +54,7 @@ export default App;`;
     return (
         <ComponentDoc
             title="Dot Globe"
-            description="A 3D globe of land dots on a plain canvas — drag to spin it with inertia, cities pulse and flights arc between them."
+            description="A 3D globe of land dots on a plain canvas, drag to spin it with inertia, cities pulse and flights arc between them."
             preview={
                 <div className="flex w-full justify-center rounded-2xl bg-neutral-950 p-4">
                     <DotGlobe markerColor={accent} arcColor={accent} glowColor={accent} autoRotateSpeed={speed} tilt={tilt} showLabels={labels} />

@@ -27,7 +27,7 @@ export default function Coverflow3DDoc() {
     return (
         <ComponentDoc
             title="Coverflow 3D"
-            description="The classic album-flip view — the centre cover faces you while the rest stand angled on either side and slide back in depth, each with a soft reflection. Drag, click or use the arrow keys."
+            description="The classic album-flip view, the centre cover faces you while the rest stand angled on either side and slide back in depth, each with a soft reflection. Drag, click or use the arrow keys."
             preview={
                 <Coverflow3D angle={angle} reflection={reflection} className="text-[var(--ink)]" />
             }

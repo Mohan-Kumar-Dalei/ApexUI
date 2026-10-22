@@ -28,7 +28,7 @@ export default function AiChatDoc() {
     return (
         <ComponentDoc
             title="AI Chat"
-            description="A compact AI chat window — replies stream in word by word behind a typing indicator, with suggestion chips and auto-scroll. Plug in any model with one onSend function."
+            description="A compact AI chat window, replies stream in word by word behind a typing indicator, with suggestion chips and auto-scroll. Plug in any model with one onSend function."
             preview={<AiChat key={theme} theme={theme} accentColor={accent} />}
             controls={
                 <ControlGrid>

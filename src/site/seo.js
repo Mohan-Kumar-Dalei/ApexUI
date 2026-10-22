@@ -65,7 +65,7 @@ export function seoForRoute(handle, pathname) {
             ? `${page.summary ?? `${page.name} guide.`} ApexUI docs.`
             : `${page.summary} Free animated React component for Tailwind CSS.`; // ≤ ~160 chars for search snippets
         return {
-            title: isGuide ? `${page.name} – ApexUI Docs` : `${page.name} – Animated React Component | ApexUI`,
+            title: isGuide ? `${page.name} | ApexUI Docs` : `${page.name} | Animated React Component | ApexUI`,
             description,
             path: page.path,
             image: page.ogImage,

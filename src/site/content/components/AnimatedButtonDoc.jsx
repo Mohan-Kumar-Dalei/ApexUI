@@ -21,14 +21,14 @@ const props = [
     { prop: 'children', type: 'ReactNode', def: '"Get started"', desc: 'Button label.' },
     { prop: 'color', type: 'string', def: '"#a3e635"', desc: 'Accent color; the label turns black or white to stay readable.' },
     { prop: 'size', type: "'sm' | 'md' | 'lg'", def: '"md"', desc: 'Button size.' },
-    { prop: 'onClick', type: '(event) => void | Promise', def: '—', desc: 'For "loading", return a promise and the button waits for it before showing the check.' },
+    { prop: 'onClick', type: '(event) => void | Promise', def: 'none', desc: 'For "loading", return a promise and the button waits for it before showing the check.' },
     { prop: 'disabled', type: 'boolean', def: 'false', desc: 'Disable the button.' },
     { prop: 'className', type: 'string', def: '""', desc: 'Extra classes.' },
-    { prop: '...rest', type: 'any', def: '—', desc: 'Other props (type, aria-*, …) go to the <button>.' },
+    { prop: '...rest', type: 'any', def: 'none', desc: 'Other props (type, aria-*, …) go to the <button>.' },
 ];
 
 const holdProps = [
-    { prop: 'onConfirm', type: "(input: 'pointer' | 'keyboard') => void", def: '—', desc: 'HoldToConfirm: called once the hold completes.' },
+    { prop: 'onConfirm', type: "(input: 'pointer' | 'keyboard') => void", def: 'none', desc: 'HoldToConfirm: called once the hold completes.' },
     { prop: 'children', type: 'ReactNode', def: '"Hold to confirm"', desc: 'HoldToConfirm: button content (icon + label).' },
     { prop: 'confirmedContent', type: 'ReactNode', def: '✓ Confirmed', desc: 'HoldToConfirm: shown after confirming.' },
     { prop: 'duration', type: 'number', def: '1600', desc: 'HoldToConfirm: how long to hold, in ms.' },
@@ -36,8 +36,8 @@ const holdProps = [
     { prop: 'disabled', type: 'boolean', def: 'false', desc: 'HoldToConfirm: disable (cancels a hold in progress).' },
     { prop: 'message', type: 'string', def: '"Project deleted"', desc: 'UndoNotice: what just happened.' },
     { prop: 'duration ', type: 'number', def: '5000', desc: 'UndoNotice: time to undo, in ms.' },
-    { prop: 'onUndo', type: "(input: 'pointer' | 'keyboard') => void", def: '—', desc: 'UndoNotice: called when Undo is pressed.' },
-    { prop: 'onExpire', type: '() => void', def: '—', desc: 'UndoNotice: called when the time runs out.' },
+    { prop: 'onUndo', type: "(input: 'pointer' | 'keyboard') => void", def: 'none', desc: 'UndoNotice: called when Undo is pressed.' },
+    { prop: 'onExpire', type: '() => void', def: 'none', desc: 'UndoNotice: called when the time runs out.' },
     { prop: 'className', type: 'string', def: '""', desc: 'Extra classes (both).' },
 ];
 
@@ -77,11 +77,11 @@ export default App;`;
     return (
         <ComponentDoc
             title="Animated Buttons"
-            description="Buttons with feel — shine, directional fill, border beam, 3D press, loading-to-success, ripple, sliding arrow, and a hold-to-confirm button for actions you don't want to trigger by accident."
+            description="Buttons with feel, shine, directional fill, border beam, 3D press, loading-to-success, ripple, sliding arrow, and a hold-to-confirm button for actions you don't want to trigger by accident."
             variants={[
                 {
                     name: 'Animated',
-                    description: "One button with seven feels — shine, directional fill, border beam, 3D press, loading-to-success, ripple and sliding arrow — each with hover and press states.",
+                    description: "One button with seven feels, shine, directional fill, border beam, 3D press, loading-to-success, ripple and sliding arrow, each with hover and press states.",
                     preview: (
                         <div className="grid w-full max-w-2xl grid-cols-[repeat(auto-fit,minmax(min(100%,11rem),1fr))] gap-x-4 gap-y-7">
                             {VARIANTS.map((v) => (
@@ -121,7 +121,7 @@ export default App;`;
                             {stage === 'undo' && <UndoNotice onExpire={closeNotice} onUndo={() => setStage('idle')} />}
                             {stage === 'closed' && (
                                 <button type="button" onClick={() => setStage('idle')} className="font-mono text-xs text-[var(--ink-3)] underline underline-offset-4">
-                                    deleted — reset demo
+                                    deleted, reset demo
                                 </button>
                             )}
                         </div>

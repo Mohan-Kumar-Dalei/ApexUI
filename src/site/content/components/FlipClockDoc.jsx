@@ -7,7 +7,7 @@ import useSiteTheme from '../../ui/useSiteTheme.js';
 const props = [
     { prop: 'mode', type: "'seconds' | 'date' | 'clock'", def: '"seconds"', desc: 'Count down a number of seconds, count down to a date, or show the time.' },
     { prop: 'seconds', type: 'number', def: '3d 4h 25m', desc: 'Countdown length for mode "seconds".' },
-    { prop: 'target', type: 'string | Date', def: '—', desc: 'End date for mode "date".' },
+    { prop: 'target', type: 'string | Date', def: 'none', desc: 'End date for mode "date".' },
     { prop: 'accentColor', type: 'string', def: '"#a3e635"', desc: 'Separator dots.' },
     { prop: 'theme', type: "'dark' | 'light'", def: '"dark"', desc: 'Card colors.' },
     { prop: 'showLabels', type: 'boolean', def: 'true', desc: 'Show Days / Hours / … under the digits.' },
@@ -43,7 +43,7 @@ export default App;`;
     return (
         <ComponentDoc
             title="Flip Clock"
-            description="Split-flap digits that fold over as they change — count down to a launch, run a timer, or show the time of day."
+            description="Split-flap digits that fold over as they change, count down to a launch, run a timer, or show the time of day."
             preview={<FlipClock key={mode} mode={mode} target="2027-01-01T00:00:00" accentColor={accent} theme={theme} size={size} className="max-w-full" />}
             controls={
                 <ControlGrid>

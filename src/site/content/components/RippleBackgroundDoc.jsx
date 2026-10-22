@@ -19,9 +19,9 @@ const App = () => (
 export default App;`;
 
 const props = [
-    { prop: 'children', type: 'ReactNode', def: '—', desc: 'Content rendered above the ripples.' },
-    { prop: 'className', type: 'string', def: '—', desc: 'Classes for the content wrapper.' },
-    { prop: 'containerClassName', type: 'string', def: '—', desc: 'Classes for the outer container.' },
+    { prop: 'children', type: 'ReactNode', def: 'none', desc: 'Content rendered above the ripples.' },
+    { prop: 'className', type: 'string', def: 'none', desc: 'Classes for the content wrapper.' },
+    { prop: 'containerClassName', type: 'string', def: 'none', desc: 'Classes for the outer container.' },
     { prop: 'colors', type: 'string[]', def: 'built-in palette', desc: 'Colors used for the ripple waves.' },
     { prop: 'desktopGridSize', type: 'number', def: '20', desc: 'Grid size on desktop (e.g. 20 × 20).' },
     { prop: 'mobileGridSize', type: 'number', def: '10', desc: 'Grid size on mobile.' },

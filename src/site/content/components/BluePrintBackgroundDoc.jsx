@@ -18,7 +18,7 @@ export default App;`;
 const props = [
     { prop: 'color', type: 'string', def: "'#9ae600'", desc: 'Color of the grid boxes that light up under the pointer.' },
     { prop: 'borderColor', type: 'string', def: "'rgb(98, 116, 142, 0.1)'", desc: 'Color of the grid lines.' },
-    { prop: 'bgColor', type: 'string', def: '—', desc: 'Background color.' },
+    { prop: 'bgColor', type: 'string', def: 'none', desc: 'Background color.' },
     { prop: 'circleColor', type: 'string', def: "'rgb(154, 230, 0, 0.2)'", desc: 'Color of the spotlight circle.' },
 ];
 

@@ -18,9 +18,9 @@ const App = () => (
 export default App;`;
 
 const props = [
-    { prop: 'children', type: 'ReactNode', def: '—', desc: 'Content rendered above the orbs.' },
-    { prop: 'className', type: 'string', def: '—', desc: 'Classes for the content wrapper.' },
-    { prop: 'containerClassName', type: 'string', def: '—', desc: 'Classes for the outer container (height, background…).' },
+    { prop: 'children', type: 'ReactNode', def: 'none', desc: 'Content rendered above the orbs.' },
+    { prop: 'className', type: 'string', def: 'none', desc: 'Classes for the content wrapper.' },
+    { prop: 'containerClassName', type: 'string', def: 'none', desc: 'Classes for the outer container (height, background…).' },
     { prop: 'colors', type: 'string[]', def: 'built-in palette', desc: 'Orb colors to pick from.' },
     { prop: 'desktopOrbs', type: 'number', def: '20', desc: 'Number of orbs on desktop.' },
     { prop: 'mobileOrbs', type: 'number', def: '10', desc: 'Number of orbs on mobile.' },

@@ -6,8 +6,8 @@ import ImageCompare from '../../../components/MainUI/ApexUI-Kit/ImageCompare/Ima
 const IK = 'https://ik.imagekit.io/ny6yinyut/apexui/assets';
 
 const props = [
-    { prop: 'before', type: 'string', def: '—', desc: '"Before" image URL.' },
-    { prop: 'after', type: 'string', def: '—', desc: '"After" image URL.' },
+    { prop: 'before', type: 'string', def: 'none', desc: '"Before" image URL.' },
+    { prop: 'after', type: 'string', def: 'none', desc: '"After" image URL.' },
     { prop: 'image', type: 'string', def: 'demo image', desc: 'One image for both sides; the before side gets beforeFilter.' },
     { prop: 'beforeFilter', type: 'string', def: 'grayscale', desc: 'CSS filter for the before side when only image is given.' },
     { prop: 'beforeLabel / afterLabel', type: 'string', def: '"Before" / "After"', desc: 'Corner labels.' },
@@ -51,7 +51,7 @@ export default App;`;
     return (
         <ComponentDoc
             title="Image Compare"
-            description="A before / after slider — drag the handle, click anywhere or use the arrow keys to wipe between two images, side to side or top to bottom."
+            description="A before / after slider, drag the handle, click anywhere or use the arrow keys to wipe between two images, side to side or top to bottom."
             preview={
                 <div className="w-full max-w-2xl">
                     <ImageCompare key={String(vertical)} image={`${IK}/thanos.png?tr=f-auto,q-80,w-1200`} beforeFilter={FILTERS[filter].value} vertical={vertical} accentColor={accent} />

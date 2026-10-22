@@ -4,8 +4,8 @@ import { ControlGrid, SelectControl } from '../../docs/controls.jsx';
 import AiVoiceWave from '../../../components/MainUI/ApexUI-Kit/AiVoiceWave/AiVoiceWave.jsx';
 
 const props = [
-    { prop: 'state', type: "'idle' | 'listening' | 'thinking' | 'speaking'", def: '—', desc: 'Control the state yourself; leave it out and a tap cycles through them.' },
-    { prop: 'onStateChange', type: '(state) => void', def: '—', desc: 'Called when it is tapped.' },
+    { prop: 'state', type: "'idle' | 'listening' | 'thinking' | 'speaking'", def: 'none', desc: 'Control the state yourself; leave it out and a tap cycles through them.' },
+    { prop: 'onStateChange', type: '(state) => void', def: 'none', desc: 'Called when it is tapped.' },
     { prop: 'colors', type: 'string[]', def: 'lime / cyan / violet', desc: 'Colors used for the visual.' },
     { prop: 'height', type: 'number', def: '9', desc: 'Wave height in rem.' },
     { prop: 'showLabel', type: 'boolean', def: 'true', desc: 'Show the state underneath.' },
@@ -31,7 +31,7 @@ export default function AiVoiceWaveDoc() {
     return (
         <ComponentDoc
             title="AI Voice Wave"
-            description="Layered glowing sine waves for a voice assistant — a calm line when idle, lively while listening, a slow swell while thinking and syllable-like bursts while speaking."
+            description="Layered glowing sine waves for a voice assistant, a calm line when idle, lively while listening, a slow swell while thinking and syllable-like bursts while speaking."
             preview={
                 <div className="flex w-full justify-center px-4 text-[var(--ink)]">
                     <AiVoiceWave key={state} state={state === 'auto' ? undefined : state} colors={PALETTES[palette]} />

@@ -5,15 +5,15 @@ import ColorControl, { ControlGrid, RangeControl, ToggleControl } from '../../do
 import MagneticCursor from '../../../components/MainUI/ApexUI-Kit/MagneticCursor/MagneticCursor.jsx';
 
 const props = [
-    { prop: 'children', type: 'ReactNode', def: '—', desc: 'The area that gets the custom cursor.' },
+    { prop: 'children', type: 'ReactNode', def: 'none', desc: 'The area that gets the custom cursor.' },
     { prop: 'color', type: 'string', def: '"#a3e635"', desc: 'Ring, dot and label bubble color.' },
     { prop: 'ringSize', type: 'number', def: '2.25', desc: 'Resting ring size, in rem.' },
     { prop: 'padding', type: 'number', def: '6', desc: 'Space between a hovered element and the ring, in px.' },
-    { prop: 'magnetStrength', type: 'number', def: '0.35', desc: 'How far data-magnetic elements follow the pointer (0–1).' },
+    { prop: 'magnetStrength', type: 'number', def: '0.35', desc: 'How far data-magnetic elements follow the pointer (0 to 1).' },
     { prop: 'blend', type: 'boolean', def: 'false', desc: 'Use mix-blend-mode: difference for the ring.' },
     { prop: 'className', type: 'string', def: '""', desc: 'Extra classes for the wrapper.' },
-    { prop: 'data-cursor-text', type: 'attribute', def: '—', desc: 'Put on any child to show a labelled bubble, e.g. "View".' },
-    { prop: 'data-magnetic', type: 'attribute', def: '—', desc: 'Put on any child to make it lean toward the pointer.' },
+    { prop: 'data-cursor-text', type: 'attribute', def: 'none', desc: 'Put on any child to show a labelled bubble, e.g. "View".' },
+    { prop: 'data-magnetic', type: 'attribute', def: 'none', desc: 'Put on any child to make it lean toward the pointer.' },
 ];
 
 const dependencies = [
@@ -62,7 +62,7 @@ export default App;`;
                         </nav>
                         <div data-cursor-text="View" className="relative h-44 overflow-hidden rounded-xl bg-neutral-900">
                             <img src={IMG} alt="" className="h-full w-full object-cover opacity-90" draggable="false" />
-                            <span className="absolute bottom-3 left-4 text-sm font-semibold text-white">Project — Mystic Arts</span>
+                            <span className="absolute bottom-3 left-4 text-sm font-semibold text-white">Project, Mystic Arts</span>
                         </div>
                         <div className="flex items-center justify-between">
                             <button type="button" data-magnetic className="rounded-full bg-[var(--ink)] px-5 py-2.5 text-sm font-semibold text-[var(--bg)]">Let&apos;s talk</button>

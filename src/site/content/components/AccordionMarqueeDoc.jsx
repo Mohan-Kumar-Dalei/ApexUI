@@ -29,7 +29,7 @@ export default function AccordionMarqueeDoc() {
     return (
         <ComponentDoc
             title="Accordion Marquee"
-            description="An accordion where each row reveals a marquee on hover — great for highlighting key information."
+            description="An accordion where each row reveals a marquee on hover, great for highlighting key information."
             preview={<AccordionMarquee />}
             fullBleed
             code={code}

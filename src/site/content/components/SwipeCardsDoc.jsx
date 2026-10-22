@@ -8,7 +8,7 @@ const props = [
     { prop: 'threshold', type: 'number', def: '110', desc: 'Drag distance in px that counts as a swipe.' },
     { prop: 'likeColor', type: 'string', def: '"#a3e635"', desc: 'LIKE stamp and button color.' },
     { prop: 'nopeColor', type: 'string', def: '"#f43f5e"', desc: 'NOPE stamp and button color.' },
-    { prop: 'onSwipe', type: "(card, 'left' | 'right') => void", def: '—', desc: 'Called after every swipe.' },
+    { prop: 'onSwipe', type: "(card, 'left' | 'right') => void", def: 'none', desc: 'Called after every swipe.' },
     { prop: 'className', type: 'string', def: '""', desc: 'Extra classes.' },
 ];
 
@@ -45,7 +45,7 @@ export default App;`;
     return (
         <ComponentDoc
             title="Swipe Cards"
-            description="A deck you swipe left or right — the card tilts with your drag, flashes a LIKE or NOPE stamp and flies off. Buttons, undo and arrow keys included."
+            description="A deck you swipe left or right, the card tilts with your drag, flashes a LIKE or NOPE stamp and flies off. Buttons, undo and arrow keys included."
             preview={
                 <div className="flex flex-col items-center py-4 text-[var(--ink)]">
                     <SwipeCards threshold={threshold} likeColor={like} onSwipe={(card, dir) => setLast(`${card.title} → ${dir === 'right' ? 'liked' : 'passed'}`)} />

@@ -12,7 +12,7 @@ const props = [
     { prop: 'tileStyle', type: "'color' | 'glass'", def: '"color"', desc: 'Colorful gradient tiles, or plain glass tiles with mono icons.' },
     { prop: 'showLabels', type: 'boolean', def: 'true', desc: 'Show a label above the icon on hover or focus.' },
     { prop: 'defaultOpen', type: 'number[]', def: '[0]', desc: 'Indexes that start with the “open” dot underneath.' },
-    { prop: 'onSelect', type: '(item, index, event) => void', def: '—', desc: 'Called when an icon is clicked (it also bounces and gets a dot).' },
+    { prop: 'onSelect', type: '(item, index, event) => void', def: 'none', desc: 'Called when an icon is clicked (it also bounces and gets a dot).' },
     { prop: 'className', type: 'string', def: '""', desc: 'Extra classes for the wrapper.' },
 ];
 
@@ -57,7 +57,7 @@ export default App;`;
     return (
         <ComponentDoc
             title="Magnify Dock"
-            description="A glass dock whose icons swell toward the pointer, macOS style — with hover labels, a bounce on click and open-app dots."
+            description="A glass dock whose icons swell toward the pointer, macOS style, with hover labels, a bounce on click and open-app dots."
             preview={
                 <MagnifyDock
                     theme={theme}

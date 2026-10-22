@@ -7,8 +7,8 @@ import Stepper from '../../../components/MainUI/ApexUI-Kit/Stepper/Stepper.jsx';
 const props = [
     { prop: 'steps', type: "{ title, content }[]", def: "4 demo steps", desc: "The steps." },
     { prop: 'initialStep', type: "number", def: "0", desc: "Step to start on." },
-    { prop: 'onStepChange', type: "(index) => void", def: "—", desc: "Called when the step changes." },
-    { prop: 'onComplete', type: "() => void", def: "—", desc: "Called on Complete." },
+    { prop: 'onStepChange', type: "(index) => void", def: "none", desc: "Called when the step changes." },
+    { prop: 'onComplete', type: "() => void", def: "none", desc: "Called on Complete." },
     { prop: 'accentColor', type: "string", def: "\"#a3e635\"", desc: "Indicator and button color." },
     { prop: 'theme', type: "'dark' | 'light'", def: "\"dark\"", desc: "Panel colors." },
     { prop: 'className', type: "string", def: "\"\"", desc: "Extra classes." },
@@ -27,7 +27,7 @@ export default function StepperDoc() {
     return (
         <ComponentDoc
             title="Stepper"
-            description="A multi-step flow — indicators fill and tick as you move on, connector lines fill in between, and each step slides in from the direction you are heading."
+            description="A multi-step flow, indicators fill and tick as you move on, connector lines fill in between, and each step slides in from the direction you are heading."
             preview={
                 <Stepper accentColor={accent} theme={theme} />
             }

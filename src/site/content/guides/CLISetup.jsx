@@ -38,7 +38,7 @@ export default function CLISetup() {
     return (
         <DocShell
             title="ApexUI CLI"
-            description="Add components to your project with a single command — no copy-pasting files by hand."
+            description="Add components to your project with a single command, no copy-pasting files by hand."
             toc={stepsToc(steps)}
         >
             <GuideSteps steps={steps} />

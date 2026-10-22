@@ -18,7 +18,7 @@ const webglProps = [
 
 const webglDependencies = [
     { name: 'React', desc: 'A JavaScript library for building user interfaces.' },
-    { name: 'OGL', desc: 'A tiny WebGL library — planes, textures and two small shaders.' },
+    { name: 'OGL', desc: 'A tiny WebGL library, planes, textures and two small shaders.' },
     { name: 'Tailwind CSS', desc: 'A utility-first CSS framework.' },
 ];
 
@@ -33,7 +33,7 @@ const props = [
     { prop: 'autoRotateSpeed', type: 'number', def: '10', desc: 'Idle spin speed, in degrees per second.' },
     { prop: 'pauseOnHover', type: 'boolean', def: 'true', desc: 'Stop the idle spin while the pointer is over it.' },
     { prop: 'showControls', type: 'boolean', def: 'true', desc: 'Show the arrows and the active title below.' },
-    { prop: 'onActiveChange', type: '(index, item) => void', def: '—', desc: 'Called when a new card reaches the front.' },
+    { prop: 'onActiveChange', type: '(index, item) => void', def: 'none', desc: 'Called when a new card reaches the front.' },
     { prop: 'className', type: 'string', def: '""', desc: 'Extra classes for the wrapper.' },
 ];
 
@@ -78,7 +78,7 @@ export default App;`;
     const variants = [
         {
             name: 'CSS Ring',
-            description: 'Cards on a ring built with CSS 3D transforms — drag or swipe to spin it, let go and it settles on the nearest card, or click any card to bring it to the front.',
+            description: 'Cards on a ring built with CSS 3D transforms, drag or swipe to spin it, let go and it settles on the nearest card, or click any card to bring it to the front.',
             preview: <Carousel3D cardWidth={cardWidth} tilt={tilt} perspective={perspective} autoRotate={autoRotate} autoRotateSpeed={speed} />,
             controls: (
                 <ControlGrid>
@@ -96,7 +96,7 @@ export default App;`;
         },
         {
             name: 'WebGL Ring',
-            description: 'A full 360° ring of images drawn with OGL — drag to spin, fast spins ripple the images and the far side dims.',
+            description: 'A full 360° ring of images drawn with OGL, drag to spin, fast spins ripple the images and the far side dims.',
             preview: <WebGLCarousel tilt={glTilt} radiusScale={glRadius} autoRotate={glSpeed} />,
             controls: (
                 <ControlGrid>
@@ -132,7 +132,7 @@ export default App;`,
     return (
         <ComponentDoc
             title="3D Carousel"
-            description="Cards on a ring that turns in 3D — a light CSS ring, or a full 360° WebGL ring. Drag or swipe to spin, and it settles on the nearest card."
+            description="Cards on a ring that turns in 3D, a light CSS ring, or a full 360° WebGL ring. Drag or swipe to spin, and it settles on the nearest card."
             variants={variants}
         />
     );

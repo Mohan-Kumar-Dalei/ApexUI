@@ -51,7 +51,7 @@ const DynamicIsland = ({
     accentColor = "#a3e635",
     music = { title: "Midnight City", artist: "Apex Sessions", cover: `${IK}/spiderman.png?tr=f-auto,q-80,w-200` },
     call = { name: "Tony Stark", subtitle: "Mobile", avatar: `${IK}/ironman.png?tr=f-auto,q-80,w-160` },
-    notification = { app: "Messages", title: "Peter Parker", message: "On my way — saving the city first 🕷️" },
+    notification = { app: "Messages", title: "Peter Parker", message: "On my way, saving the city first 🕷️" },
     timerSeconds = 300,
     onViewChange,
     className = "",

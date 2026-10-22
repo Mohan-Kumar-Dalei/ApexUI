@@ -1,5 +1,5 @@
 import { useEffect, useId, useRef, useState } from 'react';
-import { AnimatePresence, motion } from 'framer-motion';
+import { animate, AnimatePresence, motion, useMotionValue, useTransform } from 'framer-motion';
 import { Check, ChevronDown } from 'lucide-react';
 
 /* Small, consistent inputs for the live "playground" panels under previews. */
@@ -27,11 +27,27 @@ export default function ColorControl({ label, value, onChange }) {
 
 const decimalsOf = (n) => (String(n).split('.')[1] || '').length;
 
-/* Custom slider: a lime fill, a thumb that grows while held, and full keyboard support. */
+/*
+ * Custom elastic slider: a lime fill and a thumb that grows while held. Drag
+ * past either end and the track stretches like rubber (the thumb rides the
+ * stretched end), then springs back on release. Full keyboard support.
+ */
+const MAX_PULL = 36;
+const pull = (px) => Math.sign(px) * (2 / (1 + Math.exp(-Math.abs(px) / MAX_PULL)) - 1) * MAX_PULL;
+
 export function RangeControl({ label, value, onChange, min, max, step = 1, format = (v) => v }) {
     const trackRef = useRef(null);
     const labelId = useId();
     const [held, setHeld] = useState(false);
+    const [hover, setHover] = useState(false);
+    // Refs, not state, inside the pointer handlers: state lags a render, which
+    // made a quick second drag compare against a stale value and stop short.
+    const dragging = useRef(false);
+    const last = useRef(value);
+    last.current = dragging.current ? last.current : value;
+    const overflow = useMotionValue(0);
+    const scaleX = useTransform(overflow, (o) => 1 + Math.abs(o) / (trackRef.current?.offsetWidth || 200));
+    const originX = useTransform(overflow, (o) => (o < 0 ? 1 : 0));
     const pct = ((value - min) / (max - min)) * 100;
 
     const snap = (v) => {
@@ -40,7 +56,18 @@ export function RangeControl({ label, value, onChange, min, max, step = 1, forma
     };
     const fromPointer = (e) => {
         const r = trackRef.current.getBoundingClientRect();
-        onChange(snap(min + ((e.clientX - r.left) / r.width) * (max - min)));
+        const next = snap(min + ((e.clientX - r.left) / r.width) * (max - min));
+        if (next !== last.current) {
+            last.current = next;
+            onChange(next);
+        }
+        overflow.set(pull(e.clientX < r.left ? e.clientX - r.left : e.clientX > r.right ? e.clientX - r.right : 0));
+    };
+    const release = () => {
+        if (!dragging.current) return;
+        dragging.current = false;
+        setHeld(false);
+        animate(overflow, 0, { type: 'spring', stiffness: 420, damping: 14 });
     };
     const onKeyDown = (e) => {
         const big = (max - min) / 10;
@@ -49,6 +76,7 @@ export function RangeControl({ label, value, onChange, min, max, step = 1, forma
         e.preventDefault();
         onChange(snap(next));
     };
+    const thick = held || hover;
 
     return (
         <div className="block">
@@ -66,21 +94,33 @@ export function RangeControl({ label, value, onChange, min, max, step = 1, forma
                 aria-valuenow={value}
                 aria-valuetext={String(format(value))}
                 onKeyDown={onKeyDown}
+                onPointerEnter={() => setHover(true)}
+                onPointerLeave={() => setHover(false)}
                 onPointerDown={(e) => {
+                    if (e.button !== 0) return;
+                    // No text selection / native drag: those fire pointercancel mid-drag.
+                    e.preventDefault();
+                    e.currentTarget.focus({ preventScroll: true });
                     e.currentTarget.setPointerCapture(e.pointerId);
+                    overflow.stop();
+                    dragging.current = true;
                     setHeld(true);
                     fromPointer(e);
                 }}
-                onPointerMove={(e) => held && fromPointer(e)}
-                onPointerUp={() => setHeld(false)}
-                onPointerCancel={() => setHeld(false)}
-                className="group relative flex h-5 cursor-pointer touch-none items-center rounded-full outline-none focus-visible:ring-2 focus-visible:ring-[var(--lime-line)]"
+                onPointerMove={(e) => dragging.current && fromPointer(e)}
+                onPointerUp={release}
+                onPointerCancel={release}
+                onLostPointerCapture={release}
+                className="relative flex h-6 cursor-grab touch-none select-none items-center rounded-full outline-none focus-visible:ring-2 focus-visible:ring-[var(--lime-line)] active:cursor-grabbing"
             >
-                <span className="absolute inset-x-0 h-1.5 rounded-full bg-[var(--panel-3)]" />
-                <span className="absolute left-0 h-1.5 rounded-full bg-[var(--lime)]" style={{ width: `${pct}%`, transition: held ? 'none' : 'width 160ms ease-out' }} />
-                <span
-                    className={`absolute h-4 w-4 -translate-x-1/2 rounded-full border-2 border-[var(--lime)] bg-white shadow-[0_2px_8px_rgba(0,0,0,0.25)] transition-transform duration-150 group-hover:scale-110 ${held ? 'scale-125' : ''}`}
-                    style={{ left: `${pct}%`, transition: held ? 'transform 150ms' : 'left 160ms ease-out, transform 150ms' }}
+                <motion.span className="absolute inset-x-0 overflow-hidden rounded-full bg-[var(--panel-3)]" style={{ scaleX, originX }} animate={{ height: thick ? 8 : 6 }} transition={{ type: 'spring', stiffness: 500, damping: 32 }}>
+                    <span className="absolute inset-y-0 left-0 rounded-full bg-[var(--lime)]" style={{ width: `${pct}%`, transition: held ? 'none' : 'width 160ms ease-out' }} />
+                </motion.span>
+                <motion.span
+                    className="absolute h-4 w-4 rounded-full bg-white shadow-[0_1px_6px_rgba(0,0,0,0.35)] ring-1 ring-black/10"
+                    style={{ left: `${pct}%`, marginLeft: '-0.5rem', x: overflow, transition: held ? 'none' : 'left 160ms ease-out' }}
+                    animate={{ scale: held ? 1.3 : hover ? 1.12 : 1 }}
+                    transition={{ type: 'spring', stiffness: 500, damping: 28 }}
                 />
             </div>
         </div>

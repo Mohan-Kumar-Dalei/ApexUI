@@ -11,13 +11,13 @@ const props = [
     { prop: 'taxRate', type: 'number', def: '0.08', desc: 'Tax rate applied to the subtotal.' },
     { prop: 'orderId', type: 'string', def: '"AX-20491"', desc: 'Order number; also seeds the barcode.' },
     { prop: 'date', type: 'string', def: 'now', desc: 'Date line on the receipt. Defaults to the print time.' },
-    { prop: 'stage', type: "'processing' | 'printing' | 'complete'", def: '—', desc: 'Control the stage yourself. Leave it out to let the printer run on its own.' },
+    { prop: 'stage', type: "'processing' | 'printing' | 'complete'", def: 'none', desc: 'Control the stage yourself. Leave it out to let the printer run on its own.' },
     { prop: 'autoPlay', type: 'boolean', def: 'true', desc: 'Run processing → printing → complete on mount (uncontrolled only).' },
     { prop: 'feed', type: "'stepped' | 'smooth'", def: '"stepped"', desc: 'Paper feeds line by line, or in one smooth glide.' },
     { prop: 'processingTime', type: 'number', def: '1600', desc: 'Milliseconds spent on "Processing payment".' },
     { prop: 'printTime', type: 'number', def: '2200', desc: 'Milliseconds the paper takes to feed out.' },
     { prop: 'accentColor', type: 'string', def: '"#a3e635"', desc: 'LED, status icon and progress color.' },
-    { prop: 'onComplete', type: '() => void', def: '—', desc: 'Called when a self-running print finishes.' },
+    { prop: 'onComplete', type: '() => void', def: 'none', desc: 'Called when a self-running print finishes.' },
 ];
 
 const dependencies = [

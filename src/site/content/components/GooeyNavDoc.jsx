@@ -7,7 +7,7 @@ import GooeyNav from '../../../components/MainUI/ApexUI-Kit/GooeyNav/GooeyNav.js
 const props = [
     { prop: 'items', type: "{ label, href }[]", def: "4 demo links", desc: "Links." },
     { prop: 'initialActive', type: "number", def: "0", desc: "Active link at start." },
-    { prop: 'onChange', type: "(index, item) => void", def: "—", desc: "Called when a link is clicked." },
+    { prop: 'onChange', type: "(index, item) => void", def: "none", desc: "Called when a link is clicked." },
     { prop: 'accentColor', type: "string", def: "\"#a3e635\"", desc: "Blob color." },
     { prop: 'particleCount', type: "number", def: "8", desc: "Droplets per click." },
     { prop: 'goo', type: "number", def: "12", desc: "How strongly drops melt into the pill (smooth-union radius in px)." },
@@ -17,7 +17,7 @@ const props = [
 
 const dependencies = [
     { name: 'React', desc: 'A JavaScript library for building user interfaces.' },
-    { name: 'WebGL', desc: 'Built into the browser — a small metaball shader, no library needed.' },
+    { name: 'WebGL', desc: 'Built into the browser, a small metaball shader, no library needed.' },
     { name: 'Tailwind CSS', desc: 'A utility-first CSS framework.' },
 ];
 
@@ -29,7 +29,7 @@ export default function GooeyNavDoc() {
     return (
         <ComponentDoc
             title="Gooey Nav"
-            description="A WebGL metaball nav — the active pill is a liquid drop that stretches toward the next link and snaps back, while droplets burst out and melt into it. Labels stay crisp HTML; falls back to a CSS pill without WebGL."
+            description="A WebGL metaball nav, the active pill is a liquid drop that stretches toward the next link and snaps back, while droplets burst out and melt into it. Labels stay crisp HTML; falls back to a CSS pill without WebGL."
             preview={
                 <GooeyNav accentColor={accent} particleCount={count} goo={goo} theme={theme} />
             }

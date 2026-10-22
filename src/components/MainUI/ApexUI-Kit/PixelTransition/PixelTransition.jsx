@@ -14,7 +14,7 @@ const DefaultSecond = () => (
         <div>
             <p className="text-[0.7rem] font-semibold uppercase tracking-[0.3em] text-white/50">Wakanda</p>
             <p className="mt-2 text-3xl font-black">Black Panther</p>
-            <p className="mt-2 text-sm text-white/60">King T&apos;Challa — protector of his people.</p>
+            <p className="mt-2 text-sm text-white/60">King T&apos;Challa, protector of his people.</p>
         </div>
     </div>
 );

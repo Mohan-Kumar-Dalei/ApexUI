@@ -10,8 +10,8 @@ const props = [
     { prop: 'max', type: 'number', def: '4', desc: 'Most toasts kept at once; the oldest drop off.' },
     { prop: 'theme', type: "'dark' | 'light'", def: '"dark"', desc: 'Toast colors.' },
     { prop: 'contained', type: 'boolean', def: 'false', desc: 'Position inside the nearest relative parent instead of the viewport.' },
-    { prop: 'ref.show', type: '({ title, description?, type? }) => id', def: '—', desc: 'Adds a toast. type is success, error, warning or info.' },
-    { prop: 'ref.dismiss', type: '(id) => void', def: '—', desc: 'Closes a toast early.' },
+    { prop: 'ref.show', type: '({ title, description?, type? }) => id', def: 'none', desc: 'Adds a toast. type is success, error, warning or info.' },
+    { prop: 'ref.dismiss', type: '(id) => void', def: 'none', desc: 'Closes a toast early.' },
 ];
 
 const dependencies = [
@@ -23,7 +23,7 @@ const dependencies = [
 
 const SAMPLES = [
     { type: 'success', title: 'Changes saved', description: 'Your profile is up to date.' },
-    { type: 'info', title: 'New version', description: 'ApexUI 2.2 is out — 15 new components.' },
+    { type: 'info', title: 'New version', description: 'ApexUI 2.2 is out, 15 new components.' },
     { type: 'warning', title: 'Storage almost full', description: 'You have used 92% of your space.' },
     { type: 'error', title: 'Upload failed', description: 'The file is larger than 10 MB.' },
 ];

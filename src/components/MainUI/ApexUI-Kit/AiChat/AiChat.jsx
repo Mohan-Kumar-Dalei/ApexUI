@@ -11,7 +11,7 @@ import { ArrowUp, Bot, Sparkles } from "lucide-react";
 
 const DEMO_REPLIES = [
     "Sure! Wrap your section in a container with `grid` and `gap-6`, then let the cards span two columns on large screens. Want me to write the code?",
-    "Great question. Animate only `transform` and `opacity` — they run on the GPU and never trigger layout, so the motion stays at 60fps.",
+    "Great question. Animate only `transform` and `opacity`, they run on the GPU and never trigger layout, so the motion stays at 60fps.",
     "Here's a quick idea: use a spring with stiffness 380 and damping 30. It feels snappy without bouncing too much.",
 ];
 

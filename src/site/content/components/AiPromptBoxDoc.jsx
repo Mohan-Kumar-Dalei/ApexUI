@@ -25,7 +25,7 @@ export default function AiPromptBoxDoc() {
     return (
         <ComponentDoc
             title="AI Prompt Box"
-            description="The input of an AI app — a glowing animated border on focus that spins faster while generating, an auto-growing textarea, model picker, attachments, quick actions and a send button that turns into stop."
+            description="The input of an AI app, a glowing animated border on focus that spins faster while generating, an auto-growing textarea, model picker, attachments, quick actions and a send button that turns into stop."
             preview={<AiPromptBox theme={theme} />}
             code={`import AiPromptBox from './ApexUI-Kit/AiPromptBox/AiPromptBox.jsx';
 

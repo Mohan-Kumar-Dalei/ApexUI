@@ -78,7 +78,7 @@ export default function CardStackDoc() {
     return (
         <ComponentDoc
             title="Card Stack"
-            description="An interactive stack of cards that cycles automatically — perfect for projects or testimonials."
+            description="An interactive stack of cards that cycles automatically, perfect for projects or testimonials."
             preview={<CardStack autoCycle cycleInterval={3000} cards={cards} />}
             code={code}
             cli="card-stack"

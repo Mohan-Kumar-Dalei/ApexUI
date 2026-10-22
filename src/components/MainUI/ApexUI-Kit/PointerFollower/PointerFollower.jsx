@@ -132,7 +132,7 @@ const PointerFollower = ({
                         >
                             <div className="px-4 py-3 rounded-full text-[11px] overflow-hidden font-semibold shadow-[0_2px_8px_rgba(0,0,0,0.25)] border border-black/10" style={{ backgroundColor: badgeColor }}>
                                 <span className="text-[12px] font-medium tracking-wide whitespace-nowrap drop-shadow" style={{ color: badgeTextColor }}>
-                                    {person.name} — {person.job}
+                                    {person.name} none {person.job}
                                 </span>
                             </div>
                         </div>

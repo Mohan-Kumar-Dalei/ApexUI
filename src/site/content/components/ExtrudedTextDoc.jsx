@@ -35,7 +35,7 @@ export default function ExtrudedTextDoc() {
     return (
         <ComponentDoc
             title="Extruded Text"
-            description="Chunky 3D letters built from stacked layers — the block tilts toward the pointer so you can see the sides, with a solid or gradient face."
+            description="Chunky 3D letters built from stacked layers, the block tilts toward the pointer so you can see the sides, with a solid or gradient face."
             preview={<ExtrudedText text={text} depth={depth} faceColor={face} sideColor={side} gradient={GRADIENTS[gradient]} />}
             controls={
                 <ControlGrid>

@@ -236,6 +236,7 @@ const DotGlobe = ({
         };
 
         const onDown = (e) => {
+            e.preventDefault();
             drag = { x: e.clientX, yaw, lastX: e.clientX, lastT: performance.now() };
             canvas.setPointerCapture?.(e.pointerId);
         };

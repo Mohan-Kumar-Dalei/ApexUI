@@ -11,7 +11,7 @@ const props = [
     { prop: 'thickness', type: "number", def: "1.5", desc: "Visible edge thickness in px." },
     { prop: 'theme', type: "'dark' | 'light'", def: "\"dark\"", desc: "Button surface." },
     { prop: 'children', type: "ReactNode", def: "\"Get started\"", desc: "Label." },
-    { prop: '...rest', type: "any", def: "—", desc: "Other props (href, onClick, …)." },
+    { prop: '...rest', type: "any", def: "none", desc: "Other props (href, onClick, …)." },
 ];
 
 const dependencies = [

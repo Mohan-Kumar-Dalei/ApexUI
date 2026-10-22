@@ -160,8 +160,10 @@ const GooeyNav = ({ items = DEFAULT_ITEMS, initialActive = 0, onChange, accentCo
         };
         sim.current = s;
 
+        // Hold the element itself: the ref is cleared on unmount before cleanup runs.
+        const barEl = bar.current;
         const resize = () => {
-            const r = bar.current.getBoundingClientRect();
+            const r = barEl.getBoundingClientRect();
             s.dpr = Math.min(window.devicePixelRatio || 1, 2);
             const w = r.width + PAD * 2;
             const h = r.height + PAD * 2;
@@ -182,7 +184,7 @@ const GooeyNav = ({ items = DEFAULT_ITEMS, initialActive = 0, onChange, accentCo
         };
         resize();
         const ro = new ResizeObserver(resize);
-        ro.observe(bar.current);
+        ro.observe(barEl);
 
         const dropData = new Float32Array(MAX_DROPS * 4);
         let raf = 0;

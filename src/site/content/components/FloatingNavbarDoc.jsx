@@ -9,7 +9,7 @@ const props = [
     { prop: 'links', type: '{ label, href }[]', def: '5 demo links', desc: 'Navigation links.' },
     { prop: 'cta', type: '{ label, href } | null', def: '"Get started"', desc: 'Call-to-action button; null hides it.' },
     { prop: 'active', type: 'string', def: 'first link', desc: 'Label of the link that starts active.' },
-    { prop: 'onNavigate', type: '(link, event) => void', def: '—', desc: 'Called when a link is clicked.' },
+    { prop: 'onNavigate', type: '(link, event) => void', def: 'none', desc: 'Called when a link is clicked.' },
     { prop: 'hideOnScroll', type: 'boolean', def: 'true', desc: 'Tuck away when scrolling down, come back when scrolling up.' },
     { prop: 'scrollRoot', type: 'RefObject', def: 'window', desc: 'Scroll container to watch instead of the window.' },
     { prop: 'accentColor', type: 'string', def: '"#a3e635"', desc: 'Logo, dot and button color.' },
@@ -34,7 +34,7 @@ export default function FloatingNavbarDoc() {
     return (
         <ComponentDoc
             title="Floating Navbar"
-            description="A glassy floating navbar — a highlight follows the pointer, the active link keeps a dot, it tucks away on scroll down and turns into an animated hamburger menu on narrow widths."
+            description="A glassy floating navbar, a highlight follows the pointer, the active link keeps a dot, it tucks away on scroll down and turns into an animated hamburger menu on narrow widths."
             preview={
                 <div ref={scrollRef} className={`relative h-[26rem] w-full overflow-y-auto rounded-2xl ${dark ? 'bg-neutral-950' : 'bg-neutral-100'}`}>
                     <FloatingNavbar theme={theme} accentColor={accent} hideOnScroll={hide} scrollRoot={scrollRef} />

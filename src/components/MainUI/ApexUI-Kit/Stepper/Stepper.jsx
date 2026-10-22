@@ -9,7 +9,7 @@ import { Check } from "lucide-react";
  */
 
 const DEFAULT_STEPS = [
-    { title: "Account", content: <p>Welcome! Pick a username to get started — you can change it later.</p> },
+    { title: "Account", content: <p>Welcome! Pick a username to get started, you can change it later.</p> },
     { title: "Profile", content: <p>Add a photo and a short bio so people know who you are.</p> },
     { title: "Theme", content: <p>Choose light, dark or follow your system. Your choice syncs everywhere.</p> },
     { title: "Done", content: <p>All set. Press Complete to finish onboarding.</p> },
@@ -20,6 +20,18 @@ const variants = {
     center: { x: 0, opacity: 1 },
     exit: (dir) => ({ x: dir > 0 ? "-40%" : "40%", opacity: 0 }),
 };
+
+function StepBody({ step, total, title, content, accentColor, dark }) {
+    return (
+        <>
+            <p className="text-[0.72rem] font-semibold uppercase tracking-[0.18em]" style={{ color: accentColor }}>
+                Step {step + 1} of {total}
+            </p>
+            <h3 className="mt-1 text-xl font-semibold">{title}</h3>
+            <div className={`mt-2 text-[0.92rem] leading-relaxed ${dark ? "text-white/65" : "text-neutral-600"}`}>{content}</div>
+        </>
+    );
+}
 
 const Stepper = ({ steps = DEFAULT_STEPS, initialStep = 0, onStepChange, onComplete, accentColor = "#a3e635", theme = "dark", className = "" }) => {
     const id = useId();
@@ -72,26 +84,27 @@ const Stepper = ({ steps = DEFAULT_STEPS, initialStep = 0, onStepChange, onCompl
                 })}
             </div>
 
-            <motion.div layout className="relative mt-6 overflow-hidden" transition={{ type: "spring", stiffness: 300, damping: 32 }}>
+            <div className="relative mt-6 grid overflow-hidden">
+                {/* Invisible copies of every step reserve the tallest height, so the
+                    card and its buttons never move up and down between steps. */}
+                {steps.map((s, i) => (
+                    <div key={i} aria-hidden="true" className="invisible col-start-1 row-start-1 pb-1">
+                        <StepBody step={i} total={steps.length} title={s.title} content={s.content} accentColor={accentColor} dark={dark} />
+                    </div>
+                ))}
                 <AnimatePresence mode="popLayout" initial={false} custom={dir}>
-                    <motion.div key={done ? "done" : step} custom={dir} variants={variants} initial="enter" animate="center" exit="exit" transition={{ type: "spring", stiffness: 300, damping: 32 }} className="pb-1">
+                    <motion.div key={done ? "done" : step} custom={dir} variants={variants} initial="enter" animate="center" exit="exit" transition={{ type: "spring", stiffness: 300, damping: 32 }} className="col-start-1 row-start-1 pb-1">
                         {done ? (
                             <div className="py-4 text-center">
                                 <p className="text-lg font-semibold">You are all set 🎉</p>
                                 <p className={`mt-1 text-sm ${dark ? "text-white/55" : "text-neutral-500"}`}>Every step is complete.</p>
                             </div>
                         ) : (
-                            <>
-                                <p className="text-[0.72rem] font-semibold uppercase tracking-[0.18em]" style={{ color: accentColor }}>
-                                    Step {step + 1} of {steps.length}
-                                </p>
-                                <h3 className="mt-1 text-xl font-semibold">{steps[step].title}</h3>
-                                <div className={`mt-2 text-[0.92rem] leading-relaxed ${dark ? "text-white/65" : "text-neutral-600"}`}>{steps[step].content}</div>
-                            </>
+                            <StepBody step={step} total={steps.length} title={steps[step].title} content={steps[step].content} accentColor={accentColor} dark={dark} />
                         )}
                     </motion.div>
                 </AnimatePresence>
-            </motion.div>
+            </div>
 
             <div className="mt-6 flex items-center justify-between">
                 {done ? (

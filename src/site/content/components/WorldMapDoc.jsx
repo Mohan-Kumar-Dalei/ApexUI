@@ -68,7 +68,7 @@ export default function WorldMapDoc() {
         },
         {
             name: 'Locations',
-            description: 'Office pins with labels — click one to open its info card.',
+            description: 'Office pins with labels, click one to open its info card.',
             preview: frame(<WorldMap variant="locations" accentColor={accent} />),
             controls: accentControl,
             code: snippet('locations', ` accentColor="${accent}"`),
@@ -81,7 +81,7 @@ export default function WorldMapDoc() {
     return (
         <ComponentDoc
             title="World Map"
-            description="A flat dotted world map in three modes — flight connections, live visitor pings and clickable office locations — that zooms and pans, with a built-in 2 kB land mask."
+            description="A flat dotted world map in three modes, flight connections, live visitor pings and clickable office locations, that zooms and pans, with a built-in 2 kB land mask."
             variants={variants}
         />
     );

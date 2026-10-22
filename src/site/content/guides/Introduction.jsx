@@ -17,7 +17,7 @@ const features = [
 ];
 
 const faqs = [
-    { q: 'Does ApexUI work with Create React App?', a: 'Yes — as long as Tailwind CSS is configured, ApexUI works with CRA too.' },
+    { q: 'Does ApexUI work with Create React App?', a: 'Yes, as long as Tailwind CSS is configured, ApexUI works with CRA too.' },
     { q: 'How can I customize a component?', a: 'Components are added to your project under src/ApexUI-Kit/. Open the generated file and change whatever you like.' },
     { q: 'Do components animate out of the box?', a: 'Yes. GSAP and Framer Motion are used for smooth, high-performance animations.' },
     { q: 'Is ApexUI open source?', a: 'Absolutely. It is MIT licensed and open to contributions on GitHub.' },
@@ -57,7 +57,7 @@ export default function Introduction() {
     return (
         <DocShell
             title="Introduction"
-            description="ApexUI is a developer-first collection of animated React components. Add them with one command, then own the code — style and extend them however you like."
+            description="ApexUI is a developer-first collection of animated React components. Add them with one command, then own the code, style and extend them however you like."
             toc={toc}
         >
             <DocSection id="meet-apexui">
@@ -74,7 +74,7 @@ export default function Introduction() {
                     <div>
                         <p className="font-mono text-[0.68rem] uppercase tracking-[0.18em] text-[var(--lime-text)]">ApexUI {SITE.version}</p>
                         <h2 className="font-display mt-3 text-[clamp(1.2rem,1.5vw,1.7rem)] font-semibold leading-snug text-[var(--ink)]">
-                            {componentPages.length} components across {CATEGORIES.length} families — backgrounds, cards, text effects, navigation, buttons, maps and more.
+                            {componentPages.length} components across {CATEGORIES.length} families, backgrounds, cards, text effects, navigation, buttons, maps and more.
                         </h2>
                         <div className="mt-6 flex flex-wrap gap-3">
                             <Link to="/components" className="inline-flex h-10 items-center gap-2 rounded-full bg-[var(--lime)] px-5 text-sm font-semibold text-[var(--lime-ink)] transition hover:brightness-105">
@@ -95,7 +95,7 @@ export default function Introduction() {
                 </div>
             </DocSection>
 
-            <DocSection id="why-apexui" title="Why ApexUI" description="More than a component library — a faster workflow, with ready-to-use, fully customizable, animated components right inside your project.">
+            <DocSection id="why-apexui" title="Why ApexUI" description="More than a component library, a faster workflow, with ready-to-use, fully customizable, animated components right inside your project.">
                 <div className="grid gap-px overflow-hidden rounded-[1.25rem] border border-[var(--line)] bg-[var(--line)] sm:grid-cols-2 2xl:grid-cols-3">
                     {features.map(({ icon: Icon, title, description }, i) => (
                         <motion.div
@@ -119,7 +119,7 @@ export default function Introduction() {
             <DocSection id="requirements" title="Requirements">
                 <div className="grid gap-4 sm:grid-cols-2">
                     {[
-                        { title: 'Tech stack', items: ['React — component-based UI', 'Tailwind CSS — utility-first styling', 'GSAP & Framer Motion — animation'] },
+                        { title: 'Tech stack', items: ['React, component-based UI', 'Tailwind CSS, utility-first styling', 'GSAP & Framer Motion, animation'] },
                         { title: 'You’ll need', items: ['React + Vite (latest recommended)', 'Tailwind CSS, properly configured', 'Node.js 18 or newer'] },
                     ].map((col) => (
                         <div key={col.title} className="ticks border border-[var(--line)] bg-[var(--panel)] p-6">

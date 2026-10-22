@@ -12,7 +12,7 @@ const DEFAULT_CARDS = [
     { icon: Sparkles, title: "Smooth", body: "Springs tuned to feel natural, never floaty." },
     { icon: Layers, title: "Composable", body: "Drop components in and style them with Tailwind." },
     { icon: Code2, title: "Yours", body: "Copy the source or add it with one CLI command." },
-    { icon: Zap, title: "Fast", body: "Transforms and opacity only — 60fps on phones." },
+    { icon: Zap, title: "Fast", body: "Transforms and opacity only, 60fps on phones." },
 ];
 
 const CardSwap3D = ({ cards = DEFAULT_CARDS, delay = 3200, distanceX = 3.6, distanceY = 3.2, skew = 5, pauseOnHover = true, accentColor = "#a3e635", theme = "dark", width = 18, className = "" }) => {

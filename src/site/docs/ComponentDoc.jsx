@@ -1,7 +1,7 @@
 import { useEffect, useId, useRef, useState } from 'react';
 import { useLocation } from 'react-router-dom';
 import { AnimatePresence, motion } from 'framer-motion';
-import { ChevronDown, Code2, Eye, Grid3x3, Maximize2, Minimize2, Package, RotateCcw, Square, Sparkle } from 'lucide-react';
+import { ChevronDown, Code2, Eye, Grid3x3, Maximize2, Minimize2, Monitor, Package, RotateCcw, Smartphone, Square, Sparkle, Tablet } from 'lucide-react';
 import CodeBlock, { CommandLine } from '../ui/CodeBlock.jsx';
 import { findPage } from '../config/navigation.js';
 import { CliChip, DocFooter, PageHeader, Pager } from './parts.jsx';
@@ -9,6 +9,7 @@ import { DOC_PAD } from './style.js';
 import TableOfContents from './TableOfContents.jsx';
 import NewBadge from '../ui/NewBadge.jsx';
 import PromptButton from './PromptButton.jsx';
+import ViewportFrame from './ViewportFrame.jsx';
 
 const STAGE_BG = [
     { id: 'dots', icon: Sparkle, label: 'Dots', className: 'stage-dots' },
@@ -17,6 +18,13 @@ const STAGE_BG = [
 ];
 
 const STAGE_H = 'min-h-[clamp(26rem,64vh,60rem)]';
+
+// Responsive check: tablet / mobile render the preview in a real iframe of that width.
+const DEVICES = [
+    { id: 'desktop', icon: Monitor, label: 'Desktop' },
+    { id: 'tablet', icon: Tablet, label: 'Tablet', width: 768 },
+    { id: 'mobile', icon: Smartphone, label: 'Mobile', width: 375 },
+];
 
 function Segmented({ value, onChange, options, size = 'md' }) {
     const id = useId();
@@ -53,6 +61,7 @@ function Stage({ title, description, variant, variants, activeVariant, onVariant
     const [bg, setBg] = useState(variant.fullBleed ? 'plain' : 'dots');
     const [replayKey, setReplayKey] = useState(0);
     const [full, setFull] = useState(false);
+    const [device, setDevice] = useState('desktop');
     const stageRef = useRef(null);
 
     useEffect(() => {
@@ -73,6 +82,7 @@ function Stage({ title, description, variant, variants, activeVariant, onVariant
     };
 
     const bgClass = STAGE_BG.find((b) => b.id === bg)?.className ?? '';
+    const frame = !full && device !== 'desktop' ? DEVICES.find((d) => d.id === device) : null;
 
     return (
         <section ref={stageRef} aria-label="Live preview" className="flex min-w-0 flex-col overflow-hidden rounded-2xl border border-[var(--line)] bg-[var(--panel)] shadow-[var(--shadow)]">
@@ -91,6 +101,9 @@ function Stage({ title, description, variant, variants, activeVariant, onVariant
                 <div className="ml-auto flex items-center gap-1.5">
                     {view === 'preview' && (
                         <>
+                            <div className="hidden md:block">
+                                <Segmented size="sm" value={device} onChange={setDevice} options={DEVICES.map((d) => ({ value: d.id, icon: d.icon, title: `${d.label} view` }))} />
+                            </div>
                             <div>
                                 <Segmented size="sm" value={bg} onChange={setBg} options={STAGE_BG.map((b) => ({ value: b.id, icon: b.icon, title: variant.fullBleed ? `${b.label} overlay` : `${b.label} background` }))} />
                             </div>
@@ -119,15 +132,21 @@ function Stage({ title, description, variant, variants, activeVariant, onVariant
             <AnimatePresence mode="wait">
                 {view === 'preview' ? (
                     <motion.div
-                        key={`preview-${activeVariant}-${replayKey}`}
+                        key={`preview-${activeVariant}-${replayKey}-${frame ? device : 'desktop'}`}
                         initial={{ opacity: 0 }}
                         animate={{ opacity: 1 }}
                         exit={{ opacity: 0 }}
                         transition={{ duration: 0.18 }}
-                        className={`relative isolate flex flex-1 items-center justify-center overflow-hidden [transform:translateZ(0)] ${variant.fullBleed ? 'bg-[#09090b] text-white' : 'bg-[var(--stage)] text-[var(--stage-ink)]'} ${full ? 'h-screen' : STAGE_H} ${variant.fullBleed ? '' : 'p-[clamp(0.75rem,3vw,3.5rem)]'} ${variant.previewClassName ?? ''}`}
+                        className={`relative isolate flex flex-1 items-center justify-center overflow-hidden [transform:translateZ(0)] ${variant.fullBleed && !frame ? 'bg-[#09090b] text-white' : 'bg-[var(--stage)] text-[var(--stage-ink)]'} ${full ? 'h-screen' : frame ? `${STAGE_H} h-[clamp(26rem,64vh,60rem)]` : STAGE_H} ${variant.fullBleed || frame ? '' : 'p-[clamp(0.75rem,3vw,3.5rem)]'} ${frame ? '' : variant.previewClassName ?? ''}`}
                     >
                         {bgClass && <div aria-hidden="true" className={`pointer-events-none absolute inset-0 ${bgClass} ${variant.fullBleed ? 'stage-overlay z-20' : '-z-10'}`} />}
-                        {variant.preview}
+                        {frame ? (
+                            <ViewportFrame width={frame.width} label={frame.label} bodyClassName={variant.fullBleed ? '!p-0 !bg-[#09090b] !text-white' : variant.previewClassName ?? ''}>
+                                {variant.preview}
+                            </ViewportFrame>
+                        ) : (
+                            variant.preview
+                        )}
                     </motion.div>
                 ) : (
                     <motion.div key="code" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.18 }} className={`flex-1 bg-[var(--code-bg)] ${STAGE_H}`}>
@@ -166,7 +185,7 @@ function PropsTable({ rows }) {
                                     <code className="whitespace-nowrap rounded-md bg-[var(--lime-soft)] px-1.5 py-0.5 text-[0.8rem] font-medium text-[var(--lime-text)]">{row.prop}</code>
                                 </td>
                                 <td className="px-4 py-3"><code className="text-[0.78rem] text-[var(--syntax-type)]">{row.type}</code></td>
-                                <td className="px-4 py-3"><code className="text-[0.78rem] text-[var(--ink-3)]">{row.def != null && row.def !== '' ? row.def : '—'}</code></td>
+                                <td className="px-4 py-3"><code className="text-[0.78rem] text-[var(--ink-3)]">{row.def != null && row.def !== '' ? row.def : 'none'}</code></td>
                                 <td className="px-4 py-3 leading-relaxed text-[var(--ink-2)]">{row.desc}</td>
                             </tr>
                         ))}

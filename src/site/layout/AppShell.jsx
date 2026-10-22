@@ -1,11 +1,13 @@
 import { useEffect } from 'react';
-import { ScrollRestoration, useLocation, useMatches, useOutlet } from 'react-router-dom';
+import { ScrollRestoration, useLocation, useMatches, useNavigation, useOutlet } from 'react-router-dom';
 import { Toaster } from 'sonner';
 import Navbar from './Navbar.jsx';
 import Sidebar from './Sidebar.jsx';
 import MobileDrawer from './MobileDrawer.jsx';
 import CommandMenu from './CommandMenu.jsx';
 import FeedbackDialog from './FeedbackDialog.jsx';
+import { NavigationLoader } from './PageLoader.jsx';
+import { prefetchAll } from '../config/navigation.js';
 import { applySeo, seoForRoute } from '../seo.js';
 
 // Shared fallback, so a route without a handle doesn't re-run the SEO effect every render.
@@ -20,6 +22,7 @@ export default function AppShell() {
     const matches = useMatches();
     const { pathname } = useLocation();
     const outlet = useOutlet();
+    const navigation = useNavigation();
     const handle = [...matches].reverse().find((m) => m.handle)?.handle ?? NO_HANDLE;
     const showSidebar = Boolean(handle.page || handle.sidebar);
 
@@ -35,6 +38,8 @@ export default function AppShell() {
             import('../docs/ComponentDoc.jsx').catch(() => {});
             import('../docs/controls.jsx').catch(() => {});
             import('../docs/BackgroundDemo.jsx').catch(() => {});
+            import('../../components/MainUI/ApexUI-Kit/LoadingScreen/LoadingScreen.jsx').catch(() => {});
+            prefetchAll();
         };
         const idle = window.requestIdleCallback;
         const id = idle ? idle(warm, { timeout: 3000 }) : window.setTimeout(warm, 1500);
@@ -50,8 +55,7 @@ export default function AppShell() {
         }
     }, []);
 
-    // New pages swap in at once: dimming them in on every navigation read as a
-    // flicker, and the centered PageLoader covers slow loads.
+    // Pages arrive fully loaded (route-level lazy), so they swap in at once.
     const page = <div key={pathname}>{outlet}</div>;
 
     return (
@@ -68,6 +72,7 @@ export default function AppShell() {
             <MobileDrawer />
             <CommandMenu />
             <FeedbackDialog />
+            <NavigationLoader loading={navigation.state === 'loading'} />
             <Toaster richColors closeButton position="bottom-center" />
             <ScrollRestoration />
         </div>

@@ -27,7 +27,7 @@ const App = () => (
 export default App;`;
 
 const props = [
-    { prop: 'items', type: 'array', def: '—', desc: 'People to show. Each item has id, name, designation and image.' },
+    { prop: 'items', type: 'array', def: 'none', desc: 'People to show. Each item has id, name, designation and image.' },
 ];
 
 const dependencies = [
@@ -40,7 +40,7 @@ export default function ToolTipDoc() {
     return (
         <ComponentDoc
             title="ToolTip"
-            description="An animated tooltip that reveals details on hover — perfect for avatars, teams and galleries."
+            description="An animated tooltip that reveals details on hover, perfect for avatars, teams and galleries."
             preview={<ToolTip items={people} />}
             code={code}
             cli="tooltip"

@@ -189,7 +189,7 @@ export default function ProfileDoc() {
     return (
         <ComponentDoc
             title="Profile"
-            description="Animated profile cards for portfolios and team pages — flip, parallax, a tilting profile card, or an ID badge swinging on a ribbon."
+            description="Animated profile cards for portfolios and team pages, flip, parallax, a tilting profile card, or an ID badge swinging on a ribbon."
             variants={variants}
         />
     );

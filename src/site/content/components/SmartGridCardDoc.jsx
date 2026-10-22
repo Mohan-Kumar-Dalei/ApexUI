@@ -15,7 +15,7 @@ const printMergeMap = (obj) => {
 
 const props = [
     { prop: 'cards', type: 'array', def: 'defaultCards()', desc: 'Card objects with id, icon, title, description and buttonText.' },
-    { prop: 'mergeMap', type: 'object', def: '{}', desc: 'Cards to merge, as { source: target } — e.g. { 5: 2 } merges card 5 into card 2.' },
+    { prop: 'mergeMap', type: 'object', def: '{}', desc: 'Cards to merge, as { source: target }, e.g. { 5: 2 } merges card 5 into card 2.' },
     { prop: 'borderColor', type: 'string', def: '"cyan"', desc: 'Border color of the grid cards.' },
 ];
 

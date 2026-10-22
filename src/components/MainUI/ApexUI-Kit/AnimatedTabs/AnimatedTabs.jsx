@@ -8,10 +8,10 @@ import { AnimatePresence, motion } from "framer-motion";
  */
 
 const DEFAULT_TABS = [
-    { id: "overview", label: "Overview", content: "A quick look at everything in one place — usage, limits and the latest activity." },
+    { id: "overview", label: "Overview", content: "A quick look at everything in one place, usage, limits and the latest activity." },
     { id: "analytics", label: "Analytics", content: "Visitors, conversions and retention, updated every few seconds with zero setup." },
     { id: "reports", label: "Reports", content: "Export weekly PDF reports or schedule them to land in your team's inbox." },
-    { id: "settings", label: "Settings", content: "Workspace name, members, billing and the danger zone — all in one tidy screen." },
+    { id: "settings", label: "Settings", content: "Workspace name, members, billing and the danger zone, all in one tidy screen." },
 ];
 
 const AnimatedTabs = ({ tabs = DEFAULT_TABS, defaultTab, variant = "pill", accentColor = "#a3e635", theme = "dark", onChange, className = "" }) => {

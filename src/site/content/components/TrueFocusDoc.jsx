@@ -25,7 +25,7 @@ export default function TrueFocusDoc() {
     return (
         <ComponentDoc
             title="True Focus"
-            description="One word of a sentence is sharp while the rest blur, and a set of glowing corner brackets glides from word to word — on a timer or following the pointer."
+            description="One word of a sentence is sharp while the rest blur, and a set of glowing corner brackets glides from word to word, on a timer or following the pointer."
             preview={
                 <TrueFocus manual={manual} blur={blur} borderColor={accent} className="text-4xl text-[var(--ink)] sm:text-6xl" />
             }

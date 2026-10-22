@@ -39,7 +39,7 @@ export default App;`;
     return (
         <ComponentDoc
             title="FAQ Accordion"
-            description="Questions that open with a smooth height animation and a plus that turns into a cross — one at a time or several together."
+            description="Questions that open with a smooth height animation and a plus that turns into a cross, one at a time or several together."
             preview={<FaqAccordion key={String(multiple)} accentColor={accent} theme={theme} multiple={multiple} />}
             controls={
                 <ControlGrid>

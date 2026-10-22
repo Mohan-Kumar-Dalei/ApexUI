@@ -25,7 +25,7 @@ export default function ProximityTextDoc() {
     return (
         <ComponentDoc
             title="Proximity Text"
-            description="Letters swell, lift and light up as the pointer gets close, falling off smoothly with distance — like a magnifier sliding along the line."
+            description="Letters swell, lift and light up as the pointer gets close, falling off smoothly with distance, like a magnifier sliding along the line."
             preview={
                 <ProximityText radius={radius} maxScale={scale} activeColor={accent} className="max-w-3xl px-6 py-10 text-center text-4xl leading-[1.5] text-[var(--ink)] sm:text-5xl" />
             }

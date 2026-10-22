@@ -9,7 +9,7 @@ const props = [
     { prop: 'duration', type: "number", def: "18", desc: "Seconds per turn." },
     { prop: 'onHover', type: "'speedUp' | 'slowDown' | 'pause' | 'goBonkers' | 'none'", def: "\"speedUp\"", desc: "What hovering does." },
     { prop: 'color', type: "string", def: "\"currentColor\"", desc: "Text color." },
-    { prop: 'children', type: "ReactNode", def: "—", desc: "Content in the middle." },
+    { prop: 'children', type: "ReactNode", def: "none", desc: "Content in the middle." },
     { prop: 'className', type: "string", def: "\"\"", desc: "Extra classes." },
 ];
 
@@ -25,7 +25,7 @@ export default function CircularTextDoc() {
     return (
         <ComponentDoc
             title="Circular Text"
-            description="A line of text wrapped around a circle that keeps turning — on hover it can speed up, slow down, pause or go bonkers. Put a logo or icon in the middle."
+            description="A line of text wrapped around a circle that keeps turning, on hover it can speed up, slow down, pause or go bonkers. Put a logo or icon in the middle."
             preview={
                 <CircularText onHover={hover} duration={duration} className="text-[var(--ink)]">
                     <span className="grid h-16 w-16 place-items-center rounded-full bg-lime-400 text-xl font-black text-black">A</span>

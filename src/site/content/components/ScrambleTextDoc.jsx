@@ -10,11 +10,11 @@ const props = [
     { prop: 'speed', type: 'number', def: '40', desc: 'Milliseconds between scramble ticks.' },
     { prop: 'revealRate', type: 'number', def: '2', desc: 'Ticks before the next letter locks in (higher is slower).' },
     { prop: 'direction', type: "'start' | 'end' | 'center' | 'random'", def: '"start"', desc: 'Order in which letters lock in.' },
-    { prop: 'characters', type: 'string', def: 'A–Z, 0–9, symbols', desc: 'Characters used while scrambling.' },
+    { prop: 'characters', type: 'string', def: 'A to Z, 0 to 9, symbols', desc: 'Characters used while scrambling.' },
     { prop: 'accentColor', type: 'string', def: '"#a3e635"', desc: 'Color of letters that are still scrambling.' },
     { prop: 'loopDelay', type: 'number', def: '2400', desc: 'Pause between runs when trigger is "loop", in ms.' },
     { prop: 'className', type: 'string', def: '""', desc: 'Classes for the text element.' },
-    { prop: '...rest', type: 'any', def: '—', desc: 'Other props (href, onClick…) go to the element.' },
+    { prop: '...rest', type: 'any', def: 'none', desc: 'Other props (href, onClick…) go to the element.' },
 ];
 
 const dependencies = [
@@ -54,7 +54,7 @@ export default App;`;
     return (
         <ComponentDoc
             title="Scramble Text"
-            description="Letters cycle through random characters and lock in one by one, like text being decrypted — on view, on hover or on a loop, without any layout shift."
+            description="Letters cycle through random characters and lock in one by one, like text being decrypted, on view, on hover or on a loop, without any layout shift."
             preview={
                 <div key={JSON.stringify(settings)} className="flex w-full flex-col items-center gap-6 text-center">
                     <ScrambleText as="h2" text="Decrypting the future" {...settings} className="text-[clamp(2rem,6vw,4.25rem)] font-bold leading-[1.05] tracking-tight" />

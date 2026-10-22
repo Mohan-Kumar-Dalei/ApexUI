@@ -31,7 +31,7 @@ const App = () => <Testimonials testimonials={testimonials} />;
 export default App;`;
 
 const props = [
-    { prop: 'testimonials', type: 'array', def: '—', desc: 'Testimonials to show. Each item has text, author, title and image.' },
+    { prop: 'testimonials', type: 'array', def: 'none', desc: 'Testimonials to show. Each item has text, author, title and image.' },
 ];
 
 const dependencies = [
@@ -44,7 +44,7 @@ export default function TestimonialsDoc() {
     return (
         <ComponentDoc
             title="Testimonials"
-            description="A testimonials card with smooth transitions between quotes — social proof that looks the part."
+            description="A testimonials card with smooth transitions between quotes, social proof that looks the part."
             preview={<Testimonials testimonials={testimonials} />}
             previewClassName="min-h-[560px]"
             code={code}

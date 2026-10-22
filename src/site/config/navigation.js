@@ -213,7 +213,7 @@ export const componentPages = [
         load: () => import('../content/components/ProfileDoc.jsx'),
         category: 'Cards',
         image: shot('profile.png'),
-        summary: 'Profile cards in four styles — flip, parallax, a tilting card and an ID badge on a ribbon.',
+        summary: 'Profile cards in four styles, flip, parallax, a tilting card and an ID badge on a ribbon.',
         isNew: true,
     },
     {
@@ -340,7 +340,7 @@ export const componentPages = [
         load: () => import('../content/components/Carousel3DDoc.jsx'),
         category: 'Interactive',
         image: shot('3d-carousel.png'),
-        summary: 'Cards on a ring that spins in 3D — a light CSS ring or a full 360° WebGL ring.',
+        summary: 'Cards on a ring that spins in 3D, a light CSS ring or a full 360° WebGL ring.',
         isNew: true,
     },
     {
@@ -385,7 +385,7 @@ export const componentPages = [
         load: () => import('../content/components/AnimatedButtonDoc.jsx'),
         category: 'Buttons',
         image: shot('animated-buttons.png'),
-        summary: 'Seven button feels — shine, fill, border beam, 3D press, loading, ripple and arrow.',
+        summary: 'Seven button feels, shine, fill, border beam, 3D press, loading, ripple and arrow.',
         isNew: true,
     },
     {
@@ -394,7 +394,7 @@ export const componentPages = [
         load: () => import('../content/components/LoadingScreenDoc.jsx'),
         category: 'Loaders',
         image: shot('loading-screens-v2.png'),
-        summary: 'Six loaders — orbit, progress, blocks and three mini games (orb, runner, racing) to play while you wait.',
+        summary: 'Six loaders, orbit, progress, blocks and three mini games (orb, runner, racing) to play while you wait.',
         isNew: true,
     },
     {
@@ -448,7 +448,7 @@ export const componentPages = [
         load: () => import('../content/components/CursorTrailDoc.jsx'),
         category: 'Interactive',
         image: shot('cursor-trail.png'),
-        summary: 'A tail that follows the mouse — comet, rainbow, dots, ribbon, sparkles or ghost rings.',
+        summary: 'A tail that follows the mouse, comet, rainbow, dots, ribbon, sparkles or ghost rings.',
         isNew: true,
     },
     {
@@ -493,7 +493,7 @@ export const componentPages = [
         load: () => import('../content/components/AnimatedSwitchDoc.jsx'),
         category: 'Buttons',
         image: shot('animated-switches.png'),
-        summary: 'Toggles with personality — classic, icon, day-to-night and neon.',
+        summary: 'Toggles with personality, classic, icon, day-to-night and neon.',
         isNew: true,
     },
     {
@@ -735,7 +735,7 @@ export const componentPages = [
         load: () => import('../content/components/TextRing3DDoc.jsx'),
         category: 'Text & Motion',
         image: shot('text-ring-3d.png'),
-        summary: 'Letters on a spinning ring in real 3D — drag to throw it around.',
+        summary: 'Letters on a spinning ring in real 3D, drag to throw it around.',
         isNew: true,
     },
     {
@@ -871,4 +871,27 @@ export const componentsByCategory = CATEGORIES.map((category) => ({
 /* Warm a page's code before the user clicks (hover / focus). */
 export const prefetch = (page) => {
     page?.load?.().catch(() => {});
+};
+
+/*
+ * Warm every docs page in the background, a few at a time while the browser
+ * is idle, so sidebar clicks open instantly. Skipped on data-saver / 2G.
+ */
+let warmed = false;
+export const prefetchAll = () => {
+    if (warmed || typeof window === 'undefined') return;
+    warmed = true;
+    const c = navigator.connection;
+    if (c?.saveData || /2g/.test(c?.effectiveType ?? '')) return;
+    const queue = [...allDocPages];
+    const idle = window.requestIdleCallback ?? ((fn) => window.setTimeout(() => fn({ timeRemaining: () => 8 }), 200));
+    const pump = () =>
+        idle(
+            () => {
+                const batch = queue.splice(0, 4);
+                Promise.allSettled(batch.map((p) => p.load())).then(() => queue.length && pump());
+            },
+            { timeout: 4000 },
+        );
+    pump();
 };

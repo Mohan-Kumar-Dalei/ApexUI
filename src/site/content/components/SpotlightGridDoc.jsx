@@ -44,7 +44,7 @@ export default App;`;
     return (
         <ComponentDoc
             title="Spotlight Grid"
-            description="A bento grid of cards that share one pointer spotlight — the light sweeps across every border and surface at once."
+            description="A bento grid of cards that share one pointer spotlight, the light sweeps across every border and surface at once."
             preview={<SpotlightGrid key={theme} color={color} size={size} theme={theme} className="max-w-3xl" />}
             controls={
                 <ControlGrid>

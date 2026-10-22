@@ -35,7 +35,7 @@ export default function RainBackgroundDoc() {
     return (
         <ComponentDoc
             title="Rain Background"
-            description="Animated rainfall with collision detection — drops splash when they hit the ground."
+            description="Animated rainfall with collision detection, drops splash when they hit the ground."
             preview={
                 <BackgroundDemo title="Rain Effect Demo">
                     <RainBackground

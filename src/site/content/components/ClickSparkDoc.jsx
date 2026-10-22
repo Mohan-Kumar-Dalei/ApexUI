@@ -9,7 +9,7 @@ const props = [
     { prop: 'sparkRadius', type: "number", def: "26", desc: "How far sparks fly in px." },
     { prop: 'sparkSize', type: "number", def: "12", desc: "Spark length in px." },
     { prop: 'duration', type: "number", def: "450", desc: "Lifetime in ms." },
-    { prop: 'children', type: "ReactNode", def: "—", desc: "The area that sparks." },
+    { prop: 'children', type: "ReactNode", def: "none", desc: "The area that sparks." },
     { prop: 'className', type: "string", def: "\"\"", desc: "Extra classes." },
 ];
 

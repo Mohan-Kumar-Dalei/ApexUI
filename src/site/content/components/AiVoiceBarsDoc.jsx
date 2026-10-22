@@ -5,8 +5,8 @@ import useSiteTheme from '../../ui/useSiteTheme.js';
 import AiVoiceBars from '../../../components/MainUI/ApexUI-Kit/AiVoiceBars/AiVoiceBars.jsx';
 
 const props = [
-    { prop: 'state', type: "'idle' | 'listening' | 'thinking' | 'speaking'", def: '—', desc: 'Control the state yourself; leave it out and a tap cycles through them.' },
-    { prop: 'onStateChange', type: '(state) => void', def: '—', desc: 'Called when it is tapped.' },
+    { prop: 'state', type: "'idle' | 'listening' | 'thinking' | 'speaking'", def: 'none', desc: 'Control the state yourself; leave it out and a tap cycles through them.' },
+    { prop: 'onStateChange', type: '(state) => void', def: 'none', desc: 'Called when it is tapped.' },
     { prop: 'color', type: 'string', def: "'#a3e635'", desc: 'Bar color.' },
     { prop: 'theme', type: "'dark' | 'light'", def: "'dark'", desc: 'Pill background.' },
     { prop: 'count', type: 'number', def: '7', desc: 'How many bars.' },
@@ -30,7 +30,7 @@ export default function AiVoiceBarsDoc() {
     return (
         <ComponentDoc
             title="AI Voice Bars"
-            description="A pill of rounded equalizer bars — short dots when idle, mirrored peaks while listening, a travelling ripple while thinking and tall bursts while speaking."
+            description="A pill of rounded equalizer bars, short dots when idle, mirrored peaks while listening, a travelling ripple while thinking and tall bursts while speaking."
             preview={
                 <div className="text-[var(--ink)]">
                     <AiVoiceBars key={state} state={state === 'auto' ? undefined : state} color={PALETTES[palette]} theme={theme} />

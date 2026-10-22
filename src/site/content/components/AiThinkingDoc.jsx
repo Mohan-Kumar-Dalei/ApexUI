@@ -6,7 +6,7 @@ import useSiteTheme from '../../ui/useSiteTheme.js';
 
 const props = [
     { prop: 'steps', type: '{ label, detail? }[]', def: '4 demo steps', desc: 'What the assistant is doing, in order.' },
-    { prop: 'step', type: 'number', def: '—', desc: 'Current step index to drive it yourself; steps.length means done.' },
+    { prop: 'step', type: 'number', def: 'none', desc: 'Current step index to drive it yourself; steps.length means done.' },
     { prop: 'stepDuration', type: 'number', def: '1400', desc: 'Milliseconds per step when it plays on its own.' },
     { prop: 'loop', type: 'boolean', def: 'true', desc: 'Start over after finishing (demo mode).' },
     { prop: 'accentColor', type: 'string', def: '"#a3e635"', desc: 'Icon and check color.' },
@@ -29,7 +29,7 @@ export default function AiThinkingDoc() {
     return (
         <ComponentDoc
             title="AI Thinking"
-            description="Shows an assistant working — a shimmering Thinking label with a live timer, steps that tick off one by one and a collapsible panel for the reasoning."
+            description="Shows an assistant working, a shimmering Thinking label with a live timer, steps that tick off one by one and a collapsible panel for the reasoning."
             preview={<AiThinking key={speed} theme={theme} stepDuration={speed} accentColor={accent} />}
             controls={
                 <ControlGrid>

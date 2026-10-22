@@ -9,7 +9,7 @@ import { Plus } from "lucide-react";
  */
 
 const DEFAULT_ITEMS = [
-    { q: "Is ApexUI free to use?", a: "Yes. Every component is free and open source — copy it into your project or add it with one CLI command." },
+    { q: "Is ApexUI free to use?", a: "Yes. Every component is free and open source, copy it into your project or add it with one CLI command." },
     { q: "Does it work with Next.js?", a: "Yes. The components are plain React with Tailwind CSS, so they work in Vite, Next.js, Remix and anything else that runs React." },
     { q: "Can I change the colors?", a: "Every component takes props for its accent colors, and the Tailwind classes are right there in the code if you want to go further." },
     { q: "Do the animations respect reduced motion?", a: "Yes. Components check the visitor's reduced-motion setting and tone their movement down or switch it off." },

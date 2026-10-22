@@ -22,7 +22,7 @@ export default function FlipBookDoc() {
     return (
         <ComponentDoc
             title="Flip Book"
-            description="A 3D hardcover book — pages lift and turn around the spine with a sweeping shadow. Drag a page to turn it by hand, click it, or use the arrows; page edges thicken on the heavier side."
+            description="A 3D hardcover book, pages lift and turn around the spine with a sweeping shadow. Drag a page to turn it by hand, click it, or use the arrows; page edges thicken on the heavier side."
             preview={<FlipBook accentColor={accent} className="py-6 text-[var(--ink)]" />}
             controls={
                 <ControlGrid>

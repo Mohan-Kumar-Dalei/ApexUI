@@ -105,6 +105,8 @@ const CubeGallery = ({ faces = DEFAULT_FACES, size = 13, autoRotate = true, spee
                     className="relative h-full w-full cursor-grab touch-none active:cursor-grabbing [transform-style:preserve-3d]"
                     style={{ rotateX: rotX, rotateY: rotY }}
                     onPointerDown={(e) => {
+                        // Block text selection / native drag, which cancel the drag midway.
+                        e.preventDefault();
                         e.currentTarget.setPointerCapture(e.pointerId);
                         rotY.stop();
                         rotX.stop();

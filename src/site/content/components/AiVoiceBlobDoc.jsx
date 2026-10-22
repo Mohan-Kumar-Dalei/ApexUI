@@ -4,8 +4,8 @@ import { ControlGrid, SelectControl } from '../../docs/controls.jsx';
 import AiVoiceBlob from '../../../components/MainUI/ApexUI-Kit/AiVoiceBlob/AiVoiceBlob.jsx';
 
 const props = [
-    { prop: 'state', type: "'idle' | 'listening' | 'thinking' | 'speaking'", def: '—', desc: 'Control the state yourself; leave it out and a tap cycles through them.' },
-    { prop: 'onStateChange', type: '(state) => void', def: '—', desc: 'Called when it is tapped.' },
+    { prop: 'state', type: "'idle' | 'listening' | 'thinking' | 'speaking'", def: 'none', desc: 'Control the state yourself; leave it out and a tap cycles through them.' },
+    { prop: 'onStateChange', type: '(state) => void', def: 'none', desc: 'Called when it is tapped.' },
     { prop: 'colors', type: 'string[]', def: 'lime / cyan / violet', desc: 'Colors used for the visual.' },
     { prop: 'size', type: 'number', def: '13', desc: 'Blob size in rem.' },
     { prop: 'showLabel', type: 'boolean', def: 'true', desc: 'Show the state underneath.' },
@@ -31,7 +31,7 @@ export default function AiVoiceBlobDoc() {
     return (
         <ComponentDoc
             title="AI Voice Blob"
-            description="A soft gradient blob whose outline wobbles with the voice — nearly round when idle, rippling while listening, slowly morphing while thinking and bouncing while speaking."
+            description="A soft gradient blob whose outline wobbles with the voice, nearly round when idle, rippling while listening, slowly morphing while thinking and bouncing while speaking."
             preview={
                 <div className="text-[var(--ink)]">
                     <AiVoiceBlob key={state} state={state === 'auto' ? undefined : state} colors={PALETTES[palette]} />

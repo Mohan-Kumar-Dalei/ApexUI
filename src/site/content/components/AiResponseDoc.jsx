@@ -9,8 +9,8 @@ const props = [
     { prop: 'sources', type: '{ title, href }[]', def: '2 links', desc: 'Numbered source chips under the answer.' },
     { prop: 'speed', type: 'number', def: '18', desc: 'Milliseconds per streaming tick (lower is faster).' },
     { prop: 'assistant', type: 'string', def: '"Apex AI"', desc: 'Name above the answer.' },
-    { prop: 'onRegenerate', type: '() => void', def: '—', desc: 'Called by the regenerate button (it also replays the stream).' },
-    { prop: 'onFeedback', type: "('up' | 'down' | null) => void", def: '—', desc: 'Called when a thumb is toggled.' },
+    { prop: 'onRegenerate', type: '() => void', def: 'none', desc: 'Called by the regenerate button (it also replays the stream).' },
+    { prop: 'onFeedback', type: "('up' | 'down' | null) => void", def: 'none', desc: 'Called when a thumb is toggled.' },
     { prop: 'accentColor', type: 'string', def: '"#a3e635"', desc: 'Logo, cursor and active thumb color.' },
     { prop: 'theme', type: "'dark' | 'light'", def: '"dark"', desc: 'Card colors.' },
     { prop: 'className', type: 'string', def: '""', desc: 'Extra classes.' },
@@ -30,7 +30,7 @@ export default function AiResponseDoc() {
     return (
         <ComponentDoc
             title="AI Response"
-            description="An assistant answer that streams in with paragraphs, a copyable code block, numbered sources and an action bar — copy, regenerate, thumbs up and down."
+            description="An assistant answer that streams in with paragraphs, a copyable code block, numbered sources and an action bar, copy, regenerate, thumbs up and down."
             preview={<AiResponse key={speed} theme={theme} speed={speed} accentColor={accent} />}
             controls={
                 <ControlGrid>

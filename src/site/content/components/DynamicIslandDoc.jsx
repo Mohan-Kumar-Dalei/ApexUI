@@ -4,7 +4,7 @@ import ColorControl, { ControlGrid, RangeControl, SelectControl } from '../../do
 import DynamicIsland from '../../../components/MainUI/ApexUI-Kit/DynamicIsland/DynamicIsland.jsx';
 
 const props = [
-    { prop: 'view', type: "'idle' | 'music' | 'call' | 'timer' | 'notification'", def: '—', desc: 'Show one view yourself. Leave it out to let the island cycle on its own.' },
+    { prop: 'view', type: "'idle' | 'music' | 'call' | 'timer' | 'notification'", def: 'none', desc: 'Show one view yourself. Leave it out to let the island cycle on its own.' },
     { prop: 'defaultView', type: 'string', def: '"music"', desc: 'First view when uncontrolled.' },
     { prop: 'views', type: 'string[]', def: 'all five', desc: 'Which views to cycle through, in order.' },
     { prop: 'autoPlay', type: 'boolean', def: 'true', desc: 'Cycle through the views (pauses on hover and while expanded).' },
@@ -14,7 +14,7 @@ const props = [
     { prop: 'call', type: '{ name, subtitle, avatar }', def: 'Tony Stark', desc: 'Incoming call details.' },
     { prop: 'notification', type: '{ app, title, message }', def: 'demo message', desc: 'Notification details.' },
     { prop: 'timerSeconds', type: 'number', def: '300', desc: 'Countdown length for the timer view.' },
-    { prop: 'onViewChange', type: '(view) => void', def: '—', desc: 'Called when the island moves to the next view on its own.' },
+    { prop: 'onViewChange', type: '(view) => void', def: 'none', desc: 'Called when the island moves to the next view on its own.' },
 ];
 
 const dependencies = [
@@ -54,7 +54,7 @@ export default App;`;
     return (
         <ComponentDoc
             title="Dynamic Island"
-            description="A black capsule that morphs between live activities — music, calls, timers and notifications — with smooth spring motion."
+            description="A black capsule that morphs between live activities, music, calls, timers and notifications, with smooth spring motion."
             preview={
                 <DynamicIsland
                     key={view === 'auto' ? `auto-${interval}` : 'fixed'}

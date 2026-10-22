@@ -229,7 +229,7 @@ function Hero() {
                         transition={{ duration: 0.8, delay: 0.18, ease }}
                         className="mt-6 max-w-[56ch] text-[clamp(1.02rem,1.25vw,1.3rem)] leading-relaxed text-[var(--ink-2)]"
                     >
-                        {componentPages.length} copy-paste components built with Tailwind CSS, GSAP and Framer Motion. Add one with a single command — the code lands in your project, yours to change.
+                        {componentPages.length} copy-paste components built with Tailwind CSS, GSAP and Framer Motion. Add one with a single command, the code lands in your project, yours to change.
                     </motion.p>
 
                     <motion.div
@@ -374,7 +374,7 @@ const features = [
     { icon: Terminal, title: 'One command', body: 'npx apex-ui-kit add <name> writes the component straight into your project.' },
     { icon: Code2, title: 'You own the code', body: 'No runtime package or black box. Plain React and Tailwind you can edit freely.' },
     { icon: Sparkles, title: 'Motion first', body: 'GSAP and Framer Motion animations, tuned to stay smooth at 60fps.' },
-    { icon: Palette, title: 'Easy to theme', body: 'Colours, speed and behaviour are props — match your brand in seconds.' },
+    { icon: Palette, title: 'Easy to theme', body: 'Colours, speed and behaviour are props, match your brand in seconds.' },
     { icon: Gauge, title: 'Lightweight', body: 'Each component pulls in only what it needs. Nothing global, nothing extra.' },
     { icon: MonitorSmartphone, title: 'Responsive', body: 'From phones to 27" displays, layouts adapt without extra work.' },
 ];
@@ -414,7 +414,7 @@ export default function App() {
 function Steps() {
     const steps = [
         { title: 'Install the CLI', body: 'One package gives you the ApexUI command.', node: <CommandLine command="npm i apex-ui-kit" /> },
-        { title: 'Add a component', body: 'The source lands in src/ApexUI-Kit — yours to edit.', node: <CommandLine command="npx apex-ui-kit add hyper-card" /> },
+        { title: 'Add a component', body: 'The source lands in src/ApexUI-Kit, yours to edit.', node: <CommandLine command="npx apex-ui-kit add hyper-card" /> },
         { title: 'Use it', body: 'Import it like any other React component.', node: <CodeBlock code={usage} title="src/App.jsx" /> },
     ];
     return (
@@ -449,7 +449,7 @@ function Cta() {
                 <div className="flex flex-col items-start justify-between gap-10 lg:flex-row lg:items-end">
                     <div>
                         <h2 className="font-display max-w-[16ch] text-[clamp(2.2rem,5vw,5rem)] font-semibold leading-[1] tracking-[-0.045em]">Make your next interface feel alive.</h2>
-                        <p className="mt-4 max-w-[46ch] text-[1.02rem] text-[var(--lime-ink)]/75">Start with the docs, pick a component and drop it into your app — {SITE.version}, MIT licensed.</p>
+                        <p className="mt-4 max-w-[46ch] text-[1.02rem] text-[var(--lime-ink)]/75">Start with the docs, pick a component and drop it into your app, {SITE.version}, MIT licensed.</p>
                     </div>
                     <div className="flex flex-wrap gap-3">
                         <Link to="/components/docs/getting-started/introduction" className="group inline-flex h-14 items-center gap-3 rounded-full bg-[var(--lime-ink)] pl-7 pr-2 text-base font-semibold text-[var(--lime)]">

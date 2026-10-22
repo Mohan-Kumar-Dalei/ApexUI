@@ -4,8 +4,8 @@ import { ControlGrid, SelectControl } from '../../docs/controls.jsx';
 import AiVoiceRing from '../../../components/MainUI/ApexUI-Kit/AiVoiceRing/AiVoiceRing.jsx';
 
 const props = [
-    { prop: 'state', type: "'idle' | 'listening' | 'thinking' | 'speaking'", def: '—', desc: 'Control the state yourself; leave it out and a tap cycles through them.' },
-    { prop: 'onStateChange', type: '(state) => void', def: '—', desc: 'Called when it is tapped.' },
+    { prop: 'state', type: "'idle' | 'listening' | 'thinking' | 'speaking'", def: 'none', desc: 'Control the state yourself; leave it out and a tap cycles through them.' },
+    { prop: 'onStateChange', type: '(state) => void', def: 'none', desc: 'Called when it is tapped.' },
     { prop: 'colors', type: 'string[]', def: 'lime / cyan', desc: 'Colors used for the visual.' },
     { prop: 'size', type: 'number', def: '14', desc: 'Ring size in rem.' },
     { prop: 'showLabel', type: 'boolean', def: 'true', desc: 'Show the state underneath.' },
@@ -31,7 +31,7 @@ export default function AiVoiceRingDoc() {
     return (
         <ComponentDoc
             title="AI Voice Ring"
-            description="A circular audio visualiser — radial bars around a glowing core that breathe when idle, flicker while listening, spin while thinking and bloom while speaking."
+            description="A circular audio visualiser, radial bars around a glowing core that breathe when idle, flicker while listening, spin while thinking and bloom while speaking."
             preview={
                 <div className="text-[var(--ink)]">
                     <AiVoiceRing key={state} state={state === 'auto' ? undefined : state} colors={PALETTES[palette].slice(0, 2)} />

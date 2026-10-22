@@ -37,7 +37,7 @@ export default function BeamBarDoc() {
     return (
         <ComponentDoc
             title="Beam Bar"
-            description="An animated beam bar with a pulsing light — perfect for modern loading states and dashboards."
+            description="An animated beam bar with a pulsing light, perfect for modern loading states and dashboards."
             preview={
                 <>
                     <BeamBar fromColor="#a855f7" viaColor="#38bdf8" toColor="#06b6d4" barWidth={320} barHeight={8} duration={1.2} pulseDuration={2.5} />

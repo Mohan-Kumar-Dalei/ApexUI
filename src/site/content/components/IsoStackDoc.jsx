@@ -25,7 +25,7 @@ export default function IsoStackDoc() {
     return (
         <ComponentDoc
             title="Iso Stack"
-            description="Layers drawn in isometric 3D, stacked like a sandwich — hover or tap and the stack fans open to show each label; hover a layer to lift it out."
+            description="Layers drawn in isometric 3D, stacked like a sandwich, hover or tap and the stack fans open to show each label; hover a layer to lift it out."
             preview={<IsoStack theme={theme} gap={gap} />}
             controls={
                 <ControlGrid>

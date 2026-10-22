@@ -47,7 +47,7 @@ export default App;`;
     return (
         <ComponentDoc
             title="Typewriter Text"
-            description="Types a phrase, pauses, deletes it and moves on to the next — with a blinking caret and a natural, slightly uneven rhythm."
+            description="Types a phrase, pauses, deletes it and moves on to the next, with a blinking caret and a natural, slightly uneven rhythm."
             preview={
                 <TypewriterText
                     key={`${speed}-${caret}`}
