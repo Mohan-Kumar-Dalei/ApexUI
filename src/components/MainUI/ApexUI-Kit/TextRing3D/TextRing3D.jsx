@@ -1,15 +1,18 @@
-import React, { useRef } from "react";
+import React, { useEffect, useRef } from "react";
 import { useAnimationFrame, useReducedMotion } from "framer-motion";
 
 /*
  * 3D Text Ring: letters stand on a ring in real 3D space and the ring
  * turns, so text sweeps around the back and comes forward again. Letters
- * fade and soften as they pass behind. Drag to spin it yourself.
+ * fade and soften as they pass behind. Drag to spin it yourself. On narrow
+ * screens the whole ring scales down to fit its container.
  */
 
 const TextRing3D = ({ text = "APEX UI · 3D TYPE · ", radius = 9, speed = 30, tilt = -14, fontSize = 2, color = "currentColor", accentColor = "#a3e635", className = "" }) => {
     const reduced = useReducedMotion();
+    const box = useRef(null);
     const ring = useRef(null);
+    const fit = useRef(1);
     const letters = useRef([]);
     const angle = useRef(0);
     const vel = useRef(0);
@@ -17,13 +20,24 @@ const TextRing3D = ({ text = "APEX UI · 3D TYPE · ", radius = 9, speed = 30, t
     const chars = Array.from(text);
     const step = 360 / chars.length;
 
+    useEffect(() => {
+        const el = box.current;
+        const ro = new ResizeObserver(() => {
+            const rem = parseFloat(getComputedStyle(document.documentElement).fontSize) || 16;
+            const want = radius * 2.4 * rem;
+            fit.current = Math.min(1, el.getBoundingClientRect().width / want);
+        });
+        ro.observe(el);
+        return () => ro.disconnect();
+    }, [radius]);
+
     useAnimationFrame((_, delta) => {
         const dt = Math.min(0.05, delta / 1000);
         if (!drag.current) {
             vel.current *= 0.95;
             angle.current += (reduced ? 0 : speed) * dt + vel.current * dt;
         }
-        if (ring.current) ring.current.style.transform = `rotateX(${tilt}deg) rotateY(${-angle.current}deg)`;
+        if (ring.current) ring.current.style.transform = `scale(${fit.current}) rotateX(${tilt}deg) rotateY(${-angle.current}deg)`;
         letters.current.forEach((el, i) => {
             if (!el) return;
             // How much this letter faces the viewer (1 front, -1 back).
@@ -35,6 +49,7 @@ const TextRing3D = ({ text = "APEX UI · 3D TYPE · ", radius = 9, speed = 30, t
 
     return (
         <div
+            ref={box}
             className={`grid cursor-grab touch-none select-none place-items-center active:cursor-grabbing [perspective:900px] ${className}`}
             style={{ width: `${radius * 2.4}rem`, maxWidth: "100%", height: `${fontSize * 3.2 + 4}rem`, color }}
             onPointerDown={(e) => {

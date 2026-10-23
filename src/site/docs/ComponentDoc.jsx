@@ -110,7 +110,7 @@ function Stage({ title, description, variant, variants, activeVariant, onVariant
                             <div className="hidden md:block">
                                 <Segmented size="sm" value={device} onChange={setDevice} options={DEVICES.map((d) => ({ value: d.id, icon: d.icon, title: `${d.label} view` }))} />
                             </div>
-                            <div>
+                            <div className="hidden min-[360px]:block">
                                 <Segmented size="sm" value={bg} onChange={setBg} options={STAGE_BG.map((b) => ({ value: b.id, icon: b.icon, title: variant.fullBleed ? `${b.label} overlay` : `${b.label} background` }))} />
                             </div>
                             <button type="button" onClick={() => setReplayKey((k) => k + 1)} className={toolBtn} aria-label="Replay preview" title="Replay">

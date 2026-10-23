@@ -299,7 +299,7 @@ const GooeyNav = ({ items = DEFAULT_ITEMS, initialActive = 0, onChange, accentCo
                         href={item.href}
                         onClick={(e) => select(i, e)}
                         aria-current={i === active ? "page" : undefined}
-                        className={`relative z-[1] shrink-0 rounded-full px-2.5 py-2 text-[0.82rem] font-medium sm:py-2.5 sm:text-[0.95rem] outline-none transition-colors duration-300 focus-visible:ring-2 focus-visible:ring-current/30 sm:px-5 ${i === active ? "text-neutral-950" : dark ? "text-white/65 hover:text-white" : "text-neutral-500 hover:text-neutral-900"}`}
+                        className={`relative z-[1] shrink-0 rounded-full px-2.5 py-2 text-[0.82rem] font-medium max-[380px]:px-2 max-[380px]:text-[0.76rem] sm:py-2.5 sm:text-[0.95rem] outline-none transition-colors duration-300 focus-visible:ring-2 focus-visible:ring-current/30 sm:px-5 ${i === active ? "text-neutral-950" : dark ? "text-white/65 hover:text-white" : "text-neutral-500 hover:text-neutral-900"}`}
                     >
                         {item.label}
                     </a>

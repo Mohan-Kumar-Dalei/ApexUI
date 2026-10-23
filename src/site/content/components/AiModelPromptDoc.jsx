@@ -52,7 +52,7 @@ export default function AiModelPromptDoc() {
                         theme={theme}
                         accentColor={accent}
                     />
-                    <p className="h-5 max-w-2xl truncate font-mono text-[0.72rem] text-[var(--ink-3)]">
+                    <p className="h-5 w-full max-w-2xl truncate text-center font-mono text-[0.72rem] text-[var(--ink-3)]">
                         {last ? `sent → ${last.model.label} · ${JSON.stringify(last.configuration)}` : 'Pick a model, open the sliders, type and press Enter'}
                     </p>
                 </div>

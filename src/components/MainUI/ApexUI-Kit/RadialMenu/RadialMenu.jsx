@@ -6,7 +6,8 @@ import { Camera, Heart, Home, MessageCircle, Plus, Settings, Share2, User } from
  * Radial Menu: a round button that fans its actions out in a circle (or an
  * arc). Items spring out one after another and tuck back in on close.
  * Keyboard friendly: arrows move between items, Escape closes, and clicking
- * outside closes too.
+ * outside closes too. The ring shrinks to fit narrow containers, and the
+ * fade-in is a CSS animation so no item blinks when its spring settles.
  */
 
 const DEFAULT_ITEMS = [
@@ -25,10 +26,23 @@ const RadialMenu = ({ items = DEFAULT_ITEMS, radius = 6.5, arc = 360, startAngle
     const [picked, setPicked] = useState(null);
     const root = useRef(null);
     const btns = useRef([]);
+    const [fitR, setFitR] = useState(null);
     const dark = theme !== "light";
     const n = items.length;
     // Full circle spreads evenly; a partial arc includes both ends.
     const step = arc >= 360 ? 360 / n : arc / Math.max(1, n - 1);
+
+    // Keep the ring inside the box on small screens (item half size + a little room).
+    useEffect(() => {
+        const el = root.current;
+        const ro = new ResizeObserver(([entry]) => {
+            const rem = parseFloat(getComputedStyle(document.documentElement).fontSize) || 16;
+            const room = entry.contentRect.width / 2 - 30;
+            setFitR(Math.max(48, Math.min(radius * rem, room)));
+        });
+        ro.observe(el);
+        return () => ro.disconnect();
+    }, [radius]);
 
     useEffect(() => {
         if (!open) return undefined;
@@ -56,11 +70,13 @@ const RadialMenu = ({ items = DEFAULT_ITEMS, radius = 6.5, arc = 360, startAngle
 
     return (
         <div ref={root} className={`relative inline-grid place-items-center ${className}`} style={{ width: `${radius * 2 + 4}rem`, height: `${radius * 2 + 4}rem`, maxWidth: "100%" }}>
+            <style>{"@keyframes apex-radial-in{from{opacity:0}to{opacity:1}}"}</style>
             <AnimatePresence>
                 {open &&
                     items.map((item, i) => {
                         const a = ((startAngle + i * step) * Math.PI) / 180;
                         const Icon = item.icon;
+                        const r = fitR ?? radius * 16;
                         return (
                             <motion.button
                                 key={`${id}-${i}`}
@@ -71,10 +87,10 @@ const RadialMenu = ({ items = DEFAULT_ITEMS, radius = 6.5, arc = 360, startAngle
                                 onClick={() => choose(item, i)}
                                 onKeyDown={(e) => onItemKey(e, i)}
                                 className={`group absolute grid h-12 w-12 place-items-center rounded-full shadow-lg outline-none ring-1 focus-visible:ring-2 ${dark ? "bg-neutral-900 text-white ring-white/10 hover:bg-neutral-800 focus-visible:ring-white/50" : "bg-white text-neutral-800 ring-black/10 hover:bg-neutral-50 focus-visible:ring-black/40"}`}
-                                initial={{ x: 0, y: 0, scale: 0.3, opacity: 0 }}
-                                animate={{ x: `${Math.cos(a) * radius}rem`, y: `${Math.sin(a) * radius}rem`, scale: 1, opacity: 1, transition: { type: "spring", stiffness: 420, damping: 24, delay: i * 0.03 } }}
+                                initial={{ x: 0, y: 0, scale: 0.3 }}
+                                animate={{ x: Math.cos(a) * r, y: Math.sin(a) * r, scale: 1, transition: { type: "spring", stiffness: 380, damping: 26, delay: i * 0.03 } }}
                                 exit={{ x: 0, y: 0, scale: 0.3, opacity: 0, transition: { duration: 0.18, delay: (n - 1 - i) * 0.015 } }}
-                                style={picked === i ? { color: accentColor } : undefined}
+                                style={{ animation: `apex-radial-in 220ms ease-out ${i * 30}ms backwards`, ...(picked === i ? { color: accentColor } : null) }}
                             >
                                 {Icon ? <Icon className="h-5 w-5" /> : item.label[0]}
                                 <span className={`pointer-events-none absolute top-full mt-1.5 whitespace-nowrap rounded-md px-1.5 py-0.5 text-[0.65rem] font-medium opacity-0 transition-opacity group-hover:opacity-100 group-focus-visible:opacity-100 ${dark ? "bg-white text-black" : "bg-neutral-900 text-white"}`}>{item.label}</span>

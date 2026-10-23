@@ -66,6 +66,7 @@ const ToastStack = forwardRef(function ToastStack({ position = "bottom-right", d
             onPointerLeave={() => setHovered(false)}
             className={`${contained ? "absolute" : "fixed"} z-[200] flex w-[min(22rem,calc(100%-2rem))] flex-col ${place} ${className}`}
         >
+            <style>{"@keyframes apex-toast-in{from{opacity:0}to{opacity:1}}"}</style>
             <AnimatePresence initial={false}>
                 {toasts.map((t, i) => {
                     const fromEnd = toasts.length - 1 - i;
@@ -75,27 +76,34 @@ const ToastStack = forwardRef(function ToastStack({ position = "bottom-right", d
                     return (
                         <motion.li
                             key={t.id}
-                            layout
                             drag="x"
                             dragConstraints={{ left: 0, right: 0 }}
                             dragElastic={0.6}
                             onDragEnd={(_, info) => Math.abs(info.offset.x) > 90 && dismiss(t.id)}
-                            initial={{ opacity: 0, y: top ? -30 : 30, scale: 0.94 }}
-                            animate={{ opacity: fromEnd > 2 && !hovered ? 0 : 1, y: top ? offset : -offset, scale: hovered ? 1 : 1 - fromEnd * 0.05 }}
-                            exit={{ opacity: 0, scale: 0.9, transition: { duration: 0.18 } }}
+                            initial={{ y: top ? -30 : 30, scale: 0.94 }}
+                            animate={{ y: top ? offset : -offset, scale: hovered ? 1 : 1 - fromEnd * 0.05 }}
+                            exit={{ scale: 0.9, transition: { duration: 0.18 } }}
                             transition={{ type: "spring", stiffness: 380, damping: 32 }}
                             className={`absolute w-full cursor-grab touch-pan-y list-none active:cursor-grabbing ${top ? "top-0" : "bottom-0"}`}
                             style={{ zIndex: i }}
                         >
-                            <div className={`flex items-start gap-3 rounded-2xl border p-3.5 pr-9 shadow-[0_18px_40px_-18px_rgba(0,0,0,0.5)] backdrop-blur ${dark ? "border-white/10 bg-neutral-900/95 text-white" : "border-black/10 bg-white/95 text-neutral-900"}`}>
-                                <Icon className="mt-0.5 h-5 w-5 shrink-0" style={{ color }} />
-                                <div className="min-w-0">
-                                    <p className="text-[0.88rem] font-semibold">{t.title}</p>
-                                    {t.description && <p className={`mt-0.5 text-[0.8rem] ${dark ? "text-white/60" : "text-neutral-500"}`}>{t.description}</p>}
-                                </div>
-                                <button type="button" aria-label="Dismiss" onClick={() => dismiss(t.id)} className={`absolute right-2.5 top-2.5 grid h-6 w-6 place-items-center rounded-full ${dark ? "text-white/50 hover:bg-white/10 hover:text-white" : "text-neutral-400 hover:bg-black/5 hover:text-neutral-900"}`}>
-                                    <X className="h-3.5 w-3.5" />
-                                </button>
+                            {/* Cards deeper than three fade out of the collapsed stack. */}
+                            <div className="transition-opacity duration-300" style={{ opacity: fromEnd > 2 && !hovered ? 0 : 1 }}>
+                                {/* The fade-in is a CSS animation: framer hands opacity to the browser
+                                    and, when that finishes, can show the start value for one frame. */}
+                                <motion.div
+                                    exit={{ opacity: 0, transition: { duration: 0.18 } }}
+                                    style={{ animation: "apex-toast-in 0.22s ease-out backwards" }}
+                                    className={`relative flex items-start gap-3 rounded-2xl border p-3.5 pr-9 shadow-[0_18px_40px_-18px_rgba(0,0,0,0.5)] backdrop-blur ${dark ? "border-white/10 bg-neutral-900/95 text-white" : "border-black/10 bg-white/95 text-neutral-900"}`}>
+                                    <Icon className="mt-0.5 h-5 w-5 shrink-0" style={{ color }} />
+                                    <div className="min-w-0">
+                                        <p className="text-[0.88rem] font-semibold">{t.title}</p>
+                                        {t.description && <p className={`mt-0.5 text-[0.8rem] ${dark ? "text-white/60" : "text-neutral-500"}`}>{t.description}</p>}
+                                    </div>
+                                    <button type="button" aria-label="Dismiss" onClick={() => dismiss(t.id)} className={`absolute right-2.5 top-2.5 grid h-6 w-6 place-items-center rounded-full ${dark ? "text-white/50 hover:bg-white/10 hover:text-white" : "text-neutral-400 hover:bg-black/5 hover:text-neutral-900"}`}>
+                                        <X className="h-3.5 w-3.5" />
+                                    </button>
+                                </motion.div>
                             </div>
                         </motion.li>
                     );
