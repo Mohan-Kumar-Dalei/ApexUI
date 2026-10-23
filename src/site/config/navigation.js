@@ -1044,6 +1044,24 @@ export const componentPages = [
         summary: 'A ⌘K search palette with fuzzy matching and a sliding keyboard highlight.',
         isNew: true,
     },
+    {
+        name: 'Crossed Marquee',
+        path: '/components/crossed-marquee',
+        load: () => import('../content/components/CrossedMarqueeDoc.jsx'),
+        category: 'Text & Motion',
+        image: shot('crossed-marquee.png'),
+        summary: 'Two tilted tech-stack bands crossing like an X that react to page scroll.',
+        isNew: true,
+    },
+    {
+        name: 'Theme Switcher',
+        path: '/components/theme-switcher',
+        load: () => import('../content/components/ThemeSwitcherDoc.jsx'),
+        category: 'Navigation',
+        image: shot('theme-switcher.png'),
+        summary: 'Eight colour themes with a circle reveal from the swatch you click.',
+        isNew: true,
+    },
 ];
 
 // Keep components in the same order everywhere (index panel, grid, prev / next):

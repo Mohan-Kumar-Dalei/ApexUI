@@ -4,7 +4,7 @@
 
 # ApexUI
 
-### 113 free, animated UI components for React
+### 115 free, animated UI components for React
 
 Copy-paste or one-command install. Styled with Tailwind CSS, animated with Framer Motion, GSAP and Three.js.<br/>
 You get the source, so you can read it and change anything.
@@ -48,7 +48,7 @@ You get the source, so you can read it and change anything.
 
 ## Why ApexUI
 
-- **113 components** across backgrounds, cards, text effects, navigation, buttons, interactive UI, AI interfaces, loaders and maps, with new ones added regularly.
+- **115 components** across backgrounds, cards, text effects, navigation, buttons, interactive UI, AI interfaces, loaders and maps, with new ones added regularly.
 - **Real 3D, still light.** Three.js and WebGL components (Galaxy 3D, Warp Tunnel, Distortion Image, Liquid Blob 3D, Particle Morph, Retro Grid 3D, Gooey Nav) use one small shader each, cap the pixel ratio, pause when off screen and free the GPU on unmount.
 - **AI-ready UI.** Chat, prompt box with model picker, thinking state, streaming response and five voice assistant visuals.
 - **You own the code.** The CLI copies plain `.jsx` files into your project. No runtime package, no lock-in.
@@ -133,7 +133,7 @@ Needs React 18+ and Tailwind CSS (v4 recommended). Setup guides: [React](https:/
 </details>
 
 <details>
-<summary><b>Text & Motion</b> (19)</summary>
+<summary><b>Text & Motion</b> (20)</summary>
 
 | Component | Install |
 | --- | --- |
@@ -142,6 +142,7 @@ Needs React 18+ and Tailwind CSS (v4 recommended). Setup guides: [React](https:/
 | [Beam Bar](https://apex-ui.in/components/beam-bar) | `npx apex-ui-kit add beam-bar` |
 | [Blur Reveal Text](https://apex-ui.in/components/blur-reveal-text) | `npx apex-ui-kit add blur-reveal-text` |
 | [Circular Text](https://apex-ui.in/components/circular-text) | `npx apex-ui-kit add circular-text` |
+| [Crossed Marquee](https://apex-ui.in/components/crossed-marquee) | `npx apex-ui-kit add crossed-marquee` |
 | [Extruded Text](https://apex-ui.in/components/extruded-text) | `npx apex-ui-kit add extruded-text` |
 | [Flip Clock](https://apex-ui.in/components/flip-clock) | `npx apex-ui-kit add flip-clock` |
 | [Glitch Text](https://apex-ui.in/components/glitch-text) | `npx apex-ui-kit add glitch-text` |
@@ -160,7 +161,7 @@ Needs React 18+ and Tailwind CSS (v4 recommended). Setup guides: [React](https:/
 </details>
 
 <details>
-<summary><b>Navigation</b> (10)</summary>
+<summary><b>Navigation</b> (11)</summary>
 
 | Component | Install |
 | --- | --- |
@@ -173,6 +174,7 @@ Needs React 18+ and Tailwind CSS (v4 recommended). Setup guides: [React](https:/
 | [Nav Menu](https://apex-ui.in/components/nav-menu) | `npx apex-ui-kit add nav-menu` |
 | [Radial Menu](https://apex-ui.in/components/radial-menu) | `npx apex-ui-kit add radial-menu` |
 | [Sidebar Nav](https://apex-ui.in/components/sidebar-nav) | `npx apex-ui-kit add sidebar-nav` |
+| [Theme Switcher](https://apex-ui.in/components/theme-switcher) | `npx apex-ui-kit add theme-switcher` |
 | [Theme Toggle](https://apex-ui.in/components/theme-toggle) | `npx apex-ui-kit add theme-toggle` |
 
 </details>
