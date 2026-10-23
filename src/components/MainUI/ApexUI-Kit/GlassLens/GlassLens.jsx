@@ -126,7 +126,6 @@ const GlassLens = ({ image = DEFAULT_IMAGE, size = 9, refraction = 0.7, dispersi
             u.uCover.value.set(ia > a ? a / ia : 1, ia > a ? 1 : ia / a);
         };
         new TextureLoader().setCrossOrigin("anonymous").load(image, (t) => {
-            t.colorSpace = SRGBColorSpace;
             u.uTex.value = t;
             view.imgAspect = t.image.width / t.image.height;
             cover();

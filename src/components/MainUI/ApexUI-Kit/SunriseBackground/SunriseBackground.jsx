@@ -23,6 +23,7 @@ precision highp float;
 uniform vec2 uRes; uniform float uTime; uniform float uRise; uniform vec2 uMouse;
 uniform vec3 uSun; uniform vec3 uSkyTop; uniform vec3 uSkyLow; uniform vec3 uMount;
 uniform float uRays; uniform float uStars; uniform float uHaze; uniform float uSunSize; uniform float uSunHeight;
+uniform float uTrees; uniform float uBirds;
 
 float h1(float x){ return fract(sin(x * 127.1) * 43758.5453); }
 float h2(vec2 p){ return fract(sin(dot(p, vec2(127.1, 311.7))) * 43758.5453); }
@@ -45,6 +46,23 @@ float range(float x, float c, float w, float peak, float base, float amp, float 
   float sr = mix(tr, tr * tr * (3.0 - 2.0 * tr), 0.45);
   float s = max(sl, sr);
   return base + s * peak + (crag(x * freq + seed) - 0.45) * amp * (0.35 + s);
+}
+
+// A pine silhouette: three stacked tiers, each wider at its base, on a short trunk.
+// dx / dy are measured from the foot of the tree, h is its height (all in screen units).
+float pine(float dx, float dy, float h){
+  if (h <= 0.0) return 0.0;
+  float t = dy / h;
+  if (t < 0.0 || t > 1.0) return 0.0;
+  float aa = 0.0015;
+  float trunk = smoothstep(h * 0.035 + aa, h * 0.035 - aa, abs(dx)) * step(t, 0.14);
+  float tiers = 3.0;
+  float k = floor(min((t - 0.1) / 0.9, 0.999) * tiers);
+  float local = fract(min((t - 0.1) / 0.9, 0.999) * tiers);
+  float base = 0.36 * h * (1.0 - k / tiers * 0.62);
+  float w = base * (1.0 - local * 0.78);
+  float crown = smoothstep(w + aa, w - aa, abs(dx)) * step(0.1, t);
+  return max(trunk, crown);
 }
 
 void main(){
@@ -114,6 +132,46 @@ void main(){
   cn += uSun * exp(-max(hn - y, 0.0) * 120.0) * toSun * 0.9;
   col = mix(col, cn, mn);
 
+  // Pines along the near ridge, thinning out toward the valley so the sun stays clear.
+  // Sizes are in screen-height units so a tree keeps its shape on any screen.
+  float unit = 0.5 * clamp(asp, 0.7, 2.2);       // one xn unit in height units
+  float tx = (xn + mx * 0.05) * 26.0;
+  float tcell = floor(tx);
+  float cellW = unit / 26.0;
+  float jitter = (h1(tcell + 1.9) - 0.5) * 0.3;
+  float dx = (fract(tx) - 0.5 - jitter) * cellW;
+  float pres = step(0.3, h1(tcell + 3.1)) * smoothstep(0.1, 0.42, abs(xn));
+  float ht = min(0.022 + 0.04 * h1(tcell + 7.7), cellW * 1.25) * pres * uTrees;
+  float trees = pine(dx, y - hn + 0.004, ht);
+  col = mix(col, uMount * 0.6 + uSun * toSun * 0.05, trees * (1.0 - mn));
+
+  // A few big pines framing the bottom corners.
+  float tx2 = (xn + mx * 0.08) * 6.0;
+  float cell2 = floor(tx2);
+  float cellW2 = unit / 6.0;
+  float dx2 = (fract(tx2) - 0.5) * cellW2;
+  float ht2 = min(0.16 + 0.1 * h1(cell2 + 1.3), cellW2 * 1.3) * step(0.35, h1(cell2 + 4.4)) * smoothstep(0.62, 0.78, abs(xn)) * uTrees;
+  col = mix(col, uMount * 0.38, pine(dx2, y + 0.015, ht2));
+
+  // A small flock crossing the sky, wings flapping out of step.
+  if (uBirds > 0.0) {
+    float lap = fract(uTime * 0.03 + 0.38);
+    vec2 flock = vec2(mix(-asp * 0.5 - 0.25, asp * 0.5 + 0.25, lap), 0.66 + 0.035 * sin(uTime * 0.31));
+    for (int i = 0; i < 7; i++) {
+      float fi = float(i);
+      if (fi >= uBirds * 7.0) break;
+      float side = mod(fi, 2.0) * 2.0 - 1.0;
+      float rank = floor((fi + 1.0) / 2.0);
+      vec2 bpos = flock + vec2(-rank * 0.045, -rank * 0.022 * side) + vec2(0.006 * sin(uTime * 1.3 + fi), 0.008 * sin(uTime * 0.9 + fi * 1.7));
+      float size = 0.016 * (1.0 - rank * 0.08);
+      vec2 r = q - bpos;
+      float flap = 0.15 + 0.75 * (0.5 + 0.5 * sin(uTime * 9.0 + fi * 1.9));
+      float dist = abs(r.y - abs(r.x) * flap + size * 0.15) - 0.0006;
+      float bird = smoothstep(0.0024, 0.0008, dist) * step(abs(r.x), size);
+      col = mix(col, uMount * 0.45, bird * smoothstep(0.2, 0.5, rise));
+    }
+  }
+
   // Low fog over everything and light bleeding over the ridges.
   col += haze * exp(-y * 7.0) * 0.12 * uHaze * rise;
   col += uSun * exp(-d * 3.0) * 0.18 * rise;
@@ -132,7 +190,9 @@ const SunriseBackground = ({
     mountainColor,
     duration = 6,
     autoRise = true,
-    sunHeight = 0.36,
+    sunHeight = 0.28,
+    trees = true,
+    birds = 1,
     sunSize = 0.075,
     rays = 1,
     stars = 1,
@@ -158,6 +218,8 @@ const SunriseBackground = ({
         rays,
         stars,
         haze,
+        trees,
+        birds,
         speed,
         interactive,
     };
@@ -189,7 +251,9 @@ const SunriseBackground = ({
             uStars: { value: 1 },
             uHaze: { value: 1 },
             uSunSize: { value: 0.075 },
-            uSunHeight: { value: 0.3 },
+            uSunHeight: { value: 0.28 },
+            uTrees: { value: 1 },
+            uBirds: { value: 1 },
         };
         const material = new ShaderMaterial({ vertexShader: VERT, fragmentShader: FRAG, uniforms: u, depthTest: false, depthWrite: false });
         const geometry = new PlaneGeometry(2, 2);
@@ -229,6 +293,8 @@ const SunriseBackground = ({
             u.uRays.value = o.rays;
             u.uStars.value = o.stars;
             u.uHaze.value = o.haze;
+            u.uTrees.value = o.trees ? 1 : 0;
+            u.uBirds.value = reduced ? 0 : Math.max(0, Math.min(1, o.birds));
             u.uSunSize.value = o.sunSize;
             u.uSunHeight.value = o.sunHeight;
             renderer.render(scene, camera);

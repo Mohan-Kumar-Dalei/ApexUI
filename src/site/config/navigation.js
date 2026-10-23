@@ -1062,6 +1062,15 @@ export const componentPages = [
         summary: 'Eight colour themes with a circle reveal from the swatch you click.',
         isNew: true,
     },
+    {
+        name: 'Liquid Glass',
+        path: '/components/liquid-glass',
+        load: () => import('../content/components/LiquidGlassDoc.jsx'),
+        category: 'Interactive',
+        image: shot('liquid-glass.png'),
+        summary: 'iOS style WebGL glass panels that bend, frost and melt together as you drag them.',
+        isNew: true,
+    },
 ];
 
 // Keep components in the same order everywhere (index panel, grid, prev / next):

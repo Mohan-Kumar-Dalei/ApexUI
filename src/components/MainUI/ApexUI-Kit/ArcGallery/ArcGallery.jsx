@@ -3,9 +3,10 @@ import { Mesh, OrthographicCamera, PlaneGeometry, Scene, ShaderMaterial, SRGBCol
 
 /*
  * Arc Gallery: an endless row of image cards laid along a gentle arc and
- * drawn in WebGL. Drag, flick or scroll the wheel to move it; it eases to a
- * stop and settles on a card. While it moves the cards ripple slightly,
- * the edges fade out, and a title sits under each card. Arrow keys step.
+ * drawn in WebGL. It drifts on its own (pausing on hover); drag, flick or
+ * swipe sideways to move it and it eases to a stop on a card. While it
+ * moves the cards ripple and bow, the edges fade out, and a title sits under
+ * each card. Arrow keys step. Vertical wheel scrolling is left to the page.
  */
 
 const IK = "https://ik.imagekit.io/ny6yinyut/apexui/assets";
@@ -54,13 +55,13 @@ void main(){
   gl_FragColor = vec4(col, edge * f * uReady);
 }`;
 
-const ArcGallery = ({ items = DEFAULT_ITEMS, bend = 1, cardHeight = 0.62, aspectRatio = 0.78, gap = 0.22, cornerRadius = 0.05, wave = 1, pull = 1, fadeEdges = 0.14, ease = 0.08, snap = true, showTitles = true, height = "26rem", onChange, className = "" }) => {
+const ArcGallery = ({ items = DEFAULT_ITEMS, bend = 1, cardHeight = 0.62, aspectRatio = 0.78, gap = 0.22, cornerRadius = 0.05, wave = 1, pull = 1, fadeEdges = 0.14, ease = 0.08, snap = true, autoScroll = 40, pauseOnHover = true, showTitles = true, height = "26rem", onChange, className = "" }) => {
     const wrap = useRef(null);
     const labels = useRef([]);
     const api = useRef(null);
     const [active, setActive] = useState(0);
     const live = useRef({});
-    live.current = { bend, wave, pull, fadeEdges, ease, snap, onChange };
+    live.current = { bend, wave, pull, fadeEdges, ease, snap, autoScroll, pauseOnHover, onChange };
     const list = items.length ? items : DEFAULT_ITEMS;
     const key = list.map((i) => i.image).join("|");
 
@@ -84,7 +85,6 @@ const ArcGallery = ({ items = DEFAULT_ITEMS, bend = 1, cardHeight = 0.62, aspect
         const textures = list.map((item) => {
             const entry = { tex: null, aspect: 1, at: 0 };
             loader.load(item.image, (t) => {
-                t.colorSpace = SRGBColorSpace;
                 entry.tex = t;
                 entry.aspect = t.image.width / t.image.height;
                 entry.at = performance.now();
@@ -116,7 +116,8 @@ const ArcGallery = ({ items = DEFAULT_ITEMS, bend = 1, cardHeight = 0.62, aspect
             return { mesh, m };
         };
 
-        const s = { scroll: 0, target: 0, vel: 0, pull: 0, drag: null, time: 0 };
+        const s = { scroll: 0, target: 0, vel: 0, pull: 0, drag: null, time: 0, hover: false, hold: 0 };
+        const reduced = window.matchMedia?.("(prefers-reduced-motion: reduce)").matches;
         let cardW = 1;
         let cardH = 1;
         let spacing = 1;
@@ -172,6 +173,10 @@ const ArcGallery = ({ items = DEFAULT_ITEMS, bend = 1, cardHeight = 0.62, aspect
             const o = live.current;
             const dt = last ? Math.min(0.05, (now - last) / 1000) : 1 / 60;
             last = now;
+            // Auto scroll drifts the row along, pausing while hovered, dragged or
+            // just after someone moved it by hand.
+            const auto = o.autoScroll && !reduced && !s.drag && !(o.pauseOnHover && s.hover) && now > s.hold;
+            if (auto) s.target += o.autoScroll * dt;
             const before = s.scroll;
             const follow = 1 - Math.pow(1 - Math.min(1, Math.max(0.01, o.ease)), dt * 60);
             s.scroll += (s.target - s.scroll) * follow;
@@ -185,7 +190,7 @@ const ArcGallery = ({ items = DEFAULT_ITEMS, bend = 1, cardHeight = 0.62, aspect
             const pullGoal = Math.max(-1, Math.min(1, s.vel / (spacing * 7))) * 0.32 * o.pull;
             s.pull += (pullGoal - s.pull) * (1 - Math.exp(-dt / 0.12));
             if (Math.abs(s.pull) < 0.0005 && !pullGoal) s.pull = 0;
-            let busy = s.pull !== 0 || s.scroll !== s.target || s.vel !== 0 || !!s.drag;
+            let busy = auto || s.pull !== 0 || s.scroll !== s.target || s.vel !== 0 || !!s.drag;
 
             const first = Math.floor((s.scroll - view.w / 2) / spacing) - 1;
             slots.forEach((slot, k) => {
@@ -251,6 +256,7 @@ const ArcGallery = ({ items = DEFAULT_ITEMS, bend = 1, cardHeight = 0.62, aspect
         const onDown = (e) => {
             if (e.button !== 0) return;
             s.drag = { x: e.clientX, start: s.target, moved: false, samples: [] };
+            wake();
         };
         const onMove = (e) => {
             const g = s.drag;
@@ -269,6 +275,7 @@ const ArcGallery = ({ items = DEFAULT_ITEMS, bend = 1, cardHeight = 0.62, aspect
         const onUp = (e) => {
             const g = s.drag;
             s.drag = null;
+            s.hold = performance.now() + 1800;
             if (!g) return;
             if (g.moved && g.samples.length > 1) {
                 const a = g.samples[0];
@@ -286,10 +293,12 @@ const ArcGallery = ({ items = DEFAULT_ITEMS, bend = 1, cardHeight = 0.62, aspect
             settle();
         };
         const onWheel = (e) => {
-            const d = Math.abs(e.deltaX) > Math.abs(e.deltaY) ? e.deltaX : e.deltaY;
-            if (!d) return;
+            // Only sideways wheel / trackpad swipes move the row; vertical
+            // scrolling belongs to the page.
+            if (Math.abs(e.deltaX) <= Math.abs(e.deltaY)) return;
             e.preventDefault();
-            s.target += d * 1.2;
+            s.target += e.deltaX * 1.2;
+            s.hold = performance.now() + 1800;
             clearTimeout(snapTimer);
             snapTimer = setTimeout(settle, 140);
             wake();
@@ -299,6 +308,13 @@ const ArcGallery = ({ items = DEFAULT_ITEMS, bend = 1, cardHeight = 0.62, aspect
         canvas.addEventListener("pointerup", onUp);
         canvas.addEventListener("pointercancel", onUp);
         canvas.addEventListener("wheel", onWheel, { passive: false });
+        const onEnter = () => (s.hover = true);
+        const onLeave = () => {
+            s.hover = false;
+            wake();
+        };
+        canvas.addEventListener("pointerenter", onEnter);
+        canvas.addEventListener("pointerleave", onLeave);
         const io = new IntersectionObserver(([entry]) => {
             visible = entry.isIntersecting;
             wake();
@@ -316,6 +332,8 @@ const ArcGallery = ({ items = DEFAULT_ITEMS, bend = 1, cardHeight = 0.62, aspect
             canvas.removeEventListener("pointerup", onUp);
             canvas.removeEventListener("pointercancel", onUp);
             canvas.removeEventListener("wheel", onWheel);
+            canvas.removeEventListener("pointerenter", onEnter);
+            canvas.removeEventListener("pointerleave", onLeave);
             textures.forEach((t) => t.tex?.dispose());
             slots.forEach((slot) => slot.m.dispose());
             geometry.dispose();

@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import ComponentDoc from '../../docs/ComponentDoc.jsx';
+import ComponentDoc, { DocSection } from '../../docs/ComponentDoc.jsx';
 import { ControlGrid, RangeControl } from '../../docs/controls.jsx';
 import ScrollStack, { ScrollStackItem } from '../../../components/MainUI/ApexUI-Kit/ScrollStack/ScrollStack.jsx';
 
@@ -22,8 +22,8 @@ const props = [
     { prop: 'blur', type: 'number', def: '0', desc: 'Blur in px per card stacked on top (0 turns it off).' },
     { prop: 'tilt', type: 'number', def: '0', desc: 'Degrees a covered card leans back.' },
     { prop: 'endSpace', type: 'number', def: '180', desc: 'Extra scroll room after the last card, in px.' },
-    { prop: 'useWindowScroll', type: 'boolean', def: 'false', desc: 'Stack with the page scroll instead of its own scroll box.' },
-    { prop: 'height', type: 'string', def: '"100%"', desc: 'Height of the scroll box (ignored with useWindowScroll).' },
+    { prop: 'useWindowScroll', type: 'boolean', def: 'true', desc: 'Stack with the page scroll (the normal use). Set false to stack inside its own scroll box instead.' },
+    { prop: 'height', type: 'string', def: '"100%"', desc: 'Height of the scroll box when useWindowScroll is false.' },
     { prop: 'className', type: 'string', def: '""', desc: 'Extra classes. ScrollStackItem also takes className and style.' },
 ];
 
@@ -42,11 +42,25 @@ export default function ScrollStackDoc() {
     return (
         <ComponentDoc
             title="Scroll Stack"
-            description="Cards pin one after another as you scroll and pile up into a stack. A covered card shrinks a little, darkens and can blur or lean back, so the pile reads as depth. It rides on native sticky scrolling with one update per frame, so it stays smooth with mouse, trackpad, touch and keyboard."
+            description="Cards pin one after another as you scroll and pile up into a stack. A covered card shrinks a little, darkens and can blur or lean back, so the pile reads as depth. It rides on the page scroll with native sticky positioning and one update per frame, so it stays smooth with mouse, trackpad, touch and keyboard."
             preview={
-                <div className="absolute inset-0">
-                    <ScrollStack offset={offset} scaleStep={scaleStep} dim={dim} blur={blur} tilt={tilt} top={40} className="thin-scroll">
-                        {CARDS.map(([n, title, body, bg]) => (
+                // A small browser window stands in for your page here; the section
+                // further down stacks with this real page as you scroll.
+                <div className="absolute inset-0 flex flex-col p-[clamp(0.5rem,2vw,1.25rem)]">
+                    <div className="flex items-center gap-2 rounded-t-2xl border border-b-0 border-[var(--line)] bg-[var(--panel)] px-3 py-2">
+                        <span className="flex gap-1.5">
+                            <span className="h-2.5 w-2.5 rounded-full bg-[#ff5f57]" />
+                            <span className="h-2.5 w-2.5 rounded-full bg-[#febc2e]" />
+                            <span className="h-2.5 w-2.5 rounded-full bg-[#28c840]" />
+                        </span>
+                        <span className="mx-auto rounded-md bg-[var(--panel-2)] px-3 py-0.5 font-mono text-[0.68rem] text-[var(--ink-3)]">yoursite.com</span>
+                        <a href="#page-demo" className="hidden rounded-full border border-[var(--line)] px-2.5 py-0.5 text-[0.68rem] font-semibold text-[var(--ink-2)] hover:text-[var(--ink)] sm:block">
+                            Try it on this page ↓
+                        </a>
+                    </div>
+                    <div className="relative min-h-0 flex-1 overflow-hidden rounded-b-2xl border border-[var(--line)] bg-[#0b0b0e]">
+                        <ScrollStack useWindowScroll={false} offset={offset} scaleStep={scaleStep} dim={dim} blur={blur} tilt={tilt} top={24} className="thin-scroll">
+                            {CARDS.map(([n, title, body, bg]) => (
                             <ScrollStackItem key={n} className="mx-auto flex max-w-xl flex-col justify-between text-white" style={{ background: bg }}>
                                 <span className="font-mono text-sm opacity-70">{n} / 05</span>
                                 <div>
@@ -55,8 +69,26 @@ export default function ScrollStackDoc() {
                                 </div>
                             </ScrollStackItem>
                         ))}
-                    </ScrollStack>
+                        </ScrollStack>
+                    </div>
                 </div>
+            }
+            fullBleed
+            extraToc={[{ id: 'page-demo', label: 'On a real page' }]}
+            extra={
+                <DocSection id="page-demo" title="On a real page" description="This is the normal use: the cards pin under the top of the window and pile up as you scroll this page.">
+                    <ScrollStack offset={offset} scaleStep={scaleStep} dim={dim} blur={blur} tilt={tilt} top={96} gap={110} endSpace={60}>
+                        {CARDS.map(([n, title, body, bg]) => (
+                            <ScrollStackItem key={n} className="flex flex-col justify-between text-white" style={{ background: bg }}>
+                                <span className="font-mono text-sm opacity-70">{n} / 05</span>
+                                <div>
+                                    <h3 className="text-[clamp(1.6rem,5cqw,2.4rem)] font-bold leading-tight">{title}</h3>
+                                    <p className="mt-2 max-w-xs text-sm opacity-85">{body}</p>
+                                </div>
+                            </ScrollStackItem>
+                        ))}
+                    </ScrollStack>
+                </DocSection>
             }
             controls={
                 <ControlGrid>
@@ -70,15 +102,15 @@ export default function ScrollStackDoc() {
             code={`import ScrollStack, { ScrollStackItem } from './ApexUI-Kit/ScrollStack/ScrollStack.jsx';
 
 const App = () => (
-  <ScrollStack height="32rem" offset={${offset}} scaleStep={${scaleStep}} dim={${dim}}${blur ? ` blur={${blur}}` : ''}${tilt ? ` tilt={${tilt}}` : ''}>
+  <ScrollStack offset={${offset}} scaleStep={${scaleStep}} dim={${dim}}${blur ? ` blur={${blur}}` : ''}${tilt ? ` tilt={${tilt}}` : ''}>
     <ScrollStackItem className="bg-indigo-500 text-white">First card</ScrollStackItem>
     <ScrollStackItem className="bg-sky-500 text-white">Second card</ScrollStackItem>
     <ScrollStackItem className="bg-rose-500 text-white">Third card</ScrollStackItem>
   </ScrollStack>
 );
 
-// Or stack with the page scroll:
-// <ScrollStack useWindowScroll>...</ScrollStack>
+// Stacks with the page scroll by default. To stack inside a box instead:
+// <ScrollStack useWindowScroll={false} height="32rem">...</ScrollStack>
 
 export default App;`}
             cli="scroll-stack"

@@ -14,6 +14,8 @@ const props = [
     { prop: 'pull', type: 'number', def: '1', desc: 'How far the trailing edge of each card bows out, like it is being pulled along, while the gallery moves (0 turns it off).' },
     { prop: 'fadeEdges', type: 'number', def: '0.14', desc: 'Width of the fade at the left and right edges (0 to 0.5).' },
     { prop: 'ease', type: 'number', def: '0.08', desc: 'How quickly it catches up with a drag or scroll. Lower glides longer.' },
+    { prop: 'autoScroll', type: 'number', def: '40', desc: 'Auto scroll speed in px per second (0 turns it off; negative goes the other way).' },
+    { prop: 'pauseOnHover', type: 'boolean', def: 'true', desc: 'Stop the auto scroll while the pointer is over the gallery.' },
     { prop: 'snap', type: 'boolean', def: 'true', desc: 'Settle on the nearest card when you let go.' },
     { prop: 'showTitles', type: 'boolean', def: 'true', desc: 'Show each item text under its card.' },
     { prop: 'height', type: 'string', def: '"26rem"', desc: 'Height of the gallery.' },
@@ -34,13 +36,14 @@ export default function ArcGalleryDoc() {
     const [pull, setPull] = useState(1);
     const [ease, setEase] = useState(0.08);
     const [snap, setSnap] = useState(true);
+    const [autoScroll, setAutoScroll] = useState(40);
     const [titles, setTitles] = useState(true);
 
     return (
         <ComponentDoc
             title="Arc Gallery"
-            description="An endless row of image cards laid along a gentle arc and drawn in WebGL. Drag, flick or scroll the wheel and it eases to a stop on a card; while it moves, each card is pulled along so its trailing edge bows out into a half circle, then springs back flat. Click a card to center it, use arrow keys to step, and the edges fade out."
-            preview={<div className="absolute inset-0"><ArcGallery bend={bend} gap={gap} wave={wave} pull={pull} ease={ease} snap={snap} showTitles={titles} height="100%" /></div>}
+            description="An endless row of image cards laid along a gentle arc and drawn in WebGL. It drifts on its own and pauses on hover; drag, flick or swipe sideways and it eases to a stop on a card. While it moves, each card is pulled along so its trailing edge bows out into a half circle, then springs back flat. Click a card to center it, use arrow keys to step, and the edges fade out."
+            preview={<div className="absolute inset-0"><ArcGallery bend={bend} gap={gap} wave={wave} pull={pull} ease={ease} autoScroll={autoScroll} snap={snap} showTitles={titles} height="100%" /></div>}
             controls={
                 <ControlGrid>
                     <RangeControl label="Bend" value={bend} onChange={setBend} min={-3} max={3} step={0.1} format={(v) => v.toFixed(1)} />
@@ -48,6 +51,7 @@ export default function ArcGalleryDoc() {
                     <RangeControl label="Pull" value={pull} onChange={setPull} min={0} max={2.5} step={0.1} format={(v) => v.toFixed(1)} />
                     <RangeControl label="Ripple" value={wave} onChange={setWave} min={0} max={3} step={0.1} format={(v) => v.toFixed(1)} />
                     <RangeControl label="Ease" value={ease} onChange={setEase} min={0.02} max={0.3} step={0.01} format={(v) => v.toFixed(2)} />
+                    <RangeControl label="Auto scroll" value={autoScroll} onChange={setAutoScroll} min={-120} max={120} step={5} format={(v) => (v ? `${v}px/s` : 'Off')} />
                     <ToggleControl label="Snap" value={snap} onChange={setSnap} />
                     <ToggleControl label="Titles" value={titles} onChange={setTitles} />
                 </ControlGrid>
@@ -67,7 +71,8 @@ const App = () => (
     gap={${gap}}
     wave={${wave}}
     pull={${pull}}
-    ease={${ease}}${snap ? '' : '\n    snap={false}'}${titles ? '' : '\n    showTitles={false}'}
+    ease={${ease}}
+    autoScroll={${autoScroll}}${snap ? '' : '\n    snap={false}'}${titles ? '' : '\n    showTitles={false}'}
   />
 );
 

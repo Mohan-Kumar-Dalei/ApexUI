@@ -37,10 +37,16 @@ export const router = createBrowserRouter([
                     // Dev-only: preview the page loader at /loader-demo.
                     ...(import.meta.env.DEV ? [{ path: 'loader-demo', ...lazyRoute(() => import('./pages/LoaderDemo.jsx')), handle: { title: 'Loader demo | ApexUI', noindex: true } }] : []),
                     {
-                        path: 'templates-soon',
-                        ...lazyRoute(() => import('./pages/TemplatesSoon.jsx')),
-                        handle: { title: 'Templates | ApexUI', description: 'Ready-made ApexUI page templates for React and Tailwind CSS are on the way.' },
+                        path: 'templates',
+                        ...lazyRoute(() => import('./pages/TemplatesPage.jsx')),
+                        handle: { title: 'Templates | ApexUI', description: 'Complete React page templates built from ApexUI components: SaaS, portfolio, AI startup and app launch pages with live previews.' },
                     },
+                    {
+                        path: 'templates/:slug',
+                        ...lazyRoute(() => import('./pages/TemplateView.jsx')),
+                        handle: { title: 'Template preview | ApexUI', description: 'A live preview of an ApexUI page template built from animated React components.' },
+                    },
+                    { path: 'templates-soon', element: <Navigate to="/templates" replace /> },
                     {
                         path: 'components',
                         handle: { index: true },

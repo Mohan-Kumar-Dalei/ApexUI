@@ -38,7 +38,7 @@ export default function CrossedMarqueeDoc() {
                     <CrossedMarquee accentColor={accent} duration={duration} tilt={tilt} showBackBand={back} />
                 </div>
             }
-            fullBleed
+            previewClassName="!px-0"
             controls={
                 <ControlGrid>
                     <ColorControl label="Accent" value={accent} onChange={setAccent} />

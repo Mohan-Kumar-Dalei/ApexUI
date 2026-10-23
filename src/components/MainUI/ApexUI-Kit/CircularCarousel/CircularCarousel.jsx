@@ -124,7 +124,6 @@ const CircularCarousel = ({
                 },
             });
             loader.load(item.src, (t) => {
-                t.colorSpace = SRGBColorSpace;
                 m.uniforms.uTex.value = t;
                 const ia = t.image.width / t.image.height;
                 // Cover crop: show the middle of the image at the card's shape.

@@ -5,8 +5,8 @@ import React, { Children, useLayoutEffect, useRef } from "react";
  * card that gets covered shrinks a little, darkens and (optionally) blurs or
  * leans back, so the pile reads as depth. It rides on native scrolling
  * (position: sticky + one rAF update per scroll), so it stays smooth with
- * mouse, trackpad, touch and keyboard. Scrolls inside its own box, or with
- * the page (useWindowScroll).
+ * mouse, trackpad, touch and keyboard. By default it stacks with the page
+ * scroll; set useWindowScroll={false} to stack inside its own scroll box.
  */
 
 export const ScrollStackItem = ({ children, className = "", style }) => (
@@ -16,7 +16,7 @@ export const ScrollStackItem = ({ children, className = "", style }) => (
     </div>
 );
 
-const ScrollStack = ({ children, gap = 90, offset = 22, top = 64, scaleStep = 0.05, minScale = 0.82, dim = 0.22, blur = 0, tilt = 0, endSpace = 180, useWindowScroll = false, height = "100%", className = "" }) => {
+const ScrollStack = ({ children, gap = 90, offset = 22, top = 64, scaleStep = 0.05, minScale = 0.82, dim = 0.22, blur = 0, tilt = 0, endSpace = 180, useWindowScroll = true, height = "100%", className = "" }) => {
     const root = useRef(null);
     const slots = useRef([]);
     const items = Children.toArray(children);
