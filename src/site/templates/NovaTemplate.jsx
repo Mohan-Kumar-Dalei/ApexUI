@@ -57,7 +57,7 @@ export default function NovaTemplate() {
                         <p className="mt-5 max-w-lg text-[clamp(0.95rem,1.6vw,1.1rem)] text-white/70">Plan, track and ship together without the noise. Nova keeps everyone on the same page, literally.</p>
                         <div className="mt-8 flex flex-wrap justify-center gap-3">
                             <MagneticButton accentColor={ACCENT}>Start free</MagneticButton>
-                            <span className="inline-flex items-center rounded-full border border-white/15 bg-white/5 px-6 text-sm font-semibold backdrop-blur">Book a demo</span>
+                            <span className="inline-flex h-12 items-center self-center rounded-full border border-white/15 bg-white/5 px-6 text-sm font-semibold backdrop-blur">Book a demo</span>
                         </div>
                     </div>
                 </HorizonGlow>

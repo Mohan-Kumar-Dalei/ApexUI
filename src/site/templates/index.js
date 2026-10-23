@@ -6,11 +6,24 @@ import { cdn } from '../ui/cdn.js';
  * shown here.
  */
 
-const shot = (slug) => cdn(`/assets/templates/${slug}.png`, { w: 1200 });
+// Pages rewritten after their first upload use a -v2 file so the CDN cache refreshes.
+const FRESH = new Set(['atlas', 'lumen', 'nova', 'pulse']);
+const shot = (slug) => cdn(`/assets/templates/${slug}${FRESH.has(slug) ? '-v2' : ''}.png`, { w: 1200 });
 
-export const TEMPLATE_CATEGORIES = ['All', 'Startup', 'Portfolio', 'Agency', 'Store', 'Event', 'Restaurant', 'Finance'];
+export const TEMPLATE_CATEGORIES = ['All', 'Startup', 'Portfolio', 'Travel', 'Agency', 'Store', 'Event', 'Restaurant', 'Finance'];
 
 export const TEMPLATES = [
+    {
+        slug: 'ridge',
+        name: 'Ridge',
+        kind: 'Mountain retreat',
+        category: 'Travel',
+        tagline: 'A sunrise between the peaks with pines and birds, trips, booking steps and reviews.',
+        accent: '#ffb15c',
+        image: shot('ridge'),
+        components: ['Sunrise Background', 'Image Accordion', 'Rolling Counter', 'Stepper', 'Testimonials', 'FAQ Accordion'],
+        load: () => import('./RidgeTemplate.jsx'),
+    },
     {
         slug: 'obsidian',
         name: 'Obsidian',
@@ -60,7 +73,7 @@ export const TEMPLATES = [
         slug: 'atlas',
         name: 'Atlas',
         kind: 'Travel photography',
-        category: 'Portfolio',
+        category: 'Travel',
         tagline: 'A full-bleed photo hero, destinations, a draggable archive and a page-scroll card stack.',
         accent: '#fdba74',
         image: shot('atlas'),

@@ -54,7 +54,7 @@ export default function SaffronTemplate() {
                     <BlurRevealText as="h1" text="Cooked over fire, shared at the table" highlight={['fire,']} accentColor={ACCENT} className="mt-4 max-w-4xl text-[clamp(2.4rem,7vw,5.6rem)] font-black leading-[0.95] tracking-tight" />
                     <div className="mt-8 flex flex-wrap justify-center gap-3">
                         <MagneticButton accentColor={ACCENT}>Book a table</MagneticButton>
-                        <span className="inline-flex items-center rounded-full border border-white/25 bg-black/25 px-6 text-sm font-semibold backdrop-blur">See the menu</span>
+                        <span className="inline-flex h-12 items-center self-center rounded-full border border-white/25 bg-black/25 px-6 text-sm font-semibold backdrop-blur">See the menu</span>
                     </div>
                 </div>
             </div>

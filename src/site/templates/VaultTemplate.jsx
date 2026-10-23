@@ -58,7 +58,7 @@ export default function VaultTemplate() {
                         <p className="mt-5 max-w-md text-white/65">Send, spend and save in 40 currencies at the real exchange rate. One account for the whole world.</p>
                         <div className="mt-8 flex flex-wrap gap-3">
                             <MagneticButton accentColor={ACCENT}>Open free account</MagneticButton>
-                            <span className="inline-flex items-center rounded-full border border-white/15 px-6 text-sm font-semibold">See rates</span>
+                            <span className="inline-flex h-12 items-center self-center rounded-full border border-white/15 px-6 text-sm font-semibold">See rates</span>
                         </div>
                         <div className="mt-10 flex gap-8">
                             <div>

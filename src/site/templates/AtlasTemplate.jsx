@@ -57,7 +57,7 @@ export default function AtlasTemplate() {
                     <BlurRevealText as="h1" text="Places worth getting up early for" highlight={['early']} accentColor={ACCENT} className="mt-3 max-w-4xl text-[clamp(2.4rem,7vw,6rem)] font-black leading-[0.95] tracking-tight" />
                     <div className="mt-8 flex flex-wrap gap-3">
                         <MagneticButton accentColor={ACCENT}>See the journeys</MagneticButton>
-                        <span className="inline-flex items-center rounded-full border border-white/25 bg-black/20 px-6 text-sm font-semibold backdrop-blur">Shop prints</span>
+                        <span className="inline-flex h-12 items-center self-center rounded-full border border-white/25 bg-black/20 px-6 text-sm font-semibold backdrop-blur">Shop prints</span>
                     </div>
                 </div>
             </div>
