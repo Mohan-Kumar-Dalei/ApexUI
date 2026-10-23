@@ -10,7 +10,7 @@ const SITE_URL = 'https://apex-ui.in';
 const nav = await readFile(new URL('../src/site/config/navigation.js', import.meta.url), 'utf8');
 const docPaths = [...nav.matchAll(/path:\s*'([^']+)'/g)].map((m) => m[1]);
 const tpl = await readFile(new URL('../src/site/templates/index.js', import.meta.url), 'utf8');
-const templateSlugs = [...tpl.matchAll(/slug:s*'([^']+)'/g)].map((m) => m[1]);
+const templateSlugs = [...tpl.matchAll(/slug:\s*'([^']+)'/g)].map((m) => m[1]);
 const today = new Date().toISOString().slice(0, 10);
 
 const entries = [
