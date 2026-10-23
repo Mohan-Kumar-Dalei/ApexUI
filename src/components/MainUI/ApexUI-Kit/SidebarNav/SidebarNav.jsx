@@ -1,4 +1,4 @@
-import React, { useId, useRef, useState } from "react";
+import React, { useEffect, useId, useRef, useState } from "react";
 import { AnimatePresence, LayoutGroup, motion } from "framer-motion";
 import { BarChart3, Bell, ChevronDown, FolderKanban, Home, Inbox, LifeBuoy, PanelLeftClose, PanelLeftOpen, Settings, Users } from "lucide-react";
 
@@ -61,6 +61,7 @@ const SidebarNav = ({
     user = { name: "Mohan Dalei", email: "mohan@apex-ui.in", avatar: "https://ik.imagekit.io/ny6yinyut/apexui/assets/captainamerica.png?tr=f-auto,q-80,w-96" },
     defaultActive = "home",
     defaultCollapsed = false,
+    autoCollapse = true,
     accentColor = "#a3e635",
     theme = "dark",
     onSelect,
@@ -73,6 +74,25 @@ const SidebarNav = ({
     const [open, setOpen] = useState(() => new Set(["projects"]));
     const [tip, setTip] = useState(null);
     const asideRef = useRef(null);
+    const userToggled = useRef(false);
+
+    // On narrow screens the full sidebar would squeeze the page, so it becomes
+    // an icon rail there and opens again when there is room, until the user
+    // picks a state with the toggle.
+    useEffect(() => {
+        const host = asideRef.current?.parentElement;
+        if (!autoCollapse || !host) return undefined;
+        let narrow = null;
+        const ro = new ResizeObserver(([entry]) => {
+            const now = entry.contentRect.width < 560;
+            if (now !== narrow) {
+                if (!userToggled.current && (now || narrow !== null)) setCollapsed(now || defaultCollapsed);
+                narrow = now;
+            }
+        });
+        ro.observe(host);
+        return () => ro.disconnect();
+    }, [autoCollapse, defaultCollapsed]);
 
     const select = (item) => {
         setActive(item.id);
@@ -159,6 +179,7 @@ const SidebarNav = ({
                     type="button"
                     aria-label={collapsed ? "Expand sidebar" : "Collapse sidebar"}
                     onClick={() => {
+                        userToggled.current = true;
                         setCollapsed((c) => !c);
                         setTip(null);
                     }}

@@ -9,6 +9,7 @@ const props = [
     { prop: 'user', type: '{ name, email, avatar } | null', def: 'demo user', desc: 'Profile at the bottom; null hides it.' },
     { prop: 'defaultActive', type: 'string', def: '"home"', desc: 'Id of the item that starts active.' },
     { prop: 'defaultCollapsed', type: 'boolean', def: 'false', desc: 'Start as the icon rail.' },
+    { prop: 'autoCollapse', type: 'boolean', def: 'true', desc: 'Start as the icon rail when there is less than 560px of room (phones).' },
     { prop: 'accentColor', type: 'string', def: '"#a3e635"', desc: 'Active marker, icon, badge and logo color.' },
     { prop: 'theme', type: "'dark' | 'light'", def: '"dark"', desc: 'Panel colors.' },
     { prop: 'onSelect', type: '(item) => void', def: 'none', desc: 'Called when an item is chosen.' },

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { motion } from "framer-motion";
 
 /*
@@ -13,10 +13,29 @@ const DEFAULT_IMAGES = [img("hulk"), img("captainamerica"), img("spiderman"), im
 
 const BounceCards = ({ images = DEFAULT_IMAGES, cardSize = 9, spread = 5.5, fan = 8, delay = 0.2, className = "" }) => {
     const [hovered, setHovered] = useState(null);
+    const [scale, setScale] = useState(1);
+    const root = useRef(null);
     const mid = (images.length - 1) / 2;
+    // Width the fan needs (in rem): cards plus spread plus room for the tilt.
+    const needed = cardSize + spread * (images.length - 1) + 4;
+
+    // Shrink the whole fan to fit narrow screens instead of cutting cards off.
+    useEffect(() => {
+        const el = root.current;
+        if (!el) return undefined;
+        const fit = () => {
+            const rem = parseFloat(getComputedStyle(document.documentElement).fontSize) || 16;
+            setScale(Math.min(1, el.clientWidth / (needed * rem)));
+        };
+        const ro = new ResizeObserver(fit);
+        ro.observe(el);
+        fit();
+        return () => ro.disconnect();
+    }, [needed]);
 
     return (
-        <div className={`relative flex items-center justify-center ${className}`} style={{ width: `min(${cardSize + spread * (images.length - 1) + 4}rem, 92vw)`, height: `${cardSize * 1.5}rem` }} onPointerLeave={() => setHovered(null)}>
+        <div ref={root} className={`relative ${className}`} style={{ width: `min(${needed}rem, 100%)`, height: `${cardSize * 1.5 * scale}rem` }} onPointerLeave={() => setHovered(null)}>
+            <div className="absolute left-1/2 top-1/2 flex items-center justify-center" style={{ width: `${needed}rem`, height: `${cardSize * 1.5}rem`, transform: `translate(-50%, -50%) scale(${scale})` }}>
             {images.map((src, i) => {
                 const off = i - mid;
                 let x = off * spread;
@@ -46,6 +65,7 @@ const BounceCards = ({ images = DEFAULT_IMAGES, cardSize = 9, spread = 5.5, fan 
                     </motion.div>
                 );
             })}
+            </div>
         </div>
     );
 };

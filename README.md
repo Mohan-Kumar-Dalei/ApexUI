@@ -4,7 +4,7 @@
 
 # ApexUI
 
-### 96 free, animated UI components for React
+### 107 free, animated UI components for React
 
 Copy-paste or one-command install. Styled with Tailwind CSS, animated with Framer Motion, GSAP and Three.js.<br/>
 You get the source, so you can read it and change anything.
@@ -23,24 +23,24 @@ You get the source, so you can read it and change anything.
 
 <table>
   <tr>
+    <td align="center" width="33%"><a href="https://apex-ui.in/components/circular-carousel"><img src="https://ik.imagekit.io/ny6yinyut/apexui/assets/componentsimage/circular-carousel.png?tr=f-auto,q-80,w-480" alt="Circular Carousel" width="100%"/></a><br/><b>Circular Carousel</b><br/><code>npx apex-ui-kit add circular-carousel</code></td>
+    <td align="center" width="33%"><a href="https://apex-ui.in/components/arc-gallery"><img src="https://ik.imagekit.io/ny6yinyut/apexui/assets/componentsimage/arc-gallery.png?tr=f-auto,q-80,w-480" alt="Arc Gallery" width="100%"/></a><br/><b>Arc Gallery</b><br/><code>npx apex-ui-kit add arc-gallery</code></td>
+    <td align="center" width="33%"><a href="https://apex-ui.in/components/marquee-3d"><img src="https://ik.imagekit.io/ny6yinyut/apexui/assets/componentsimage/marquee-3d.png?tr=f-auto,q-80,w-480" alt="Marquee 3D" width="100%"/></a><br/><b>Marquee 3D</b><br/><code>npx apex-ui-kit add marquee-3d</code></td>
+  </tr>
+  <tr>
+    <td align="center" width="33%"><a href="https://apex-ui.in/components/particle-text"><img src="https://ik.imagekit.io/ny6yinyut/apexui/assets/componentsimage/particle-text.png?tr=f-auto,q-80,w-480" alt="Particle Text" width="100%"/></a><br/><b>Particle Text</b><br/><code>npx apex-ui-kit add particle-text</code></td>
     <td align="center" width="33%"><a href="https://apex-ui.in/components/galaxy-3d"><img src="https://ik.imagekit.io/ny6yinyut/apexui/assets/componentsimage/galaxy-3d.png?tr=f-auto,q-80,w-480" alt="Galaxy 3D" width="100%"/></a><br/><b>Galaxy 3D</b><br/><code>npx apex-ui-kit add galaxy-3d</code></td>
     <td align="center" width="33%"><a href="https://apex-ui.in/components/warp-tunnel"><img src="https://ik.imagekit.io/ny6yinyut/apexui/assets/componentsimage/warp-tunnel.png?tr=f-auto,q-80,w-480" alt="Warp Tunnel" width="100%"/></a><br/><b>Warp Tunnel</b><br/><code>npx apex-ui-kit add warp-tunnel</code></td>
-    <td align="center" width="33%"><a href="https://apex-ui.in/components/distortion-image"><img src="https://ik.imagekit.io/ny6yinyut/apexui/assets/componentsimage/distortion-image.png?tr=f-auto,q-80,w-480" alt="Distortion Image" width="100%"/></a><br/><b>Distortion Image</b><br/><code>npx apex-ui-kit add distortion-image</code></td>
   </tr>
   <tr>
-    <td align="center" width="33%"><a href="https://apex-ui.in/components/liquid-blob-3d"><img src="https://ik.imagekit.io/ny6yinyut/apexui/assets/componentsimage/liquid-blob-3d.png?tr=f-auto,q-80,w-480" alt="Liquid Blob 3D" width="100%"/></a><br/><b>Liquid Blob 3D</b><br/><code>npx apex-ui-kit add liquid-blob-3d</code></td>
-    <td align="center" width="33%"><a href="https://apex-ui.in/components/retro-grid-3d"><img src="https://ik.imagekit.io/ny6yinyut/apexui/assets/componentsimage/retro-grid-3d.png?tr=f-auto,q-80,w-480" alt="Retro Grid 3D" width="100%"/></a><br/><b>Retro Grid 3D</b><br/><code>npx apex-ui-kit add retro-grid-3d</code></td>
-    <td align="center" width="33%"><a href="https://apex-ui.in/components/particle-morph"><img src="https://ik.imagekit.io/ny6yinyut/apexui/assets/componentsimage/particle-morph.png?tr=f-auto,q-80,w-480" alt="Particle Morph" width="100%"/></a><br/><b>Particle Morph</b><br/><code>npx apex-ui-kit add particle-morph</code></td>
+    <td align="center" width="33%"><a href="https://apex-ui.in/components/accordion-marquee"><img src="https://ik.imagekit.io/ny6yinyut/apexui/assets/componentsimage/accordion-marquee-v2.png?tr=f-auto,q-80,w-480" alt="Accordion Marquee" width="100%"/></a><br/><b>Accordion Marquee</b><br/><code>npx apex-ui-kit add accordion-marquee</code></td>
+    <td align="center" width="33%"><a href="https://apex-ui.in/components/sunrise-background"><img src="https://ik.imagekit.io/ny6yinyut/apexui/assets/componentsimage/sunrise-background.png?tr=f-auto,q-80,w-480" alt="Sunrise Background" width="100%"/></a><br/><b>Sunrise Background</b><br/><code>npx apex-ui-kit add sunrise-background</code></td>
+    <td align="center" width="33%"><a href="https://apex-ui.in/components/gooey-nav"><img src="https://ik.imagekit.io/ny6yinyut/apexui/assets/componentsimage/gooey-nav-v4.png?tr=f-auto,q-80,w-480" alt="Gooey Nav" width="100%"/></a><br/><b>Gooey Nav</b><br/><code>npx apex-ui-kit add gooey-nav</code></td>
   </tr>
   <tr>
-    <td align="center" width="33%"><a href="https://apex-ui.in/components/gooey-nav"><img src="https://ik.imagekit.io/ny6yinyut/apexui/assets/componentsimage/gooey-nav-v3.png?tr=f-auto,q-80,w-480" alt="Gooey Nav" width="100%"/></a><br/><b>Gooey Nav</b><br/><code>npx apex-ui-kit add gooey-nav</code></td>
-    <td align="center" width="33%"><a href="https://apex-ui.in/components/cube-gallery"><img src="https://ik.imagekit.io/ny6yinyut/apexui/assets/componentsimage/cube-gallery-v2.png?tr=f-auto,q-80,w-480" alt="Cube Gallery" width="100%"/></a><br/><b>Cube Gallery</b><br/><code>npx apex-ui-kit add cube-gallery</code></td>
-    <td align="center" width="33%"><a href="https://apex-ui.in/components/coverflow-3d"><img src="https://ik.imagekit.io/ny6yinyut/apexui/assets/componentsimage/coverflow-3d.png?tr=f-auto,q-80,w-480" alt="Coverflow 3D" width="100%"/></a><br/><b>Coverflow 3D</b><br/><code>npx apex-ui-kit add coverflow-3d</code></td>
-  </tr>
-  <tr>
+    <td align="center" width="33%"><a href="https://apex-ui.in/components/scroll-stack"><img src="https://ik.imagekit.io/ny6yinyut/apexui/assets/componentsimage/scroll-stack.png?tr=f-auto,q-80,w-480" alt="Scroll Stack" width="100%"/></a><br/><b>Scroll Stack</b><br/><code>npx apex-ui-kit add scroll-stack</code></td>
+    <td align="center" width="33%"><a href="https://apex-ui.in/components/horizon-glow"><img src="https://ik.imagekit.io/ny6yinyut/apexui/assets/componentsimage/horizon-glow-v2.png?tr=f-auto,q-80,w-480" alt="Horizon Glow" width="100%"/></a><br/><b>Horizon Glow</b><br/><code>npx apex-ui-kit add horizon-glow</code></td>
     <td align="center" width="33%"><a href="https://apex-ui.in/components/ai-voice-orb"><img src="https://ik.imagekit.io/ny6yinyut/apexui/assets/componentsimage/ai-voice-orb.png?tr=f-auto,q-80,w-480" alt="AI Voice Orb" width="100%"/></a><br/><b>AI Voice Orb</b><br/><code>npx apex-ui-kit add ai-voice-orb</code></td>
-    <td align="center" width="33%"><a href="https://apex-ui.in/components/ai-model-prompt"><img src="https://ik.imagekit.io/ny6yinyut/apexui/assets/componentsimage/ai-model-prompt-v2.png?tr=f-auto,q-80,w-480" alt="AI Model Prompt" width="100%"/></a><br/><b>AI Model Prompt</b><br/><code>npx apex-ui-kit add ai-model-prompt</code></td>
-    <td align="center" width="33%"><a href="https://apex-ui.in/components/flip-book"><img src="https://ik.imagekit.io/ny6yinyut/apexui/assets/componentsimage/flip-book-v2.png?tr=f-auto,q-80,w-480" alt="Flip Book" width="100%"/></a><br/><b>Flip Book</b><br/><code>npx apex-ui-kit add flip-book</code></td>
   </tr>
 </table>
 
@@ -48,7 +48,7 @@ You get the source, so you can read it and change anything.
 
 ## Why ApexUI
 
-- **96 components** across backgrounds, cards, text effects, navigation, buttons, interactive UI, AI interfaces, loaders and maps, with new ones added regularly.
+- **107 components** across backgrounds, cards, text effects, navigation, buttons, interactive UI, AI interfaces, loaders and maps, with new ones added regularly.
 - **Real 3D, still light.** Three.js and WebGL components (Galaxy 3D, Warp Tunnel, Distortion Image, Liquid Blob 3D, Particle Morph, Retro Grid 3D, Gooey Nav) use one small shader each, cap the pixel ratio, pause when off screen and free the GPU on unmount.
 - **AI-ready UI.** Chat, prompt box with model picker, thinking state, streaming response and five voice assistant visuals.
 - **You own the code.** The CLI copies plain `.jsx` files into your project. No runtime package, no lock-in.
@@ -80,7 +80,7 @@ Needs React 18+ and Tailwind CSS (v4 recommended). Setup guides: [React](https:/
 ## All components
 
 <details>
-<summary><b>Backgrounds</b> (14)</summary>
+<summary><b>Backgrounds</b> (16)</summary>
 
 | Component | Install |
 | --- | --- |
@@ -88,6 +88,7 @@ Needs React 18+ and Tailwind CSS (v4 recommended). Setup guides: [React](https:/
 | [BluePrint Background](https://apex-ui.in/components/blueprint-background) | `npx apex-ui-kit add blueprint-background` |
 | [Dot Wave Background](https://apex-ui.in/components/dot-wave-background) | `npx apex-ui-kit add dot-wave-background` |
 | [Galaxy 3D](https://apex-ui.in/components/galaxy-3d) | `npx apex-ui-kit add galaxy-3d` |
+| [Horizon Glow](https://apex-ui.in/components/horizon-glow) | `npx apex-ui-kit add horizon-glow` |
 | [Kinetic Threads Background](https://apex-ui.in/components/kinetic-threads-background) | `npx apex-ui-kit add kinetic-threads-background` |
 | [Lens Flare Background](https://apex-ui.in/components/lens-flare-background) | `npx apex-ui-kit add lens-flare-background` |
 | [Liquid Gradient](https://apex-ui.in/components/liquid-gradient) | `npx apex-ui-kit add liquid-gradient` |
@@ -97,12 +98,13 @@ Needs React 18+ and Tailwind CSS (v4 recommended). Setup guides: [React](https:/
 | [Retro Grid 3D](https://apex-ui.in/components/retro-grid-3d) | `npx apex-ui-kit add retro-grid-3d` |
 | [Ripple Background](https://apex-ui.in/components/ripple-background) | `npx apex-ui-kit add ripple-background` |
 | [Smoke Background](https://apex-ui.in/components/smoke-background) | `npx apex-ui-kit add smoke-background` |
+| [Sunrise Background](https://apex-ui.in/components/sunrise-background) | `npx apex-ui-kit add sunrise-background` |
 | [Warp Tunnel](https://apex-ui.in/components/warp-tunnel) | `npx apex-ui-kit add warp-tunnel` |
 
 </details>
 
 <details>
-<summary><b>Cards</b> (18)</summary>
+<summary><b>Cards</b> (19)</summary>
 
 | Component | Install |
 | --- | --- |
@@ -120,6 +122,7 @@ Needs React 18+ and Tailwind CSS (v4 recommended). Setup guides: [React](https:/
 | [Pixel Transition](https://apex-ui.in/components/pixel-transition) | `npx apex-ui-kit add pixel-transition` |
 | [Pricing Cards](https://apex-ui.in/components/pricing-cards) | `npx apex-ui-kit add pricing-cards` |
 | [Profile](https://apex-ui.in/components/profile) | `npx apex-ui-kit add flip-profile` (+ `parallax-profile`, `profile-card`) |
+| [Scroll Stack](https://apex-ui.in/components/scroll-stack) | `npx apex-ui-kit add scroll-stack` |
 | [Smart Grid Card](https://apex-ui.in/components/smart-grid-card) | `npx apex-ui-kit add smart-grid-card` |
 | [Spotlight Grid](https://apex-ui.in/components/spotlight-grid) | `npx apex-ui-kit add spotlight-grid` |
 | [Swipe Cards](https://apex-ui.in/components/swipe-cards) | `npx apex-ui-kit add swipe-cards` |
@@ -128,7 +131,7 @@ Needs React 18+ and Tailwind CSS (v4 recommended). Setup guides: [React](https:/
 </details>
 
 <details>
-<summary><b>Text & Motion</b> (18)</summary>
+<summary><b>Text & Motion</b> (19)</summary>
 
 | Component | Install |
 | --- | --- |
@@ -142,6 +145,7 @@ Needs React 18+ and Tailwind CSS (v4 recommended). Setup guides: [React](https:/
 | [Glitch Text](https://apex-ui.in/components/glitch-text) | `npx apex-ui-kit add glitch-text` |
 | [Hover Text](https://apex-ui.in/components/hover-text) | `npx apex-ui-kit add hover-text` |
 | [Mask View](https://apex-ui.in/components/mask-view) | `npx apex-ui-kit add mask-view` |
+| [Particle Text](https://apex-ui.in/components/particle-text) | `npx apex-ui-kit add particle-text` |
 | [Proximity Text](https://apex-ui.in/components/proximity-text) | `npx apex-ui-kit add proximity-text` |
 | [Rolling Counter](https://apex-ui.in/components/rolling-counter) | `npx apex-ui-kit add rolling-counter` |
 | [Rotating Text](https://apex-ui.in/components/rotating-text) | `npx apex-ui-kit add rotating-text` |
@@ -154,7 +158,7 @@ Needs React 18+ and Tailwind CSS (v4 recommended). Setup guides: [React](https:/
 </details>
 
 <details>
-<summary><b>Navigation</b> (8)</summary>
+<summary><b>Navigation</b> (9)</summary>
 
 | Component | Install |
 | --- | --- |
@@ -164,35 +168,40 @@ Needs React 18+ and Tailwind CSS (v4 recommended). Setup guides: [React](https:/
 | [Magnify Dock](https://apex-ui.in/components/magnify-dock) | `npx apex-ui-kit add magnify-dock` |
 | [Nav DropDown](https://apex-ui.in/components/nav-drop-down) | `npx apex-ui-kit add nav-dropdown` |
 | [Nav Menu](https://apex-ui.in/components/nav-menu) | `npx apex-ui-kit add nav-menu` |
+| [Radial Menu](https://apex-ui.in/components/radial-menu) | `npx apex-ui-kit add radial-menu` |
 | [Sidebar Nav](https://apex-ui.in/components/sidebar-nav) | `npx apex-ui-kit add sidebar-nav` |
 | [Theme Toggle](https://apex-ui.in/components/theme-toggle) | `npx apex-ui-kit add theme-toggle` |
 
 </details>
 
 <details>
-<summary><b>Buttons</b> (3)</summary>
+<summary><b>Buttons</b> (4)</summary>
 
 | Component | Install |
 | --- | --- |
 | [Animated Buttons](https://apex-ui.in/components/animated-buttons) | `npx apex-ui-kit add animated-button` (+ `hold-to-confirm`) |
 | [Animated Switches](https://apex-ui.in/components/animated-switches) | `npx apex-ui-kit add animated-switch` |
+| [Magnetic Button](https://apex-ui.in/components/magnetic-button) | `npx apex-ui-kit add magnetic-button` |
 | [Star Border](https://apex-ui.in/components/star-border) | `npx apex-ui-kit add star-border` |
 
 </details>
 
 <details open>
-<summary><b>Interactive</b> (22)</summary>
+<summary><b>Interactive</b> (27)</summary>
 
 | Component | Install |
 | --- | --- |
 | [3D Carousel](https://apex-ui.in/components/3d-carousel) | `npx apex-ui-kit add 3d-carousel` (+ `webgl-carousel`) |
+| [Arc Gallery](https://apex-ui.in/components/arc-gallery) | `npx apex-ui-kit add arc-gallery` |
 | [Avatar](https://apex-ui.in/components/avatar) | `npx apex-ui-kit add avatar` |
 | [Carousel](https://apex-ui.in/components/carousel) | `npx apex-ui-kit add carousel` (+ `parallax-carousel`, `drag-carousel`) |
+| [Circular Carousel](https://apex-ui.in/components/circular-carousel) | `npx apex-ui-kit add circular-carousel` |
 | [Click Spark](https://apex-ui.in/components/click-spark) | `npx apex-ui-kit add click-spark` |
 | [Coverflow 3D](https://apex-ui.in/components/coverflow-3d) | `npx apex-ui-kit add coverflow-3d` |
 | [Cube Gallery](https://apex-ui.in/components/cube-gallery) | `npx apex-ui-kit add cube-gallery` |
 | [Cursor Trail](https://apex-ui.in/components/cursor-trail) | `npx apex-ui-kit add cursor-trail` |
 | [Dynamic Island](https://apex-ui.in/components/dynamic-island) | `npx apex-ui-kit add dynamic-island` |
+| [Edge Blur](https://apex-ui.in/components/edge-blur) | `npx apex-ui-kit add edge-blur` |
 | [Edge Glow Form](https://apex-ui.in/components/edge-glow-form) | `npx apex-ui-kit add edge-glow-form` |
 | [Elastic Slider](https://apex-ui.in/components/elastic-slider) | `npx apex-ui-kit add elastic-slider` |
 | [FAQ Accordion](https://apex-ui.in/components/faq-accordion) | `npx apex-ui-kit add faq-accordion` |
@@ -201,12 +210,14 @@ Needs React 18+ and Tailwind CSS (v4 recommended). Setup guides: [React](https:/
 | [Liquid Blob 3D](https://apex-ui.in/components/liquid-blob-3d) | `npx apex-ui-kit add liquid-blob-3d` |
 | [Magnet Lines](https://apex-ui.in/components/magnet-lines) | `npx apex-ui-kit add magnet-lines` |
 | [Magnetic Cursor](https://apex-ui.in/components/magnetic-cursor) | `npx apex-ui-kit add magnetic-cursor` |
+| [Marquee 3D](https://apex-ui.in/components/marquee-3d) | `npx apex-ui-kit add marquee-3d` |
 | [Particle Morph](https://apex-ui.in/components/particle-morph) | `npx apex-ui-kit add particle-morph` |
 | [Pointer Follower](https://apex-ui.in/components/pointer-follower) | `npx apex-ui-kit add pointer-follower` |
 | [Receipt Printer](https://apex-ui.in/components/receipt-printer) | `npx apex-ui-kit add receipt-printer` |
 | [Stepper](https://apex-ui.in/components/stepper) | `npx apex-ui-kit add stepper` |
 | [Toast Stack](https://apex-ui.in/components/toast-stack) | `npx apex-ui-kit add toast-stack` |
 | [ToolTip](https://apex-ui.in/components/tool-tip) | `npx apex-ui-kit add tooltip` |
+| [Wireframe Knot 3D](https://apex-ui.in/components/wireframe-knot-3d) | `npx apex-ui-kit add wireframe-knot-3d` |
 
 </details>
 

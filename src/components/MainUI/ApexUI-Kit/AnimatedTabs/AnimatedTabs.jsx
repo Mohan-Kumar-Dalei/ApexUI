@@ -58,7 +58,7 @@ const AnimatedTabs = ({ tabs = DEFAULT_TABS, defaultTab, variant = "pill", accen
                             aria-controls={`${id}-panel`}
                             tabIndex={on ? 0 : -1}
                             onClick={() => select(i)}
-                            className={`relative flex-1 whitespace-nowrap px-4 py-2 text-[0.88rem] font-medium outline-none transition-colors duration-200 focus-visible:ring-2 focus-visible:ring-current/40 ${variant === "underline" ? "pb-3" : variant === "pill" ? "rounded-full" : "rounded-lg"} ${on ? (variant === "pill" ? "text-neutral-950" : "") : dark ? "text-white/55 hover:text-white" : "text-neutral-500 hover:text-neutral-900"}`}
+                            className={`relative flex-1 whitespace-nowrap px-3 py-2 text-[0.82rem] sm:px-4 sm:text-[0.88rem] font-medium outline-none transition-colors duration-200 focus-visible:ring-2 focus-visible:ring-current/40 ${variant === "underline" ? "pb-3" : variant === "pill" ? "rounded-full" : "rounded-lg"} ${on ? (variant === "pill" ? "text-neutral-950" : "") : dark ? "text-white/55 hover:text-white" : "text-neutral-500 hover:text-neutral-900"}`}
                         >
                             {on && (
                                 <motion.span

@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useId, useLayoutEffect, useRef, useState } from 'react';
 import { AnimatePresence, LayoutGroup, MotionConfig, motion } from 'framer-motion';
-import { ArrowRight, ArrowUpRight, ChevronDown } from 'lucide-react';
+import { ArrowRight, ArrowUpRight, ChevronDown, Menu, X } from 'lucide-react';
 
 const ease = [0.22, 1, 0.36, 1];
 const CLOSE_DELAY = 140;
@@ -70,7 +70,129 @@ const PanelContent = ({ item }) => {
     return <Services items={item.submenu} />;
 };
 
+/*
+ * Phones: a Menu button opens one full-width sheet; each section expands in
+ * place (accordion) instead of a hover panel that would not fit.
+ */
+const MobileNav = ({ navData }) => {
+    const [open, setOpen] = useState(false);
+    const [section, setSection] = useState(null);
+    const root = useRef(null);
+    useEffect(() => {
+        if (!open) return undefined;
+        const down = (e) => !root.current?.contains(e.target) && setOpen(false);
+        const key = (e) => e.key === 'Escape' && setOpen(false);
+        window.addEventListener('pointerdown', down);
+        window.addEventListener('keydown', key);
+        return () => {
+            window.removeEventListener('pointerdown', down);
+            window.removeEventListener('keydown', key);
+        };
+    }, [open]);
+    return (
+        <div ref={root} className="relative w-full max-w-sm">
+            <button
+                type="button"
+                aria-expanded={open}
+                onClick={() => setOpen((o) => !o)}
+                className="flex w-full items-center justify-between rounded-full border border-white/10 bg-zinc-950/85 px-5 py-3 text-sm font-medium text-zinc-200 shadow-[0_10px_40px_-12px_rgba(0,0,0,0.7)] outline-none backdrop-blur-xl focus-visible:ring-2 focus-visible:ring-lime-400/60"
+            >
+                Menu
+                {open ? <X size={18} /> : <Menu size={18} />}
+            </button>
+            <AnimatePresence>
+                {open && (
+                    <motion.nav
+                        aria-label="Main"
+                        initial={{ opacity: 0, y: -8, scale: 0.98 }}
+                        animate={{ opacity: 1, y: 0, scale: 1 }}
+                        exit={{ opacity: 0, y: -6, scale: 0.98, transition: { duration: 0.15 } }}
+                        transition={{ duration: 0.22, ease }}
+                        className="absolute left-0 right-0 top-full z-10 mt-2 max-h-[70vh] origin-top overflow-y-auto rounded-2xl border border-white/10 bg-zinc-950/95 p-2 shadow-[0_24px_60px_-20px_rgba(0,0,0,0.8)] backdrop-blur-xl"
+                    >
+                        {navData.map((item, i) => {
+                            const hasMenu = Boolean(item.submenu?.length);
+                            const isOpen = section === i;
+                            if (!hasMenu) {
+                                return (
+                                    <a key={i} href={item.href || '#'} className="block rounded-xl px-3 py-3 text-sm font-medium text-zinc-200 outline-none hover:bg-white/[0.05] focus-visible:bg-white/[0.07]">
+                                        {item.label}
+                                    </a>
+                                );
+                            }
+                            return (
+                                <div key={i}>
+                                    <button
+                                        type="button"
+                                        aria-expanded={isOpen}
+                                        onClick={() => setSection(isOpen ? null : i)}
+                                        className={`flex w-full items-center justify-between rounded-xl px-3 py-3 text-sm font-medium outline-none hover:bg-white/[0.05] focus-visible:bg-white/[0.07] ${isOpen ? 'text-lime-300' : 'text-zinc-200'}`}
+                                    >
+                                        {item.label}
+                                        <ChevronDown size={16} className={`transition-transform duration-300 ${isOpen ? 'rotate-180' : ''}`} />
+                                    </button>
+                                    <AnimatePresence initial={false}>
+                                        {isOpen && (
+                                            <motion.ul
+                                                initial={{ height: 0, opacity: 0 }}
+                                                animate={{ height: 'auto', opacity: 1 }}
+                                                exit={{ height: 0, opacity: 0 }}
+                                                transition={{ duration: 0.25, ease }}
+                                                className="overflow-hidden pl-2"
+                                            >
+                                                {item.submenu.map((sub, j) => (
+                                                    <li key={j}>
+                                                        <a href={sub.href} className="flex items-center gap-3 rounded-lg px-3 py-2 outline-none hover:bg-white/[0.05] focus-visible:bg-white/[0.07]">
+                                                            {sub.image ? (
+                                                                <img src={sub.image} alt="" className="h-9 w-9 shrink-0 rounded-md object-cover ring-1 ring-white/10" />
+                                                            ) : (
+                                                                <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg border border-lime-400/20 bg-lime-400/10 text-xs font-semibold text-lime-300">
+                                                                    {sub.icon ? <sub.icon size={14} /> : sub.label.charAt(0)}
+                                                                </span>
+                                                            )}
+                                                            <span className="min-w-0">
+                                                                <span className="block truncate text-sm text-zinc-100">{sub.label}</span>
+                                                                {sub.subtitle && <span className="block truncate text-xs text-zinc-500">{sub.subtitle}</span>}
+                                                            </span>
+                                                        </a>
+                                                    </li>
+                                                ))}
+                                            </motion.ul>
+                                        )}
+                                    </AnimatePresence>
+                                </div>
+                            );
+                        })}
+                    </motion.nav>
+                )}
+            </AnimatePresence>
+        </div>
+    );
+};
+
+// Below this much room the desktop bar would not fit, so the phone menu shows.
+const COMPACT_BELOW = 640;
+
 const NavDropDown = ({ navData = [], className = '' }) => {
+    const hostRef = useRef(null);
+    const [compact, setCompact] = useState(false);
+    useLayoutEffect(() => {
+        const host = hostRef.current?.parentElement;
+        if (!host) return undefined;
+        const check = () => setCompact(host.clientWidth < COMPACT_BELOW);
+        check();
+        const ro = new ResizeObserver(check);
+        ro.observe(host);
+        return () => ro.disconnect();
+    }, []);
+    return (
+        <div ref={hostRef} className={`flex w-full justify-center ${className}`}>
+            {compact ? <MobileNav navData={navData} /> : <DesktopNav navData={navData} />}
+        </div>
+    );
+};
+
+const DesktopNav = ({ navData = [], className = '' }) => {
     const uid = useId();
     const rootRef = useRef(null);
     const barRef = useRef(null);

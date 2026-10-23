@@ -91,7 +91,10 @@ const FlipClock = ({ mode = "seconds", target, seconds = 3 * 86400 + 4 * 3600 + 
     const ink = dark ? "#fafafa" : "#18181b";
 
     return (
-        <div role="timer" aria-live="off" aria-label={parts.map(([l, v]) => `${v} ${l}`).join(", ")} className={`inline-flex items-start gap-[0.35em] font-mono font-bold ${className}`} style={{ fontSize: `${size}rem` }}>
+        // The clock is sized in em; on narrow screens the font shrinks with the
+        // container (cqw) so every unit fits instead of being cut off.
+        <div className="flex w-full justify-center" style={{ containerType: "inline-size" }}>
+        <div role="timer" aria-live="off" aria-label={parts.map(([l, v]) => `${v} ${l}`).join(", ")} className={`inline-flex items-start gap-[0.35em] font-mono font-bold ${className}`} style={{ fontSize: `min(${size}rem, ${(100 / (parts.length * 2.55)).toFixed(2)}cqw)` }}>
             {parts.map(([label, value], i) => (
                 <React.Fragment key={label}>
                     {i > 0 && (
@@ -114,6 +117,7 @@ const FlipClock = ({ mode = "seconds", target, seconds = 3 * 86400 + 4 * 3600 + 
                     </span>
                 </React.Fragment>
             ))}
+        </div>
         </div>
     );
 };
