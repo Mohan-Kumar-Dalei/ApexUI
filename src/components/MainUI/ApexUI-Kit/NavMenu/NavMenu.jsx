@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect, useLayoutEffect } from 'react';
 import { gsap } from "gsap";
 const NavMenu = ({
     indicatorColor = "#a3e635",
@@ -80,7 +80,7 @@ const NavMenu = ({
     return (
         <nav
             ref={navContainerRef}
-            className="rounded px-3 py-2 shadow-lg border border-white/10 overflow-hidden"
+            className="relative rounded px-3 py-2 shadow-lg border border-white/10 overflow-hidden"
             style={{ backdropFilter: 'blur(16px)', WebkitBackdropFilter: 'blur(16px)', background: backgroundColor ,  }}
         >
             <div
@@ -113,37 +113,54 @@ const NavMenu = ({
 const ResponsiveNavMenu = (props) => {
     const [isOpen, setIsOpen] = useState(false);
     const navItems = ['Home', 'Docs', 'UI Kit', 'Contact'];
+    // Switch to the menu button when the space it sits in is narrow (not the
+    // screen), so it also fits sidebars, preview frames and small columns.
+    const wrap = useRef(null);
+    const [narrow, setNarrow] = useState(false);
+
+    useLayoutEffect(() => {
+        const el = wrap.current;
+        if (!el) return undefined;
+        const ro = new ResizeObserver(() => {
+            const rem = parseFloat(getComputedStyle(document.documentElement).fontSize) || 16;
+            setNarrow(el.clientWidth / rem < 34);
+        });
+        ro.observe(el);
+        return () => ro.disconnect();
+    }, []);
 
     return (
-        <nav className="flex items-center justify-center p-4 sticky top-0 left-0 w-full z-50 bg-transparent">
-            <div className="hidden md:flex w-full justify-center">
-                <NavMenu {...props} />
-            </div>
+        <nav ref={wrap} className="flex items-center justify-center p-4 sticky top-0 left-0 w-full z-50 bg-transparent">
+            {!narrow ? (
+                <div className="flex w-full justify-center">
+                    <NavMenu {...props} />
+                </div>
+            ) : (
+                <div className="flex w-full justify-end">
+                    {/* Same backdrop as the desktop bar, so the icon stays visible on light pages too. */}
+                    <button
+                        onClick={() => setIsOpen(!isOpen)}
+                        aria-label={isOpen ? "Close menu" : "Open menu"}
+                        className="rounded-full border border-white/10 p-2.5 text-white shadow-lg focus:outline-none"
+                        style={{ backdropFilter: 'blur(16px)', WebkitBackdropFilter: 'blur(16px)', background: props.backgroundColor ?? 'rgba(17, 24, 39, 0.7)' }}
+                    >
+                        <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d={isOpen ? "M6 18L18 6M6 6l12 12" : "M4 6h16M4 12h16m-7 6h7"} />
+                        </svg>
+                    </button>
+                </div>
+            )}
 
-            <div className="md:hidden flex w-full justify-end">
-                {/* Same backdrop as the desktop bar, so the icon stays visible on light pages too. */}
-                <button
-                    onClick={() => setIsOpen(!isOpen)}
-                    aria-label={isOpen ? "Close menu" : "Open menu"}
-                    className="rounded-full border border-white/10 p-2.5 text-white shadow-lg focus:outline-none"
-                    style={{ backdropFilter: 'blur(16px)', WebkitBackdropFilter: 'blur(16px)', background: props.backgroundColor ?? 'rgba(17, 24, 39, 0.7)' }}
-                >
-                    <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d={isOpen ? "M6 18L18 6M6 6l12 12" : "M4 6h16M4 12h16m-7 6h7"} />
-                    </svg>
-                </button>
-            </div>
-
-            {isOpen && (
-                <div className="md:hidden absolute top-20 left-4 right-4 rounded-xl shadow-lg border border-white/10"
+            {narrow && isOpen && (
+                <div className="absolute top-20 left-4 right-4 rounded-xl shadow-lg border border-white/10"
                     style={{ backdropFilter: 'blur(16px)', WebkitBackdropFilter: 'blur(16px)', background: 'rgba(17, 24, 39, 0.7)' }}>
                     <div className="flex flex-col items-center gap-2 p-4">
                         {navItems.map((label) => (
                             <button
                                 key={label}
                                 onClick={() => {
-                                    console.log(`${label} clicked`);
                                     setIsOpen(false);
+                                    props.onNavItemClick?.();
                                 }}
                                 className="w-full text-center px-6 py-3 text-lg font-semibold rounded-full text-gray-300 hover:text-white hover:bg-white/10 transition-colors duration-300"
                             >

@@ -240,14 +240,6 @@ export const componentPages = [
         summary: 'Text and card marquees whose speed follows the scroll.',
     },
     {
-        name: 'Smart Grid Card',
-        path: '/components/smart-grid-card',
-        load: () => import('../content/components/SmartGridCardDoc.jsx'),
-        category: 'Cards',
-        image: shot('Grid Card.png'),
-        summary: 'A responsive card grid with a spotlight that tracks the pointer.',
-    },
-    {
         name: 'Smoke Background',
         path: '/components/smoke-background',
         load: () => import('../content/components/SmokeBackgroundDoc.jsx'),

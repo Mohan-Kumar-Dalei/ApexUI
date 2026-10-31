@@ -149,7 +149,7 @@ function Stage({ title, description, variant, variants, activeVariant, onVariant
                         {frame ? (
                             <div className="absolute inset-0 z-10 flex flex-col items-center justify-center gap-2 px-3 py-3">
                                 <div
-                                    className={`@container relative isolate flex min-h-0 w-full flex-1 items-center justify-center overflow-hidden rounded-[1.4rem] border-[6px] border-[var(--panel-3)] shadow-[0_20px_60px_-25px_rgba(0,0,0,0.6)] transition-[max-width] duration-300 ease-out ${variant.fullBleed ? 'bg-[#09090b] text-white' : 'bg-[var(--stage)] p-4 text-[var(--stage-ink)]'} ${variant.previewClassName ?? ''}`}
+                                    className={`@container relative isolate flex min-h-0 w-full flex-1 rounded-[1.4rem] border-[6px] border-[var(--panel-3)] shadow-[0_20px_60px_-25px_rgba(0,0,0,0.6)] transition-[max-width] duration-300 ease-out ${variant.fullBleed ? 'items-center justify-center overflow-hidden bg-[#09090b] text-white' : 'thin-scroll overflow-x-hidden overflow-y-auto bg-[var(--stage)] p-4 text-[var(--stage-ink)] [align-items:safe_center] [justify-content:safe_center]'} ${variant.previewClassName ?? ''}`}
                                     style={{ maxWidth: frame.width }}
                                 >
                                     {variant.preview}

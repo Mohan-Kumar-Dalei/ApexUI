@@ -46,7 +46,6 @@ export default function TestimonialsDoc() {
             title="Testimonials"
             description="A testimonials card with smooth transitions between quotes, social proof that looks the part."
             preview={<Testimonials testimonials={testimonials} />}
-            previewClassName="min-h-[560px]"
             code={code}
             cli="testimonials"
             props={props}

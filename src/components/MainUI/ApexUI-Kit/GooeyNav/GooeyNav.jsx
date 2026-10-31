@@ -123,6 +123,20 @@ const GooeyNav = ({ items = DEFAULT_ITEMS, initialActive = 0, onChange, accentCo
     const gooRef = useRef(goo);
     const glowRef = useRef(theme === "light" ? 0 : 0.22);
     const dark = theme !== "light";
+    // Sized from the space it sits in (not the screen), so it fits narrow columns too.
+    const [size, setSize] = useState("lg");
+
+    useLayoutEffect(() => {
+        const el = bar.current?.parentElement?.parentElement;
+        if (!el) return undefined;
+        const ro = new ResizeObserver(() => {
+            const rem = parseFloat(getComputedStyle(document.documentElement).fontSize) || 16;
+            const w = el.clientWidth / rem;
+            setSize(w < 22 ? "xs" : w < 34 ? "sm" : "lg");
+        });
+        ro.observe(el);
+        return () => ro.disconnect();
+    }, []);
 
     useEffect(() => {
         color.current = hexToRgb(accentColor);
@@ -289,7 +303,7 @@ const GooeyNav = ({ items = DEFAULT_ITEMS, initialActive = 0, onChange, accentCo
 
     return (
         <nav className={`relative inline-flex max-w-full ${className}`} aria-label="Main">
-            <div ref={bar} className={`relative flex items-center gap-0 rounded-full p-1 sm:gap-0.5 sm:p-1.5 ${dark ? "bg-neutral-950 ring-1 ring-white/10" : "bg-white shadow-sm ring-1 ring-black/10"}`}>
+            <div ref={bar} className={`relative flex items-center gap-0 rounded-full ${size === "lg" ? "gap-0.5 p-1.5" : "p-1"} ${dark ? "bg-neutral-950 ring-1 ring-white/10" : "bg-white shadow-sm ring-1 ring-black/10"}`}>
                 <canvas ref={canvas} aria-hidden="true" className="pointer-events-none absolute" style={{ left: -PAD, top: -PAD, display: fallback ? "none" : "block" }} />
                 {fallback && <span ref={fallbackPill} aria-hidden="true" className="pointer-events-none absolute rounded-full" style={{ background: accentColor }} />}
                 {items.map((item, i) => (
@@ -299,7 +313,7 @@ const GooeyNav = ({ items = DEFAULT_ITEMS, initialActive = 0, onChange, accentCo
                         href={item.href}
                         onClick={(e) => select(i, e)}
                         aria-current={i === active ? "page" : undefined}
-                        className={`relative z-[1] shrink-0 rounded-full px-2.5 py-2 text-[0.82rem] font-medium max-[380px]:px-2 max-[380px]:text-[0.76rem] sm:py-2.5 sm:text-[0.95rem] outline-none transition-colors duration-300 focus-visible:ring-2 focus-visible:ring-current/30 sm:px-5 ${i === active ? "text-neutral-950" : dark ? "text-white/65 hover:text-white" : "text-neutral-500 hover:text-neutral-900"}`}
+                        className={`relative z-[1] shrink-0 whitespace-nowrap rounded-full font-medium outline-none transition-colors duration-300 focus-visible:ring-2 focus-visible:ring-current/30 ${{ lg: "px-5 py-2.5 text-[0.95rem]", sm: "px-2.5 py-2 text-[0.82rem]", xs: "px-2 py-2 text-[0.76rem]" }[size]} ${i === active ? "text-neutral-950" : dark ? "text-white/65 hover:text-white" : "text-neutral-500 hover:text-neutral-900"}`}
                     >
                         {item.label}
                     </a>

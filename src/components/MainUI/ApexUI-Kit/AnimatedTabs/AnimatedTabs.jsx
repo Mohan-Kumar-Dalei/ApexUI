@@ -1,4 +1,4 @@
-import React, { useId, useRef, useState } from "react";
+import React, { useId, useLayoutEffect, useRef, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 
 /*
@@ -19,7 +19,21 @@ const AnimatedTabs = ({ tabs = DEFAULT_TABS, defaultTab, variant = "pill", accen
     const [active, setActive] = useState(defaultTab ?? tabs[0]?.id);
     const [dir, setDir] = useState(1);
     const refs = useRef([]);
+    const root = useRef(null);
     const dark = theme !== "light";
+    // Compact tabs when the box itself is narrow (not the screen), so labels never get cut.
+    const [compact, setCompact] = useState(false);
+
+    useLayoutEffect(() => {
+        const el = root.current;
+        if (!el) return undefined;
+        const ro = new ResizeObserver(() => {
+            const rem = parseFloat(getComputedStyle(document.documentElement).fontSize) || 16;
+            setCompact(el.clientWidth / rem < 30);
+        });
+        ro.observe(el);
+        return () => ro.disconnect();
+    }, []);
     const index = tabs.findIndex((t) => t.id === active);
     const current = tabs[index];
 
@@ -44,7 +58,7 @@ const AnimatedTabs = ({ tabs = DEFAULT_TABS, defaultTab, variant = "pill", accen
     }[variant];
 
     return (
-        <div className={`w-full max-w-xl ${dark ? "text-white" : "text-neutral-900"} ${className}`}>
+        <div ref={root} className={`w-full max-w-xl ${dark ? "text-white" : "text-neutral-900"} ${className}`}>
             <div role="tablist" aria-orientation="horizontal" onKeyDown={onKeyDown} className={`relative flex overflow-x-auto [scrollbar-width:none] ${list}`}>
                 {tabs.map((t, i) => {
                     const on = t.id === active;
@@ -58,7 +72,7 @@ const AnimatedTabs = ({ tabs = DEFAULT_TABS, defaultTab, variant = "pill", accen
                             aria-controls={`${id}-panel`}
                             tabIndex={on ? 0 : -1}
                             onClick={() => select(i)}
-                            className={`relative flex-1 whitespace-nowrap px-3 py-2 text-[0.82rem] max-[380px]:px-2 max-[380px]:text-[0.76rem] sm:px-4 sm:text-[0.88rem] font-medium outline-none transition-colors duration-200 focus-visible:ring-2 focus-visible:ring-current/40 ${variant === "underline" ? "pb-3" : variant === "pill" ? "rounded-full" : "rounded-lg"} ${on ? (variant === "pill" ? "text-neutral-950" : "") : dark ? "text-white/55 hover:text-white" : "text-neutral-500 hover:text-neutral-900"}`}
+                            className={`relative flex-1 whitespace-nowrap py-2 ${compact ? "px-2 text-[0.76rem]" : "px-4 text-[0.88rem]"} font-medium outline-none transition-colors duration-200 focus-visible:ring-2 focus-visible:ring-current/40 ${variant === "underline" ? "pb-3" : variant === "pill" ? "rounded-full" : "rounded-lg"} ${on ? (variant === "pill" ? "text-neutral-950" : "") : dark ? "text-white/55 hover:text-white" : "text-neutral-500 hover:text-neutral-900"}`}
                         >
                             {on && (
                                 <motion.span

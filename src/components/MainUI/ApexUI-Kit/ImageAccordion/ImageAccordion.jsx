@@ -24,6 +24,7 @@ const ImageAccordion = ({ items = DEFAULT_ITEMS, defaultActive = 0, autoPlay = 0
     const list = items.length ? items : DEFAULT_ITEMS;
     const [active, setActive] = useState(Math.min(defaultActive, list.length - 1));
     const [vertical, setVertical] = useState(false);
+    const [panelW, setPanelW] = useState(416);
     const root = useRef(null);
     const hovering = useRef(false);
 
@@ -34,13 +35,20 @@ const ImageAccordion = ({ items = DEFAULT_ITEMS, defaultActive = 0, autoPlay = 0
         });
     };
 
-    // Stack vertically when the box is narrow (a container check, not the viewport).
+    // Stack vertically when the box is narrow (a container check, not the viewport),
+    // and work out how wide the open panel ends up so its text never overflows it.
     useEffect(() => {
         const el = root.current;
-        const ro = new ResizeObserver(([entry]) => setVertical(entry.contentRect.width < 520));
+        const ro = new ResizeObserver(([entry]) => {
+            const w = entry.contentRect.width;
+            const rem = parseFloat(getComputedStyle(document.documentElement).fontSize) || 16;
+            const stacked = w < 520;
+            setVertical(stacked);
+            setPanelW(stacked ? w : ((w - gap * rem * (list.length - 1)) * openRatio) / (openRatio + list.length - 1));
+        });
         ro.observe(el);
         return () => ro.disconnect();
-    }, []);
+    }, [gap, openRatio, list.length]);
 
     useEffect(() => {
         if (!autoPlay) return undefined;
@@ -101,8 +109,8 @@ const ImageAccordion = ({ items = DEFAULT_ITEMS, defaultActive = 0, autoPlay = 0
 
                         {/* Open: title and text rise in once the panel has room. A fixed width keeps them from re-wrapping as it grows. */}
                         <span
-                            className="absolute bottom-0 left-0 block w-[min(26rem,85vw)] p-[clamp(1rem,3cqw,1.75rem)] [backface-visibility:hidden]"
-                            style={{ opacity: on ? 1 : 0, transform: on ? "none" : "translateY(0.75rem)", transition: `opacity ${duration * 0.6}ms ${EASE} ${on ? duration * 0.35 : 0}ms, transform ${duration * 0.8}ms ${EASE} ${on ? duration * 0.3 : 0}ms` }}
+                            className="absolute bottom-0 left-0 block p-[clamp(1rem,3cqw,1.75rem)] [backface-visibility:hidden]"
+                            style={{ width: `min(26rem, ${Math.round(panelW)}px)`, opacity: on ? 1 : 0, transform: on ? "none" : "translateY(0.75rem)", transition: `opacity ${duration * 0.6}ms ${EASE} ${on ? duration * 0.35 : 0}ms, transform ${duration * 0.8}ms ${EASE} ${on ? duration * 0.3 : 0}ms` }}
                         >
                             <span className="block font-mono text-[0.7rem] tracking-[0.2em] text-white/60">{String(i + 1).padStart(2, "0")}</span>
                             <span className="mt-1 block truncate text-[1.6rem] font-bold leading-tight">{item.title}</span>

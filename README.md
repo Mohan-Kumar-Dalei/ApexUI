@@ -4,7 +4,7 @@
 
 # ApexUI
 
-### 118 free, animated UI components for React
+### 117 free, animated UI components for React
 
 Copy-paste or one-command install. Styled with Tailwind CSS, animated with Framer Motion, GSAP and Three.js.<br/>
 You get the source, so you can read it and change anything.
@@ -48,7 +48,7 @@ You get the source, so you can read it and change anything.
 
 ## Why ApexUI
 
-- **118 components** across backgrounds, cards, text effects, navigation, buttons, interactive UI, AI interfaces, loaders and maps, with new ones added regularly.
+- **117 components** across backgrounds, cards, text effects, navigation, buttons, interactive UI, AI interfaces, loaders and maps, with new ones added regularly.
 - **Real 3D, still light.** Three.js and WebGL components (Galaxy 3D, Warp Tunnel, Distortion Image, Liquid Blob 3D, Particle Morph, Retro Grid 3D, Gooey Nav) use one small shader each, cap the pixel ratio, pause when off screen and free the GPU on unmount.
 - **AI-ready UI.** Chat, prompt box with model picker, thinking state, streaming response and five voice assistant visuals.
 - **You own the code.** The CLI copies plain `.jsx` files into your project. No runtime package, no lock-in.
@@ -125,7 +125,6 @@ Needs React 18+ and Tailwind CSS (v4 recommended). Setup guides: [React](https:/
 | [Pricing Cards](https://apex-ui.in/components/pricing-cards) | `npx apex-ui-kit add pricing-cards` |
 | [Profile](https://apex-ui.in/components/profile) | `npx apex-ui-kit add flip-profile` (+ `parallax-profile`, `profile-card`) |
 | [Scroll Stack](https://apex-ui.in/components/scroll-stack) | `npx apex-ui-kit add scroll-stack` |
-| [Smart Grid Card](https://apex-ui.in/components/smart-grid-card) | `npx apex-ui-kit add smart-grid-card` |
 | [Spotlight Grid](https://apex-ui.in/components/spotlight-grid) | `npx apex-ui-kit add spotlight-grid` |
 | [Swipe Cards](https://apex-ui.in/components/swipe-cards) | `npx apex-ui-kit add swipe-cards` |
 | [Testimonials](https://apex-ui.in/components/testimonials) | `npx apex-ui-kit add testimonials` |
