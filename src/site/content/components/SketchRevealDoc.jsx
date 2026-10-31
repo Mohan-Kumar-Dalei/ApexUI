@@ -45,10 +45,25 @@ export default function SketchRevealDoc() {
             title="Sketch Reveal"
             description="One picture turns into a glowing line sketch, then a ragged, pixelated circle burns outward from the centre and reveals a second picture, with sparks along the burning edge. One WebGL shader does the edge detection and the dissolve. Drive it with the page scroll (the section pins while it plays), with hover, on a loop or with your own progress."
             preview={
-                <div className="absolute inset-0">
+                // Manual mode: drag across the picture (or use the Progress slider) to scrub the reveal.
+                <div
+                    className={`absolute inset-0 ${mode === 'manual' ? 'cursor-ew-resize touch-none' : ''}`}
+                    onPointerDown={(e) => {
+                        if (mode !== 'manual') return;
+                        e.preventDefault();
+                        e.currentTarget.setPointerCapture(e.pointerId);
+                        const r = e.currentTarget.getBoundingClientRect();
+                        setProgress(Math.min(1, Math.max(0, (e.clientX - r.left) / r.width)));
+                    }}
+                    onPointerMove={(e) => {
+                        if (mode !== 'manual' || !e.currentTarget.hasPointerCapture(e.pointerId)) return;
+                        const r = e.currentTarget.getBoundingClientRect();
+                        setProgress(Math.min(1, Math.max(0, (e.clientX - r.left) / r.width)));
+                    }}
+                >
                     <SketchReveal key={pair} from={from} to={to} mode={mode} progress={progress} edgeColor={edge} sparkle={sparkle}>
                         <div className="flex h-full flex-col items-center justify-end px-6 pb-10 text-center text-white [text-shadow:0_2px_20px_rgba(0,0,0,0.6)]">
-                            <p className="font-mono text-[0.7rem] uppercase tracking-[0.35em] text-white/75">{mode === 'hover' ? 'Hover me' : mode === 'manual' ? 'Drag the progress slider' : 'Plays on a loop'}</p>
+                            <p className="font-mono text-[0.7rem] uppercase tracking-[0.35em] text-white/75">{mode === 'hover' ? 'Hover me' : mode === 'manual' ? `Drag across the picture · ${Math.round(progress * 100)}%` : 'Plays on a loop'}</p>
                             <h3 className="mt-2 text-3xl font-black tracking-tight sm:text-5xl">From sketch to light</h3>
                         </div>
                     </SketchReveal>
@@ -58,7 +73,7 @@ export default function SketchRevealDoc() {
             controls={
                 <ControlGrid>
                     <SelectControl label="Pictures" value={pair} onChange={setPair} options={[{ value: 'peaks', label: 'Peaks' }, { value: 'city', label: 'City' }, { value: 'sea', label: 'Sea' }]} />
-                    <SelectControl label="Mode" value={mode} onChange={setMode} options={[{ value: 'auto', label: 'Auto loop' }, { value: 'hover', label: 'Hover' }, { value: 'manual', label: 'Manual' }]} />
+                    <SelectControl label="Mode" value={mode} onChange={setMode} options={[{ value: 'auto', label: 'Auto loop' }, { value: 'hover', label: 'Hover' }, { value: 'manual', label: 'Manual (drag)' }]} />
                     <RangeControl label="Progress" value={progress} onChange={(v) => (setProgress(v), setMode('manual'))} min={0} max={1} step={0.01} format={(v) => v.toFixed(2)} />
                     <ColorControl label="Edge" value={edge} onChange={setEdge} />
                     <RangeControl label="Sparkle" value={sparkle} onChange={setSparkle} min={0} max={2} step={0.1} format={(v) => v.toFixed(1)} />
