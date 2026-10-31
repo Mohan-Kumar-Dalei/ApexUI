@@ -37,6 +37,7 @@ export function ComponentCard({ item, index = 0, showCategory = true }) {
             >
                 <div className="relative aspect-[16/10] overflow-hidden rounded-xl bg-[var(--stage)]">
                     <Thumb src={item.image} alt={`${item.name} preview`} className="transition duration-700 ease-[var(--ease-out)] group-hover:scale-[1.04]" />
+                    {item.isNew && <NewBadge className="absolute left-2.5 top-2.5 shadow-lg" />}
                     <span className="absolute right-2.5 top-2.5 inline-flex h-8 w-8 translate-y-1 items-center justify-center rounded-full bg-[var(--lime)] text-[var(--lime-ink)] opacity-0 shadow-lg transition duration-300 group-hover:translate-y-0 group-hover:opacity-100">
                         <ArrowUpRight className="h-4 w-4" />
                     </span>

@@ -10,6 +10,7 @@ import { Thumb } from '../../ui/ComponentIndex.jsx';
 import { CliChip } from '../../docs/parts.jsx';
 import { PAD_X } from '../../docs/style.js';
 import { CATEGORIES, componentPages, prefetch, SITE } from '../../config/navigation.js';
+import NewBadge from '../../ui/NewBadge.jsx';
 import { FramerIcon, GsapIcon, ReactIcon, TailwindIcon } from './BrandIcons.jsx';
 import GlareCard from '../../../components/MainUI/ApexUI-Kit/GlareCard/GlareCard.jsx';
 import HyperCard from '../../../components/MainUI/ApexUI-Kit/HyperCard/HyperCard.jsx';
@@ -142,7 +143,7 @@ function Showcase() {
                                 >
                                     <span className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-lg font-mono text-[0.68rem] ${active ? 'bg-[var(--lime)] text-[var(--lime-ink)]' : 'bg-[var(--panel-2)] text-[var(--ink-3)]'}`}>{s.page.num}</span>
                                     <span className="min-w-0">
-                                        <span className="block truncate text-[0.9rem] font-medium">{s.page.name}</span>
+                                        <span className="flex min-w-0 items-center gap-1.5 text-[0.9rem] font-medium"><span className="truncate">{s.page.name}</span>{s.page.isNew && <NewBadge />}</span>
                                         <span className="hidden truncate text-[0.72rem] text-[var(--ink-3)] lg:block">{s.page.category}</span>
                                     </span>
                                     {active && (
