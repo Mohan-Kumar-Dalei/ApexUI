@@ -37,12 +37,12 @@ const Particles = ({ number = 50, color = '#ffffff', speed = 1 }) => {
 };
 
 // Main MeteorCard Component
-// A fixed-size card (image on top, content below) so it looks the same on every screen.
+// Cards share a responsive grid: up to 20rem wide, shrinking to fit narrow screens.
 const MeteorCard = ({ data, particleNumber, particleColor, particleSpeed }) => {
     return (
-        <div className="flex flex-wrap justify-center gap-6">
+        <div className="grid w-full justify-center gap-6" style={{ gridTemplateColumns: "repeat(auto-fit, minmax(min(100%, 16rem), 20rem))" }}>
             {data.map((item, index) => (
-                <div key={index} className="relative w-[20rem] max-w-full bg-slate-800/80 p-0.5 rounded-2xl moving-border-card">
+                <div key={index} className="relative w-full min-w-0 bg-slate-800/80 p-0.5 rounded-2xl moving-border-card">
                     {/* Card ka content container */}
                     <div className="relative bg-slate-900 rounded-[calc(1rem-2px)] p-3 flex flex-col overflow-hidden">
                         {/* Background Effects */}
@@ -59,13 +59,13 @@ const MeteorCard = ({ data, particleNumber, particleColor, particleSpeed }) => {
                         <div className="absolute -top-1/4 -left-1/4 w-3/4 h-1/2 bg-blue-400/60 rounded-full blur-[90px] pointer-events-none z-0"></div>
 
                         {/* Image */}
-                        <div className="relative h-[13.75rem] w-full rounded-xl overflow-hidden z-10 ring-1 ring-white/10">
+                        <div className="relative aspect-[4/3] w-full rounded-xl overflow-hidden z-10 ring-1 ring-white/10">
                             <img src={item.imageUrl} alt={item.title} className="w-full h-full object-cover object-[center_25%]" />
                         </div>
 
                         {/* Content */}
                         <div className="relative z-10 px-2 pt-4 pb-2 text-center">
-                            <h3 className="text-2xl font-bold mb-2 text-white tracking-tight">{item.title}</h3>
+                            <h3 className="text-xl font-bold sm:text-2xl mb-2 text-white tracking-tight">{item.title}</h3>
                             <p className="text-sm leading-relaxed text-gray-400 mb-5">{item.description}</p>
                             <button className="group relative inline-flex w-full items-center justify-center whitespace-nowrap px-6 py-2.5 bg-lime-600 text-white font-semibold rounded-lg overflow-hidden transition-all duration-300 hover:bg-lime-700">
                                 <span>{item.buttonText}</span>

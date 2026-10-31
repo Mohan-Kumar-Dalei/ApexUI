@@ -34,14 +34,32 @@ async function* walk(dir) {
     }
 }
 
+// What is already on ImageKit (path -> size). Unchanged files are skipped, so a
+// run only uploads new or edited images instead of overwriting everything
+// (every overwrite keeps an old version and counts toward the plan limits).
+const existing = new Map();
+for (let skip = 0; ; skip += 1000) {
+    const res = await fetch(`https://api.imagekit.io/v1/files?type=file&limit=1000&skip=${skip}`, { headers: { Authorization: auth } });
+    if (!res.ok) break;
+    const page = await res.json();
+    page.forEach((f) => existing.set(f.filePath, f.size));
+    if (page.length < 1000) break;
+}
+
 let ok = 0;
 let failed = 0;
+let skipped = 0;
 for await (const file of walk(ROOT)) {
     const rel = path.relative(ROOT, file).split(path.sep);
     const fileName = clean(rel.pop());
     const folder = [FOLDER, ...rel.map(clean)].join('/') || '/';
+    const data = await readFile(file);
+    if (existing.get(`${folder}/${fileName}`) === data.length && !process.env.FORCE) {
+        skipped += 1;
+        continue;
+    }
     const form = new FormData();
-    form.append('file', new Blob([await readFile(file)]), fileName);
+    form.append('file', new Blob([data]), fileName);
     form.append('fileName', fileName);
     form.append('folder', folder);
     form.append('useUniqueFileName', 'false');
@@ -55,5 +73,5 @@ for await (const file of walk(ROOT)) {
         console.error('✗', `${folder}/${fileName}`, res.status, await res.text());
     }
 }
-console.log(`\nDone: ${ok} uploaded, ${failed} failed.`);
+console.log(`\nDone: ${ok} uploaded, ${skipped} unchanged (skipped), ${failed} failed.`);
 process.exit(failed ? 1 : 0);

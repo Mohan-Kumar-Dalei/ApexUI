@@ -80,14 +80,16 @@ const ImageAccordion = ({ items = DEFAULT_ITEMS, defaultActive = 0, autoPlay = 0
                             alt=""
                             draggable={false}
                             className="absolute inset-0 h-full w-full object-cover"
-                            style={{ transform: on ? "scale(1)" : "scale(1.12)", filter: on ? "none" : "saturate(0.6) brightness(0.75)", transition: `transform ${duration * 1.4}ms ${EASE}, filter ${duration}ms ${EASE}` }}
+                            style={{ transform: on ? "scale(1)" : "scale(1.12)", transition: `transform ${duration * 1.4}ms ${EASE}`, willChange: "transform" }}
                         />
+                        {/* Dim folded panels with an overlay (cheap) instead of a filter on the image (repaints every frame). */}
+                        <span aria-hidden="true" className="absolute inset-0 bg-black" style={{ opacity: on ? 0 : 0.32, transition: `opacity ${duration}ms ${EASE}` }} />
                         <span aria-hidden="true" className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
 
                         {/* Folded: the title runs along the strip. */}
                         <span
                             aria-hidden="true"
-                            className="absolute whitespace-nowrap text-sm font-semibold tracking-wide"
+                            className="absolute whitespace-nowrap text-sm font-semibold tracking-wide [backface-visibility:hidden]"
                             style={{
                                 ...(vertical ? { left: "1rem", top: "50%", transform: "translateY(-50%)" } : { left: "50%", bottom: "1.25rem", transform: "translateX(-50%) rotate(-90deg)", transformOrigin: "center", translate: "0 -2.5rem" }),
                                 opacity: on ? 0 : 0.9,
@@ -97,14 +99,14 @@ const ImageAccordion = ({ items = DEFAULT_ITEMS, defaultActive = 0, autoPlay = 0
                             {item.title}
                         </span>
 
-                        {/* Open: title and text rise in once the panel has room. */}
+                        {/* Open: title and text rise in once the panel has room. A fixed width keeps them from re-wrapping as it grows. */}
                         <span
-                            className="absolute inset-x-0 bottom-0 block p-[clamp(1rem,3cqw,1.75rem)]"
+                            className="absolute bottom-0 left-0 block w-[min(26rem,85vw)] p-[clamp(1rem,3cqw,1.75rem)] [backface-visibility:hidden]"
                             style={{ opacity: on ? 1 : 0, transform: on ? "none" : "translateY(0.75rem)", transition: `opacity ${duration * 0.6}ms ${EASE} ${on ? duration * 0.35 : 0}ms, transform ${duration * 0.8}ms ${EASE} ${on ? duration * 0.3 : 0}ms` }}
                         >
                             <span className="block font-mono text-[0.7rem] tracking-[0.2em] text-white/60">{String(i + 1).padStart(2, "0")}</span>
-                            <span className="mt-1 block text-[clamp(1.2rem,2.4vw,1.9rem)] font-bold leading-tight">{item.title}</span>
-                            {item.description && <span className="mt-1 block max-w-sm text-sm text-white/75">{item.description}</span>}
+                            <span className="mt-1 block truncate text-[1.6rem] font-bold leading-tight">{item.title}</span>
+                            {item.description && <span className="mt-1 block max-w-[20rem] text-sm text-white/75">{item.description}</span>}
                         </span>
                     </button>
                 );

@@ -44,7 +44,7 @@ export function ComponentCard({ item, index = 0, showCategory = true }) {
                 </div>
                 <div className="flex flex-1 flex-col px-3 pb-3 pt-3.5">
                     <div className="flex items-center justify-between gap-3">
-                        <h3 className="flex min-w-0 items-center gap-2 text-[0.98rem] font-semibold text-[var(--ink)]"><span className="truncate">{item.name}</span>{item.isNew && <NewBadge />}</h3>
+                        <h3 className="flex min-w-0 items-center gap-2 text-[0.98rem] font-semibold text-[var(--ink)]"><span className="truncate">{item.name}</span></h3>
                         {showCategory && <span className="shrink-0 rounded-full border border-[var(--line)] px-2 py-0.5 text-[0.68rem] text-[var(--ink-3)]">{item.category}</span>}
                     </div>
                     <p className="mt-1.5 line-clamp-2 text-[0.85rem] leading-relaxed text-[var(--ink-2)]">{item.summary}</p>

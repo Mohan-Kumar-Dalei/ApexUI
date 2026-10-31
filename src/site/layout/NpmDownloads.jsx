@@ -65,7 +65,7 @@ export default function NpmDownloads({ className = '' }) {
             target="_blank"
             rel="noopener noreferrer"
             title={`${count.toLocaleString()} npm downloads`}
-            className={`inline-flex h-8 items-center gap-1.5 rounded-full border border-[var(--line)] bg-[var(--panel)] px-2.5 text-[0.75rem] font-semibold text-[var(--ink-2)] transition-colors hover:border-[var(--lime-line)] hover:text-[var(--ink)] ${className}`}
+            className={`h-8 items-center gap-1.5 rounded-full border border-[var(--line)] bg-[var(--panel)] px-2.5 text-[0.75rem] font-semibold text-[var(--ink-2)] transition-colors hover:border-[var(--lime-line)] hover:text-[var(--ink)] ${className}`}
         >
             <Download className="h-3.5 w-3.5 text-[var(--lime)]" />
             <span className="tabular-nums">{short(count)}</span>

@@ -1,10 +1,11 @@
-import React, { useState } from "react";
-import { motion } from "framer-motion";
+import React, { useLayoutEffect, useRef, useState } from "react";
+import { motion, useMotionValue, useSpring } from "framer-motion";
 
 /*
  * Folder: a little folder that opens on click — the front flap tilts down
  * and up to three papers fan out of it. While open, each paper leans toward
- * the pointer a little. Click again to tuck everything back in.
+ * the pointer a little. Click again to tuck everything back in. It shrinks
+ * to fit narrow containers so the open fan never gets cut off.
  */
 
 const DEFAULT_ITEMS = [
@@ -32,23 +33,66 @@ const SPOTS = [
     { x: 0, y: -4.2, r: 3 },
     { x: 3.9, y: -3.3, r: 15 },
 ];
+// Width of the open fan in em (papers plus their spread), used to fit the container.
+const FAN_WIDTH = 15.5;
+
+// One paper. Its lean follows the pointer through motion values, so moving the
+// mouse never re-renders the folder.
+function Paper({ children, spot, index, open }) {
+    const lx = useMotionValue(0);
+    const ly = useMotionValue(0);
+    const x = useSpring(lx, { stiffness: 260, damping: 20 });
+    const y = useSpring(ly, { stiffness: 260, damping: 20 });
+    return (
+        <motion.span
+            className="absolute bottom-[10%] left-[10%] h-[80%] w-[80%]"
+            initial={false}
+            animate={open ? { x: `${spot.x}em`, y: `${spot.y}em`, rotate: spot.r, scale: 1 } : { x: "0em", y: `${-0.3 - index * 0.2}em`, rotate: 0, scale: 0.92 - (2 - index) * 0.03 }}
+            transition={{ type: "spring", stiffness: 300, damping: 22, delay: open ? index * 0.04 : 0 }}
+            onPointerMove={(e) => {
+                if (!open) return;
+                const r = e.currentTarget.getBoundingClientRect();
+                lx.set(((e.clientX - (r.left + r.width / 2)) / r.width) * 10);
+                ly.set(((e.clientY - (r.top + r.height / 2)) / r.height) * 10);
+            }}
+            onPointerLeave={() => {
+                lx.set(0);
+                ly.set(0);
+            }}
+        >
+            <motion.span className="block h-full w-full overflow-hidden rounded-[0.4em] bg-white text-left shadow-md" style={{ x, y }}>
+                {children}
+            </motion.span>
+        </motion.span>
+    );
+}
 
 const Folder = ({ color = "#a3e635", size = 1, items = DEFAULT_ITEMS, label = "Projects", className = "" }) => {
     const [open, setOpen] = useState(false);
-    const [lean, setLean] = useState([]);
+    const [fit, setFit] = useState(size);
+    const root = useRef(null);
     const papers = items.slice(0, 3);
     const back = `color-mix(in srgb, ${color} 75%, #000)`;
 
+    // Shrink when the container can't hold the open fan.
+    useLayoutEffect(() => {
+        const el = root.current?.parentElement;
+        if (!el) return undefined;
+        const ro = new ResizeObserver(() => {
+            const rem = parseFloat(getComputedStyle(document.documentElement).fontSize) || 16;
+            setFit(Math.min(size, el.clientWidth / (FAN_WIDTH * rem)));
+        });
+        ro.observe(el);
+        return () => ro.disconnect();
+    }, [size]);
+
     return (
-        <div className={`flex flex-col items-center gap-4 ${className}`} style={{ fontSize: `${size}rem` }}>
+        <div ref={root} className={`flex flex-col items-center gap-4 pt-[4.5em] ${className}`} style={{ fontSize: `${fit}rem` }}>
             <button
                 type="button"
                 aria-expanded={open}
                 aria-label={`${label} folder`}
-                onClick={() => {
-                    setOpen((o) => !o);
-                    setLean([]);
-                }}
+                onClick={() => setOpen((o) => !o)}
                 className="group relative h-[5.5em] w-[7em] outline-none transition-transform duration-200 hover:-translate-y-1"
                 style={{ perspective: "600px" }}
             >
@@ -56,33 +100,11 @@ const Folder = ({ color = "#a3e635", size = 1, items = DEFAULT_ITEMS, label = "P
                 <span className="absolute inset-0 rounded-[0.6em] rounded-tl-none" style={{ background: back }} />
                 <span className="absolute -top-[0.7em] left-0 h-[0.9em] w-[2.6em] rounded-t-[0.45em]" style={{ background: back }} />
 
-                {papers.map((p, i) => {
-                    const spot = SPOTS[papers.length === 1 ? 1 : papers.length === 2 ? i * 2 : i];
-                    const l = lean[i] ?? { x: 0, y: 0 };
-                    return (
-                        <motion.span
-                            key={i}
-                            className="absolute bottom-[10%] left-[10%] h-[80%] w-[80%] overflow-hidden rounded-[0.4em] bg-white text-left shadow-md"
-                            initial={false}
-                            animate={open ? { x: `${spot.x + l.x}em`, y: `${spot.y + l.y}em`, rotate: spot.r, scale: 1 } : { x: "0em", y: `${-0.3 - i * 0.2}em`, rotate: 0, scale: 0.92 - (2 - i) * 0.03 }}
-                            transition={{ type: "spring", stiffness: 300, damping: 22, delay: open ? i * 0.04 : 0 }}
-                            onPointerMove={(e) => {
-                                if (!open) return;
-                                const r = e.currentTarget.getBoundingClientRect();
-                                const next = [...lean];
-                                next[i] = { x: ((e.clientX - (r.left + r.width / 2)) / r.width) * 0.8, y: ((e.clientY - (r.top + r.height / 2)) / r.height) * 0.8 };
-                                setLean(next);
-                            }}
-                            onPointerLeave={() => {
-                                const next = [...lean];
-                                next[i] = { x: 0, y: 0 };
-                                setLean(next);
-                            }}
-                        >
-                            {p}
-                        </motion.span>
-                    );
-                })}
+                {papers.map((p, i) => (
+                    <Paper key={i} index={i} open={open} spot={SPOTS[papers.length === 1 ? 1 : papers.length === 2 ? i * 2 : i]}>
+                        {p}
+                    </Paper>
+                ))}
 
                 {/* Front flap */}
                 <motion.span

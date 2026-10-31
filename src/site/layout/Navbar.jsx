@@ -54,7 +54,7 @@ export default function Navbar() {
                         <Search className="h-[1.05rem] w-[1.05rem]" />
                     </button>
                     <span className="mx-1 hidden h-5 w-px bg-[var(--line)] lg:block" />
-                    <NpmDownloads className="mr-1 hidden sm:inline-flex" />
+                    <NpmDownloads className="mr-1 hidden md:inline-flex" />
                     <a href={SITE.github} target="_blank" rel="noopener noreferrer" className={iconBtn} aria-label="GitHub">
                         <Github className="h-[1.05rem] w-[1.05rem]" />
                     </a>
