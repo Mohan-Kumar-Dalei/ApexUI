@@ -217,7 +217,7 @@ const InfiniteCanvas = ({ items = DEFAULT_ITEMS, cardWidth = 14, aspectRatio = 0
         >
             {Array.from({ length: pool }, (_, k) => (
                 <div key={k} ref={(e) => (tiles.current[k] = e)} className="group absolute left-0 top-0 will-change-transform" style={{ width: w, height: h }}>
-                    <div className="h-full w-full overflow-hidden rounded-2xl bg-white/5 shadow-[0_18px_40px_-22px_rgba(0,0,0,0.7)] ring-1 ring-white/10">
+                    <div className="h-full w-full overflow-hidden rounded-2xl bg-white/5 ring-1 ring-white/10">
                         <img alt="" draggable={false} loading="lazy" decoding="async" className="h-full w-full object-cover transition-transform duration-500 ease-out group-hover:scale-[1.06]" />
                     </div>
                     {showTitles && <p data-title="" className="pointer-events-none absolute inset-x-3 bottom-3 truncate rounded-full bg-black/45 px-3 py-1 text-xs font-semibold text-white opacity-0 backdrop-blur transition-opacity duration-300 group-hover:opacity-100" />}

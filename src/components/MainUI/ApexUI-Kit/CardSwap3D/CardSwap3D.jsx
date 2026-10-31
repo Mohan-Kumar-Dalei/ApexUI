@@ -26,7 +26,8 @@ const CardSwap3D = ({ cards = DEFAULT_CARDS, delay = 3200, distanceX = 3.6, dist
     const dark = theme !== "light";
     const n = cards.length;
     // Footprint of the whole stack in rem (card plus the steps behind it).
-    const footW = width + distanceX * (n - 1) + 2;
+    // (+5: the 3D turn makes the cards project a little wider than they are.)
+    const footW = width + distanceX * (n - 1) + 5;
     const footH = width * 0.68 + distanceY * (n - 1) + 2;
 
     const swap = () => {
@@ -65,7 +66,7 @@ const CardSwap3D = ({ cards = DEFAULT_CARDS, delay = 3200, distanceX = 3.6, dist
                 onPointerLeave={() => setPaused(false)}
                 onClick={swap}
             >
-                <div className="absolute [transform-style:preserve-3d]" style={{ left: "1rem", bottom: "1rem", width: `${width}rem`, height: `${width * 0.68}rem`, transform: `rotateY(${-tilt}deg) rotateX(${tilt * 0.35}deg)` }}>
+                <div className="absolute [transform-style:preserve-3d]" style={{ left: "2.5rem", bottom: "1rem", width: `${width}rem`, height: `${width * 0.68}rem`, transform: `rotateY(${-tilt}deg) rotateX(${tilt * 0.35}deg)` }}>
                     {cards.map((card, i) => {
                         const slot = order.indexOf(i);
                         const isDropping = dropping === i;

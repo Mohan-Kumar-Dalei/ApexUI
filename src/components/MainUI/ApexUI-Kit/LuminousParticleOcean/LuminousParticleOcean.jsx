@@ -39,11 +39,12 @@ function FlowingSpheres({ count, sep, color, pushStrength }) {
         const mouseZWorld = -mouse.y * (count * sep / 4);
 
         // Animate each sphere's y-position and update its matrix
-        particles.forEach((particle, i) => {
-            const { x, z } = particle;
+        const timeFactor = Math.sin(elapsedTime * 0.5);
+        const mesh = instancedMeshRef.current;
+        for (let i = 0; i < particles.length; i++) {
+            const { x, z } = particles[i];
 
             // --- 1. Wave Animation ---
-            const timeFactor = Math.sin(elapsedTime * 0.5);
             const wave1 = Math.sin(x * 0.15 + timeFactor * Math.PI);
             const wave2 = Math.sin(z * 1 + timeFactor * Math.PI);
             let y = (wave1 + wave2) * 7;
@@ -63,8 +64,8 @@ function FlowingSpheres({ count, sep, color, pushStrength }) {
             dummy.position.set(x, y, z);
             dummy.updateMatrix();
 
-            instancedMeshRef.current.setMatrixAt(i, dummy.matrix);
-        });
+            mesh.setMatrixAt(i, dummy.matrix);
+        }
 
         instancedMeshRef.current.instanceMatrix.needsUpdate = true;
     });
@@ -75,7 +76,8 @@ function FlowingSpheres({ count, sep, color, pushStrength }) {
                 ref={instancedMeshRef}
                 args={[null, null, count * count]}
             >
-                <sphereGeometry args={[0.2, 19, 19]} />
+                {/* 8x6 segments look the same as 19x19 at this size, with ~7x fewer triangles. */}
+                <sphereGeometry args={[0.2, 8, 6]} />
                 <meshStandardMaterial
                     color={color}
                     emissive={color}

@@ -49,6 +49,8 @@ const DEFAULT_ARCS = [
 
 const rad = (d) => (d * Math.PI) / 180;
 const toVec = (lat, lon) => [Math.cos(rad(lat)) * Math.sin(rad(lon)), Math.sin(rad(lat)), Math.cos(rad(lat)) * Math.cos(rad(lon))];
+// Land dot directions never change, so work them out once instead of every frame.
+const landVecs = landDots.map(([lat, lon]) => toVec(lat, lon));
 
 // Spherical interpolation between two unit vectors.
 const slerp = (a, b, t) => {
@@ -141,9 +143,10 @@ const DotGlobe = ({
             // Land dots: front bright, back faint.
             const dr = Math.max(0.8, R / 190);
             ctx.fillStyle = o.dotColor;
-            for (let i = 0; i < landDots.length; i++) {
-                const [lat, lon] = landDots[i];
-                const [x, y, z] = project(toVec(lat, lon), R, c);
+            for (let i = 0; i < landVecs.length; i++) {
+                const [x, y, z] = project(landVecs[i], R, c);
+                // Dots well behind the globe are nearly invisible; skip them.
+                if (z < -0.25) continue;
                 ctx.globalAlpha = z > 0 ? 0.35 + 0.65 * z : 0.06;
                 ctx.fillRect(x - dr, y - dr, dr * 2, dr * 2);
             }

@@ -148,7 +148,7 @@ const OrbitIcons = ({ rings = DEFAULT_RINGS, size = 28, tilt = 0.55, speed = 1, 
                 return (
                     <div key={idx} ref={(e) => (nodes.current[idx] = e)} className="group absolute left-1/2 top-1/2 will-change-transform">
                         <div
-                            className="grid place-items-center rounded-2xl border border-white/10 bg-neutral-900/90 text-white shadow-[0_10px_30px_-12px_rgba(0,0,0,0.7)] backdrop-blur transition-colors duration-300 group-hover:border-[var(--orbit-accent)]"
+                            className="grid place-items-center rounded-2xl border border-white/10 bg-neutral-900/90 text-white transition-colors duration-300 group-hover:border-[var(--orbit-accent)]"
                             style={{ width: "var(--orbit-item, 2.75rem)", aspectRatio: "1" }}
                             title={it.label}
                         >

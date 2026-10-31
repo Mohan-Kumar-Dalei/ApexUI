@@ -111,7 +111,9 @@ export const SmokeBackground = ({
         // cap DPR depending on mount width to avoid heavy pixel loads on small devices
         const mountWidth = mountNode.clientWidth || window.innerWidth;
         const dprCap = mountWidth > 1200 ? 1.8 : (mountWidth > 768 ? 1.4 : 1.0);
-        const dpr = Math.min(window.devicePixelRatio || 1, dprCap);
+        // The smoke is soft, so rendering at ~70% resolution and letting the browser upscale
+        // looks the same while the 35-step raymarch runs on half the pixels.
+        const dpr = Math.min(window.devicePixelRatio || 1, dprCap) * 0.7;
 
         const renderer = new Renderer({
             webgl: 2,

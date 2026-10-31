@@ -25,53 +25,54 @@ const ParallaxCard = ({ cardData = [], tiltEnable, glareEnable, scale, perspecti
 
             if (!cardElement) return;
 
+            // quickTo builds each tween once and just retargets it, instead of
+            // creating six new tweens on every mouse move.
+            const to = (el, prop, duration) => (el ? gsap.quickTo(el, prop, { duration, ease: "power3.out" }) : () => {});
+            const card = { rx: to(cardElement, "rotationX", 0.8), ry: to(cardElement, "rotationY", 0.8), s: to(cardElement, "scale", 0.8) };
+            const layers = [
+                [titleElement, 0.8, 0.6],
+                [imageElement, 1.5, 0.7],
+                [descElement, 1.2, 0.8],
+                [buttonElement, 1.1, 0.9],
+                [linkElement, 1.1, 0.9],
+            ]
+                .filter(([el]) => el)
+                .map(([el, k, d]) => ({ k, x: to(el, "x", d), y: to(el, "y", d) }));
+            let rect = null;
+
+            const handleMouseEnter = () => {
+                rect = cardElement.getBoundingClientRect();
+            };
             const handleMouseMove = (e) => {
                 if (!tiltEnable) return;
-                const { left, top, width, height } = cardElement.getBoundingClientRect();
-                const x = e.clientX - left;
-                const y = e.clientY - top;
-                const rotateX = (y / height - 0.5) * -30;
-                const rotateY = (x / width - 0.5) * 30;
-
-                gsap.to(cardElement, {
-                    duration: 1,
-                    rotationX: rotateX,
-                    rotationY: rotateY,
-                    scale: scale,
-                    ease: "power3.out",
+                const r = rect ?? (rect = cardElement.getBoundingClientRect());
+                const rotateX = ((e.clientY - r.top) / r.height - 0.5) * -30;
+                const rotateY = ((e.clientX - r.left) / r.width - 0.5) * 30;
+                card.rx(rotateX);
+                card.ry(rotateY);
+                card.s(scale);
+                layers.forEach((l) => {
+                    l.x(rotateY * l.k);
+                    l.y(-rotateX * l.k);
                 });
-
-                if (titleElement) gsap.to(titleElement, { duration: 0.7, x: rotateY * 0.8, y: -rotateX * 0.8 });
-                if (imageElement) gsap.to(imageElement, { duration: 0.8, x: rotateY * 1.5, y: -rotateX * 1.5 });
-                if (descElement) gsap.to(descElement, { duration: 0.9, x: rotateY * 1.2, y: -rotateX * 1.2 });
-                if (buttonElement) gsap.to(buttonElement, { duration: 1, x: rotateY * 1.1, y: -rotateX * 1.1 });
-                if (linkElement) gsap.to(linkElement, { duration: 1, x: rotateY * 1.1, y: -rotateX * 1.1 });
             };
 
             const handleMouseLeave = () => {
-                if (tiltEnable) {
-                    gsap.to(cardElement, {
-                        duration: 1.2,
-                        rotationX: 0,
-                        rotationY: 0,
-                        scale: 1,
-                        ease: "elastic.out(1, 0.5)",
-                    });
-                    gsap.to([titleElement, imageElement, descElement, buttonElement, linkElement].filter(Boolean), {
-                        duration: 1.2,
-                        x: 0,
-                        y: 0,
-                        ease: "elastic.out(1, 0.5)",
-                    });
-                }
+                rect = null;
+                if (!tiltEnable) return;
+                gsap.to(cardElement, { duration: 1.2, rotationX: 0, rotationY: 0, scale: 1, ease: "elastic.out(1, 0.5)", overwrite: "auto" });
+                gsap.to([titleElement, imageElement, descElement, buttonElement, linkElement].filter(Boolean), { duration: 1.2, x: 0, y: 0, ease: "elastic.out(1, 0.5)", overwrite: "auto" });
             };
 
+            cardElement.addEventListener("mouseenter", handleMouseEnter);
             cardElement.addEventListener("mousemove", handleMouseMove, { passive: true });
             cardElement.addEventListener("mouseleave", handleMouseLeave);
 
             cleanups.push(() => {
+                cardElement.removeEventListener("mouseenter", handleMouseEnter);
                 cardElement.removeEventListener("mousemove", handleMouseMove);
                 cardElement.removeEventListener("mouseleave", handleMouseLeave);
+                gsap.killTweensOf([cardElement, titleElement, imageElement, descElement, buttonElement, linkElement].filter(Boolean));
             });
         });
         return () => cleanups.forEach((fn) => fn());
