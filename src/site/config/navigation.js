@@ -214,7 +214,6 @@ export const componentPages = [
         category: 'Cards',
         image: shot('profile.png'),
         summary: 'Profile cards in four styles, flip, parallax, a tilting card and an ID badge on a ribbon.',
-        isNew: true,
     },
     {
         name: 'Rain Background',
@@ -287,7 +286,6 @@ export const componentPages = [
         category: 'Interactive',
         image: shot('receipt-printer.png'),
         summary: 'A thermal printer that processes a payment and feeds a receipt out line by line.',
-        isNew: true,
     },
     {
         name: 'Dynamic Island',
@@ -296,7 +294,6 @@ export const componentPages = [
         category: 'Interactive',
         image: shot('dynamic-island.png'),
         summary: 'A black capsule that morphs between music, calls, timers and notifications.',
-        isNew: true,
     },
     {
         name: 'Magnify Dock',
@@ -305,7 +302,6 @@ export const componentPages = [
         category: 'Navigation',
         image: shot('magnify-dock.png'),
         summary: 'A macOS-style glass dock whose icons swell toward the pointer.',
-        isNew: true,
     },
     {
         name: 'Dot Wave Background',
@@ -314,7 +310,6 @@ export const componentPages = [
         category: 'Backgrounds',
         image: shot('dot-wave-background.png'),
         summary: 'A grid of dots with a rolling wave of color that reacts to the pointer.',
-        isNew: true,
     },
     {
         name: 'Rolling Counter',
@@ -323,7 +318,6 @@ export const componentPages = [
         category: 'Text & Motion',
         image: shot('rolling-counter.png'),
         summary: 'An odometer-style number whose digit wheels roll to every new value.',
-        isNew: true,
     },
     {
         name: 'Scramble Text',
@@ -332,7 +326,6 @@ export const componentPages = [
         category: 'Text & Motion',
         image: shot('scramble-text.png'),
         summary: 'Text that decrypts letter by letter on view, on hover or on a loop.',
-        isNew: true,
     },
     {
         name: '3D Carousel',
@@ -341,7 +334,6 @@ export const componentPages = [
         category: 'Interactive',
         image: shot('3d-carousel.png'),
         summary: 'Cards on a ring that spins in 3D, a light CSS ring or a full 360° WebGL ring.',
-        isNew: true,
     },
     {
         name: 'Liquid Gradient',
@@ -350,7 +342,6 @@ export const componentPages = [
         category: 'Backgrounds',
         image: shot('liquid-gradient.png'),
         summary: 'A flowing four-color mesh gradient with film grain, drawn by one tiny OGL shader.',
-        isNew: true,
     },
     {
         name: 'Magnetic Cursor',
@@ -359,7 +350,6 @@ export const componentPages = [
         category: 'Interactive',
         image: shot('magnetic-cursor.png'),
         summary: 'A dot-and-ring cursor that wraps buttons, labels images and pulls magnetic elements.',
-        isNew: true,
     },
     {
         name: 'Spotlight Grid',
@@ -368,7 +358,6 @@ export const componentPages = [
         category: 'Cards',
         image: shot('spotlight-grid.png'),
         summary: 'A bento grid of cards sharing one pointer spotlight across borders and surfaces.',
-        isNew: true,
     },
     {
         name: 'Sidebar Nav',
@@ -377,7 +366,6 @@ export const componentPages = [
         category: 'Navigation',
         image: shot('sidebar-nav-v2.png'),
         summary: 'An app sidebar that collapses to an icon rail, with a sliding active pill and groups.',
-        isNew: true,
     },
     {
         name: 'Animated Buttons',
@@ -386,7 +374,6 @@ export const componentPages = [
         category: 'Buttons',
         image: shot('animated-buttons.png'),
         summary: 'Seven button feels, shine, fill, border beam, 3D press, loading, ripple and arrow.',
-        isNew: true,
     },
     {
         name: 'Loading Screens',
@@ -395,7 +382,6 @@ export const componentPages = [
         category: 'Loaders',
         image: shot('loading-screens-v2.png'),
         summary: 'Six loaders, orbit, progress, blocks and three mini games (orb, runner, racing) to play while you wait.',
-        isNew: true,
     },
     {
         name: 'Animated Tabs',
@@ -404,7 +390,6 @@ export const componentPages = [
         category: 'Navigation',
         image: shot('animated-tabs-v2.png'),
         summary: 'Tabs with a sliding pill, underline or segmented indicator and sliding panels.',
-        isNew: true,
     },
     {
         name: 'FAQ Accordion',
@@ -413,7 +398,6 @@ export const componentPages = [
         category: 'Interactive',
         image: shot('faq-accordion.png'),
         summary: 'Questions that open smoothly with a plus that turns into a cross.',
-        isNew: true,
     },
     {
         name: 'Toast Stack',
@@ -422,7 +406,6 @@ export const componentPages = [
         category: 'Interactive',
         image: shot('toast-stack.png'),
         summary: 'Stacked notifications that fan out on hover and swipe away.',
-        isNew: true,
     },
     {
         name: 'Blur Reveal Text',
@@ -431,7 +414,6 @@ export const componentPages = [
         category: 'Text & Motion',
         image: shot('blur-reveal-text.png'),
         summary: 'Words rise out of a blur one after another as they scroll into view.',
-        isNew: true,
     },
     {
         name: 'Flip Clock',
@@ -440,7 +422,6 @@ export const componentPages = [
         category: 'Text & Motion',
         image: shot('flip-clock-v2.png'),
         summary: 'Split-flap digits for countdowns, timers and clocks.',
-        isNew: true,
     },
     {
         name: 'Cursor Trail',
@@ -449,7 +430,6 @@ export const componentPages = [
         category: 'Interactive',
         image: shot('cursor-trail.png'),
         summary: 'A tail that follows the mouse, comet, rainbow, dots, ribbon, sparkles or ghost rings.',
-        isNew: true,
     },
     {
         name: 'Typewriter Text',
@@ -458,7 +438,6 @@ export const componentPages = [
         category: 'Text & Motion',
         image: shot('typewriter-text.png'),
         summary: 'Types, pauses and deletes rotating phrases with a blinking caret.',
-        isNew: true,
     },
     {
         name: 'Image Compare',
@@ -467,7 +446,6 @@ export const componentPages = [
         category: 'Interactive',
         image: shot('image-compare.png'),
         summary: 'A before / after slider you drag, click or move with the keyboard.',
-        isNew: true,
     },
     {
         name: 'Pricing Cards',
@@ -476,7 +454,6 @@ export const componentPages = [
         category: 'Cards',
         image: shot('pricing-cards.png'),
         summary: 'Plans with a monthly / yearly switch, sliding prices and a glowing featured plan.',
-        isNew: true,
     },
     {
         name: 'Swipe Cards',
@@ -485,7 +462,6 @@ export const componentPages = [
         category: 'Cards',
         image: shot('swipe-cards.png'),
         summary: 'A deck you swipe left or right with tilt, LIKE / NOPE stamps and undo.',
-        isNew: true,
     },
     {
         name: 'Animated Switches',
@@ -494,7 +470,6 @@ export const componentPages = [
         category: 'Buttons',
         image: shot('animated-switches.png'),
         summary: 'Toggles with personality, classic, icon, day-to-night and neon.',
-        isNew: true,
     },
     {
         name: 'Aurora Background',
@@ -503,7 +478,6 @@ export const componentPages = [
         category: 'Backgrounds',
         image: shot('aurora-background.png'),
         summary: 'Drifting northern-light bands made from blurred CSS gradients only.',
-        isNew: true,
     },
     {
         name: 'Holo Card',
@@ -512,7 +486,6 @@ export const componentPages = [
         category: 'Cards',
         image: shot('holo-card.png'),
         summary: 'A collectible card that tilts in 3D with a holographic foil and floating layers.',
-        isNew: true,
     },
     {
         name: 'Cube Gallery',
@@ -521,7 +494,6 @@ export const componentPages = [
         category: 'Interactive',
         image: shot('cube-gallery-v2.png'),
         summary: 'Images on a 3D cube you drag, click or arrow-key around.',
-        isNew: true,
     },
     {
         name: 'Flip Book',
@@ -530,7 +502,6 @@ export const componentPages = [
         category: 'Interactive',
         image: shot('flip-book-v2.png'),
         summary: 'A 3D book whose pages turn around the spine.',
-        isNew: true,
     },
     {
         name: 'Extruded Text',
@@ -539,7 +510,6 @@ export const componentPages = [
         category: 'Text & Motion',
         image: shot('extruded-text.png'),
         summary: 'Chunky 3D layered letters that tilt toward the pointer.',
-        isNew: true,
     },
     {
         name: 'Iso Stack',
@@ -548,7 +518,6 @@ export const componentPages = [
         category: 'Cards',
         image: shot('iso-stack.png'),
         summary: 'Isometric 3D layers that fan open to show each label.',
-        isNew: true,
     },
     {
         name: 'Floating Navbar',
@@ -557,7 +526,6 @@ export const componentPages = [
         category: 'Navigation',
         image: shot('floating-navbar.png'),
         summary: 'A glassy responsive navbar with a hover pill, hide-on-scroll and an animated mobile menu.',
-        isNew: true,
     },
     {
         name: 'AI Chat',
@@ -566,7 +534,6 @@ export const componentPages = [
         category: 'AI',
         image: shot('ai-chat.png'),
         summary: 'A chat window with streaming replies, typing dots and suggestion chips.',
-        isNew: true,
     },
     {
         name: 'AI Prompt Box',
@@ -575,7 +542,6 @@ export const componentPages = [
         category: 'AI',
         image: shot('ai-prompt-box.png'),
         summary: 'A prompt input with a glowing border, model picker, attachments and send / stop.',
-        isNew: true,
     },
     {
         name: 'AI Thinking',
@@ -584,7 +550,6 @@ export const componentPages = [
         category: 'AI',
         image: shot('ai-thinking.png'),
         summary: 'A shimmering Thinking state with a timer and steps that tick off.',
-        isNew: true,
     },
     {
         name: 'AI Voice Orb',
@@ -593,7 +558,6 @@ export const componentPages = [
         category: 'AI',
         image: shot('ai-voice-orb.png'),
         summary: 'A glass voice-assistant orb that reacts to idle, listening, thinking and speaking.',
-        isNew: true,
     },
     {
         name: 'AI Voice Wave',
@@ -602,7 +566,6 @@ export const componentPages = [
         category: 'AI',
         image: shot('ai-voice-wave.png'),
         summary: 'Glowing sine waves that swell and burst with the assistant\'s voice.',
-        isNew: true,
     },
     {
         name: 'AI Voice Bars',
@@ -611,7 +574,6 @@ export const componentPages = [
         category: 'AI',
         image: shot('ai-voice-bars.png'),
         summary: 'An equalizer pill of rounded bars for listening, thinking and speaking.',
-        isNew: true,
     },
     {
         name: 'AI Voice Ring',
@@ -620,7 +582,6 @@ export const componentPages = [
         category: 'AI',
         image: shot('ai-voice-ring.png'),
         summary: 'A circular audio visualiser with radial bars around a glowing core.',
-        isNew: true,
     },
     {
         name: 'AI Voice Blob',
@@ -629,7 +590,6 @@ export const componentPages = [
         category: 'AI',
         image: shot('ai-voice-blob.png'),
         summary: 'A gradient blob whose outline wobbles with the assistant\'s voice.',
-        isNew: true,
     },
     {
         name: 'AI Response',
@@ -638,7 +598,6 @@ export const componentPages = [
         category: 'AI',
         image: shot('ai-response.png'),
         summary: 'A streaming answer with code, sources and copy / regenerate / feedback actions.',
-        isNew: true,
     },
     {
         name: 'AI Model Prompt',
@@ -647,7 +606,6 @@ export const componentPages = [
         category: 'AI',
         image: shot('ai-model-prompt-v2.png'),
         summary: 'A prompt composer with a model picker and per-model temperature, tokens and reasoning settings.',
-        isNew: true,
     },
     {
         name: 'Dot Globe',
@@ -656,7 +614,6 @@ export const componentPages = [
         category: 'Maps',
         image: shot('dot-globe.png'),
         summary: 'A draggable 3D globe of land dots with pulsing cities and flight arcs.',
-        isNew: true,
     },
     {
         name: 'World Map',
@@ -665,7 +622,6 @@ export const componentPages = [
         category: 'Maps',
         image: shot('world-map.png'),
         summary: 'A dotted world map with flight connections, live pings or clickable office pins.',
-        isNew: true,
     },
     {
         name: 'Mask View',
@@ -682,7 +638,6 @@ export const componentPages = [
         category: 'Text & Motion',
         image: shot('shiny-text.png'),
         summary: 'A band of light sweeps across the text on a loop, like light catching metal.',
-        isNew: true,
     },
     {
         name: 'Glitch Text',
@@ -691,7 +646,6 @@ export const componentPages = [
         category: 'Text & Motion',
         image: shot('glitch-text.png'),
         summary: 'Text that tears into shifted color slices like a broken signal.',
-        isNew: true,
     },
     {
         name: 'Rotating Text',
@@ -700,7 +654,6 @@ export const componentPages = [
         category: 'Text & Motion',
         image: shot('rotating-text.png'),
         summary: 'A headline whose last word swaps letter by letter inside a resizing pill.',
-        isNew: true,
     },
     {
         name: 'Circular Text',
@@ -709,7 +662,6 @@ export const componentPages = [
         category: 'Text & Motion',
         image: shot('circular-text.png'),
         summary: 'Text wrapped around a spinning circle that reacts to hover.',
-        isNew: true,
     },
     {
         name: 'Proximity Text',
@@ -718,7 +670,6 @@ export const componentPages = [
         category: 'Text & Motion',
         image: shot('proximity-text.png'),
         summary: 'Letters swell, lift and light up as the pointer gets close.',
-        isNew: true,
     },
     {
         name: 'True Focus',
@@ -727,7 +678,6 @@ export const componentPages = [
         category: 'Text & Motion',
         image: shot('true-focus.png'),
         summary: 'One sharp word at a time, framed by brackets that glide between words.',
-        isNew: true,
     },
     {
         name: '3D Text Ring',
@@ -736,7 +686,6 @@ export const componentPages = [
         category: 'Text & Motion',
         image: shot('text-ring-3d.png'),
         summary: 'Letters on a spinning ring in real 3D, drag to throw it around.',
-        isNew: true,
     },
     {
         name: 'Star Border',
@@ -745,7 +694,6 @@ export const componentPages = [
         category: 'Buttons',
         image: shot('star-border.png'),
         summary: 'A button with points of light sliding along its edges.',
-        isNew: true,
     },
     {
         name: 'Click Spark',
@@ -754,7 +702,6 @@ export const componentPages = [
         category: 'Interactive',
         image: shot('click-spark.png'),
         summary: 'Every click throws a ring of sparks from the pointer.',
-        isNew: true,
     },
     {
         name: 'Elastic Slider',
@@ -763,7 +710,6 @@ export const componentPages = [
         category: 'Interactive',
         image: shot('elastic-slider-v2.png'),
         summary: 'A slider whose track stretches like rubber when pulled past the ends.',
-        isNew: true,
     },
     {
         name: 'Stepper',
@@ -772,7 +718,6 @@ export const componentPages = [
         category: 'Interactive',
         image: shot('stepper.png'),
         summary: 'A multi-step flow with filling indicators and sliding step content.',
-        isNew: true,
     },
     {
         name: 'Coverflow 3D',
@@ -781,7 +726,6 @@ export const componentPages = [
         category: 'Interactive',
         image: shot('coverflow-3d.png'),
         summary: 'The classic album-flip view with angled covers and reflections.',
-        isNew: true,
     },
     {
         name: 'Magnet Lines',
@@ -790,7 +734,6 @@ export const componentPages = [
         category: 'Interactive',
         image: shot('magnet-lines.png'),
         summary: 'A grid of lines that all swing to point at the pointer.',
-        isNew: true,
     },
     {
         name: 'Pixel Transition',
@@ -799,7 +742,6 @@ export const componentPages = [
         category: 'Cards',
         image: shot('pixel-transition.png'),
         summary: 'A card that dissolves into pixels to reveal its other side.',
-        isNew: true,
     },
     {
         name: 'Folder',
@@ -808,7 +750,6 @@ export const componentPages = [
         category: 'Cards',
         image: shot('folder.png'),
         summary: 'A folder that opens and fans its papers out toward the pointer.',
-        isNew: true,
     },
     {
         name: 'Bounce Cards',
@@ -817,7 +758,6 @@ export const componentPages = [
         category: 'Cards',
         image: shot('bounce-cards-v2.png'),
         summary: 'A fanned hand of photo cards that bounce in and make room on hover.',
-        isNew: true,
     },
     {
         name: 'Card Swap 3D',
@@ -826,7 +766,6 @@ export const componentPages = [
         category: 'Cards',
         image: shot('card-swap-3d.png'),
         summary: 'A 3D stack of cards where the front one drops away to the back.',
-        isNew: true,
     },
     {
         name: 'Gooey Nav',
@@ -835,7 +774,6 @@ export const componentPages = [
         category: 'Navigation',
         image: shot('gooey-nav-v4.png'),
         summary: 'A liquid active pill that bursts droplets between links.',
-        isNew: true,
     },
     {
         name: 'Liquid Blob 3D',
@@ -844,7 +782,6 @@ export const componentPages = [
         category: 'Interactive',
         image: shot('liquid-blob-3d.png'),
         summary: 'A glossy three.js blob whose surface flows and ripples toward the pointer.',
-        isNew: true,
     },
     {
         name: 'Particle Morph',
@@ -853,7 +790,6 @@ export const componentPages = [
         category: 'Interactive',
         image: shot('particle-morph.png'),
         summary: 'Thousands of three.js particles that swarm between 3D shapes.',
-        isNew: true,
     },
     {
         name: 'Retro Grid 3D',
@@ -862,7 +798,6 @@ export const componentPages = [
         category: 'Backgrounds',
         image: shot('retro-grid-3d.png'),
         summary: 'A synthwave three.js landscape with scrolling hills and a striped sun.',
-        isNew: true,
     },
     {
         name: 'Distortion Image',
@@ -871,7 +806,6 @@ export const componentPages = [
         category: 'Cards',
         image: shot('distortion-image.png'),
         summary: 'A WebGL image that ripples and splits into RGB fringes under the pointer.',
-        isNew: true,
     },
     {
         name: 'Galaxy 3D',
@@ -880,7 +814,6 @@ export const componentPages = [
         category: 'Backgrounds',
         image: shot('galaxy-3d.png'),
         summary: 'A turning three.js spiral galaxy with pointer parallax.',
-        isNew: true,
     },
     {
         name: 'Warp Tunnel',
@@ -889,7 +822,6 @@ export const componentPages = [
         category: 'Backgrounds',
         image: shot('warp-tunnel.png'),
         summary: 'A WebGL hyperspace tunnel that bends to the pointer; hold to boost.',
-        isNew: true,
     },
     {
         name: 'Magnetic Button',
@@ -898,7 +830,6 @@ export const componentPages = [
         category: 'Buttons',
         image: shot('magnetic-button.png'),
         summary: 'A button that leans toward the pointer with a layered label and a tracking glow.',
-        isNew: true,
     },
     {
         name: 'Radial Menu',
@@ -907,7 +838,6 @@ export const componentPages = [
         category: 'Navigation',
         image: shot('radial-menu.png'),
         summary: 'A round button that fans its actions out in a circle or an arc.',
-        isNew: true,
     },
     {
         name: 'Marquee 3D',
@@ -916,7 +846,6 @@ export const componentPages = [
         category: 'Interactive',
         image: shot('marquee-3d.png'),
         summary: 'A tilted 3D wall of cards with columns scrolling in opposite directions.',
-        isNew: true,
     },
     {
         name: 'Wireframe Knot 3D',
@@ -925,7 +854,6 @@ export const componentPages = [
         category: 'Interactive',
         image: shot('wireframe-knot-3d.png'),
         summary: 'A glowing three.js wireframe shape that turns toward the pointer.',
-        isNew: true,
     },
     {
         name: 'Particle Text',
@@ -934,7 +862,6 @@ export const componentPages = [
         category: 'Text & Motion',
         image: shot('particle-text.png'),
         summary: 'Text built from canvas particles that fly in, dodge the pointer and burst on click.',
-        isNew: true,
     },
     {
         name: 'Edge Blur',
@@ -943,7 +870,6 @@ export const componentPages = [
         category: 'Interactive',
         image: shot('edge-blur.png'),
         summary: 'A progressive blur that melts content at the edge of a scrolling area.',
-        isNew: true,
     },
     {
         name: 'Circular Carousel',
@@ -952,7 +878,6 @@ export const componentPages = [
         category: 'Interactive',
         image: shot('circular-carousel.png'),
         summary: 'A WebGL ring of curved image cards you can drag, flick and click.',
-        isNew: true,
     },
     {
         name: 'Arc Gallery',
@@ -961,7 +886,6 @@ export const componentPages = [
         category: 'Interactive',
         image: shot('arc-gallery.png'),
         summary: 'An endless WebGL row of image cards bent along an arc, with drag and wheel.',
-        isNew: true,
     },
     {
         name: 'Scroll Stack',
@@ -970,7 +894,6 @@ export const componentPages = [
         category: 'Cards',
         image: shot('scroll-stack.png'),
         summary: 'Cards that pin and pile up as you scroll, shrinking and dimming into depth.',
-        isNew: true,
     },
     {
         name: 'Sunrise Background',
@@ -979,7 +902,6 @@ export const componentPages = [
         category: 'Backgrounds',
         image: shot('sunrise-background.png'),
         summary: 'A WebGL sun rising between two mountain ranges, with rays, mist and rim light.',
-        isNew: true,
     },
     {
         name: 'Horizon Glow',
@@ -988,7 +910,6 @@ export const componentPages = [
         category: 'Backgrounds',
         image: shot('horizon-glow-v2.png'),
         summary: 'A soft WebGL light rising from the bottom edge into a deep sky, for hero sections.',
-        isNew: true,
     },
     {
         name: 'Glass Lens',
@@ -997,7 +918,6 @@ export const componentPages = [
         category: 'Interactive',
         image: shot('glass-lens.png'),
         summary: 'A WebGL drop of liquid glass that refracts and magnifies an image under the pointer.',
-        isNew: true,
     },
     {
         name: 'Dither Waves',
@@ -1006,7 +926,6 @@ export const componentPages = [
         category: 'Backgrounds',
         image: shot('dither-waves.png'),
         summary: 'Flowing waves as two-tone dithered pixel art in WebGL, with pointer ripples.',
-        isNew: true,
     },
     {
         name: 'Infinite Canvas',
@@ -1015,7 +934,6 @@ export const componentPages = [
         category: 'Interactive',
         image: shot('infinite-canvas.png'),
         summary: 'An endless wall of image cards you drag and fling in any direction.',
-        isNew: true,
     },
     {
         name: 'Image Accordion',
@@ -1024,7 +942,6 @@ export const componentPages = [
         category: 'Cards',
         image: shot('image-accordion.png'),
         summary: 'Image panels that open wide on hover and stack vertically on phones.',
-        isNew: true,
     },
     {
         name: 'Orbit Icons',
@@ -1033,7 +950,6 @@ export const componentPages = [
         category: 'Interactive',
         image: shot('orbit-icons.png'),
         summary: 'Icons circling a center on tilted rings, easing to a stop on hover.',
-        isNew: true,
     },
     {
         name: 'Command Palette',
@@ -1042,7 +958,6 @@ export const componentPages = [
         category: 'Navigation',
         image: shot('command-palette.png'),
         summary: 'A ⌘K search palette with fuzzy matching and a sliding keyboard highlight.',
-        isNew: true,
     },
     {
         name: 'Crossed Marquee',
@@ -1051,7 +966,6 @@ export const componentPages = [
         category: 'Text & Motion',
         image: shot('crossed-marquee.png'),
         summary: 'Two tilted tech-stack bands crossing like an X that react to page scroll.',
-        isNew: true,
     },
     {
         name: 'Theme Switcher',
@@ -1060,7 +974,6 @@ export const componentPages = [
         category: 'Navigation',
         image: shot('theme-switcher.png'),
         summary: 'Eight colour themes with a circle reveal from the swatch you click.',
-        isNew: true,
     },
     {
         name: 'Liquid Glass',
@@ -1069,6 +982,14 @@ export const componentPages = [
         category: 'Interactive',
         image: shot('liquid-glass.png'),
         summary: 'iOS style WebGL glass panels that bend, frost and melt together as you drag them.',
+    },
+    {
+        name: 'Fluid Cursor',
+        path: '/components/fluid-cursor',
+        load: () => import('../content/components/FluidCursorDoc.jsx'),
+        category: 'Interactive',
+        image: shot('fluid-cursor.png'),
+        summary: 'A real-time WebGL fluid simulation that trails the cursor with swirling ink.',
         isNew: true,
     },
 ];
