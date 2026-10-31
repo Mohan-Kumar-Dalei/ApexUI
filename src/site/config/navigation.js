@@ -992,6 +992,15 @@ export const componentPages = [
         summary: 'A real-time WebGL fluid simulation that trails the cursor with swirling ink.',
         isNew: true,
     },
+    {
+        name: 'Sketch Reveal',
+        path: '/components/sketch-reveal',
+        load: () => import('../content/components/SketchRevealDoc.jsx'),
+        category: 'Interactive',
+        image: shot('sketch-reveal.png'),
+        summary: 'A photo turns into a glowing sketch, then burns away into the next one as you scroll.',
+        isNew: true,
+    },
 ];
 
 // Keep components in the same order everywhere (index panel, grid, prev / next):
