@@ -5,6 +5,7 @@ import { SITE } from '../config/navigation.js';
 import { NAV_ITEMS } from './navItems.js';
 import { openFeedback, openIndex, openSearch } from './overlays.js';
 import ThemeSwitch from './ThemeSwitch.jsx';
+import NpmDownloads from './NpmDownloads.jsx';
 
 const iconBtn = 'inline-flex h-9 w-9 items-center justify-center rounded-lg text-[var(--ink-2)] transition-colors hover:bg-[var(--panel-2)] hover:text-[var(--ink)]';
 
@@ -53,6 +54,7 @@ export default function Navbar() {
                         <Search className="h-[1.05rem] w-[1.05rem]" />
                     </button>
                     <span className="mx-1 hidden h-5 w-px bg-[var(--line)] lg:block" />
+                    <NpmDownloads className="mr-1 hidden sm:inline-flex" />
                     <a href={SITE.github} target="_blank" rel="noopener noreferrer" className={iconBtn} aria-label="GitHub">
                         <Github className="h-[1.05rem] w-[1.05rem]" />
                     </a>
