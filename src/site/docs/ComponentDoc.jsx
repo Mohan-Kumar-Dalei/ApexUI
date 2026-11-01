@@ -17,10 +17,13 @@ const STAGE_BG = [
 ];
 
 const STAGE_H = 'min-h-[clamp(26rem,64vh,60rem)]';
-// On phones the preview is drawn as if the stage were FIT_W px wide, then zoomed
-// down to fit, so components show whole and a little smaller instead of 1:1 and cut.
-const FIT_W = 480;
-const FIT_MIN = 0.68;
+// On phones and in the Mobile frame the preview is laid out as if the box were
+// FIT_REM wide, then zoomed down to fit, so components keep their real shape and
+// just get smaller, instead of being squeezed into a phone-shaped column.
+const FIT_REM = 30;
+const FIT_MIN = 0.6;
+// Frame border (6px each side) plus its p-4 padding.
+const FRAME_INSET = 44;
 
 // Responsive check: tablet / mobile narrow the live preview to that width (no iframe,
 // so nothing reloads). The box is a CSS container, so @container styles respond.
@@ -91,28 +94,27 @@ function Stage({ title, description, variant, variants, activeVariant, onVariant
         else stageRef.current?.requestFullscreen?.();
     };
 
-    // Phone-width stages zoom the preview out (see FIT_W).
-    const [fit, setFit] = useState(1);
+    // Stage width and root font size, for the zoom-out (see FIT_REM).
+    const [box, setBox] = useState({ w: 0, rem: 16 });
     useEffect(() => {
         const el = stageRef.current;
         if (!el) return undefined;
-        const ro = new ResizeObserver(() => {
-            const w = el.clientWidth;
-            setFit(w < FIT_W ? Math.max(FIT_MIN, Math.round((w / FIT_W) * 100) / 100) : 1);
-        });
+        const ro = new ResizeObserver(() => setBox({ w: el.clientWidth, rem: parseFloat(getComputedStyle(document.documentElement).fontSize) || 16 }));
         ro.observe(el);
         return () => ro.disconnect();
     }, []);
 
     const bgClass = STAGE_BG.find((b) => b.id === bg)?.className ?? '';
     const frame = !full && device !== 'desktop' ? DEVICES.find((d) => d.id === device) : null;
+    // Room the preview gets: the frame's inside, or the whole stage.
+    const room = frame ? Math.min(frame.width, box.w - 24) - FRAME_INSET : box.w;
+    const target = FIT_REM * box.rem;
+    const fit = box.w && room < target ? Math.max(FIT_MIN, Math.round((room / target) * 100) / 100) : 1;
     // Full-bleed backgrounds already fill the stage at any size, so only the rest zoom.
-    const zoomed = fit < 1 && !frame && !full && !variant.fullBleed;
+    const zoomed = fit < 1 && !full && !variant.fullBleed;
+    const align = /items-start/.test(variant.previewClassName ?? '') ? 'items-start' : /items-end/.test(variant.previewClassName ?? '') ? 'items-end' : '[align-items:safe_center]';
     const preview = zoomed ? (
-        <div
-            className={`relative flex min-h-0 w-full self-stretch justify-center ${/items-start/.test(variant.previewClassName ?? '') ? 'items-start' : /items-end/.test(variant.previewClassName ?? '') ? 'items-end' : 'items-center'}`}
-            style={{ zoom: fit }}
-        >
+        <div className={`relative flex min-h-0 w-full self-stretch justify-center ${align}`} style={{ zoom: fit }}>
             {variant.preview}
         </div>
     ) : (
@@ -181,7 +183,7 @@ function Stage({ title, description, variant, variants, activeVariant, onVariant
                                     className={`@container relative isolate flex min-h-0 w-full flex-1 rounded-[1.4rem] border-[6px] border-[var(--panel-3)] shadow-[0_20px_60px_-25px_rgba(0,0,0,0.6)] transition-[max-width] duration-300 ease-out ${variant.fullBleed ? 'items-center justify-center overflow-hidden bg-[#09090b] text-white' : 'thin-scroll overflow-x-hidden overflow-y-auto bg-[var(--stage)] p-4 text-[var(--stage-ink)] [align-items:safe_center] [justify-content:safe_center]'} ${variant.previewClassName ?? ''}`}
                                     style={{ maxWidth: frame.width }}
                                 >
-                                    {variant.preview}
+                                    {preview}
                                 </div>
                                 <span className="font-mono text-[0.68rem] text-[var(--ink-3)]">
                                     {frame.label} · {frame.width}px
