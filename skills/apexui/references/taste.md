@@ -45,7 +45,9 @@ Premium is not more effects. It is fewer, better decisions made on purpose. Thin
 - Alternate section layouts (split, full-bleed, list, grid) so the page has rhythm; never repeat the same layout three times in a row.
 
 ## Motion rules
-- On load: headline and hero image fade and rise 16px, 700ms, `cubic-bezier(0.16, 1, 0.3, 1)`, staggered 80ms. Nothing else animates on load.
-- On scroll: images can scale from 1.06 to 1 as they enter. Keep it subtle. No section should "fly in".
-- Hover: links underline, images scale 1.03 over 600ms, buttons darken. No bouncing.
-- Reduced motion: turn all of it off except opacity.
+Premium sites move. A static page looks like a template. Follow `motion.md`:
+- On load: the headline rises word by word out of a mask, then the subline and buttons, then the hero image settles from a slow zoom.
+- On scroll: headings rise in, images uncover like a curtain or drift slower than the page, list rows arrive one after another, numbers count up.
+- One signature moment per site (intro curtain, sticky lookbook, pinned gallery, floating preview...).
+- Hover: underlines draw in, images scale 1.05 slowly, buttons invert or lift 2px. No bouncing, no spinning.
+- Reduced motion: everything visible at rest.

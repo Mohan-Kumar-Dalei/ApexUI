@@ -20,7 +20,7 @@ Follow the steps in order. Do not skip the plan. Small and fast models: follow t
 8. **Real images.** Use real photography that fits the brand (Unsplash by id is fine). Same tone and colour temperature across the page. No cartoon illustrations unless the brand asks.
 9. **Complete pages.** Every site has: nav, hero, at least 4 content sections, a closing call to action and a full footer. See `references/page-plans.md`.
 10. **Phone first, every width.** Works from 320px to 1920px with no horizontal scroll. See `references/responsive-mobile.md`.
-11. **Quiet motion.** One entrance moment on load, gentle hovers. Only `transform` and `opacity`. Respect reduced motion.
+11. **Premium motion.** Every site gets the core motion set (headline lines, reveals, image curtains, parallax, hover details) and one signature moment from `references/motion.md`. Smooth and calm, never bouncy. Only `transform`, `opacity` and `clip-path`. Respect reduced motion.
 12. **Secure by default.** No secrets in front-end code, no unsafe HTML, safe links. See `references/security.md`.
 
 ## Step 1. Write the brief (3 lines)
@@ -34,6 +34,7 @@ Open `references/directions.md`. Pick the direction whose "Best for" matches the
 
 ## Step 3. Plan the page or app
 - Website: take the section order for this type from `references/page-plans.md`. Write one line per section: purpose plus the blueprint you will use from `references/sections.md`.
+- Choose the signature motion moment from `references/motion.md` that fits the brand (intro curtain, sticky lookbook, pinned gallery, story by the hour...).
 - Mobile app: list the screens and the tab bar from `references/mobile-app.md`.
 - Write the real copy now, following `references/copy.md`. Design around real words, not placeholders.
 
@@ -41,6 +42,7 @@ Open `references/directions.md`. Pick the direction whose "Best for" matches the
 - Default stack: React + Vite + Tailwind CSS v4 (or plain HTML + Tailwind if the user wants one file). Any stack works; the rules stay the same.
 - Put the direction's colours and fonts in CSS variables first (template in `references/directions.md`). Use only those tokens.
 - Assemble sections from `references/sections.md`, then adjust spacing and copy to the brand. Keep the code clean: one component per section.
+- Add motion from `references/motion.md`: the core set on every section, plus the one signature moment you chose in the plan. A static page is not finished.
 - ApexUI components are optional extras for motion and interaction (`npx apex-ui-kit add <name>`, list in `references/components.md`). Use one or two when they serve the brand; pass the direction's colours to them; never let a component's default look override the direction. You can build everything without them.
 
 ## Step 5. Secure and polish
@@ -57,6 +59,7 @@ Look at the page at 375px and 1440px. Ask: does anything look like a template? I
 | `references/copy.md` | Writing like a person: rules, banned words, before and after examples. |
 | `references/page-plans.md` | Section order for each kind of site (store, portfolio, restaurant, SaaS...). |
 | `references/sections.md` | Code blueprints for every section, nav to footer. |
+| `references/motion.md` | The motion that makes it feel premium: core set and signature moments, with code. |
 | `references/mobile-app.md` | Premium mobile app screens, navigation, sizes and motion. |
 | `references/responsive-mobile.md` | Breakpoints, touch, safe areas, PWA, performance. |
 | `references/components.md` | Optional ApexUI animated components and when they fit. |

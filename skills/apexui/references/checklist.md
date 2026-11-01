@@ -28,7 +28,8 @@ Go through every line. Fix what fails. In your final message, say which directio
 - [ ] Safe-area padding on fixed bars (mobile apps).
 
 ## Performance and accessibility
-- [ ] Only `transform` and `opacity` animate; reduced motion respected.
+- [ ] Core motion on every section (headline lines, reveals, image curtains or parallax) and exactly one signature moment.
+- [ ] Only `transform`, `opacity` and `clip-path` animate; reveals play once; reduced motion respected.
 - [ ] Images lazy-loaded below the fold with fixed aspect ratios (no layout shift).
 - [ ] Keyboard: every action reachable, focus visible. Contrast 4.5:1 for text.
 - [ ] Fonts loaded with `display=swap`, only the weights used.

@@ -1,6 +1,8 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
+import { motion, useMotionValue, useReducedMotion, useScroll, useSpring, useTransform } from 'framer-motion';
 import { Compass, Home, Pause, Play, User, Wind, X } from 'lucide-react';
-import { BackPill, Container, Section, photo, riseCss, useFonts } from './shared.jsx';
+import { BackPill, Container, Section, photo, useFonts } from './shared.jsx';
+import { Counter, EASE, Intro, Lines, Reveal, useIntroDelay } from './motion.jsx';
 
 /* Stillwater: a meditation app and its landing page. Direction: custom, calm pine. */
 
@@ -222,6 +224,110 @@ function PhoneApp({ initial = 'today' }) {
     );
 }
 
+/* The signature: a circle that breathes, four seconds in and four seconds out. */
+function Breathe() {
+    const reduce = useReducedMotion();
+    const [inhale, setInhale] = useState(true);
+    useEffect(() => {
+        if (reduce) return undefined;
+        const id = setInterval(() => setInhale((v) => !v), 4000);
+        return () => clearInterval(id);
+    }, [reduce]);
+    return (
+        <section className="relative overflow-hidden bg-[var(--d-accent)] py-24 text-white sm:py-32">
+            <Container className="grid items-center gap-14 lg:grid-cols-12">
+                <div className="lg:col-span-5">
+                    <Lines text="Try one breath with us" className="text-[42px] leading-[1.02] sm:text-[64px]" style={display} />
+                    <Reveal delay={0.2}>
+                        <p className="mt-6 max-w-sm text-[18px] leading-relaxed opacity-80">Follow the circle. In while it grows, out while it falls back. That is most of what the first session asks of you.</p>
+                    </Reveal>
+                </div>
+                <div className="grid place-items-center lg:col-span-7">
+                    <div className="relative grid aspect-square w-[min(440px,82vw)] place-items-center">
+                        <span className="absolute inset-0 rounded-full border border-white/20" />
+                        <span className="absolute inset-[16%] rounded-full border border-white/15" />
+                        <motion.span className="absolute inset-[24%] rounded-full bg-white/10" animate={reduce ? undefined : { scale: inhale ? 1.5 : 1 }} transition={{ duration: 4, ease: [0.45, 0, 0.55, 1] }} />
+                        <motion.span className="absolute inset-[33%] rounded-full bg-white" animate={reduce ? undefined : { scale: inhale ? 1.45 : 1 }} transition={{ duration: 4, ease: [0.45, 0, 0.55, 1] }} />
+                        <span className="relative text-[22px] text-[var(--d-accent)] sm:text-[26px]" style={display}>
+                            {inhale ? 'Breathe in' : 'Breathe out'}
+                        </span>
+                    </div>
+                </div>
+            </Container>
+        </section>
+    );
+}
+
+/* Hero phone: rises on load, floats, and leans toward the pointer on desktop. */
+function HeroPhone({ delay }) {
+    const reduce = useReducedMotion();
+    const rx = useMotionValue(0);
+    const ry = useMotionValue(0);
+    const srx = useSpring(rx, { stiffness: 120, damping: 16 });
+    const sry = useSpring(ry, { stiffness: 120, damping: 16 });
+    return (
+        <div
+            className="[perspective:1200px]"
+            onPointerMove={(e) => {
+                if (e.pointerType !== 'mouse' || reduce) return;
+                const r = e.currentTarget.getBoundingClientRect();
+                ry.set(((e.clientX - r.left) / r.width - 0.5) * 14);
+                rx.set(-((e.clientY - r.top) / r.height - 0.5) * 10);
+            }}
+            onPointerLeave={() => {
+                rx.set(0);
+                ry.set(0);
+            }}
+        >
+            <motion.div initial={reduce ? false : { opacity: 0, y: 80 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 1.2, ease: EASE, delay: delay + 0.2 }}>
+                <motion.div style={{ rotateX: srx, rotateY: sry }} animate={reduce ? undefined : { y: [0, -10, 0] }} transition={{ duration: 6, ease: 'easeInOut', repeat: Infinity }}>
+                    <Phone>
+                        <PhoneApp />
+                    </Phone>
+                </motion.div>
+            </motion.div>
+        </div>
+    );
+}
+
+/* Three phones; the middle one drifts against the scroll on desktop. */
+function Screens() {
+    const ref = useRef(null);
+    const reduce = useReducedMotion();
+    const { scrollYProgress } = useScroll({ target: ref, offset: ['start end', 'end start'] });
+    const up = useTransform(scrollYProgress, [0, 1], [60, -60]);
+    const down = useTransform(scrollYProgress, [0, 1], [-20, 30]);
+    const list = [
+        ['today', 'Today', 'One practice chosen for you, and a few short ones if you have time.'],
+        ['explore', 'Explore', 'Sleep, focus, stress and movement. Every session works offline.'],
+        ['profile', 'You', 'Your week at a glance, reminders and sounds. No badges.'],
+    ];
+    return (
+        <Section id="screens" className="bg-[var(--d-surface)]">
+            <Container>
+                <Lines text="Three screens, and that is the whole app" className="max-w-3xl text-[40px] leading-[1.05] sm:text-[60px]" style={display} />
+                <div ref={ref} className="-mx-5 mt-14 flex snap-x snap-mandatory gap-6 overflow-x-auto px-5 pb-4 [scrollbar-width:none] sm:-mx-8 sm:px-8 lg:mx-0 lg:grid lg:grid-cols-3 lg:overflow-visible lg:px-0 lg:pt-10">
+                    {list.map(([id, t, b], i) => (
+                        <Reveal as="figure" key={id} delay={i * 0.12} className="w-[min(300px,78vw)] shrink-0 snap-center lg:w-auto">
+                            <motion.div style={reduce ? undefined : { y: i === 1 ? up : down }}>
+                                <Phone className="lg:w-[min(280px,100%)]">
+                                    <PhoneApp initial={id} />
+                                </Phone>
+                            </motion.div>
+                            <figcaption className="mx-auto mt-6 max-w-[300px]">
+                                <p className="text-[22px]" style={display}>
+                                    {t}
+                                </p>
+                                <p className="mt-1 text-[15px] text-[var(--d-muted)]">{b}</p>
+                            </figcaption>
+                        </Reveal>
+                    ))}
+                </div>
+            </Container>
+        </Section>
+    );
+}
+
 /* A phone outline that scales with the screen. */
 function Phone({ children, className = '' }) {
     return (
@@ -234,9 +340,10 @@ function Phone({ children, className = '' }) {
 
 export default function AppDemo() {
     useFonts(FONTS);
+    const wait = useIntroDelay('Stillwater');
     return (
-        <div style={vars} className="min-h-dvh overflow-x-hidden bg-[var(--d-bg)] text-[16px] text-[var(--d-ink)] antialiased">
-            <style>{riseCss}</style>
+        <div style={vars} className="min-h-dvh overflow-x-clip bg-[var(--d-bg)] text-[16px] text-[var(--d-ink)] antialiased">
+            <Intro name="Stillwater" bg="#2F4A3E" fg="#F4F2EE" font={display} />
 
             <header className="sticky top-0 z-50 border-b border-[var(--d-line)] bg-[var(--d-bg)]">
                 <Container className="flex h-16 items-center justify-between sm:h-20">
@@ -264,26 +371,40 @@ export default function AppDemo() {
             <Section id="top" className="pt-12 sm:pt-16">
                 <Container className="grid items-center gap-14 lg:grid-cols-12">
                     <div className="lg:col-span-6">
-                        <h1 className="demo-rise text-[48px] leading-[1] sm:text-[72px] lg:text-[88px]" style={display}>
-                            Ten quiet minutes, every morning
-                        </h1>
-                        <p className="demo-rise mt-6 max-w-md text-[18px] leading-relaxed text-[var(--d-muted)]" style={{ animationDelay: '100ms' }}>
-                            Short guided sessions for breath, sleep and focus, recorded by teachers who have practised for decades. No streak pressure, no feed.
-                        </p>
-                        <div id="get" className="demo-rise mt-9 flex flex-wrap gap-3" style={{ animationDelay: '180ms' }}>
+                        <Lines as="h1" onMount delay={wait} text="Ten quiet minutes, every morning" className="text-[48px] leading-[1] sm:text-[76px] lg:text-[92px]" style={display} />
+                        <Reveal delay={wait + 0.45}>
+                            <p className="mt-6 max-w-md text-[18px] leading-relaxed text-[var(--d-muted)]">
+                                Short guided sessions for breath, sleep and focus, recorded by teachers who have practised for decades. No streak pressure, no feed.
+                            </p>
+                        </Reveal>
+                        <Reveal id="get" delay={wait + 0.55} className="mt-9 flex flex-wrap gap-3">
                             <a href="#top" className="rounded-full bg-[var(--d-ink)] px-6 py-3.5 text-[14px] font-medium text-white">
                                 Download for iPhone
                             </a>
                             <a href="#top" className="rounded-full border border-[var(--d-ink)] px-6 py-3.5 text-[14px] font-medium">
                                 Get it on Android
                             </a>
-                        </div>
-                        <p className="mt-5 text-[14px] text-[var(--d-muted)]">Try the app on the right. Tap a session to start it.</p>
+                        </Reveal>
+                        <Reveal delay={wait + 0.65}>
+                            <p className="mt-5 text-[14px] text-[var(--d-muted)]">Try the app on the right. Tap a session to start it.</p>
+                        </Reveal>
+                        <dl className="mt-10 grid max-w-md grid-cols-3 gap-4 border-t border-[var(--d-line)] pt-6">
+                            {[
+                                [312, '', 'sessions'],
+                                [41, '', 'teachers'],
+                                [12, ' min', 'average session'],
+                            ].map(([n, sfx, l]) => (
+                                <div key={l}>
+                                    <dt className="text-[30px] leading-none" style={display}>
+                                        <Counter to={n} suffix={sfx} />
+                                    </dt>
+                                    <dd className="mt-1 text-[13px] text-[var(--d-muted)]">{l}</dd>
+                                </div>
+                            ))}
+                        </dl>
                     </div>
                     <div className="lg:col-span-6">
-                        <Phone>
-                            <PhoneApp />
-                        </Phone>
+                        <HeroPhone delay={wait} />
                     </div>
                 </Container>
             </Section>
@@ -291,61 +412,33 @@ export default function AppDemo() {
             {/* How it works */}
             <Section id="how" className="border-t border-[var(--d-line)]">
                 <Container className="grid gap-10 lg:grid-cols-12">
-                    <h2 className="text-[38px] leading-[1.05] sm:text-[56px] lg:col-span-4" style={display}>
-                        How a morning goes
-                    </h2>
+                    <Lines text="How a morning goes" className="text-[40px] leading-[1.05] sm:text-[60px] lg:col-span-4" style={display} />
                     <ol className="lg:col-span-8">
                         {[
                             ['Open the app', 'Today shows one session picked for the time you have. Nothing else asks for your attention.'],
                             ['Sit, or walk', 'Sessions run from five to twenty minutes. Audio only, so you can close your eyes or keep walking.'],
                             ['Close it and go', 'A short note of how you feel, if you like. Your week is there when you want to look.'],
                         ].map(([t, b], i) => (
-                            <li key={t} className="grid gap-2 border-t border-[var(--d-line)] py-7 sm:grid-cols-[3.5rem_12rem_1fr] sm:gap-6">
+                            <Reveal as="li" key={t} delay={i * 0.08} className="grid gap-2 border-t border-[var(--d-line)] py-7 sm:grid-cols-[3.5rem_12rem_1fr] sm:gap-6">
                                 <span className="tabular-nums text-[var(--d-muted)]">{String(i + 1).padStart(2, '0')}</span>
                                 <h3 className="text-[20px]" style={display}>
                                     {t}
                                 </h3>
                                 <p className="text-[var(--d-muted)]">{b}</p>
-                            </li>
+                            </Reveal>
                         ))}
                     </ol>
                 </Container>
             </Section>
 
-            {/* Screens */}
-            <Section id="screens" className="bg-[var(--d-surface)]">
-                <Container>
-                    <h2 className="max-w-2xl text-[38px] leading-[1.05] sm:text-[56px]" style={display}>
-                        Three screens, and that is the whole app
-                    </h2>
-                    <div className="-mx-5 mt-12 flex snap-x snap-mandatory gap-6 overflow-x-auto px-5 pb-4 [scrollbar-width:none] sm:-mx-8 sm:px-8 lg:mx-0 lg:grid lg:grid-cols-3 lg:overflow-visible lg:px-0">
-                        {[
-                            ['today', 'Today', 'One practice chosen for you, and a few short ones if you have time.'],
-                            ['explore', 'Explore', 'Sleep, focus, stress and movement. Every session works offline.'],
-                            ['profile', 'You', 'Your week at a glance, reminders and sounds. No badges.'],
-                        ].map(([id, t, b]) => (
-                            <figure key={id} className="w-[min(300px,78vw)] shrink-0 snap-center lg:w-auto">
-                                <Phone className="lg:w-[min(280px,100%)]">
-                                    <PhoneApp initial={id} />
-                                </Phone>
-                                <figcaption className="mx-auto mt-6 max-w-[300px]">
-                                    <p className="text-[20px]" style={display}>
-                                        {t}
-                                    </p>
-                                    <p className="mt-1 text-[15px] text-[var(--d-muted)]">{b}</p>
-                                </figcaption>
-                            </figure>
-                        ))}
-                    </div>
-                </Container>
-            </Section>
+            <Breathe />
+
+            <Screens />
 
             {/* Quote */}
             <Section>
                 <Container className="max-w-4xl">
-                    <blockquote className="text-[28px] leading-[1.3] sm:text-[42px]" style={display}>
-                        "It is the only app on my phone that wants me to put the phone down. I use it on the tram most mornings."
-                    </blockquote>
+                    <Lines as="blockquote" stagger={0.025} text={'"It is the only app on my phone that wants me to put the phone down. I use it on the tram most mornings."'} className="text-[28px] leading-[1.3] sm:text-[44px]" style={display} />
                     <p className="mt-6 text-[var(--d-muted)]">Review on the App Store, February</p>
                 </Container>
             </Section>
@@ -382,9 +475,7 @@ export default function AppDemo() {
             {/* CTA */}
             <Section className="bg-[var(--d-accent)] text-white">
                 <Container className="flex flex-col items-start justify-between gap-8 lg:flex-row lg:items-end">
-                    <h2 className="max-w-2xl text-[42px] leading-[1.02] sm:text-[64px]" style={display}>
-                        Start tomorrow morning
-                    </h2>
+                    <Lines text="Start tomorrow morning" className="max-w-2xl text-[44px] leading-[1.02] sm:text-[68px]" style={display} />
                     <div className="flex flex-wrap gap-3">
                         <a href="#top" className="rounded-full bg-white px-6 py-3.5 text-[14px] font-medium text-[var(--d-accent)]">
                             Download for iPhone

@@ -1,8 +1,9 @@
 import { useEffect, useState } from 'react';
 import { Menu, Search, ShoppingBag, User, X } from 'lucide-react';
-import { BackPill, Container, Img, Section, photo, riseCss, useFonts } from './shared.jsx';
+import { BackPill, Container, Section, photo, useFonts } from './shared.jsx';
+import { ClipImage, Counter, Intro, Lines, Marquee, Parallax, Reveal, useIntroDelay } from './motion.jsx';
 
-/* Maison Ivoire: a clothing store. Direction: Atelier. */
+/* Maison Ivoire: a clothing store. Direction: Atelier. Signature: the lookbook with a sticky coat. */
 
 const FONTS = 'https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,wght@0,400;0,500;1,400&family=Hanken+Grotesk:wght@400;500&display=swap';
 const vars = {
@@ -28,6 +29,13 @@ const TILES = [
     { label: 'Shirts and layers', img: 'photo-1490481651871-ab68de25d43d' },
 ];
 
+const DETAILS = [
+    ['The cloth', 'A dense wool check woven in Biella, heavy enough to stop the wind and soft enough to wear over a T-shirt.'],
+    ['The lining', 'Cupro, which breathes like cotton and slides like silk. Fully replaceable, for free, for five years.'],
+    ['The shoulders', 'Soft and natural, cut a little wide so the coat sits right over a sweater in January.'],
+    ['The buttons', 'Corozo nut, horn coloured, sewn with a shank so they never pull at the cloth.'],
+];
+
 const SERVICES = [
     ['Delivery', 'Free across Europe on orders over €200. Usually two to four days.'],
     ['Returns', 'Thirty days, collected from your door. Refunds within a week.'],
@@ -39,6 +47,7 @@ const NAV = ['New in', 'Coats', 'Knitwear', 'Journal'];
 
 export default function StoreDemo() {
     useFonts(FONTS);
+    const wait = useIntroDelay('Maison Ivoire');
     const [open, setOpen] = useState(false);
     const [bag, setBag] = useState(0);
     const [toast, setToast] = useState('');
@@ -57,13 +66,13 @@ export default function StoreDemo() {
     };
 
     return (
-        <div style={vars} className="min-h-dvh overflow-x-hidden bg-[var(--d-bg)] text-[15px] text-[var(--d-ink)] antialiased">
-            <style>{riseCss}</style>
+        <div style={vars} className="min-h-dvh overflow-x-clip bg-[var(--d-bg)] text-[15px] text-[var(--d-ink)] antialiased">
+            <Intro name="Maison Ivoire" bg="#161513" fg="#F3F0EA" font={display} />
 
             <p className="border-b border-[var(--d-line)] py-2.5 text-center text-[12px] tracking-[0.04em] text-[var(--d-muted)]">Free delivery across Europe on orders over €200</p>
 
             {/* Nav: links left, name centered, icons right */}
-            <header className="sticky top-0 z-50 border-b border-[var(--d-line)] bg-[var(--d-bg)]">
+            <header className="sticky top-0 z-50 border-b border-[var(--d-line)] bg-[var(--d-bg)]/95 backdrop-blur-sm">
                 <Container className="grid h-16 grid-cols-[1fr_auto_1fr] items-center sm:h-20">
                     <div className="flex items-center gap-7">
                         <button className="-ml-2 grid h-11 w-11 place-items-center md:hidden" aria-label={open ? 'Close menu' : 'Open menu'} aria-expanded={open} onClick={() => setOpen(!open)}>
@@ -71,8 +80,9 @@ export default function StoreDemo() {
                         </button>
                         <nav className="hidden gap-7 md:flex">
                             {NAV.map((l) => (
-                                <a key={l} href="#new" className="text-[var(--d-muted)] transition-colors hover:text-[var(--d-ink)]">
+                                <a key={l} href="#new" className="group relative text-[var(--d-muted)] transition-colors hover:text-[var(--d-ink)]">
                                     {l}
+                                    <span className="absolute -bottom-1 left-0 h-px w-full origin-left scale-x-0 bg-current transition-transform duration-500 group-hover:scale-x-100" />
                                 </a>
                             ))}
                         </nav>
@@ -96,55 +106,59 @@ export default function StoreDemo() {
                 {open && (
                     <nav className="border-t border-[var(--d-line)] md:hidden">
                         <Container className="flex flex-col py-3">
-                            {NAV.map((l) => (
-                                <a key={l} href="#new" onClick={() => setOpen(false)} className="border-b border-[var(--d-line)] py-4 text-[26px] last:border-0" style={display}>
-                                    {l}
-                                </a>
+                            {NAV.map((l, i) => (
+                                <Reveal key={l} delay={i * 0.05} y={14}>
+                                    <a href="#new" onClick={() => setOpen(false)} className="block border-b border-[var(--d-line)] py-4 text-[26px]" style={display}>
+                                        {l}
+                                    </a>
+                                </Reveal>
                             ))}
                         </Container>
                     </nav>
                 )}
             </header>
 
-            {/* Hero: full-bleed campaign photo */}
-            <section id="top" className="relative h-[82svh] min-h-[520px] overflow-hidden">
-                <img src={photo('photo-1539109136881-3be0616acf4b', 2200)} alt="Woman in a long pale blue coat in a city square" className="absolute inset-0 h-full w-full object-cover object-[50%_35%]" />
+            {/* Hero: full-bleed campaign photo, drifting on scroll */}
+            <section id="top" className="relative h-[86svh] min-h-[540px] overflow-hidden">
+                <Parallax src={photo('photo-1539109136881-3be0616acf4b', 2200)} alt="Woman in a long pale blue coat in a city square" className="absolute inset-0" strength={8} eager />
                 <div className="absolute inset-0 bg-black/30" />
                 <Container className="relative flex h-full flex-col justify-end pb-12 text-white sm:pb-20">
-                    <p className="demo-rise text-[13px] tracking-[0.12em]">AUTUMN AND WINTER</p>
-                    <h1 className="demo-rise mt-4 max-w-3xl text-[48px] leading-[1] sm:text-[80px] lg:text-[112px]" style={{ ...display, animationDelay: '80ms' }}>
-                        Coats cut to last a decade
-                    </h1>
-                    <div className="demo-rise mt-9 flex flex-wrap items-center gap-6" style={{ animationDelay: '160ms' }}>
-                        <a href="#new" className="bg-white px-7 py-4 text-[12px] tracking-[0.12em] text-black transition-colors hover:bg-[#ECE7DE]">
+                    <Reveal delay={wait} y={12}>
+                        <p className="text-[13px] tracking-[0.14em]">AUTUMN AND WINTER</p>
+                    </Reveal>
+                    <Lines as="h1" onMount delay={wait + 0.1} text="Coats cut to last a decade" className="mt-4 max-w-4xl text-[48px] leading-[1] sm:text-[84px] lg:text-[120px]" style={display} />
+                    <Reveal delay={wait + 0.55} className="mt-9 flex flex-wrap items-center gap-6">
+                        <a href="#new" className="bg-white px-7 py-4 text-[12px] tracking-[0.14em] text-black transition-colors hover:bg-[#ECE7DE]">
                             SHOP THE COLLECTION
                         </a>
-                        <a href="#story" className="text-sm underline decoration-white/40 underline-offset-8 hover:decoration-white">
-                            How we make them
+                        <a href="#look" className="text-sm underline decoration-white/40 underline-offset-8 transition-colors hover:decoration-white">
+                            See the Harlow coat
                         </a>
-                    </div>
+                    </Reveal>
                 </Container>
             </section>
+
+            <Marquee className="border-b border-[var(--d-line)] bg-[var(--d-ink)] py-4 text-[13px] tracking-[0.12em] text-[var(--d-bg)]" items={['CUT AND SEWN IN PORTO', 'FREE REPAIRS FOR FIVE YEARS', 'SMALL RUNS, NEVER ON SALE', 'FREE DELIVERY ACROSS EUROPE']} />
 
             {/* New in */}
             <Section id="new">
                 <Container>
                     <div className="flex items-end justify-between gap-6">
-                        <h2 className="text-[36px] leading-none sm:text-[52px]" style={display}>
-                            New in
-                        </h2>
-                        <a href="#new" className="text-sm underline decoration-[var(--d-line)] underline-offset-8 hover:decoration-[var(--d-ink)]">
-                            View all 48 pieces
-                        </a>
+                        <Lines text="New in" className="text-[40px] leading-none sm:text-[60px]" style={display} />
+                        <Reveal>
+                            <a href="#new" className="text-sm underline decoration-[var(--d-line)] underline-offset-8 hover:decoration-[var(--d-ink)]">
+                                View all 48 pieces
+                            </a>
+                        </Reveal>
                     </div>
-                    <ul className="mt-10 grid grid-cols-2 gap-x-3 gap-y-10 sm:gap-x-6 lg:grid-cols-4">
-                        {PRODUCTS.map((p) => (
-                            <li key={p.name} className="group">
-                                <div className="relative">
-                                    <Img id={p.img} w={900} alt={p.name} />
+                    <ul className="mt-12 grid grid-cols-2 gap-x-3 gap-y-12 sm:gap-x-6 lg:grid-cols-4">
+                        {PRODUCTS.map((p, i) => (
+                            <Reveal as="li" key={p.name} delay={(i % 4) * 0.08} className="group">
+                                <div className="relative aspect-[4/5] overflow-hidden bg-[var(--d-surface)]">
+                                    <img src={photo(p.img, 900)} alt={p.name} loading="lazy" className="h-full w-full object-cover transition-transform duration-[1.2s] ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:scale-[1.06]" />
                                     <button
                                         onClick={() => add(p)}
-                                        className="absolute inset-x-3 bottom-3 bg-[var(--d-bg)] py-3 text-[11px] tracking-[0.12em] opacity-100 transition-opacity duration-300 hover:bg-white lg:opacity-0 lg:group-hover:opacity-100 lg:focus:opacity-100"
+                                        className="absolute inset-x-3 bottom-3 bg-[var(--d-bg)] py-3 text-[11px] tracking-[0.14em] transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] hover:bg-white lg:translate-y-[140%] lg:opacity-0 lg:group-hover:translate-y-0 lg:group-hover:opacity-100 lg:focus:translate-y-0 lg:focus:opacity-100"
                                     >
                                         ADD TO BAG
                                     </button>
@@ -154,32 +168,65 @@ export default function StoreDemo() {
                                     <span className="shrink-0 tabular-nums text-[var(--d-muted)]">€{p.price}</span>
                                 </div>
                                 <p className="mt-1 text-[13px] text-[var(--d-muted)]">{p.note}</p>
-                            </li>
+                            </Reveal>
                         ))}
                     </ul>
                 </Container>
             </Section>
 
+            {/* Lookbook: the coat stays put while its details scroll past */}
+            <section id="look" className="scroll-mt-20 border-y border-[var(--d-line)] bg-[var(--d-surface)]">
+                <Container className="grid gap-10 py-20 sm:py-28 lg:grid-cols-12 lg:gap-16 lg:py-0">
+                    <div className="lg:col-span-6">
+                        <div className="lg:sticky lg:top-24 lg:py-16">
+                            <ClipImage src={photo('photo-1485968579580-b6d095142e6e', 1400)} alt="The Harlow coat in charcoal wool check" className="aspect-[4/5] lg:h-[calc(100svh-12rem)] lg:aspect-auto" />
+                        </div>
+                    </div>
+                    <div className="lg:col-span-6 lg:py-32">
+                        <p className="text-[13px] tracking-[0.14em] text-[var(--d-muted)]">THE HARLOW COAT, €640</p>
+                        <Lines text="Four details you will notice in the first winter" className="mt-4 text-[38px] leading-[1.05] sm:text-[56px]" style={display} />
+                        <ol className="mt-12">
+                            {DETAILS.map(([t, b], i) => (
+                                <Reveal as="li" key={t} className="grid gap-3 border-t border-[var(--d-line)] py-8 sm:grid-cols-[3rem_1fr] lg:py-12">
+                                    <span className="tabular-nums text-[var(--d-muted)]">{String(i + 1).padStart(2, '0')}</span>
+                                    <div>
+                                        <h3 className="text-[26px] leading-tight" style={display}>
+                                            {t}
+                                        </h3>
+                                        <p className="mt-3 max-w-md text-[16px] leading-relaxed text-[var(--d-muted)]">{b}</p>
+                                    </div>
+                                </Reveal>
+                            ))}
+                        </ol>
+                        <Reveal>
+                            <button onClick={() => add(PRODUCTS[0])} className="mt-4 bg-[var(--d-ink)] px-7 py-4 text-[12px] tracking-[0.14em] text-[var(--d-bg)] transition-opacity hover:opacity-90">
+                                ADD THE HARLOW TO BAG
+                            </button>
+                        </Reveal>
+                    </div>
+                </Container>
+            </section>
+
             {/* Story */}
-            <Section id="story" className="bg-[var(--d-surface)]">
+            <Section id="story">
                 <Container className="grid items-center gap-10 lg:grid-cols-12 lg:gap-16">
-                    <Img className="lg:col-span-7" ratio="aspect-[4/3]" id="photo-1441984904996-e0b6ba687e04" w={1600} alt="The Porto studio with coats on rails" />
+                    <ClipImage className="aspect-[4/3] lg:col-span-7" src={photo('photo-1441984904996-e0b6ba687e04', 1600)} alt="The Porto studio with coats on rails" />
                     <div className="lg:col-span-5">
-                        <h2 className="text-[36px] leading-[1.05] sm:text-[52px]" style={display}>
-                            Cut in Porto, by eleven people
-                        </h2>
-                        <p className="mt-6 text-[17px] leading-relaxed text-[var(--d-muted)]">
-                            Every coat is cut, sewn and pressed in one workshop near the river. We make small runs of about three hundred pieces, so nothing waits in a warehouse and nothing ends up on sale.
-                        </p>
+                        <Lines text="Cut in Porto, by eleven people" className="text-[38px] leading-[1.05] sm:text-[54px]" style={display} />
+                        <Reveal delay={0.1}>
+                            <p className="mt-6 text-[17px] leading-relaxed text-[var(--d-muted)]">
+                                Every coat is cut, sewn and pressed in one workshop near the river. We make small runs of about three hundred pieces, so nothing waits in a warehouse and nothing ends up on sale.
+                            </p>
+                        </Reveal>
                         <dl className="mt-10 grid grid-cols-3 gap-4 border-t border-[var(--d-line)] pt-6">
                             {[
-                                ['312', 'pieces this season'],
-                                ['14', 'hours per coat'],
-                                ['5 yrs', 'free repairs'],
-                            ].map(([n, l]) => (
+                                [312, '', 'pieces this season'],
+                                [14, '', 'hours per coat'],
+                                [5, ' yrs', 'free repairs'],
+                            ].map(([n, s, l]) => (
                                 <div key={l}>
-                                    <dt className="text-[28px] tabular-nums sm:text-[34px]" style={display}>
-                                        {n}
+                                    <dt className="text-[30px] sm:text-[38px]" style={display}>
+                                        <Counter to={n} suffix={s} />
                                     </dt>
                                     <dd className="mt-1 text-[13px] text-[var(--d-muted)]">{l}</dd>
                                 </div>
@@ -190,39 +237,40 @@ export default function StoreDemo() {
             </Section>
 
             {/* Categories */}
-            <Section>
+            <section className="pb-20 sm:pb-28 lg:pb-36">
                 <Container className="grid gap-4 sm:gap-6 md:h-[clamp(520px,58vw,820px)] md:grid-cols-3 md:grid-rows-2">
                     {TILES.map((t, i) => (
                         <a key={t.label} href="#new" className={`group relative block md:h-full md:min-h-0 ${i === 0 ? 'md:col-span-2 md:row-span-2' : ''}`}>
-                            <Img id={t.img} w={i === 0 ? 1600 : 900} alt={t.label} className="md:h-full" ratio="aspect-[4/5] sm:aspect-[4/3] md:aspect-auto" />
-                            <span className="absolute bottom-4 left-4 bg-[var(--d-bg)] px-4 py-2.5 text-[12px] tracking-[0.12em] sm:bottom-6 sm:left-6">{t.label.toUpperCase()}</span>
+                            <ClipImage delay={i * 0.12} src={photo(t.img, i === 0 ? 1600 : 900)} alt={t.label} className="aspect-[4/5] h-full sm:aspect-[4/3] md:aspect-auto" imgClassName="transition-transform duration-[1.2s] ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:scale-[1.05]" />
+                            <span className="absolute bottom-4 left-4 flex items-center gap-3 bg-[var(--d-bg)] px-4 py-2.5 text-[12px] tracking-[0.14em] sm:bottom-6 sm:left-6">
+                                {t.label.toUpperCase()}
+                                <span className="inline-block h-px w-4 bg-current transition-all duration-500 group-hover:w-8" />
+                            </span>
                         </a>
                     ))}
                 </Container>
-            </Section>
+            </section>
 
             {/* Quote */}
             <Section className="border-y border-[var(--d-line)]">
-                <Container className="max-w-4xl text-center">
-                    <blockquote className="text-[28px] leading-[1.25] sm:text-[42px]" style={display}>
-                        "I have worn this coat for six winters. Last year they replaced the lining for free, and it still looks new."
-                    </blockquote>
-                    <p className="mt-8 text-[var(--d-muted)]">Ana R., Lisbon</p>
+                <Container className="max-w-5xl text-center">
+                    <Lines as="blockquote" stagger={0.025} text={'"I have worn this coat for six winters. Last year they replaced the lining for free, and it still looks new."'} className="text-[28px] leading-[1.25] sm:text-[44px]" style={display} />
+                    <Reveal delay={0.3}>
+                        <p className="mt-8 text-[var(--d-muted)]">Ana R., Lisbon</p>
+                    </Reveal>
                 </Container>
             </Section>
 
             {/* Services */}
             <Section>
                 <Container className="grid gap-10 lg:grid-cols-12">
-                    <h2 className="text-[36px] leading-[1.05] sm:text-[52px] lg:col-span-4" style={display}>
-                        After you buy
-                    </h2>
+                    <Lines text="After you buy" className="text-[38px] leading-[1.05] sm:text-[54px] lg:col-span-4" style={display} />
                     <ul className="lg:col-span-8">
-                        {SERVICES.map(([t, b]) => (
-                            <li key={t} className="grid gap-2 border-t border-[var(--d-line)] py-6 sm:grid-cols-[11rem_1fr] sm:gap-8">
+                        {SERVICES.map(([t, b], i) => (
+                            <Reveal as="li" key={t} delay={i * 0.06} className="grid gap-2 border-t border-[var(--d-line)] py-6 sm:grid-cols-[11rem_1fr] sm:gap-8">
                                 <h3 className="text-[17px]">{t}</h3>
                                 <p className="text-[var(--d-muted)]">{b}</p>
-                            </li>
+                            </Reveal>
                         ))}
                     </ul>
                 </Container>
@@ -232,17 +280,17 @@ export default function StoreDemo() {
             <Section className="bg-[var(--d-ink)] text-[var(--d-bg)]">
                 <Container className="grid gap-10 lg:grid-cols-12 lg:items-end">
                     <div className="lg:col-span-7">
-                        <h2 className="text-[40px] leading-[1.02] sm:text-[64px]" style={display}>
-                            New pieces, before anyone else
-                        </h2>
-                        <p className="mt-5 max-w-md opacity-70">Two emails a month: the next run, the journal, and the occasional sample sale in Porto.</p>
+                        <Lines text="New pieces, before anyone else" className="text-[42px] leading-[1.02] sm:text-[68px]" style={display} />
+                        <Reveal delay={0.15}>
+                            <p className="mt-5 max-w-md opacity-70">Two emails a month: the next run, the journal, and the occasional sample sale in Porto.</p>
+                        </Reveal>
                     </div>
-                    <div className="lg:col-span-5">
+                    <Reveal className="lg:col-span-5" delay={0.2}>
                         {joined ? (
                             <p className="border-b border-[var(--d-bg)]/40 py-4">Thank you. Look out for the next email in your inbox.</p>
                         ) : (
                             <form
-                                className="flex border-b border-[var(--d-bg)]/40"
+                                className="flex border-b border-[var(--d-bg)]/40 transition-colors focus-within:border-[var(--d-bg)]"
                                 onSubmit={(e) => {
                                     e.preventDefault();
                                     if (email.includes('@')) setJoined(true);
@@ -261,10 +309,10 @@ export default function StoreDemo() {
                                     placeholder="you@example.com"
                                     className="min-w-0 flex-1 bg-transparent py-4 text-[16px] outline-none placeholder:text-[var(--d-bg)]/45"
                                 />
-                                <button className="py-4 pl-4 text-[12px] tracking-[0.12em]">SUBSCRIBE</button>
+                                <button className="py-4 pl-4 text-[12px] tracking-[0.14em]">SUBSCRIBE</button>
                             </form>
                         )}
-                    </div>
+                    </Reveal>
                 </Container>
             </Section>
 
@@ -302,9 +350,11 @@ export default function StoreDemo() {
                         <p>Privacy, Terms, Cookies</p>
                     </div>
                 </Container>
-                <p aria-hidden="true" className="mt-10 whitespace-nowrap px-3 text-center text-[17vw] leading-[0.78] tracking-[-0.03em]" style={display}>
-                    Ivoire
-                </p>
+                <Reveal y={80}>
+                    <p aria-hidden="true" className="mt-10 whitespace-nowrap px-3 text-center text-[17vw] leading-[0.78] tracking-[-0.03em]" style={display}>
+                        Ivoire
+                    </p>
+                </Reveal>
             </footer>
 
             {toast && (
