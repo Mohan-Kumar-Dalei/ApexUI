@@ -29,7 +29,7 @@ const FRAME_INSET = 44;
 const FIT_PAGES = new Set([
     'parallax-card', 'cards', 'hyper-card', 'profile', 'pricing-cards', 'testimonials', 'holo-card', 'glare-card',
     'card-stack', 'spotlight-grid', 'edge-glow-form', 'carousel', '3d-carousel', 'coverflow-3d', 'cube-gallery',
-    'flip-book', 'swipe-cards', 'card-swap-3d', 'bounce-cards', 'folder', 'iso-stack', 'image-accordion',
+    'flip-book', 'swipe-cards', 'bounce-cards', 'folder', 'iso-stack', 'image-accordion',
     'faq-accordion', 'stepper', 'animated-buttons', 'ai-chat', 'ai-response', 'ai-thinking', 'ai-prompt-box',
     'ai-model-prompt', 'receipt-printer', 'magnetic-cursor', 'arc-gallery', 'circular-carousel', 'image-compare',
 ]);

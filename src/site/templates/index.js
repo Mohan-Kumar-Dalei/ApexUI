@@ -88,7 +88,7 @@ export const TEMPLATES = [
         tagline: 'A glass lens hero, add to bag toasts, a lookbook coverflow and swipe to like.',
         accent: '#ff6a3d',
         image: shot('bloom'),
-        components: ['Glass Lens', 'Toast Stack', 'Coverflow 3D', 'Swipe Cards', 'Card Swap 3D'],
+        components: ['Glass Lens', 'Toast Stack', 'Coverflow 3D', 'Swipe Cards'],
         load: () => import('./BloomTemplate.jsx'),
     },
     {

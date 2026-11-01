@@ -4,7 +4,6 @@ import GlassLens from '../../components/MainUI/ApexUI-Kit/GlassLens/GlassLens.js
 import ToastStack from '../../components/MainUI/ApexUI-Kit/ToastStack/ToastStack.jsx';
 import Coverflow3D from '../../components/MainUI/ApexUI-Kit/Coverflow3D/Coverflow3D.jsx';
 import SwipeCards from '../../components/MainUI/ApexUI-Kit/SwipeCards/SwipeCards.jsx';
-import CardSwap3D from '../../components/MainUI/ApexUI-Kit/CardSwap3D/CardSwap3D.jsx';
 import MagneticButton from '../../components/MainUI/ApexUI-Kit/MagneticButton/MagneticButton.jsx';
 import { photo } from './photos.js';
 
@@ -120,9 +119,19 @@ export default function BloomTemplate() {
                         <h2 className="text-[clamp(1.6rem,3.4vw,2.6rem)] font-black leading-[1.05] tracking-tight">Shopping that feels easy</h2>
                         <p className="mt-3 text-black/60">Every order comes with the same promises, wherever you are.</p>
                     </div>
-                    <div className="flex justify-center">
-                        <CardSwap3D cards={PERKS} accentColor={ACCENT} theme="light" />
-                    </div>
+                    <ul className="grid gap-3">
+                        {PERKS.map(({ icon: Icon, title, body }) => (
+                            <li key={title} className="flex items-start gap-3 rounded-2xl border border-black/10 p-4">
+                                <span className="grid h-10 w-10 shrink-0 place-items-center rounded-xl text-white" style={{ background: ACCENT }}>
+                                    <Icon className="h-5 w-5" />
+                                </span>
+                                <span>
+                                    <span className="block font-semibold">{title}</span>
+                                    <span className="mt-0.5 block text-sm text-black/60">{body}</span>
+                                </span>
+                            </li>
+                        ))}
+                    </ul>
                 </div>
             </section>
 

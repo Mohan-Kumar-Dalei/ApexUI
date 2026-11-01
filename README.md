@@ -4,7 +4,7 @@
 
 # ApexUI
 
-### 117 free, animated UI components for React
+### 116 free, animated UI components for React
 
 Copy-paste or one-command install. Styled with Tailwind CSS, animated with Framer Motion, GSAP and Three.js.<br/>
 You get the source, so you can read it and change anything.
@@ -48,7 +48,7 @@ You get the source, so you can read it and change anything.
 
 ## Why ApexUI
 
-- **117 components** across backgrounds, cards, text effects, navigation, buttons, interactive UI, AI interfaces, loaders and maps, with new ones added regularly.
+- **116 components** across backgrounds, cards, text effects, navigation, buttons, interactive UI, AI interfaces, loaders and maps, with new ones added regularly.
 - **Real 3D, still light.** Three.js and WebGL components (Galaxy 3D, Warp Tunnel, Distortion Image, Liquid Blob 3D, Particle Morph, Retro Grid 3D, Gooey Nav) use one small shader each, cap the pixel ratio, pause when off screen and free the GPU on unmount.
 - **AI-ready UI.** Chat, prompt box with model picker, thinking state, streaming response and five voice assistant visuals.
 - **You own the code.** The CLI copies plain `.jsx` files into your project. No runtime package, no lock-in.
@@ -111,7 +111,6 @@ Needs React 18+ and Tailwind CSS (v4 recommended). Setup guides: [React](https:/
 | --- | --- |
 | [Bounce Cards](https://apex-ui.in/components/bounce-cards) | `npx apex-ui-kit add bounce-cards` |
 | [Card Stack](https://apex-ui.in/components/card-stack) | `npx apex-ui-kit add card-stack` |
-| [Card Swap 3D](https://apex-ui.in/components/card-swap-3d) | `npx apex-ui-kit add card-swap-3d` |
 | [Cards](https://apex-ui.in/components/cards) | `npx apex-ui-kit add basic-card` (+ `meteor-card`) |
 | [Distortion Image](https://apex-ui.in/components/distortion-image) | `npx apex-ui-kit add distortion-image` |
 | [Folder](https://apex-ui.in/components/folder) | `npx apex-ui-kit add folder` |

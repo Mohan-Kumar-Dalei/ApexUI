@@ -752,14 +752,6 @@ export const componentPages = [
         summary: 'A fanned hand of photo cards that bounce in and make room on hover.',
     },
     {
-        name: 'Card Swap 3D',
-        path: '/components/card-swap-3d',
-        load: () => import('../content/components/CardSwap3DDoc.jsx'),
-        category: 'Cards',
-        image: shot('card-swap-3d.png'),
-        summary: 'A 3D stack of cards where the front one drops away to the back.',
-    },
-    {
         name: 'Gooey Nav',
         path: '/components/gooey-nav',
         load: () => import('../content/components/GooeyNavDoc.jsx'),
