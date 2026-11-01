@@ -64,7 +64,7 @@ export default function SketchRevealDoc() {
                     <SketchReveal key={pair} from={from} to={to} mode={mode} progress={progress} edgeColor={edge} sparkle={sparkle}>
                         <div className="flex h-full flex-col items-center justify-end px-6 pb-10 text-center text-white [text-shadow:0_2px_20px_rgba(0,0,0,0.6)]">
                             <p className="font-mono text-[0.7rem] uppercase tracking-[0.35em] text-white/75">{mode === 'hover' ? 'Hover me' : mode === 'manual' ? `Drag across the picture · ${Math.round(progress * 100)}%` : 'Plays on a loop'}</p>
-                            <h3 className="mt-2 text-3xl font-black tracking-tight sm:text-5xl">From sketch to light</h3>
+                            <h3 className="mt-2 text-2xl font-black tracking-tight @md:text-4xl @3xl:text-5xl">From sketch to light</h3>
                         </div>
                     </SketchReveal>
                 </div>
@@ -85,7 +85,7 @@ export default function SketchRevealDoc() {
                     <div className="overflow-clip rounded-2xl">
                         <SketchReveal from={from} to={to} mode="scroll" stickyTop={64} scrollLength={120} edgeColor={edge} sparkle={sparkle}>
                             <div className="flex h-full items-end p-8 text-white [text-shadow:0_2px_20px_rgba(0,0,0,0.6)]">
-                                <h3 className="text-3xl font-black tracking-tight sm:text-5xl">Keep scrolling</h3>
+                                <h3 className="text-2xl font-black tracking-tight @md:text-4xl @3xl:text-5xl">Keep scrolling</h3>
                             </div>
                         </SketchReveal>
                     </div>

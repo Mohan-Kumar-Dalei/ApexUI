@@ -14,15 +14,15 @@ export default function BackgroundDemo({ title, subtitle = 'A beautiful animated
                 className="pointer-events-none absolute inset-0 z-10 flex flex-col items-center justify-center p-4 transition-opacity duration-500"
                 style={{ opacity: showDemo ? 1 : 0 }}
             >
-                <nav className="mb-8 flex w-full max-w-md items-center justify-between rounded-full border border-white/10 bg-black/20 px-6 py-3 shadow-lg backdrop-blur-sm">
-                    <span className="text-lg font-semibold text-white">Demo Nav</span>
+                <nav className="mb-6 flex w-full max-w-md items-center justify-between rounded-full border border-white/10 bg-black/20 px-4 py-2.5 @md:mb-8 @md:px-6 @md:py-3 shadow-lg backdrop-blur-sm">
+                    <span className="text-base font-semibold text-white @md:text-lg">Demo Nav</span>
                     <div className="flex gap-4 text-sm font-medium text-white/70">
                         <span>Home</span>
                         <span>About</span>
                     </div>
                 </nav>
-                <h2 className="mb-2 text-center text-4xl font-extrabold text-white drop-shadow-lg md:text-5xl">{title}</h2>
-                <p className="max-w-md text-center text-lg text-white/80">{subtitle}</p>
+                <h2 className="mb-2 text-center text-2xl font-extrabold text-white drop-shadow-lg @md:text-4xl @3xl:text-5xl">{title}</h2>
+                <p className="max-w-md text-center text-sm text-white/80 @md:text-lg">{subtitle}</p>
             </div>
             <button
                 type="button"

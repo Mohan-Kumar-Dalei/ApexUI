@@ -1,4 +1,4 @@
-import React, { useEffect, useId, useState } from "react";
+import React, { useEffect, useId, useRef, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { ArrowUpRight } from "lucide-react";
 
@@ -18,12 +18,14 @@ const DEFAULT_LINKS = [
     { label: "Blog", href: "#blog" },
 ];
 
+// Three lines that fold into an X. Transforms only, so it stays smooth on phones.
 function Burger({ open }) {
+    const spring = { type: "spring", stiffness: 500, damping: 32 };
     return (
         <span className="relative block h-3.5 w-5" aria-hidden="true">
-            <motion.span className="absolute left-0 top-0 h-[2px] w-full rounded-full bg-current" animate={open ? { top: "50%", rotate: 45, y: "-50%" } : { top: "0%", rotate: 0, y: 0 }} />
-            <motion.span className="absolute left-0 top-1/2 h-[2px] w-full -translate-y-1/2 rounded-full bg-current" animate={{ opacity: open ? 0 : 1, scaleX: open ? 0.3 : 1 }} />
-            <motion.span className="absolute bottom-0 left-0 h-[2px] w-full rounded-full bg-current" animate={open ? { bottom: "50%", rotate: -45, y: "50%" } : { bottom: "0%", rotate: 0, y: 0 }} />
+            <motion.span className="absolute left-0 top-[6px] h-[2px] w-full rounded-full bg-current" initial={false} animate={{ y: open ? 0 : -6, rotate: open ? 45 : 0 }} transition={spring} />
+            <motion.span className="absolute left-0 top-[6px] h-[2px] w-full rounded-full bg-current" initial={false} animate={{ opacity: open ? 0 : 1, scaleX: open ? 0.3 : 1 }} transition={{ duration: 0.15 }} />
+            <motion.span className="absolute left-0 top-[6px] h-[2px] w-full rounded-full bg-current" initial={false} animate={{ y: open ? 0 : 6, rotate: open ? -45 : 0 }} transition={spring} />
         </span>
     );
 }
@@ -63,6 +65,20 @@ const FloatingNavbar = ({
         return () => root.removeEventListener("scroll", onScroll);
     }, [hideOnScroll, scrollRoot]);
 
+    // Close the menu with Escape or a tap outside it.
+    const wrap = useRef(null);
+    useEffect(() => {
+        if (!open) return undefined;
+        const onKey = (e) => e.key === "Escape" && setOpen(false);
+        const onDown = (e) => !wrap.current?.contains(e.target) && setOpen(false);
+        document.addEventListener("keydown", onKey);
+        document.addEventListener("pointerdown", onDown);
+        return () => {
+            document.removeEventListener("keydown", onKey);
+            document.removeEventListener("pointerdown", onDown);
+        };
+    }, [open]);
+
     const go = (link, e) => {
         setActive(link.label);
         setOpen(false);
@@ -70,16 +86,18 @@ const FloatingNavbar = ({
     };
 
     const surface = dark ? "border-white/10 bg-neutral-900/70 text-white shadow-[0_10px_40px_-12px_rgba(0,0,0,0.7)]" : "border-black/10 bg-white/75 text-neutral-900 shadow-[0_10px_40px_-14px_rgba(0,0,0,0.25)]";
+    // Solid: a blur nested inside the blurred bar cannot see the page behind it.
+    const menuSurface = dark ? "border-white/10 bg-neutral-900 text-white shadow-[0_18px_50px_-16px_rgba(0,0,0,0.8)]" : "border-black/10 bg-white text-neutral-900 shadow-[0_18px_50px_-18px_rgba(0,0,0,0.3)]";
     const muted = dark ? "text-white/65 hover:text-white" : "text-neutral-500 hover:text-neutral-900";
 
     return (
-        <div className={`@container sticky top-3 z-50 w-full px-3 ${className}`}>
+        <div ref={wrap} className={`@container sticky top-3 z-50 w-full px-3 ${className}`}>
             <motion.nav
                 aria-label="Main"
                 initial={false}
                 animate={{ y: hidden && !open ? "-140%" : "0%", opacity: hidden && !open ? 0 : 1 }}
                 transition={{ type: "spring", stiffness: 380, damping: 34 }}
-                className={`mx-auto max-w-4xl rounded-[1.6rem] border backdrop-blur-xl transition-[padding] duration-300 ${surface} ${compact ? "px-2.5 py-1.5" : "px-3 py-2.5"}`}
+                className={`relative mx-auto max-w-4xl rounded-[1.6rem] border backdrop-blur-xl transition-[padding] duration-300 ${surface} ${compact ? "px-2.5 py-1.5" : "px-3 py-2.5"}`}
             >
                 <div className="flex items-center justify-between gap-3">
                     <a href="#home" onClick={(e) => go(links[0], e)} className="flex items-center gap-2 pl-1.5 text-[0.95rem] font-bold">
@@ -130,13 +148,20 @@ const FloatingNavbar = ({
                     </div>
                 </div>
 
-                {/* Mobile menu */}
+                {/* Mobile menu: its own panel under the bar that only fades and slides
+                    (no height animation, so nothing re-lays out or re-blurs each frame). */}
                 <AnimatePresence initial={false}>
                     {open && (
-                        <motion.div initial={{ height: 0, opacity: 0 }} animate={{ height: "auto", opacity: 1 }} exit={{ height: 0, opacity: 0 }} transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }} className="overflow-hidden @xl:hidden">
-                            <ul className="space-y-1 px-1 pb-2 pt-3">
+                        <motion.div
+                            initial={{ opacity: 0, y: -8, scale: 0.98 }}
+                            animate={{ opacity: 1, y: 0, scale: 1 }}
+                            exit={{ opacity: 0, y: -8, scale: 0.98 }}
+                            transition={{ duration: 0.22, ease: [0.22, 1, 0.36, 1] }}
+                            className={`absolute inset-x-0 top-full mt-2 origin-top rounded-[1.4rem] border will-change-transform @xl:hidden ${menuSurface}`}
+                        >
+                            <ul className="space-y-1 p-2">
                                 {links.map((link, i) => (
-                                    <motion.li key={link.label} initial={{ x: -14, opacity: 0 }} animate={{ x: 0, opacity: 1 }} transition={{ delay: 0.04 * i + 0.05 }}>
+                                    <motion.li key={link.label} initial={{ x: -10, opacity: 0 }} animate={{ x: 0, opacity: 1 }} transition={{ delay: 0.03 * i + 0.04, duration: 0.25 }}>
                                         <a href={link.href} onClick={(e) => go(link, e)} className={`flex items-center justify-between rounded-2xl px-4 py-3 text-[0.95rem] font-medium ${active === link.label ? (dark ? "bg-white/[0.08]" : "bg-black/[0.05]") : ""}`}>
                                             {link.label}
                                             {active === link.label && <span className="h-1.5 w-1.5 rounded-full" style={{ background: accentColor }} />}
@@ -144,7 +169,7 @@ const FloatingNavbar = ({
                                     </motion.li>
                                 ))}
                                 {cta && (
-                                    <motion.li initial={{ y: 8, opacity: 0 }} animate={{ y: 0, opacity: 1 }} transition={{ delay: 0.04 * links.length + 0.08 }} className="pt-2">
+                                    <motion.li initial={{ y: 8, opacity: 0 }} animate={{ y: 0, opacity: 1 }} transition={{ delay: 0.03 * links.length + 0.06, duration: 0.25 }} className="pt-1">
                                         <a href={cta.href} className="flex items-center justify-center gap-1 rounded-2xl py-3 text-[0.95rem] font-semibold text-black" style={{ background: accentColor }}>
                                             {cta.label} <ArrowUpRight className="h-4 w-4" />
                                         </a>

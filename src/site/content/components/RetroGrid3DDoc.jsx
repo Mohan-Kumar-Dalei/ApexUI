@@ -43,7 +43,7 @@ export default function RetroGrid3DDoc() {
                 <RetroGrid3D {...t} speed={speed} hills={hills} showSun={sun}>
                     <div className="px-6 pb-[22%] text-center text-white">
                         <p className="text-[0.7rem] font-semibold uppercase tracking-[0.35em] text-white/60">ApexUI</p>
-                        <h3 className="mt-2 text-4xl font-black tracking-tight sm:text-6xl">Drive into 3D</h3>
+                        <h3 className="mt-2 text-3xl font-black tracking-tight @md:text-5xl @3xl:text-6xl">Drive into 3D</h3>
                     </div>
                 </RetroGrid3D>
                 </div>

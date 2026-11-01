@@ -87,13 +87,18 @@ export function useTheme(themes = defaultThemes, { storageKey = "theme", default
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [themes, store, id]);
 
-    const setTheme = (next, origin) => {
+    // onCommit runs in the same update as the theme change, so anything it
+    // changes (like closing a menu) lands in the same view-transition frame.
+    const setTheme = (next, origin, onCommit) => {
         const theme = themes.find((x) => x.id === next);
-        if (!theme || next === store.get()) return;
+        if (!theme || next === store.get()) return onCommit?.();
         write(storageKey, next);
         const commit = () => {
             applyTheme(theme, rootEl());
-            flushSync(() => store.set(next));
+            flushSync(() => {
+                store.set(next);
+                onCommit?.();
+            });
         };
         const reduced = window.matchMedia?.("(prefers-reduced-motion: reduce)").matches;
         if (!document.startViewTransition || reduced) {
@@ -130,6 +135,9 @@ const Palette = () => (
 const ThemeSwitcher = ({ themes = defaultThemes, placement = "down", align = "right", label, storageKey = "theme", target, className = "", buttonClassName = "" }) => {
     const [id, setTheme] = useTheme(themes, { storageKey, target });
     const [open, setOpen] = useState(false);
+    // Closed by picking a theme: hide at once (an exit animation would be caught
+    // half-way by the theme transition snapshot and flicker).
+    const [picked, setPicked] = useState(false);
     const root = useRef(null);
     const current = themes.find((x) => x.id === id) ?? themes[0];
     const up = placement === "up";
@@ -153,21 +161,27 @@ const ThemeSwitcher = ({ themes = defaultThemes, placement = "down", align = "ri
                 aria-label="Choose colour theme"
                 aria-haspopup="true"
                 aria-expanded={open}
-                onClick={() => setOpen((o) => !o)}
+                onClick={() => {
+                    setPicked(false);
+                    setOpen((o) => !o);
+                }}
                 className={`relative inline-flex items-center justify-center gap-2 border border-[var(--line)] bg-[var(--surface)] text-[var(--ink)] transition-colors hover:border-[var(--accent)] ${label ? "h-9 rounded-full px-3.5 text-sm font-medium" : "h-9 w-9 rounded-full"} ${buttonClassName}`}
             >
                 <Palette />
                 {label && <span>{label}</span>}
                 <span aria-hidden="true" className="absolute right-0.5 top-0.5 h-2 w-2 rounded-full ring-2 ring-[var(--surface)]" style={{ background: current?.vars["--accent"] }} />
             </button>
-            <AnimatePresence>
+            {/* custom passes the latest "picked" to the panel that is leaving. */}
+            <AnimatePresence custom={picked}>
                 {open && (
                     <motion.div
                         role="dialog"
                         aria-label="Colour themes"
                         initial={{ opacity: 0, y: up ? 8 : -8, scale: 0.96 }}
                         animate={{ opacity: 1, y: 0, scale: 1 }}
-                        exit={{ opacity: 0, y: up ? 8 : -8, scale: 0.96 }}
+                        custom={picked}
+                        variants={{ leave: (p) => (p ? { opacity: 0, transition: { duration: 0 } } : { opacity: 0, y: up ? 8 : -8, scale: 0.96 }) }}
+                        exit="leave"
                         transition={{ type: "spring", stiffness: 380, damping: 28 }}
                         className={`absolute z-50 w-[17.5rem] max-w-[calc(100vw-2rem)] rounded-2xl border border-[var(--line)] bg-[var(--surface)] p-3 text-[var(--ink)] shadow-[0_24px_60px_-16px_rgba(0,0,0,0.35)] ${up ? "bottom-full mb-2" : "top-full mt-2"} ${align === "left" ? "left-0" : "right-0"}`}
                         style={{ transformOrigin: `${up ? "bottom" : "top"} ${align === "left" ? "left" : "right"}` }}
@@ -185,8 +199,10 @@ const ThemeSwitcher = ({ themes = defaultThemes, placement = "down", align = "ri
                                         animate={{ y: 0 }}
                                         transition={{ delay: 0.03 * i, type: "spring", stiffness: 380, damping: 28 }}
                                         onClick={(e) => {
-                                            setTheme(theme.id, e.currentTarget.querySelector("[data-swatch]"));
-                                            setOpen(false);
+                                            setTheme(theme.id, e.currentTarget.querySelector("[data-swatch]"), () => {
+                                                setPicked(true);
+                                                setOpen(false);
+                                            });
                                         }}
                                         className={`relative flex items-center gap-2.5 rounded-xl py-2 pl-2 pr-5 text-left text-[0.82rem] font-medium transition-colors hover:bg-[var(--bg)] ${active ? "bg-[var(--bg)]" : ""}`}
                                         style={{ animation: `apex-theme-in 240ms ease-out ${30 * i}ms backwards` }}

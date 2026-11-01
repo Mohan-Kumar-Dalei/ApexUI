@@ -51,7 +51,7 @@ export default function SunriseBackgroundDoc() {
                     <SunriseBackground preset={preset} duration={duration} sunHeight={sunHeight} rays={rays} haze={haze} trees={trees} birds={birds} interactive={interactive} replay={replay}>
                         <div className="flex h-full flex-col items-center px-6 pt-[12%] text-center text-white">
                             <p className="text-[0.7rem] font-semibold uppercase tracking-[0.35em] text-white/60">A new day</p>
-                            <h3 className="mt-2 text-4xl font-black tracking-tight sm:text-6xl">Rise and build</h3>
+                            <h3 className="mt-2 text-3xl font-black tracking-tight @md:text-5xl @3xl:text-6xl">Rise and build</h3>
                             <button type="button" onClick={() => setReplay((r) => r + 1)} className="mt-5 rounded-full border border-white/25 bg-white/10 px-4 py-1.5 text-xs font-semibold backdrop-blur transition-colors hover:bg-white/20">
                                 Play again
                             </button>

@@ -42,7 +42,7 @@ export default function Galaxy3DDoc() {
                     <Galaxy3D key={`${palette}-${arms}`} colors={PALETTES[palette]} arms={arms} speed={speed} starSize={size}>
                         <div className="px-6 text-center text-white">
                             <p className="text-[0.7rem] font-semibold uppercase tracking-[0.35em] text-white/60">ApexUI</p>
-                            <h3 className="mt-2 text-4xl font-black tracking-tight sm:text-6xl">Build among the stars</h3>
+                            <h3 className="mt-2 text-3xl font-black tracking-tight @md:text-5xl @3xl:text-6xl">Build among the stars</h3>
                         </div>
                     </Galaxy3D>
                 </div>

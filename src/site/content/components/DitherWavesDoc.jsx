@@ -55,7 +55,7 @@ export default function DitherWavesDoc() {
                             <p className="font-mono text-[0.7rem] font-semibold uppercase tracking-[0.35em]" style={{ color: ink }}>
                                 [ 1-bit ]
                             </p>
-                            <h3 className="mt-2 rounded-md px-3 py-1 font-mono text-4xl font-black tracking-tight sm:text-6xl" style={{ color: ink, background: paper }}>
+                            <h3 className="mt-2 rounded-md px-3 py-1 font-mono text-3xl font-black tracking-tight @md:text-5xl @3xl:text-6xl" style={{ color: ink, background: paper }}>
                                 Dither Waves
                             </h3>
                         </div>

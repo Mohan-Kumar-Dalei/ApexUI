@@ -7,9 +7,11 @@ import CardSwap3D from '../../../components/MainUI/ApexUI-Kit/CardSwap3D/CardSwa
 const props = [
     { prop: 'cards', type: "{ icon?, title, body }[]", def: "4 demo cards", desc: "Cards in the stack." },
     { prop: 'delay', type: "number", def: "3200", desc: "Milliseconds between swaps." },
-    { prop: 'distanceX', type: "number", def: "3.6", desc: "Horizontal step back in rem." },
-    { prop: 'distanceY', type: "number", def: "3.2", desc: "Vertical step back in rem." },
-    { prop: 'skew', type: "number", def: "5", desc: "Skew in degrees." },
+    { prop: 'distanceX', type: "number", def: "3.8", desc: "Horizontal step back in rem." },
+    { prop: 'distanceY', type: "number", def: "3.4", desc: "Vertical step back in rem." },
+    { prop: 'depth', type: "number", def: "110", desc: "How far back each card sits, in px." },
+    { prop: 'tilt', type: "number", def: "22", desc: "How far the stack is turned in 3D, in degrees." },
+    { prop: 'skew', type: "number", def: "0", desc: "Skew in degrees." },
     { prop: 'pauseOnHover', type: "boolean", def: "true", desc: "Pause while hovered." },
     { prop: 'accentColor', type: "string", def: "\"#a3e635\"", desc: "Icon badge color." },
     { prop: 'theme', type: "'dark' | 'light'", def: "\"dark\"", desc: "Card colors." },
@@ -25,7 +27,7 @@ const dependencies = [
 ];
 
 export default function CardSwap3DDoc() {
-    const [skew, setSkew] = useState(5);
+    const [skew, setSkew] = useState(0);
     const [delay, setDelay] = useState(3200);
     const [accent, setAccent] = useState('#a3e635');
     const theme = useSiteTheme();

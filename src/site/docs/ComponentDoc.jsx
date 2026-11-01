@@ -24,6 +24,15 @@ const FIT_REM = 30;
 const FIT_MIN = 0.6;
 // Frame border (6px each side) plus its p-4 padding.
 const FRAME_INSET = 44;
+// Only layout pieces (cards, carousels, galleries, forms) zoom out. Navs, cursors
+// and text effects stay 1:1 on phones, which is how they really look there.
+const FIT_PAGES = new Set([
+    'parallax-card', 'cards', 'hyper-card', 'profile', 'pricing-cards', 'testimonials', 'holo-card', 'glare-card',
+    'card-stack', 'spotlight-grid', 'edge-glow-form', 'carousel', '3d-carousel', 'coverflow-3d', 'cube-gallery',
+    'flip-book', 'swipe-cards', 'card-swap-3d', 'bounce-cards', 'folder', 'iso-stack', 'image-accordion',
+    'faq-accordion', 'stepper', 'animated-buttons', 'ai-chat', 'ai-response', 'ai-thinking', 'ai-prompt-box',
+    'ai-model-prompt', 'receipt-printer', 'magnetic-cursor', 'arc-gallery', 'circular-carousel', 'image-compare',
+]);
 
 // Responsive check: tablet / mobile narrow the live preview to that width (no iframe,
 // so nothing reloads). The box is a CSS container, so @container styles respond.
@@ -111,7 +120,8 @@ function Stage({ title, description, variant, variants, activeVariant, onVariant
     const target = FIT_REM * box.rem;
     const fit = box.w && room < target ? Math.max(FIT_MIN, Math.round((room / target) * 100) / 100) : 1;
     // Full-bleed backgrounds already fill the stage at any size, so only the rest zoom.
-    const zoomed = fit < 1 && !full && !variant.fullBleed;
+    const { pathname } = useLocation();
+    const zoomed = fit < 1 && !full && !variant.fullBleed && FIT_PAGES.has(pathname.split('/').pop());
     const align = /items-start/.test(variant.previewClassName ?? '') ? 'items-start' : /items-end/.test(variant.previewClassName ?? '') ? 'items-end' : '[align-items:safe_center]';
     const preview = zoomed ? (
         <div className={`relative flex min-h-0 w-full self-stretch justify-center ${align}`} style={{ zoom: fit }}>
@@ -174,7 +184,7 @@ function Stage({ title, description, variant, variants, activeVariant, onVariant
                         animate={{ opacity: 1 }}
                         exit={{ opacity: 0 }}
                         transition={{ duration: 0.18 }}
-                        className={`relative isolate flex flex-1 items-center justify-center overflow-hidden [transform:translateZ(0)] ${variant.fullBleed && !frame ? 'bg-[#09090b] text-white' : 'bg-[var(--stage)] text-[var(--stage-ink)]'} ${full ? 'h-screen' : frame ? `${STAGE_H} h-[clamp(26rem,64vh,60rem)]` : STAGE_H} ${variant.fullBleed || frame ? '' : 'p-[clamp(0.75rem,3vw,3.5rem)]'} ${frame ? '' : variant.previewClassName ?? ''}`}
+                        className={`@container relative isolate flex flex-1 items-center justify-center overflow-hidden [transform:translateZ(0)] ${variant.fullBleed && !frame ? 'bg-[#09090b] text-white' : 'bg-[var(--stage)] text-[var(--stage-ink)]'} ${full ? 'h-screen' : frame ? `${STAGE_H} h-[clamp(26rem,64vh,60rem)]` : STAGE_H} ${variant.fullBleed || frame ? '' : 'p-[clamp(0.75rem,3vw,3.5rem)]'} ${frame ? '' : variant.previewClassName ?? ''}`}
                     >
                         {bgClass && <div aria-hidden="true" className={`pointer-events-none absolute inset-0 ${bgClass} ${variant.fullBleed ? 'stage-overlay z-20' : '-z-10'}`} />}
                         {frame ? (

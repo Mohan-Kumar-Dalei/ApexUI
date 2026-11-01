@@ -35,7 +35,7 @@ export default function ThemeSwitcherDoc() {
                     <div className="grid flex-1 place-items-center px-6 text-center">
                         <div>
                             <p className="font-mono text-[0.7rem] uppercase tracking-[0.3em] text-[var(--muted)]">Pick a colour vibe</p>
-                            <h3 className="mt-2 text-4xl font-black tracking-tight sm:text-5xl">Your brand, any mood</h3>
+                            <h3 className="mt-2 text-3xl font-black tracking-tight @md:text-4xl @3xl:text-5xl">Your brand, any mood</h3>
                             <div className="mt-6 flex justify-center gap-3">
                                 <span className="rounded-full bg-[var(--accent)] px-5 py-2.5 text-sm font-semibold text-[var(--accent-ink)]">Get started</span>
                                 <span className="rounded-full border border-[var(--line)] bg-[var(--surface)] px-5 py-2.5 text-sm font-semibold">Docs</span>

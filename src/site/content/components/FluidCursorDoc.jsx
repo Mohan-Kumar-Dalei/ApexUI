@@ -45,7 +45,7 @@ export default function FluidCursorDoc() {
                 <div className="absolute inset-0 bg-[#07070b]">
                     <div className="flex h-full flex-col items-center justify-center px-6 text-center text-white">
                         <p className="font-mono text-[0.7rem] uppercase tracking-[0.35em] text-white/50">Move · Click</p>
-                        <h3 className="mt-2 text-4xl font-black tracking-tight sm:text-6xl">Paint with fluid</h3>
+                        <h3 className="mt-2 text-3xl font-black tracking-tight @md:text-5xl @3xl:text-6xl">Paint with fluid</h3>
                     </div>
                     <FluidCursor colors={PALETTES[palette]} dissipation={dissipation} curl={curl} splatRadius={radius} idle={idle} />
                 </div>

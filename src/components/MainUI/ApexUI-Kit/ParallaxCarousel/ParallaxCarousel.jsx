@@ -1,4 +1,3 @@
-/* eslint-disable no-unused-vars */
 import React, { useState, useEffect, useRef } from 'react';
 import { motion, useMotionValue, useTransform } from 'framer-motion';
 import { ArrowLeft, ArrowRight } from 'lucide-react';
@@ -22,12 +21,13 @@ const CarouselCard = ({ slide, isCenter, isScrolling }) => {
         y.set(0);
     };
 
+    // Level the card when it leaves the centre or the page scrolls.
     useEffect(() => {
-        if (isScrolling) {
+        if (isScrolling || !isCenter) {
             x.set(0);
             y.set(0);
         }
-    }, [isScrolling, x, y]);
+    }, [isScrolling, isCenter, x, y]);
 
     return (
         <motion.div
@@ -36,8 +36,9 @@ const CarouselCard = ({ slide, isCenter, isScrolling }) => {
             style={{
                 transformStyle: 'preserve-3d',
                 perspective: '1500px',
-                rotateX: isCenter ? rotateX : 0,
-                rotateY: isCenter ? rotateY : 0,
+                // Always the motion values (swapping them for 0 made the card jump).
+                rotateX,
+                rotateY,
             }}
             onMouseMove={handleMouseMove}
             onMouseLeave={handleMouseLeave}
@@ -110,7 +111,7 @@ const ParallaxCarousel = ({ slides }) => {
         <div className="relative w-full flex flex-col items-center px-2">
             <div
                 className="relative w-full h-[380px] sm:h-[480px]"
-                style={{ perspective: '1200px', transformStyle: 'preserve-3d' }}
+                style={{ perspective: '1200px' }}
             >
                 {slides.map((slide, index) => {
                     let positionOffset = index - activeIndex;
@@ -123,15 +124,19 @@ const ParallaxCarousel = ({ slides }) => {
                     const isVisible = Math.abs(positionOffset) <= 2;
 
                     return (
+                        // Separate x / z / scale (not one transform string) and no preserve-3d
+                        // here: opacity below 1 flattens a 3D layer, which made cards pop
+                        // while they moved. The stacking order is set at once, not animated.
                         <motion.div
                             key={index}
-                            className={`absolute left-1/2 top-1/2 aspect-[25/26] w-[min(80%,25rem)] sm:w-[min(88%,25rem)] -translate-x-1/2 -translate-y-1/2 ${positionOffset === 0 ? '' : 'pointer-events-none'}`}
+                            className={`absolute left-1/2 top-1/2 aspect-[25/26] w-[min(80%,25rem)] sm:w-[min(88%,25rem)] ${positionOffset === 0 ? '' : 'pointer-events-none'}`}
                             initial={false}
-                            style={{ transformStyle: 'preserve-3d', willChange: 'transform, opacity' }}
+                            style={{ y: '-50%', zIndex: slides.length - Math.abs(positionOffset), willChange: 'transform, opacity' }}
                             animate={{
-                                transform: `translateX(${positionOffset * 50}%) translateZ(${-Math.abs(positionOffset) * 250}px) scale(${1 - Math.abs(positionOffset) * 0.15})`,
-                                opacity: isVisible ? (1 - Math.abs(positionOffset) * 0.45) : 0,
-                                zIndex: slides.length - Math.abs(positionOffset),
+                                x: `${-50 + positionOffset * 50}%`,
+                                z: -Math.abs(positionOffset) * 250,
+                                scale: 1 - Math.abs(positionOffset) * 0.15,
+                                opacity: isVisible ? 1 - Math.abs(positionOffset) * 0.45 : 0,
                             }}
                             transition={{ type: 'spring', stiffness: 160, damping: 22 }}
                         >

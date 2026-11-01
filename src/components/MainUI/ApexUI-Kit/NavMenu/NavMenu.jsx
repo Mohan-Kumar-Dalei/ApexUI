@@ -36,10 +36,9 @@ const NavMenu = ({
         };
 
         const moveWithGSAP = () => {
-            const rect = el.getBoundingClientRect();
-            const parentRect = el.parentElement.getBoundingClientRect();
-            const left = rect.left - parentRect.left;
-            const width = rect.width;
+            // Layout offsets (not screen rects), so it stays right inside zoomed or scaled parents.
+            const left = el.offsetLeft;
+            const width = el.offsetWidth;
 
             gsap.to(indicator, {
                 x: left,
@@ -59,10 +58,8 @@ const NavMenu = ({
         const handleResize = () => {
             const el = navItemsRef.current[activeIdx];
             if (el) {
-                const rect = el.getBoundingClientRect();
-                const parentRect = el.parentElement.getBoundingClientRect();
-                const left = rect.left - parentRect.left;
-                const width = rect.width;
+                const left = el.offsetLeft;
+                const width = el.offsetWidth;
 
                 gsap.set(indicatorRef.current, {
                     x: left,

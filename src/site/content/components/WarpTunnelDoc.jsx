@@ -35,7 +35,7 @@ export default function WarpTunnelDoc() {
                     <WarpTunnel colors={PALETTES[palette]} speed={speed} density={density} interactive={interactive}>
                         <div className="pointer-events-none px-6 text-center text-white">
                             <p className="text-[0.7rem] font-semibold uppercase tracking-[0.35em] text-white/60">Hold to boost</p>
-                            <h3 className="mt-2 text-4xl font-black tracking-tight sm:text-6xl">Ship at light speed</h3>
+                            <h3 className="mt-2 text-3xl font-black tracking-tight @md:text-5xl @3xl:text-6xl">Ship at light speed</h3>
                         </div>
                     </WarpTunnel>
                 </div>

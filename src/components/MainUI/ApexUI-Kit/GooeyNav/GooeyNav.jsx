@@ -149,9 +149,8 @@ const GooeyNav = ({ items = DEFAULT_ITEMS, initialActive = 0, onChange, accentCo
         const el = links.current[i];
         const b = bar.current;
         if (!el || !b) return null;
-        const a = el.getBoundingClientRect();
-        const p = b.getBoundingClientRect();
-        return { l: a.left - p.left + PAD, r: a.right - p.left + PAD, t: a.top - p.top + PAD, h: a.height };
+        // Layout offsets (not screen rects), so it stays right inside zoomed or scaled parents.
+        return { l: el.offsetLeft + PAD, r: el.offsetLeft + el.offsetWidth + PAD, t: el.offsetTop + PAD, h: el.offsetHeight };
     };
 
     // Set up GL + simulation once.
@@ -177,10 +176,9 @@ const GooeyNav = ({ items = DEFAULT_ITEMS, initialActive = 0, onChange, accentCo
         // Hold the element itself: the ref is cleared on unmount before cleanup runs.
         const barEl = bar.current;
         const resize = () => {
-            const r = barEl.getBoundingClientRect();
             s.dpr = Math.min(window.devicePixelRatio || 1, 2);
-            const w = r.width + PAD * 2;
-            const h = r.height + PAD * 2;
+            const w = barEl.offsetWidth + PAD * 2;
+            const h = barEl.offsetHeight + PAD * 2;
             cv.width = Math.round(w * s.dpr);
             cv.height = Math.round(h * s.dpr);
             cv.style.width = `${w}px`;
