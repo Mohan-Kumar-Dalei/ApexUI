@@ -77,6 +77,17 @@ export default function Hero() {
 
 Needs React 18+ and Tailwind CSS (v4 recommended). Setup guides: [React](https://apex-ui.in/components/docs/getting-started/installation/react-setup) · [Tailwind](https://apex-ui.in/components/docs/getting-started/installation/tailwind-setup) · [CLI](https://apex-ui.in/components/docs/getting-started/installation/apexui-cli).
 
+## AI agent skill
+
+Teach your AI agent (Claude Code, Antigravity, Cursor, Windsurf, Copilot, Codex, Gemini CLI) to build premium, responsive and secure sites and mobile web apps with ApexUI:
+
+```bash
+npx apex-ui-kit skill            # pick your agents
+npx apex-ui-kit skill --ai all   # or install for every agent at once
+```
+
+It installs a skill with every component and its CLI name, page and app-screen recipes, a design system (palettes, fonts, motion), responsive and mobile rules, a security checklist and a ship checklist. For ChatGPT or Claude.ai, download the all-in-one file from [apex-ui.in/skills](https://apex-ui.in/skills).
+
 ## All components
 
 <details>

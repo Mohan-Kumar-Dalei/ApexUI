@@ -37,16 +37,14 @@ export const router = createBrowserRouter([
                     // Dev-only: preview the page loader at /loader-demo.
                     ...(import.meta.env.DEV ? [{ path: 'loader-demo', ...lazyRoute(() => import('./pages/LoaderDemo.jsx')), handle: { title: 'Loader demo | ApexUI', noindex: true } }] : []),
                     {
-                        path: 'templates',
-                        ...lazyRoute(() => import('./pages/TemplatesPage.jsx')),
-                        handle: { title: 'Templates | ApexUI', description: 'Complete React page templates built from ApexUI components: SaaS, portfolio, AI startup and app launch pages with live previews.' },
+                        path: 'skills',
+                        ...lazyRoute(() => import('./pages/SkillsPage.jsx')),
+                        handle: { title: 'AI Agent Skills | ApexUI', description: 'A free skill that teaches Claude, ChatGPT, Antigravity, Cursor and Copilot to build premium, responsive and secure websites and mobile web apps with ApexUI. Install with one command.' },
                     },
-                    {
-                        path: 'templates/:slug',
-                        ...lazyRoute(() => import('./pages/TemplateView.jsx')),
-                        handle: { title: 'Template preview | ApexUI', description: 'A live preview of an ApexUI page template built from animated React components.' },
-                    },
-                    { path: 'templates-soon', element: <Navigate to="/templates" replace /> },
+                    // Templates were replaced by Skills; keep old links working.
+                    { path: 'templates', element: <Navigate to="/skills" replace /> },
+                    { path: 'templates/:slug', element: <Navigate to="/skills" replace /> },
+                    { path: 'templates-soon', element: <Navigate to="/skills" replace /> },
                     {
                         path: 'components',
                         handle: { index: true },

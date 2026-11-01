@@ -469,7 +469,7 @@ export const componentPages = [
         load: () => import('../content/components/AuroraBackgroundDoc.jsx'),
         category: 'Backgrounds',
         image: shot('aurora-background.png'),
-        summary: 'Drifting northern-light bands made from blurred CSS gradients only.',
+        summary: 'Drifting northern-light curtains drawn by a light WebGL shader.',
     },
     {
         name: 'Holo Card',
