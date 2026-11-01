@@ -5,6 +5,8 @@ import { ArrowUpRight, Check, Database, Gauge, Github, KeyRound, Languages, Laye
 import SiteFooter from '../layout/SiteFooter.jsx';
 import { CommandLine } from '../ui/CodeBlock.jsx';
 import FaqAccordion from '../../components/MainUI/ApexUI-Kit/FaqAccordion/FaqAccordion.jsx';
+import SpotlightGrid from '../../components/MainUI/ApexUI-Kit/SpotlightGrid/SpotlightGrid.jsx';
+import StarBorder from '../../components/MainUI/ApexUI-Kit/StarBorder/StarBorder.jsx';
 import useSiteTheme from '../ui/useSiteTheme.js';
 import { DEMOS } from '../demos/index.js';
 
@@ -27,12 +29,12 @@ const AGENTS = [
 ];
 
 const INSIDE = [
-    { icon: Ruler, title: 'Taste, written down', body: 'What makes a page feel expensive, and the generic AI looks to avoid. No gradients, no glow, no template feel.' },
-    { icon: Layers, title: 'Eight art directions', body: 'Complete palettes, font pairs, image styles and a signature idea each. Or the recipe to make your own.' },
-    { icon: PenLine, title: 'Ready sections', body: 'Code for every part of a page, nav to footer, so even a small, fast model builds the whole thing properly.' },
-    { icon: Languages, title: 'Copy that sounds human', body: 'Plain words, real details, no dashes or buzzwords. A final check that catches what slips through.' },
-    { icon: Smartphone, title: 'Mobile apps too', body: 'Screen layouts, tab bars, sheets, sizes and motion for apps that feel native on a phone.' },
-    { icon: ShieldCheck, title: 'Safe and responsive', body: 'Works from 320px up, keyboard friendly, and keeps secrets and unsafe HTML out of the browser.' },
+    { icon: Ruler, title: 'Taste, written down', description: 'What makes a page feel expensive, and the generic AI looks to avoid. No gradients, no glow, no template feel.' },
+    { icon: Layers, title: 'Eight art directions', description: 'Complete palettes, font pairs, image styles and a signature idea each. Or the recipe to make your own.' },
+    { icon: PenLine, title: 'Ready sections', description: 'Code for every part of a page, nav to footer, so even a small, fast model builds the whole thing properly.' },
+    { icon: Languages, title: 'Copy that sounds human', description: 'Plain words, real details, no dashes or buzzwords. A final check that catches what slips through.' },
+    { icon: Smartphone, title: 'Mobile apps too', description: 'Screen layouts, tab bars, sheets, sizes and motion for apps that feel native on a phone.' },
+    { icon: ShieldCheck, title: 'Safe and responsive', description: 'Works from 320px up, keyboard friendly, and keeps secrets and unsafe HTML out of the browser.' },
 ];
 
 const PRO_SECURE = ['Argon2id passwords, lockout after failed logins', 'Short-lived JWT and a rotating refresh token in httpOnly cookies', 'Helmet, a CORS allowlist and rate limits on every route', 'Protection against CSRF and NoSQL injection', 'Every record checked against its owner', 'Secrets checked when the server starts'];
@@ -159,9 +161,11 @@ export default function SkillsPage() {
                             </div>
                         </div>
                         <div className="mt-auto flex flex-wrap items-center gap-4 pt-7">
-                            <span className="inline-flex h-11 items-center gap-2 rounded-xl border border-[var(--line)] px-4 text-sm font-semibold text-[var(--ink-3)]">
-                                <Server className="h-4 w-4" /> Coming soon
-                            </span>
+                            <StarBorder as="button" disabled aria-disabled="true" color="#a3e635" speed={6} theme={theme === 'light' ? 'light' : 'dark'} className="cursor-not-allowed">
+                                <span className="inline-flex items-center gap-2 text-sm">
+                                    <Server className="h-4 w-4" /> Coming soon
+                                </span>
+                            </StarBorder>
                             <a href="https://github.com/Mohan-Kumar-Dalei/ApexUI" target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1.5 text-sm font-medium text-[var(--ink-2)] hover:text-[var(--ink)]">
                                 <Github className="h-4 w-4" /> Star the repo to hear first
                             </a>
@@ -207,15 +211,7 @@ export default function SkillsPage() {
             {/* What is inside */}
             <section className="px-[clamp(1rem,2.2vw,2rem)] pt-[clamp(4rem,8vw,6rem)]">
                 <h2 className="font-display max-w-3xl text-[clamp(1.8rem,3.4vw,2.8rem)] font-semibold tracking-[-0.02em] text-[var(--ink)]">What the agent learns</h2>
-                <div className="mt-8 grid gap-px overflow-hidden rounded-[1.4rem] border border-[var(--line)] bg-[var(--line)] sm:grid-cols-2 lg:grid-cols-3">
-                    {INSIDE.map(({ icon: Icon, title, body }) => (
-                        <div key={title} className="bg-[var(--panel)] p-6">
-                            <Icon className="h-5 w-5 text-[var(--ink-3)]" strokeWidth={1.75} />
-                            <h3 className="mt-4 font-semibold text-[var(--ink)]">{title}</h3>
-                            <p className="mt-1.5 text-sm leading-relaxed text-[var(--ink-2)]">{body}</p>
-                        </div>
-                    ))}
-                </div>
+                <SpotlightGrid items={INSIDE} color="#a3e635" theme={theme === 'light' ? 'light' : 'dark'} minCardWidth={26} className="mt-8" />
             </section>
 
             <section className="mx-auto max-w-3xl px-[clamp(1rem,2.2vw,2rem)] py-[clamp(4rem,8vw,7rem)]">
