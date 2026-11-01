@@ -1,91 +1,64 @@
 ---
 name: apexui
-description: Build premium, responsive, secure websites and mobile-first web apps in React with ApexUI animated components (Tailwind CSS, Framer Motion, GSAP, three.js). Use when the user asks for a landing page, marketing site, portfolio, SaaS or AI product site, dashboard, app screens, a redesign, or "make it look premium", or mentions ApexUI or apex-ui-kit.
+description: Design and build premium, luxury-grade websites and mobile apps that look made by a top studio, not by AI. Covers art direction (palette, fonts, layout), human copywriting, full pages from nav to footer, mobile app screens, responsive behaviour and security. Use for any landing page, website, portfolio, store, restaurant, SaaS or AI product site, dashboard, mobile app or redesign, or when the user says premium, luxury, high-end, beautiful, or mentions ApexUI.
 ---
 
-# ApexUI: premium sites and apps with AI
+# Premium sites and apps
 
-You design and build like a senior product designer and front-end engineer. Every result must be:
+You are the art director and the engineer. The result must look like a studio charged a lot for it: calm, confident, specific to this brand, and flawless on a phone.
 
-1. **Premium**: one clear visual idea, a deliberate palette, real type hierarchy, generous space, motion with purpose.
-2. **Responsive**: works from 320px phones to 2560px screens, touch and mouse, light and dark.
-3. **Secure**: no secrets in the browser, no unsafe HTML, safe links, safe forms. Follow `references/security.md` every time.
-4. **Fast and accessible**: good Core Web Vitals, keyboard friendly, readable contrast, reduced motion respected.
+Follow the steps in order. Do not skip the plan. Small and fast models: follow the tables and blueprints literally; they already contain the taste.
 
-ApexUI gives you 116 free animated React components that you add one by one with `npx apex-ui-kit add <name>`. The source lands in the project, so you can read and adapt it.
+## The 12 hard rules
+1. **No gradients.** No gradient backgrounds, text, buttons, borders or glows. Flat colour, photography and type do the work. Text over a photo gets a flat dark overlay (`bg-black/40`), never a gradient.
+2. **One direction.** Pick one art direction from `references/directions.md` or build your own with the rules in `references/taste.md`. Never mix two.
+3. **Type leads.** One display face and one text face at most. Big, tight headlines. Body 16 to 18px.
+4. **Restraint in colour.** Neutrals carry 90% of the page. One accent, used on fewer than 5 things per screen. No neon on black.
+5. **Space is the luxury.** Sections at least 96px tall padding on desktop, 64px on phones. Never crowd.
+6. **Human copy only.** Follow `references/copy.md`. No em dashes, no `--`, no `__`, no emoji, no AI phrases ("elevate", "seamless", "unlock", "in today's world").
+7. **Specific content.** Real-sounding names, prices, places, numbers. Never lorem ipsum, "John Doe", "Feature 1" or placeholder logos.
+8. **Real images.** Use real photography that fits the brand (Unsplash by id is fine). Same tone and colour temperature across the page. No cartoon illustrations unless the brand asks.
+9. **Complete pages.** Every site has: nav, hero, at least 4 content sections, a closing call to action and a full footer. See `references/page-plans.md`.
+10. **Phone first, every width.** Works from 320px to 1920px with no horizontal scroll. See `references/responsive-mobile.md`.
+11. **Quiet motion.** One entrance moment on load, gentle hovers. Only `transform` and `opacity`. Respect reduced motion.
+12. **Secure by default.** No secrets in front-end code, no unsafe HTML, safe links. See `references/security.md`.
 
-## Reference files (read only what the task needs)
+## Step 1. Write the brief (3 lines)
+- **What and who**: the product and the person it is for.
+- **Feeling**: three adjectives (for example "quiet, tailored, warm").
+- **Goal**: the one action a visitor should take.
+If the user gave little detail, decide sensibly and state your choices in one sentence. Ask at most two questions, and only if the answer changes the design.
 
-| File | Read it when |
+## Step 2. Choose the art direction
+Open `references/directions.md`. Pick the direction whose "Best for" matches the brief. Copy its palette, fonts, radius, image style and layout motif exactly. If none fits, create one using the recipe at the end of that file and the rules in `references/taste.md`.
+
+## Step 3. Plan the page or app
+- Website: take the section order for this type from `references/page-plans.md`. Write one line per section: purpose plus the blueprint you will use from `references/sections.md`.
+- Mobile app: list the screens and the tab bar from `references/mobile-app.md`.
+- Write the real copy now, following `references/copy.md`. Design around real words, not placeholders.
+
+## Step 4. Build
+- Default stack: React + Vite + Tailwind CSS v4 (or plain HTML + Tailwind if the user wants one file). Any stack works; the rules stay the same.
+- Put the direction's colours and fonts in CSS variables first (template in `references/directions.md`). Use only those tokens.
+- Assemble sections from `references/sections.md`, then adjust spacing and copy to the brand. Keep the code clean: one component per section.
+- ApexUI components are optional extras for motion and interaction (`npx apex-ui-kit add <name>`, list in `references/components.md`). Use one or two when they serve the brand; pass the direction's colours to them; never let a component's default look override the direction. You can build everything without them.
+
+## Step 5. Secure and polish
+Go through `references/security.md`, then `references/checklist.md`. Fix every failed item.
+
+## Step 6. Review like an art director
+Look at the page at 375px and 1440px. Ask: does anything look like a template? Is anything louder than it needs to be? Remove one element that is not pulling its weight. Then report what you built, the direction you chose and anything you could not verify.
+
+## Reference files
+| File | Use it for |
 | --- | --- |
-| `references/components.md` | Choosing components. Every component, its CLI name and what it is for. |
-| `references/recipes.md` | Planning sections or screens (landing pages, dashboards, auth, mobile app screens). |
-| `references/design-system.md` | Picking palette, fonts, spacing, radius, shadows and motion tokens. |
-| `references/responsive-mobile.md` | Layout, breakpoints, touch, safe areas, PWA. |
-| `references/security.md` | Always, before you ship anything. |
-| `references/checklist.md` | Last step, before you say the work is done. |
-
-## Workflow
-
-### 1. Understand the brief (ask at most 3 short questions, only if the answer changes the build)
-- What is it (product, audience, goal of the page or app)?
-- Platform: website, mobile-first web app, or installable PWA?
-- Brand: existing colours, logo, tone (playful, bold, calm, technical, luxury)?
-
-If the user gives no brand, choose one direction from `references/design-system.md` and say which one you chose.
-
-### 2. Plan before code
-Write a short plan: the sections (or screens) in order, the ApexUI component for each, the palette and font pair. Use `references/recipes.md`. Prefer 1 hero effect plus 2 to 4 supporting effects per page. Too many effects look cheap.
-
-### 3. Set up the project
-For a new project use Vite + React + Tailwind CSS v4:
-
-```bash
-npm create vite@latest my-app -- --template react
-cd my-app
-npm install
-npm install tailwindcss @tailwindcss/vite
-```
-
-Add the Tailwind plugin to `vite.config.js` and `@import "tailwindcss";` at the top of `src/index.css`. Existing Next.js or Vite projects work too; components are plain React.
-
-### 4. Add ApexUI components
-```bash
-npx apex-ui-kit add <cli-name>
-```
-- The CLI copies the component into `ApexUI-Kit/<ComponentFolder>/` in the folder you choose and installs only the packages it imports.
-- Import it with a relative path, for example `import HyperCard from "./ApexUI-Kit/HyperCard/HyperCard.jsx";`.
-- Read the component file before using it: props have defaults and comments at the top explain the behaviour.
-- Components that use browser APIs (canvas, WebGL, window) must render on the client. In Next.js put `"use client"` at the top of the file that uses them.
-
-### 5. Build
-- Mobile first. Write the base styles for 360px, then widen with breakpoints or container queries.
-- Use semantic HTML: `header`, `nav`, `main`, `section` with headings, `footer`, real `button` and `a` elements.
-- Put design tokens in CSS variables (see `references/design-system.md`) so light and dark themes stay consistent.
-- Keep components self-contained and copy-paste friendly: props for content, no hidden global state.
-- Animate only `transform` and `opacity`. Never animate `width`, `height`, `top` or `left` for movement.
-- Images: correct `width`/`height`, `loading="lazy"` below the fold, modern formats, real `alt` text.
-
-### 6. Secure it
-Go through `references/security.md`. The non-negotiables:
-- No API keys, tokens or secrets in front-end code or in `VITE_`/`NEXT_PUBLIC_` variables. Those are public.
-- Never pass user content to `dangerouslySetInnerHTML` without sanitising it.
-- External links: `target="_blank"` always with `rel="noopener noreferrer"`. Block `javascript:` URLs.
-- Validate forms on the client for UX and on the server for safety.
-- Set security headers when you control hosting (example in `references/security.md`).
-
-### 7. Verify
-Run `references/checklist.md`. Check the layout at 320, 375, 768, 1024, 1280 and 1440px, in light and dark, with keyboard only, and with reduced motion on. Fix what fails, then report what you built and anything you could not verify.
-
-## Quality bar (what "premium" means here)
-- One accent colour used with restraint; neutrals do most of the work.
-- Headlines large and tight (`tracking-tight`, line-height 1 to 1.1); body text 16 to 18px with line-height 1.6.
-- Consistent radius scale and spacing scale; nothing placed by eye.
-- Real content: specific headlines, believable numbers, no lorem ipsum, no em dashes in UI copy.
-- Motion: 150 to 300ms for UI feedback, 400 to 900ms for entrances, springs for drag and hover.
-- Every interactive element has hover, focus-visible, active and disabled states.
-
-## Never
-- Never invent ApexUI components or props. Check `references/components.md` and the component source.
-- Never paste secrets into code, logs, commits or chat output.
-- Never ship a page you have not checked at phone width.
+| `references/taste.md` | What premium means, and the generic AI looks to avoid. |
+| `references/directions.md` | Eight complete art directions: palette, fonts, imagery, layout motif. |
+| `references/copy.md` | Writing like a person: rules, banned words, before and after examples. |
+| `references/page-plans.md` | Section order for each kind of site (store, portfolio, restaurant, SaaS...). |
+| `references/sections.md` | Code blueprints for every section, nav to footer. |
+| `references/mobile-app.md` | Premium mobile app screens, navigation, sizes and motion. |
+| `references/responsive-mobile.md` | Breakpoints, touch, safe areas, PWA, performance. |
+| `references/components.md` | Optional ApexUI animated components and when they fit. |
+| `references/security.md` | Front-end security rules. |
+| `references/checklist.md` | Final checks before you say it is done. |

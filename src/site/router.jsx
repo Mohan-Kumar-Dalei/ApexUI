@@ -41,6 +41,16 @@ export const router = createBrowserRouter([
                         ...lazyRoute(() => import('./pages/SkillsPage.jsx')),
                         handle: { title: 'AI Agent Skills | ApexUI', description: 'A free skill that teaches Claude, ChatGPT, Antigravity, Cursor and Copilot to build premium, responsive and secure websites and mobile web apps with ApexUI. Install with one command.' },
                     },
+                    {
+                        path: 'demos',
+                        ...lazyRoute(() => import('./pages/DemosPage.jsx')),
+                        handle: { title: 'Demos built with the ApexUI skill | ApexUI', description: 'Full websites and a mobile app built with the ApexUI agent skill: a clothing store, a photography portfolio, a restaurant and a meditation app.' },
+                    },
+                    {
+                        path: 'demos/:slug',
+                        ...lazyRoute(() => import('./pages/DemoView.jsx')),
+                        handle: { bare: true, title: 'Demo | ApexUI', description: 'A full site built with the ApexUI agent skill.' },
+                    },
                     // Templates were replaced by Skills; keep old links working.
                     { path: 'templates', element: <Navigate to="/skills" replace /> },
                     { path: 'templates/:slug', element: <Navigate to="/skills" replace /> },

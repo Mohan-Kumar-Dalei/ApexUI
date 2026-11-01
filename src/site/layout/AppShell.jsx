@@ -25,6 +25,8 @@ export default function AppShell() {
     const navigation = useNavigation();
     const handle = [...matches].reverse().find((m) => m.handle)?.handle ?? NO_HANDLE;
     const showSidebar = Boolean(handle.page || handle.sidebar);
+    // Demo sites bring their own nav, so they render without the site chrome.
+    const bare = Boolean(handle.bare);
 
     // Title, description, canonical, social tags and breadcrumbs for this route.
     useEffect(() => {
@@ -60,7 +62,7 @@ export default function AppShell() {
 
     return (
         <div className="min-h-dvh bg-[var(--bg)] text-[var(--ink)]">
-            <Navbar />
+            {!bare && <Navbar />}
             {showSidebar ? (
                 <div className="mx-auto flex w-full max-w-[100rem]">
                     <Sidebar />
@@ -69,9 +71,9 @@ export default function AppShell() {
             ) : (
                 <main id="main" className="min-w-0">{page}</main>
             )}
-            <MobileDrawer />
-            <CommandMenu />
-            <FeedbackDialog />
+            {!bare && <MobileDrawer />}
+            {!bare && <CommandMenu />}
+            {!bare && <FeedbackDialog />}
             <NavigationLoader loading={navigation.state === 'loading'} />
             <Toaster richColors closeButton position="bottom-center" />
             <ScrollRestoration />

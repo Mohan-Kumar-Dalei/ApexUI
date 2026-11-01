@@ -19,6 +19,36 @@
     <priority>0.8</priority>
   </url>
   <url>
+    <loc>https://apex-ui.in/demos</loc>
+    <lastmod>2026-11-01</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://apex-ui.in/demos/maison-ivoire</loc>
+    <lastmod>2026-11-01</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://apex-ui.in/demos/halden</loc>
+    <lastmod>2026-11-01</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://apex-ui.in/demos/brasa</loc>
+    <lastmod>2026-11-01</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://apex-ui.in/demos/stillwater</loc>
+    <lastmod>2026-11-01</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
     <loc>https://apex-ui.in/components/docs/getting-started/introduction</loc>
     <lastmod>2026-11-01</lastmod>
     <changefreq>monthly</changefreq>

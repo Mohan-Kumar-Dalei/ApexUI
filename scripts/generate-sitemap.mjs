@@ -9,12 +9,16 @@ import { readFile, writeFile } from 'node:fs/promises';
 const SITE_URL = 'https://apex-ui.in';
 const nav = await readFile(new URL('../src/site/config/navigation.js', import.meta.url), 'utf8');
 const docPaths = [...nav.matchAll(/path:\s*'([^']+)'/g)].map((m) => m[1]);
+const demos = await readFile(new URL('../src/site/demos/index.js', import.meta.url), 'utf8');
+const demoSlugs = [...demos.matchAll(/slug:\s*'([^']+)'/g)].map((m) => m[1]);
 const today = new Date().toISOString().slice(0, 10);
 
 const entries = [
     { path: '/', priority: '1.0', changefreq: 'weekly' },
     { path: '/components', priority: '0.9', changefreq: 'weekly' },
     { path: '/skills', priority: '0.8', changefreq: 'weekly' },
+    { path: '/demos', priority: '0.7', changefreq: 'monthly' },
+    ...demoSlugs.map((slug) => ({ path: `/demos/${slug}`, priority: '0.6', changefreq: 'monthly' })),
     ...docPaths.map((path) => ({
         path,
         priority: path.includes('/docs/') ? '0.7' : '0.8',

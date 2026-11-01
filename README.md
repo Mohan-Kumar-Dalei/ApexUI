@@ -79,14 +79,14 @@ Needs React 18+ and Tailwind CSS (v4 recommended). Setup guides: [React](https:/
 
 ## AI agent skill
 
-Teach your AI agent (Claude Code, Antigravity, Cursor, Windsurf, Copilot, Codex, Gemini CLI) to build premium, responsive and secure sites and mobile web apps with ApexUI:
+Give your AI agent (Claude Code, Antigravity, Cursor, Windsurf, Copilot, Codex, Gemini CLI) a designer's eye. It builds premium websites and mobile apps with a real art direction, flat colour, human copy and every section from nav to footer, responsive from 320px up. It works with any stack; ApexUI components are optional.
 
 ```bash
 npx apex-ui-kit skill            # pick your agents
-npx apex-ui-kit skill --ai all   # or install for every agent at once
+npx apex-ui-kit skill --ai all   # or set up every agent at once
 ```
 
-It installs a skill with every component and its CLI name, page and app-screen recipes, a design system (palettes, fonts, motion), responsive and mobile rules, a security checklist and a ship checklist. For ChatGPT or Claude.ai, download the all-in-one file from [apex-ui.in/skills](https://apex-ui.in/skills).
+Inside: taste rules, eight complete art directions, ready section code, copywriting rules, mobile app screens, responsive and security checklists. See sites built with it at [apex-ui.in/demos](https://apex-ui.in/demos).
 
 ## All components
 

@@ -1,7 +1,6 @@
-# Components
+# ApexUI components (optional)
 
-116 ApexUI components. Add one with `npx apex-ui-kit add <cli-name>`; it lands in `ApexUI-Kit/<Folder>/`. Live demos and props: https://apex-ui.in/components/<page>.
-Read the component source before using it: the props, their defaults and notes are at the top of the file.
+You do not need these to build a premium site: the directions and blueprints are enough. Use one or two when an interaction or motion piece truly serves the brand. 116 components; add one with `npx apex-ui-kit add <cli-name>` (it lands in `ApexUI-Kit/<Folder>/`). Read the component source before using it and pass your direction's colours to it.
 
 ## Backgrounds
 
@@ -166,9 +165,8 @@ Read the component source before using it: the props, their defaults and notes a
 
 ## Picking well
 
-- One hero effect per page (a background, a 3D piece or a big text effect). Support it with 2 to 4 quieter pieces.
-- Backgrounds that use WebGL (Aurora, Galaxy 3D, Warp Tunnel, Liquid Gradient, Dither Waves, Horizon Glow, Sunrise) are the heaviest: use one per page, never stack two.
+- Luxury and editorial directions: prefer quiet pieces (Image Accordion, Image Compare, FAQ Accordion, Scroll Stack, Flip Clock, Magnetic Button, Toast Stack, Animated Tabs, Stepper, Swipe Cards, Coverflow 3D). They keep the page calm.
+- Glow and colour backgrounds (Aurora, Galaxy 3D, Warp Tunnel, Liquid Gradient, Horizon Glow, Sunrise, Lens Flare, Orbs) contain gradients. Do not use them in the luxury directions; at most one, only for a playful or tech brand that asked for it.
 - Text effects work best on short strings: a headline, a word that rotates, a stat that counts.
-- For product UI (dashboards, settings, forms) prefer calm pieces: Animated Tabs, Sidebar Nav, Stepper, FAQ Accordion, Toast Stack, Command Palette.
-- For mobile app screens: Floating Navbar or Magnify Dock style bottom bars, Swipe Cards, Card Stack, Toast Stack, Animated Switches.
-- AI products: AI Prompt Box or AI Model Prompt for input, AI Thinking and AI Response for output, an AI Voice piece for voice mode.
+- Product UI (dashboards, settings, forms): Animated Tabs, Sidebar Nav, Stepper, FAQ Accordion, Toast Stack, Command Palette.
+- AI products: AI Prompt Box or AI Model Prompt for input, AI Thinking and AI Response for output.

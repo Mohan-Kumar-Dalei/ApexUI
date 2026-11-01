@@ -3,10 +3,8 @@
  *  1. Writes skills/apexui/references/components.md from the real component list
  *     (names, categories and summaries from src/site/config/navigation.js, CLI
  *     names from the README table).
- *  2. Copies skills/apexui to public/skills/apexui (site downloads) and to the
- *     npm package (../v1/NPM/apex-ui-kit/src/skill/apexui) when it exists.
- *  3. Writes public/skills/apexui-skill.md: everything in one file, for chat
- *     apps that take a single upload (ChatGPT, Claude.ai projects, Gemini).
+ *  2. Copies skills/apexui to the npm package (../v1/NPM/apex-ui-kit/src/skill/apexui)
+ *     when it exists, so `npx apex-ui-kit skill` ships the same files.
  * Run: node scripts/build-skill.mjs
  */
 import { cp, mkdir, readFile, readdir, rm, writeFile } from 'node:fs/promises';
@@ -29,8 +27,8 @@ for (const block of nav.split(/\n\s*\{\s*\n/)) {
 }
 
 // CLI names from the README table (a page can have several variants).
-const cli = new Map();
 // Rows look like: | [Name](…/components/slug) | `npx apex-ui-kit add a` (+ `b`, `c`) |
+const cli = new Map();
 for (const m of readme.matchAll(/\| \[([^\]]+)\]\(https:\/\/apex-ui\.in\/components\/([a-z0-9-]+)\) \| `npx apex-ui-kit add ([a-z0-9-]+)`([^|\n]*)\|/g)) {
     const [, name, slug, cmd, extra] = m;
     if (!cli.has(slug)) cli.set(slug, []);
@@ -39,40 +37,38 @@ for (const m of readme.matchAll(/\| \[([^\]]+)\]\(https:\/\/apex-ui\.in\/compone
     }
 }
 
+const tick = '`';
 const ORDER = ['Backgrounds', 'Text & Motion', 'Cards', 'Navigation', 'Buttons', 'Interactive', 'AI', 'Loaders', 'Maps'];
 const cats = [...new Set([...ORDER, ...pages.map((p) => p.category)])].filter((c) => pages.some((p) => p.category === c));
-let md = `# Components
-
-${pages.length} ApexUI components. Add one with \`npx apex-ui-kit add <cli-name>\`; it lands in \`ApexUI-Kit/<Folder>/\`. Live demos and props: https://apex-ui.in/components/<page>.
-Read the component source before using it: the props, their defaults and notes are at the top of the file.
-`;
-let missing = [];
+const lines = [
+    '# ApexUI components (optional)',
+    '',
+    `You do not need these to build a premium site: the directions and blueprints are enough. Use one or two when an interaction or motion piece truly serves the brand. ${pages.length} components; add one with ${tick}npx apex-ui-kit add <cli-name>${tick} (it lands in ${tick}ApexUI-Kit/<Folder>/${tick}). Read the component source before using it and pass your direction's colours to it.`,
+];
+const missing = [];
 for (const c of cats) {
-    md += `\n## ${c}\n\n| Component | CLI name | What it is |\n| --- | --- | --- |\n`;
+    lines.push('', `## ${c}`, '', '| Component | CLI name | What it is |', '| --- | --- | --- |');
     for (const p of pages.filter((x) => x.category === c)) {
         const variants = cli.get(p.path);
         if (!variants) missing.push(p.path);
-        const names = variants ? variants.map((v) => `\`${v.cmd}\``).join(', ') : `\`${p.path}\``;
-        md += `| ${p.name} | ${names} | ${p.summary} |\n`;
+        const names = (variants ? variants.map((v) => v.cmd) : [p.path]).map((n) => tick + n + tick).join(', ');
+        lines.push(`| ${p.name} | ${names} | ${p.summary} |`);
     }
 }
-md += `
-## Picking well
+lines.push(
+    '',
+    '## Picking well',
+    '',
+    '- Luxury and editorial directions: prefer quiet pieces (Image Accordion, Image Compare, FAQ Accordion, Scroll Stack, Flip Clock, Magnetic Button, Toast Stack, Animated Tabs, Stepper, Swipe Cards, Coverflow 3D). They keep the page calm.',
+    '- Glow and colour backgrounds (Aurora, Galaxy 3D, Warp Tunnel, Liquid Gradient, Horizon Glow, Sunrise, Lens Flare, Orbs) contain gradients. Do not use them in the luxury directions; at most one, only for a playful or tech brand that asked for it.',
+    '- Text effects work best on short strings: a headline, a word that rotates, a stat that counts.',
+    '- Product UI (dashboards, settings, forms): Animated Tabs, Sidebar Nav, Stepper, FAQ Accordion, Toast Stack, Command Palette.',
+    '- AI products: AI Prompt Box or AI Model Prompt for input, AI Thinking and AI Response for output.',
+    '',
+);
+await writeFile(new URL('references/components.md', skillDir), lines.join('\n'));
 
-- One hero effect per page (a background, a 3D piece or a big text effect). Support it with 2 to 4 quieter pieces.
-- Backgrounds that use WebGL (Aurora, Galaxy 3D, Warp Tunnel, Liquid Gradient, Dither Waves, Horizon Glow, Sunrise) are the heaviest: use one per page, never stack two.
-- Text effects work best on short strings: a headline, a word that rotates, a stat that counts.
-- For product UI (dashboards, settings, forms) prefer calm pieces: Animated Tabs, Sidebar Nav, Stepper, FAQ Accordion, Toast Stack, Command Palette.
-- For mobile app screens: Floating Navbar or Magnify Dock style bottom bars, Swipe Cards, Card Stack, Toast Stack, Animated Switches.
-- AI products: AI Prompt Box or AI Model Prompt for input, AI Thinking and AI Response for output, an AI Voice piece for voice mode.
-`;
-await writeFile(new URL('references/components.md', skillDir), md);
-
-// Copies for the site and the npm package.
-const publicDir = new URL('public/skills/apexui/', root);
-await rm(publicDir, { recursive: true, force: true });
-await mkdir(publicDir, { recursive: true });
-await cp(skillDir, publicDir, { recursive: true });
+// Copy for the npm package.
 const npmDir = new URL('../v1/NPM/apex-ui-kit/src/skill/apexui/', root);
 if (existsSync(new URL('../v1/NPM/apex-ui-kit/package.json', root))) {
     await rm(npmDir, { recursive: true, force: true });
@@ -80,10 +76,5 @@ if (existsSync(new URL('../v1/NPM/apex-ui-kit/package.json', root))) {
     await cp(skillDir, npmDir, { recursive: true });
 }
 
-// All-in-one file.
 const refs = (await readdir(new URL('references/', skillDir))).sort();
-let all = (await readFile(new URL('SKILL.md', skillDir), 'utf8')).replace(/`references\/([a-z-]+)\.md`/g, 'the "$1" part below');
-for (const f of refs) all += `\n\n---\n\n<!-- ${f} -->\n\n` + (await readFile(new URL(`references/${f}`, skillDir), 'utf8'));
-await writeFile(new URL('public/skills/apexui-skill.md', root), all);
-
-console.log(`skill: ${pages.length} components (no README CLI row: ${missing.join(", ") || "none"}), ${refs.length} references`);
+console.log(`skill: ${pages.length} components (no README CLI row: ${missing.join(', ') || 'none'}), ${refs.length} references`);
