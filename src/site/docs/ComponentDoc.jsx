@@ -17,6 +17,10 @@ const STAGE_BG = [
 ];
 
 const STAGE_H = 'min-h-[clamp(26rem,64vh,60rem)]';
+// On phones the preview is drawn as if the stage were FIT_W px wide, then zoomed
+// down to fit, so components show whole and a little smaller instead of 1:1 and cut.
+const FIT_W = 480;
+const FIT_MIN = 0.68;
 
 // Responsive check: tablet / mobile narrow the live preview to that width (no iframe,
 // so nothing reloads). The box is a CSS container, so @container styles respond.
@@ -87,8 +91,33 @@ function Stage({ title, description, variant, variants, activeVariant, onVariant
         else stageRef.current?.requestFullscreen?.();
     };
 
+    // Phone-width stages zoom the preview out (see FIT_W).
+    const [fit, setFit] = useState(1);
+    useEffect(() => {
+        const el = stageRef.current;
+        if (!el) return undefined;
+        const ro = new ResizeObserver(() => {
+            const w = el.clientWidth;
+            setFit(w < FIT_W ? Math.max(FIT_MIN, Math.round((w / FIT_W) * 100) / 100) : 1);
+        });
+        ro.observe(el);
+        return () => ro.disconnect();
+    }, []);
+
     const bgClass = STAGE_BG.find((b) => b.id === bg)?.className ?? '';
     const frame = !full && device !== 'desktop' ? DEVICES.find((d) => d.id === device) : null;
+    // Full-bleed backgrounds already fill the stage at any size, so only the rest zoom.
+    const zoomed = fit < 1 && !frame && !full && !variant.fullBleed;
+    const preview = zoomed ? (
+        <div
+            className={`relative flex min-h-0 w-full self-stretch justify-center ${/items-start/.test(variant.previewClassName ?? '') ? 'items-start' : /items-end/.test(variant.previewClassName ?? '') ? 'items-end' : 'items-center'}`}
+            style={{ zoom: fit }}
+        >
+            {variant.preview}
+        </div>
+    ) : (
+        variant.preview
+    );
 
     return (
         <section ref={stageRef} aria-label="Live preview" className="flex min-w-0 flex-col overflow-hidden rounded-2xl border border-[var(--line)] bg-[var(--panel)] shadow-[var(--shadow)]">
@@ -159,7 +188,7 @@ function Stage({ title, description, variant, variants, activeVariant, onVariant
                                 </span>
                             </div>
                         ) : (
-                            variant.preview
+                            preview
                         )}
                     </motion.div>
                 ) : (
