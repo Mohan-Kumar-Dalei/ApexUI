@@ -1,5 +1,5 @@
 /* eslint-disable no-unused-vars */
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { motion, useAnimation } from 'framer-motion';
 
 const BeamBar = ({
@@ -18,19 +18,15 @@ const BeamBar = ({
     // Responsive width ke liye state
     const [dynamicBarWidth, setDynamicBarWidth] = useState(0);
 
-    // Screen size change ko handle karne ke liye useEffect
+    // 80% of the space it sits in (not the screen) or maxBarWidth, whichever is smaller,
+    // so it also fits sidebars, preview frames and narrow columns.
+    const wrap = useRef(null);
     useEffect(() => {
-        const updateWidth = () => {
-            // Screen width ka 80% ya maxBarWidth, jo bhi kam ho
-            const newWidth = Math.min(window.innerWidth * 0.8, maxBarWidth);
-            setDynamicBarWidth(newWidth);
-        };
-
-        updateWidth(); // Pehli baar set karne ke liye
-        window.addEventListener('resize', updateWidth); // Resize par update karne ke liye
-
-        // Cleanup function
-        return () => window.removeEventListener('resize', updateWidth);
+        const el = wrap.current;
+        if (!el) return undefined;
+        const ro = new ResizeObserver(() => setDynamicBarWidth(Math.min(el.clientWidth * 0.8, maxBarWidth)));
+        ro.observe(el);
+        return () => ro.disconnect();
     }, [maxBarWidth]);
 
     useEffect(() => {
@@ -71,11 +67,10 @@ const BeamBar = ({
     const beamHeight = 800; // Ise bhi dynamic kar sakte hain agar zaroorat ho
 
     return (
-        <div className="fixed top-10 left-0 w-full flex justify-center z-50 pointer-events-none">
+        <div ref={wrap} className="fixed top-10 left-0 w-full flex justify-center z-50 pointer-events-none">
             <motion.div
                 initial={{ width: 0 }}
                 animate={controls}
-                // Class se 'hidden md:block' hataya gaya hai
                 className={`absolute top-0 left-1/2 -translate-x-1/2 rounded-md shadow-[0_0_10px_#fff,0_0_20px_#4f46e5,0_0_30px_#06b6d4] ${pulse ? 'animate-pulse' : ''}`}
                 style={{
                     height: barHeight,

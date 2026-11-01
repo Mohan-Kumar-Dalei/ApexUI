@@ -69,7 +69,7 @@ export default function NpmDownloads({ className = '' }) {
         >
             <Download className="h-3.5 w-3.5 text-[var(--lime)]" />
             <span className="tabular-nums">{short(count)}</span>
-            <span className="font-normal text-[var(--ink-3)]">downloads</span>
+            <span className="hidden font-normal text-[var(--ink-3)] xl:inline">downloads</span>
         </a>
     );
 }

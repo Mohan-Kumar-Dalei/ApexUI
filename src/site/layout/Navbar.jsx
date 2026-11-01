@@ -47,8 +47,8 @@ export default function Navbar() {
                         className="hidden h-9 w-[clamp(13rem,18vw,18rem)] items-center gap-2 rounded-lg border border-[var(--line)] bg-[var(--panel)] pl-3 pr-1.5 text-[0.85rem] text-[var(--ink-3)] transition-colors hover:border-[var(--line-strong)] hover:text-[var(--ink-2)] lg:inline-flex"
                     >
                         <Search className="h-4 w-4" />
-                        <span className="flex-1 text-left">Search components…</span>
-                        <kbd className="rounded-md border border-[var(--line)] bg-[var(--panel-2)] px-1.5 py-0.5 font-mono text-[0.68rem]">Ctrl K</kbd>
+                        <span className="min-w-0 flex-1 truncate whitespace-nowrap text-left">Search<span className="hidden xl:inline"> components</span>…</span>
+                        <kbd className="shrink-0 rounded-md border border-[var(--line)] bg-[var(--panel-2)] px-1.5 py-0.5 font-mono text-[0.68rem]">Ctrl K</kbd>
                     </button>
                     <button type="button" onClick={openSearch} className={`${iconBtn} lg:hidden`} aria-label="Search">
                         <Search className="h-[1.05rem] w-[1.05rem]" />
