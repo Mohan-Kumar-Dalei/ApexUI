@@ -18,7 +18,9 @@ Premium is not more effects. It is fewer, better decisions made on purpose. Thin
 - Glassmorphism everywhere, frosted cards on busy backgrounds.
 - Three identical rounded cards with an icon, a title and two lines, repeated down the page.
 - Everything centered. Use left alignment for most text; center only short statements.
-- Tiny all-caps labels above every heading, middle dots between every word, arrows after every link.
+- Random tiny all-caps labels above every heading, middle dots between every word, arrows after every link. (A consistent section index such as "02 Experience" with meta on the right is fine when it is part of the layout motif.)
+- Components dropped in with their demo colours, fonts and content (restyle them: `adapt-components.md`).
+- A stock navbar that ignores the layout (design one: `navbar.md`).
 - Big fake stats ("10x faster", "99.9% uptime") without context; fake logos; testimonials from "Sarah J., CEO".
 - Default fonts used without thought (Inter, Roboto, Arial, Space Grotesk, Poppins) as the display face.
 - Emoji, sparkles, rocket icons, "✨ New".

@@ -39,4 +39,13 @@ export const DEMOS = [
         image: photo('photo-1506126613408-eca07ce68773', 1400),
         Component: lazy(() => import('./AppDemo.jsx')),
     },
+    {
+        slug: 'kora',
+        name: 'Kora',
+        kind: 'Coffee roastery and cafe',
+        direction: 'Its own (made by the agent)',
+        brief: 'Built by a small, fast AI model given only the skill and a one-paragraph brief. No edits by hand.',
+        image: photo('photo-1495474472287-4d71bcdd2085', 1400),
+        Component: lazy(() => import('./KoraDemo.jsx')),
+    },
 ];

@@ -3,7 +3,11 @@
 Go through every line. Fix what fails. In your final message, say which direction you used and list anything you could not check.
 
 ## Taste
+- [ ] A written design note exists, and the page matches it (palette, fonts, layout motif, signature moment).
 - [ ] One art direction, used through tokens. No stray colours, no second accent.
+- [ ] Every ApexUI component is restyled: search `src` for `lime`, `#a3e635`, `slate-9`, `neutral-950`, `gradient`, `from-`; each hit is intended or removed.
+- [ ] The navbar is custom for this site: its shape, links, CTA and scroll behaviour fit the layout; it works as a menu on phones.
+- [ ] At least one "proof" piece built in HTML (a real widget, menu, tracking card, product detail), not only icon cards.
 - [ ] Zero gradients anywhere (search the code for `gradient`, `from-`, `via-`, `to-`, `bg-clip-text`).
 - [ ] At most two font families and three weights. Display face on headings only.
 - [ ] No identical card grids repeated down the page; sections alternate layout.

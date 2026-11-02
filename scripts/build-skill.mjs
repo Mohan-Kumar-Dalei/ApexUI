@@ -43,7 +43,7 @@ const cats = [...new Set([...ORDER, ...pages.map((p) => p.category)])].filter((c
 const lines = [
     '# ApexUI components (optional)',
     '',
-    `You do not need these to build a premium site: the directions and blueprints are enough. Use one or two when an interaction or motion piece truly serves the brand. ${pages.length} components; add one with ${tick}npx apex-ui-kit add <cli-name>${tick} (it lands in ${tick}ApexUI-Kit/<Folder>/${tick}). Read the component source before using it and pass your direction's colours to it.`,
+    `You do not need these to build a premium site: the directions and blueprints are enough. Use one or two when an interaction or motion piece truly serves the brand. ${pages.length} components; add one with ${tick}npx apex-ui-kit add <cli-name> --dir src --yes${tick} (it lands in ${tick}src/ApexUI-Kit/<Folder>/${tick}; import it from there). Read the component source before using it and pass your direction's colours to it.`,
 ];
 const missing = [];
 for (const c of cats) {

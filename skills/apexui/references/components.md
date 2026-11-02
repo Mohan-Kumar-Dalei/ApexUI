@@ -1,6 +1,6 @@
 # ApexUI components (optional)
 
-You do not need these to build a premium site: the directions and blueprints are enough. Use one or two when an interaction or motion piece truly serves the brand. 116 components; add one with `npx apex-ui-kit add <cli-name>` (it lands in `ApexUI-Kit/<Folder>/`). Read the component source before using it and pass your direction's colours to it.
+You do not need these to build a premium site: the directions and blueprints are enough. Use one or two when an interaction or motion piece truly serves the brand. 116 components; add one with `npx apex-ui-kit add <cli-name> --dir src --yes` (it lands in `src/ApexUI-Kit/<Folder>/`; import it from there). Read the component source before using it and pass your direction's colours to it.
 
 ## Backgrounds
 

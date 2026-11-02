@@ -63,6 +63,8 @@ Use on every H1 and H2. Hero headline: `onMount`. Long quotes: stagger 0.025.
 ```
 Use on feature images and tiles. Not on every small thumbnail.
 
+**Important:** keep `viewport={{ once: true }}` (or a `margin`) on the curtain. Never add `amount: 0.2` or any amount above 0: the element starts fully clipped, so its visible area is zero and the reveal never fires, leaving an empty box. Test it: scroll to the image and make sure it appears.
+
 ### 4. Parallax image: slower than the page
 ```jsx
 const ref = useRef(null);
@@ -103,3 +105,45 @@ Animate from 0 to the value once in view, 1.6s, tabular figures. Only real numbe
 
 ## Mobile apps
 Screen pushes slide 100% (300 to 350ms), sheets spring up, list items fade in, buttons scale to 0.97 on press. The phone frame in a landing page can rise on load, float gently (y ±10px over 6s) and tilt toward the pointer on desktop.
+
+## Page stack: sections and cards that stack while you scroll
+A strong signature for services, processes and case studies. Each panel sticks a little lower than the one before, so the next one slides over it and the stack builds up.
+
+```jsx
+const steps = [
+  { n: "01", title: "You message us", body: "Tell us what broke and where you are." },
+  { n: "02", title: "We send someone near you", body: "You get their name, photo and number before they leave." },
+  { n: "03", title: "They arrive, you let them start", body: "A six digit code starts the job. Nobody else can." },
+];
+<section className="py-24">
+  <div className="mx-auto max-w-5xl px-5">
+    {steps.map((s, i) => (
+      <div key={s.n} className="sticky mb-6" style={{ top: `${96 + i * 24}px` }}>
+        <article className="relative flex min-h-[60svh] flex-col justify-end overflow-hidden rounded-[24px] border border-line bg-surface p-8 sm:p-12">
+          <span aria-hidden="true" className="absolute right-8 top-6 font-display text-[96px] leading-none text-line sm:text-[160px]">{s.n}</span>
+          <h3 className="font-display text-[32px] leading-tight sm:text-[48px]">{s.title}</h3>
+          <p className="mt-4 max-w-lg text-lg text-muted">{s.body}</p>
+        </article>
+      </div>
+    ))}
+  </div>
+</section>
+```
+- Optional depth: scale each card from 1 to 0.94 as the next one covers it (`useScroll` on the card, `useTransform(progress, [0, 1], [1, 0.94])`).
+- On phones keep the stacking (it works with touch), but use `min-h-[50svh]` and smaller numerals.
+- Full-screen version: each section is `sticky top-0 h-svh`, alternating `bg-bg` and `bg-ink`; the next section covers the previous like a page turning.
+
+## Route transitions (multi-page sites)
+When the site has several pages, a short curtain keeps it feeling like one piece:
+```jsx
+// Wrap the routed content; key it by the path.
+<AnimatePresence mode="wait">
+  <motion.main key={pathname} initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -12 }} transition={{ duration: 0.45, ease: EASE }}>
+    {outlet}
+  </motion.main>
+</AnimatePresence>
+```
+Scroll to the top on every route change. Keep it under half a second; never block reading.
+
+## Smooth scrolling (optional)
+For long editorial pages, momentum scrolling (the `lenis` package, 1.0 to 1.2 lerp) makes parallax and pinned sections feel richer. Turn it off for reduced motion and never fight the native scroll on phones.
