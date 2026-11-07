@@ -91,7 +91,7 @@ export default function SkillsPage() {
                         <li key={d.slug}>
                             <Link to={`/demos/${d.slug}`} className="group block">
                                 <div className="aspect-[4/5] overflow-hidden rounded-[1.1rem] bg-[var(--panel-2)]">
-                                    <img src={d.image} alt={`${d.name}, ${d.kind}`} loading="lazy" decoding="async" className="h-full w-full object-cover transition-transform duration-700 ease-out group-hover:scale-[1.03]" />
+                                    <img src={d.poster} alt={`${d.name}, ${d.kind}`} loading="lazy" decoding="async" className="h-full w-full object-cover transition-transform duration-700 ease-out group-hover:scale-[1.03]" />
                                 </div>
                                 <div className="mt-3 flex items-baseline justify-between gap-3">
                                     <span className="font-semibold text-[var(--ink)]">{d.name}</span>

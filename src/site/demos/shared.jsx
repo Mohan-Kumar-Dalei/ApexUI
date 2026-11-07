@@ -4,9 +4,8 @@ import { Link } from 'react-router-dom';
 import { ArrowLeft } from 'lucide-react';
 
 /*
- * Shared pieces for the demo sites. Each demo is a full page built the way the
- * ApexUI skill tells an agent to build: one art direction, flat colours, real
- * photography, human copy, every section from nav to footer.
+ * Shared pieces for the demo sites: photo URLs, font loading and the way back to the
+ * gallery. Everything else (layout, loader, skeleton, motion) belongs to each demo.
  */
 
 // Unsplash photo by id, sized for its slot.
@@ -24,20 +23,6 @@ export function useFonts(href) {
     }, [href]);
 }
 
-export const Container = ({ className = '', children }) => <div className={`mx-auto w-full max-w-[1360px] px-5 sm:px-8 lg:px-12 ${className}`}>{children}</div>;
-
-export const Section = ({ className = '', id, children }) => (
-    <section id={id} className={`scroll-mt-20 py-20 sm:py-28 lg:py-36 ${className}`}>
-        {children}
-    </section>
-);
-
-export const Img = ({ id, w, alt, ratio = 'aspect-[4/5]', className = '', imgClassName = '' }) => (
-    <div className={`overflow-hidden ${ratio} ${className}`} style={{ background: 'var(--d-surface)' }}>
-        <img src={photo(id, w)} alt={alt} loading="lazy" decoding="async" className={`h-full w-full object-cover transition-transform duration-700 ease-out hover:scale-[1.03] ${imgClassName}`} />
-    </div>
-);
-
 // A small way back to the demo list, kept out of the demo's own design.
 export function BackPill() {
     return (
@@ -50,10 +35,3 @@ export function BackPill() {
         </Link>
     );
 }
-
-// Calm entrance for the hero: fade and rise once, off for reduced motion.
-export const riseCss = `
-@keyframes demo-rise { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: none; } }
-.demo-rise { animation: demo-rise 0.8s cubic-bezier(0.16, 1, 0.3, 1) both; }
-@media (prefers-reduced-motion: reduce) { .demo-rise { animation: none; } }
-`;

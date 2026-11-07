@@ -13,7 +13,7 @@ export default function DemosPage() {
                     <div className="lg:col-span-8">
                         <h1 className="font-display text-[clamp(2.4rem,5.5vw,4.5rem)] font-semibold leading-[1] tracking-[-0.03em] text-[var(--ink)]">Built with the skill</h1>
                         <p className="mt-5 max-w-xl text-[1.02rem] text-[var(--ink-2)]">
-                            Four complete sites, each made by following the ApexUI skill: one art direction, flat colour, real photography and plain language, from the first nav link to the last line of the footer. Open one on your phone too.
+                            Four complete sites made by following the ApexUI skill. Each has its own layout, page loader, skeleton state and motion, so no two feel alike. Open one on your phone too.
                         </p>
                     </div>
                     <div className="lg:col-span-4">
@@ -28,7 +28,7 @@ export default function DemosPage() {
                         <li key={d.slug}>
                             <Link to={`/demos/${d.slug}`} className="group block">
                                 <div className="aspect-[4/3] overflow-hidden rounded-[1.25rem] bg-[var(--panel-2)]">
-                                    <img src={d.image} alt={`${d.name}, ${d.kind}`} loading="lazy" decoding="async" className="h-full w-full object-cover transition-transform duration-700 ease-out group-hover:scale-[1.03]" />
+                                    <img src={d.image} alt={`${d.name}, ${d.kind}`} loading="lazy" decoding="async" className="h-full w-full object-cover object-top transition-transform duration-700 ease-out group-hover:scale-[1.03]" />
                                 </div>
                                 <div className="mt-4 flex items-start justify-between gap-4">
                                     <div className="min-w-0">
@@ -37,6 +37,7 @@ export default function DemosPage() {
                                             {d.kind}, {d.direction} direction
                                         </p>
                                         <p className="mt-2 text-[0.95rem] text-[var(--ink-2)]">{d.brief}</p>
+                                        <p className="mt-2 text-sm text-[var(--ink-3)]">{d.build}</p>
                                     </div>
                                     <span className="mt-1 grid h-10 w-10 shrink-0 place-items-center rounded-full border border-[var(--line)] text-[var(--ink-3)] transition-colors group-hover:border-transparent group-hover:bg-[var(--lime)] group-hover:text-[var(--lime-ink)]">
                                         <ArrowUpRight className="h-4 w-4" />
