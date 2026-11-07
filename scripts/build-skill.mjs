@@ -68,12 +68,16 @@ lines.push(
 );
 await writeFile(new URL('references/components.md', skillDir), lines.join('\n'));
 
-// Copy for the npm package.
-const npmDir = new URL('../v1/NPM/apex-ui-kit/src/skill/apexui/', root);
+// Copy every skill folder (apexui plus the style skills) into the npm package.
+const SKILLS = ['apexui', 'simplepremium', 'luxurypremium'];
 if (existsSync(new URL('../v1/NPM/apex-ui-kit/package.json', root))) {
-    await rm(npmDir, { recursive: true, force: true });
-    await mkdir(npmDir, { recursive: true });
-    await cp(skillDir, npmDir, { recursive: true });
+    const npmSkills = new URL('../v1/NPM/apex-ui-kit/src/skill/', root);
+    await rm(npmSkills, { recursive: true, force: true });
+    for (const name of SKILLS) {
+        const to = new URL(`${name}/`, npmSkills);
+        await mkdir(to, { recursive: true });
+        await cp(new URL(`skills/${name}/`, root), to, { recursive: true });
+    }
 }
 
 const refs = (await readdir(new URL('references/', skillDir))).sort();

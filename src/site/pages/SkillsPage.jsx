@@ -174,6 +174,31 @@ export default function SkillsPage() {
                 </div>
             </section>
 
+            {/* Style skills, called by name */}
+            <section className="px-[clamp(1rem,2.2vw,2rem)] pt-[clamp(4rem,8vw,6rem)]">
+                <h2 className="font-display text-[clamp(1.8rem,3.4vw,2.8rem)] font-semibold tracking-[-0.02em] text-[var(--ink)]">Two styles, when you ask for them</h2>
+                <p className="mt-3 max-w-2xl text-[var(--ink-2)]">
+                    They only run when you call them, so they never get mixed up with the main skill. In Claude Code each one is a slash command; in Cursor type <code className="font-mono text-[0.85em] text-[var(--ink)]">@simplepremium</code>.
+                </p>
+                <div className="mt-8 grid gap-5 lg:grid-cols-2">
+                    {[
+                        ['/simplepremium', 'Calm product UI', 'Apps, dashboards, admin panels and internal tools. Light neutrals, one blue accent, one sans font, motion only on dialogs and menus. No hero, no scroll animations.', '/simplepremium leave tracker dashboard', 'npx apex-ui-kit skill simplepremium'],
+                        ['/luxurypremium', 'Luxury websites', 'Fashion, hotels, jewellery, restaurants. Ivory and charcoal, a serif display face, generous space, big type and slow, considered motion.', '/luxurypremium website for a boutique hotel in Udaipur', 'npx apex-ui-kit skill luxurypremium'],
+                    ].map(([cmd, title, body, example, install]) => (
+                        <article key={cmd} className="flex flex-col rounded-[1.4rem] border border-[var(--line)] bg-[var(--panel)] p-[clamp(1.25rem,3vw,2rem)]">
+                            <p className="font-mono text-sm text-[var(--ink-3)]">{cmd}</p>
+                            <h3 className="font-display mt-2 text-2xl font-semibold text-[var(--ink)]">{title}</h3>
+                            <p className="mt-3 text-[var(--ink-2)]">{body}</p>
+                            <p className="mt-5 text-sm text-[var(--ink-3)]">Type in Claude Code</p>
+                            <p className="mt-1.5 break-words rounded-lg bg-[var(--panel-2)] px-3 py-2 font-mono text-[0.82rem] text-[var(--ink)]">{example}</p>
+                            <div className="mt-auto pt-6">
+                                <CommandLine command={install} />
+                            </div>
+                        </article>
+                    ))}
+                </div>
+            </section>
+
             {/* Install per agent */}
             <section id="install" className="scroll-mt-24 px-[clamp(1rem,2.2vw,2rem)] pt-[clamp(4rem,8vw,6rem)]">
                 <h2 className="font-display text-[clamp(1.8rem,3.4vw,2.8rem)] font-semibold tracking-[-0.02em] text-[var(--ink)]">Install it for your agent</h2>

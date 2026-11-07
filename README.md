@@ -88,6 +88,15 @@ npx apex-ui-kit skill --ai all   # or set up every agent at once
 
 Inside: taste rules, eight complete art directions, ready section code, copywriting rules, mobile app screens, responsive and security checklists. See sites built with it at [apex-ui.in/demos](https://apex-ui.in/demos).
 
+Two style skills come with it and only run when you ask for them. In Claude Code each one is a slash command:
+
+```bash
+/simplepremium leave tracker dashboard        # calm product UI for apps and dashboards
+/luxurypremium website for a boutique hotel   # warm neutrals, serif type, slow motion
+```
+
+Install just one with `npx apex-ui-kit skill simplepremium` (or `luxurypremium`). In Cursor call them with `@simplepremium`; in Windsurf they are manual rules.
+
 ## All components
 
 <details>
