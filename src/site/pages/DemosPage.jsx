@@ -3,7 +3,6 @@ import { ArrowUpRight } from 'lucide-react';
 import SiteFooter from '../layout/SiteFooter.jsx';
 import { CommandLine } from '../ui/CodeBlock.jsx';
 import { DEMOS } from '../demos/index.js';
-import ProBadge from '../ui/ProBadge.jsx';
 
 /* Gallery of full sites built with the ApexUI skill. */
 export default function DemosPage() {
@@ -14,7 +13,7 @@ export default function DemosPage() {
                     <div className="lg:col-span-8">
                         <h1 className="font-display text-[clamp(2.4rem,5.5vw,4.5rem)] font-semibold leading-[1] tracking-[-0.03em] text-[var(--ink)]">Built with the skill</h1>
                         <p className="mt-5 max-w-xl text-[1.02rem] text-[var(--ink-2)]">
-                            Seven complete sites made by following the ApexUI skills. The ones marked Pro use the brand playbooks coming with ApexUI Pro. Each has its own layout, page loader, skeleton state and motion, so no two feel alike. Open one on your phone too.
+                            Seven complete sites made by following the ApexUI skills. Each has its own layout, page loader, skeleton state and motion, so no two feel alike. Open one on your phone too.
                         </p>
                     </div>
                     <div className="lg:col-span-4">
@@ -29,7 +28,6 @@ export default function DemosPage() {
                         <li key={d.slug} className="min-w-0">
                             <Link to={`/demos/${d.slug}`} className="group block">
                                 <div className="relative aspect-[4/3] overflow-hidden rounded-[1.25rem] bg-[var(--panel-2)]">
-                                    {d.pro && <ProBadge className="absolute right-3 top-3 z-10 !bg-black/70 !text-[#a3e635] backdrop-blur" />}
                                     <img src={d.image} alt={`${d.name}, ${d.kind}`} loading="lazy" decoding="async" className="h-full w-full object-cover object-top transition-transform duration-700 ease-out group-hover:scale-[1.03]" />
                                 </div>
                                 <div className="mt-4 flex items-start justify-between gap-4">
@@ -46,10 +44,14 @@ export default function DemosPage() {
                                     </span>
                                 </div>
                             </Link>
-                            {d.pro && (
-                                <p className="mt-4 rounded-[1rem] border border-[var(--line)] bg-[var(--panel)] px-4 py-3 text-sm text-[var(--ink-2)]">
-                                    Made with the brand playbooks in ApexUI Pro. Pro is not out yet; star the repo to hear when it opens.
-                                </p>
+                            {d.skill && (
+                                <div className="mt-4 rounded-[1rem] border border-[var(--line)] bg-[var(--panel)] p-4">
+                                    <p className="text-sm text-[var(--ink-2)]">Build one like this for any brand. Install the skill, then run it in Claude Code:</p>
+                                    <div className="mt-3 grid gap-2">
+                                        <CommandLine command={d.skill.install} />
+                                        <CommandLine command={d.skill.run} />
+                                    </div>
+                                </div>
                             )}
                         </li>
                     ))}

@@ -356,7 +356,7 @@ export function Footer() {
             </div>
             <div className="mx-auto flex max-w-[1400px] flex-col gap-2 border-t border-tn-on-band/15 px-5 py-6 text-[13px] text-tn-band-muted sm:flex-row sm:justify-between sm:px-8">
                 <span>© 2026 Taana Handlooms. A demo store: products, prices and orders are sample data, and the API runs in your browser.</span>
-                <span>Built with ApexUI Pro</span>
+                <span>Built with the ApexUI premiumbrand skill</span>
             </div>
         </footer>
     );

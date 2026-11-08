@@ -2,7 +2,7 @@ import { useEffect } from 'react';
 import { BackPill } from '../shared.jsx';
 
 /*
- * Lay's Crunch Lab, a Pro demo: a food brand store with real 3D bags.
+ * Lay's Crunch Lab, built with the premiumbrand skill (food playbook): a snack brand store with real 3D bags.
  * The site is its own build (React, Three.js, GSAP, Lenis) with the Express API running in the
  * browser, served from /demos/lays/app/. It sits in a full-page frame so its styles stay its own.
  * Fan project: the pack art and the Lay's logo belong to PepsiCo.

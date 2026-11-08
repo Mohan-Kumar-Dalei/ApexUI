@@ -39,7 +39,7 @@ const FAQ = [
     { q: 'What is a skill?', a: 'A set of instructions and reference files that an AI agent reads before it starts. This one teaches it how to plan, design, write and build a site or an app, and what to check before it calls the work finished.' },
     { q: 'Do I have to use ApexUI components?', a: 'No. The skill works on its own with any stack. ApexUI components are there if you want an animated piece, and the skill tells the agent when one fits.' },
     { q: 'Will a small model really make a good site with it?', a: 'That is what it is written for. The rules are specific, the art directions are complete and the sections come as code, so the model follows them instead of guessing.' },
-    { q: 'Is it free?', a: 'Yes. The website and app skill is free and open source. The Fullstack skill and the premiumbrand playbooks will be part of ApexUI Pro.' },
+    { q: 'Is it free?', a: 'Yes. The website and app skill is free and open source. The Fullstack skill will be part of ApexUI Pro.' },
     { q: 'Does it make my site fully secure?', a: 'No tool can promise that. The skill makes the agent follow a strict checklist and tell you anything it could not check. Read the code before you put it live.' },
     { q: 'How do I update it?', a: 'Run the same command again. It replaces the skill files and only the ApexUI part of AGENTS.md or GEMINI.md.' },
 ];
@@ -86,7 +86,6 @@ export default function SkillsPage() {
                         <li key={d.slug}>
                             <Link to={`/demos/${d.slug}`} className="group block">
                                 <div className="relative aspect-[4/5] overflow-hidden rounded-[1.1rem] bg-[var(--panel-2)]">
-                                    {d.pro && <ProBadge className="absolute right-3 top-3 z-10 !bg-black/70 !text-[#a3e635] backdrop-blur" />}
                                     <img src={d.poster} alt={`${d.name}, ${d.kind}`} loading="lazy" decoding="async" className="h-full w-full object-cover transition-transform duration-700 ease-out group-hover:scale-[1.03]" />
                                 </div>
                                 <div className="mt-3 flex items-baseline justify-between gap-3">
@@ -172,7 +171,7 @@ export default function SkillsPage() {
 
             {/* Style skills, called by name */}
             <section className="px-[clamp(1rem,2.2vw,2rem)] pt-[clamp(4rem,8vw,6rem)]">
-                <h2 className="font-display text-[clamp(1.8rem,3.4vw,2.8rem)] font-semibold tracking-[-0.02em] text-[var(--ink)]">Styles, when you ask for them</h2>
+                <h2 className="font-display text-[clamp(1.8rem,3.4vw,2.8rem)] font-semibold tracking-[-0.02em] text-[var(--ink)]">Three styles, when you ask for them</h2>
                 <p className="mt-3 max-w-2xl text-[var(--ink-2)]">
                     They only run when you call them, so they never get mixed up with the main skill. In Claude Code each one is a slash command; in Cursor type <code className="font-mono text-[0.85em] text-[var(--ink)]">@simplepremium</code>.
                 </p>
@@ -180,30 +179,16 @@ export default function SkillsPage() {
                     {[
                         ['/simplepremium', 'Calm product UI', 'Apps, dashboards, admin panels and internal tools. Light neutrals, one blue accent, one sans font, motion only on dialogs and menus. No hero, no scroll animations.', '/simplepremium leave tracker dashboard', 'npx apex-ui-kit skill simplepremium'],
                         ['/luxurypremium', 'Luxury websites', 'Fashion, hotels, jewellery, restaurants. Ivory and charcoal, a serif display face, generous space, big type and slow, considered motion.', '/luxurypremium website for a boutique hotel in Udaipur', 'npx apex-ui-kit skill luxurypremium'],
-                        ['/premiumbrand', 'Brand stores with 3D', 'A full store for a brand, built from a playbook for its category: sarees and clothing like Taana, snacks and food like Lay’s Crunch Lab. 3D products, a scroll story, bundle pricing and a Node and Express backend, with README, prompts and screenshots.', '/premiumbrand a store for my masala chips brand', null],
+                        ['/premiumbrand', 'Brand stores with 3D', 'A full store for a brand, built from a playbook for its category: sarees and clothing like Taana, snacks and food like Lay’s Crunch Lab. 3D products, a scroll story, bundle pricing and a Node and Express backend, with README, prompts and screenshots.', '/premiumbrand a store for my masala chips brand', 'npx apex-ui-kit skill premiumbrand'],
                     ].map(([cmd, title, body, example, install]) => (
                         <article key={cmd} className="flex flex-col rounded-[1.4rem] border border-[var(--line)] bg-[var(--panel)] p-[clamp(1.25rem,3vw,2rem)]">
-                            <div className="flex items-center justify-between gap-3">
-                                <p className="font-mono text-sm text-[var(--ink-3)]">{cmd}</p>
-                                {!install && <ProBadge />}
-                            </div>
+                            <p className="font-mono text-sm text-[var(--ink-3)]">{cmd}</p>
                             <h3 className="font-display mt-2 text-2xl font-semibold text-[var(--ink)]">{title}</h3>
                             <p className="mt-3 text-[var(--ink-2)]">{body}</p>
                             <p className="mt-5 text-sm text-[var(--ink-3)]">Type in Claude Code</p>
                             <p className="mt-1.5 break-words rounded-lg bg-[var(--panel-2)] px-3 py-2 font-mono text-[0.82rem] text-[var(--ink)]">{example}</p>
                             <div className="mt-auto pt-6">
-                                {install ? (
-                                    <CommandLine command={install} />
-                                ) : (
-                                    <div className="flex flex-wrap items-center gap-4">
-                                        <StarBorder as="button" disabled aria-disabled="true" color="#a3e635" speed={6} theme={theme === 'light' ? 'light' : 'dark'} className="cursor-not-allowed">
-                                            <span className="text-sm">Coming with Pro</span>
-                                        </StarBorder>
-                                        <Link to="/demos" className="text-sm font-medium text-[var(--ink-2)] hover:text-[var(--ink)]">
-                                            See the demos
-                                        </Link>
-                                    </div>
-                                )}
+                                <CommandLine command={install} />
                             </div>
                         </article>
                     ))}
