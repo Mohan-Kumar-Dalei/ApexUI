@@ -83,17 +83,27 @@ Best for: jewellery, beauty, skincare, weddings, boutique hotels.
 4. Pick one display face and one text face from the lists in `taste.md`.
 5. Decide radius (0, 4 or 8px) and keep it everywhere. Decide the one signature move.
 6. Check contrast: ink on bg and on-accent on accent must be 4.5:1 or more.
+7. Derive the dark theme from the same world (`theme.md`, section 1): a tinted soft black bg, lighter surface, off-white ink, a lighter accent. Every direction below needs both.
 
 ## Tokens template (Tailwind CSS v4)
 ```css
 @import url("https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,wght@0,400;1,400&family=Hanken+Grotesk:wght@400;500&display=swap");
 @import "tailwindcss";
+@custom-variant dark (&:where([data-theme="dark"], [data-theme="dark"] *));
 
 :root {
+  color-scheme: light;
   --bg: #F3F0EA; --surface: #E9E4DA; --ink: #161513; --muted: #6F6A61;
   --line: #D8D1C4; --accent: #161513; --on-accent: #F3F0EA;
   --font-display: "Bodoni Moda", Georgia, serif;
   --font-text: "Hanken Grotesk", system-ui, sans-serif;
+}
+
+/* Dark: same world, never inverted (rules in theme.md) */
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --bg: #141311; --surface: #1E1C19; --ink: #EDE9E1; --muted: #A39D93;
+  --line: #2E2B27; --accent: #EDE9E1; --on-accent: #141311;
 }
 
 @theme inline {
@@ -106,4 +116,4 @@ Best for: jewellery, beauty, skincare, weddings, boutique hotels.
 html { background: var(--bg); color: var(--ink); font-family: var(--font-text); -webkit-font-smoothing: antialiased; }
 h1, h2, h3 { font-family: var(--font-display); font-weight: 400; letter-spacing: -0.02em; line-height: 1.05; }
 ```
-Now use `bg-bg`, `bg-surface`, `text-ink`, `text-muted`, `border-line`, `bg-accent text-on-accent`, `font-display`.
+Now use `bg-bg`, `bg-surface`, `text-ink`, `text-muted`, `border-line`, `bg-accent text-on-accent`, `font-display`. Both themes switch through these classes; set `data-theme` on `<html>` with the script and hook in `theme.md`.

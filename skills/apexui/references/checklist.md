@@ -14,6 +14,12 @@ Go through every line. Fix what fails. In your final message, say which directio
 - [ ] Images share one mood and colour temperature; every image has a purpose and `alt` text.
 - [ ] One signature move, and nothing louder than it.
 
+## Theme
+- [ ] Light and dark themes both designed from the brand (dark is not inverted); contrast 4.5:1 for text in both.
+- [ ] A theme toggle in the custom nav, reachable on phones, with an `aria-label` that says what it does.
+- [ ] First visit follows the system setting; the choice is remembered; reloading in dark shows no light flash.
+- [ ] No hard-coded colours (`#fff`, `bg-white`, `text-black`, `bg-neutral-`): every section, form, skeleton, dialog and footer switches.
+
 ## Copy
 - [ ] No `—`, `–` used as a pause, `--`, `__`, emoji or exclamation marks in headlines.
 - [ ] None of the banned phrases from `copy.md`.
@@ -26,7 +32,7 @@ Go through every line. Fix what fails. In your final message, say which directio
 - [ ] Forms have labels, validation and a success state.
 
 ## Responsive
-- [ ] Checked at 320, 375, 768, 1024, 1280 and 1440px; no horizontal scroll at any width.
+- [ ] Checked at 320, 375, 768, 1024, 1280 and 1440px in both themes; no horizontal scroll at any width.
 - [ ] Nav collapses to a working menu on phones; tap targets at least 44px.
 - [ ] Headline sizes step down on phones (no word broken mid-way, no overflow).
 - [ ] Safe-area padding on fixed bars (mobile apps).

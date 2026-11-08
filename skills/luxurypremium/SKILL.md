@@ -13,7 +13,7 @@ This is the luxury mode of the `apexui` skill: a marketing website or brand site
 
 ## Read first
 The full method lives in the `apexui` skill installed next to this one. Read its `SKILL.md`, then these references from its `references/` folder (in Claude Code: `.claude/skills/apexui/references/`; in Antigravity: `.agents/skills/apexui/references/`):
-`art-direction.md`, `taste.md`, `navbar.md`, `motion.md`, `sections.md`, `copy.md`, `adapt-components.md`, `responsive-mobile.md`, `checklist.md`.
+`art-direction.md`, `taste.md`, `theme.md`, `navbar.md`, `motion.md`, `sections.md`, `copy.md`, `adapt-components.md`, `responsive-mobile.md`, `checklist.md`.
 If the apexui skill is missing, install it with `npx apex-ui-kit skill apexui`.
 
 ## The luxury recipe
@@ -27,6 +27,8 @@ If the apexui skill is missing, install it with `npx apex-ui-kit skill apexui`.
 | `line` | `#D9D1C2` | hairlines |
 | `accent` | one quiet colour from the brand (oxblood `#5B1A18`, bronze `#8A6A3F`, deep green `#2F3B2F`) | fewer than 5 uses per screen |
 One dark band per page in `ink` with `bg` text gives rhythm.
+
+**Dark theme (required, never inverted).** Night version of the same house: bg `#14120F`, surface `#1D1A16`, ink `#EDE7DC`, muted `#A39A8C`, line `#2E2A24`, accent lifted so it reads on dark (oxblood to `#B4544C`, bronze to `#C29A63`, green to `#7F9A7C`). The dark band becomes a `surface` band. Photos unchanged. A quiet theme toggle sits in the nav (an icon button in ink, no pill), the first visit follows the system, and there is no flash on load. Script, hook and toggle: `theme.md` in the apexui references.
 
 **Type.** A serif display face (Bodoni Moda, Cormorant Garamond, Instrument Serif, Fraunces, Italiana) with one quiet sans (Hanken Grotesk, Manrope, Jost, Figtree). Headlines 64 to 128px on desktop, 44 to 56px on phones, weight 400, tracking `-0.02em`, line height 1.0. Body 17 to 18px, line height 1.65. Small uppercase labels only as a consistent system, tracked `0.14em`.
 
@@ -43,4 +45,4 @@ One dark band per page in `ink` with `bg` text gives rhythm.
 **Copy.** Few words, exact details (materials, places, hours, prices). No superlatives, no "luxury" or "premium" in the copy; let the page prove it.
 
 ## Done means
-The apexui checklist passes, plus: serif display face on every heading, warm neutral palette with a single accent, at least 112px section padding on desktop, no reveal shorter than 600ms, and the site works from 320px up.
+The apexui checklist passes (both themes), plus: serif display face on every heading, warm neutral palette with a single accent, at least 112px section padding on desktop, no reveal shorter than 600ms, and the site works from 320px up.

@@ -6,7 +6,8 @@ The nav is the first thing people touch, so it has to belong to the brand. Never
 - Logo or wordmark (in the display face, or the real logo).
 - 3 to 5 links, named in plain words.
 - One primary action that matches the goal (Book a table, Shop, Get the app, Book on WhatsApp, Let's talk).
-- Product-specific extras only if they help: a location picker for a local service, a cart count for a store, a search (Ctrl K) for docs, a theme toggle for developer sites, opening status for a restaurant.
+- A theme toggle, always: an icon button next to the CTA on desktop, in the bar or the first row of the menu on phones (`theme.md`).
+- Product-specific extras only if they help: a location picker for a local service, a cart count for a store, a search (Ctrl K) for docs, opening status for a restaurant.
 
 ## Step 2. Pick the pattern that fits the layout
 | Pattern | Fits | Shape |

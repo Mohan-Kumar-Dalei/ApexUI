@@ -22,6 +22,7 @@ If the `apexui` skill is also installed, ignore these parts of it for this build
 ## Tokens (Tailwind CSS v4 `@theme`; no raw CSS outside `@theme` and `@layer base`)
 ```css
 @import "tailwindcss";
+@custom-variant dark (&:where([data-theme="dark"], [data-theme="dark"] *));
 
 @theme {
   --color-bg: #f5f6f8;
@@ -45,6 +46,19 @@ If the `apexui` skill is also installed, ignore these parts of it for this build
 }
 
 @layer base {
+  :root { color-scheme: light; }
+  /* Dark: same calm tool, lighter surfaces for raised things, softer accent */
+  :root[data-theme="dark"] {
+    color-scheme: dark;
+    --color-bg: #0f1115; --color-surface: #161920; --color-sunken: #1c2028;
+    --color-ink: #e8eaef; --color-muted: #9aa1ae; --color-line: #262a33;
+    --color-accent: #6d8dff; --color-accent-deep: #8ba5ff; --color-accent-soft: #1a2342;
+    --color-approved: #3fc28c; --color-approved-soft: #10281e;
+    --color-rejected: #f07a70; --color-rejected-soft: #2e1614;
+    --color-pending: #e2ad52; --color-pending-soft: #2b2110;
+    --shadow-card: 0 0 0 1px rgb(255 255 255 / 0.02);
+    --shadow-float: 0 16px 40px -12px rgb(0 0 0 / 0.6), 0 0 0 1px rgb(255 255 255 / 0.04);
+  }
   html { background: var(--color-bg); color: var(--color-ink); font-family: var(--font-sans); -webkit-font-smoothing: antialiased; }
   :focus-visible { outline: 2px solid var(--color-accent); outline-offset: 2px; }
 }
@@ -82,6 +96,7 @@ Only on sheets, dialogs, popovers, menus and toasts: 140 to 320ms, `cubic-bezier
 - A password field with an eye toggle (`aria-label` switches between "Show password" and "Hide password").
 - Dialogs with the native `<dialog>` element (`showModal()`), a visible close button, Escape to close, focus returned to the opener.
 - A visible focus ring in the accent on every interactive element.
+- Light and dark themes with a toggle in the top bar (Light, Dark, System in the user menu or settings). First visit follows the system, the choice is remembered, and a blocking `public/theme-init.js` sets `data-theme` before paint so there is no flash. If the apexui skill is installed, use the script, hook and toggle from its `references/theme.md`. No hard-coded `bg-white` or `text-black`: tokens only.
 - Empty, loading and error states for every list and every form.
 - Works at 320px: no horizontal page scroll; wide tables scroll inside their own box or turn into cards.
 - Keyboard: every action reachable, logical tab order, 44px targets.
@@ -90,4 +105,4 @@ Only on sheets, dialogs, popovers, menus and toasts: 140 to 320ms, `cubic-bezier
 Short plain sentences. Buttons are verbs ("Approve", "Save changes", "Export CSV"). No em dashes, no emoji, no exclamation marks, no filler ("Seamlessly manage your..."). Dates as "7 Nov 2026", times as "14:30" or "2:30 pm" consistently.
 
 ## Done means
-`npm run build` passes, every screen checked at 320, 768, 1024 and 1440px, no colours outside the tokens, no gradients, and every list has its empty state. Report what you built and anything you could not check.
+`npm run build` passes, every screen checked at 320, 768, 1024 and 1440px in both themes, no colours outside the tokens, no gradients, and every list has its empty state. Report what you built and anything you could not check.

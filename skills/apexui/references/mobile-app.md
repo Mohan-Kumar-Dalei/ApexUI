@@ -7,7 +7,7 @@ Works for a mobile web app or PWA (React + Tailwind) and for native apps (React 
 ## The system
 - **Grid**: 4pt base. Screen margin 20px (16px on very small phones). Gaps 8, 12, 16, 24, 32.
 - **Type** (sizes in px): large title 34 (bold or display face), title 22 to 28, headline 17 semibold, body 16 to 17, secondary 14 to 15, caption 12 to 13. Line height 1.3 to 1.4. Never below 12.
-- **Colour**: the same direction tokens as the website. Light and dark mode both designed, not inverted. Surfaces separate by a small tone shift, not shadows.
+- **Colour**: the same direction tokens as the website. Light and dark mode both designed, not inverted, following the system by default with a Light, Dark and System choice in settings (`theme.md`). Surfaces separate by a small tone shift, not shadows.
 - **Radius**: pick one: 12px (cards), 16 to 20px (sheets), full (buttons and chips) and keep it.
 - **Icons**: one icon set, 24px, 1.5 to 2px stroke, filled version only for the active tab.
 - **Touch**: every target at least 44 by 44px (48 on Android). 8px between targets.
