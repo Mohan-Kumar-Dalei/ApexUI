@@ -13,7 +13,7 @@ export default function DemosPage() {
                     <div className="lg:col-span-8">
                         <h1 className="font-display text-[clamp(2.4rem,5.5vw,4.5rem)] font-semibold leading-[1] tracking-[-0.03em] text-[var(--ink)]">Built with the skill</h1>
                         <p className="mt-5 max-w-xl text-[1.02rem] text-[var(--ink-2)]">
-                            Five complete sites made by following the ApexUI skill. Each has its own layout, page loader, skeleton state and motion, so no two feel alike. Open one on your phone too.
+                            Six complete sites made by following the ApexUI skills. Each has its own layout, page loader, skeleton state and motion, so no two feel alike. Open one on your phone too.
                         </p>
                     </div>
                     <div className="lg:col-span-4">
@@ -25,7 +25,7 @@ export default function DemosPage() {
             <section className="px-[clamp(1rem,2.2vw,2rem)] pt-[clamp(2.5rem,5vw,4rem)]">
                 <ul className="grid gap-6 md:grid-cols-2">
                     {DEMOS.map((d) => (
-                        <li key={d.slug}>
+                        <li key={d.slug} className="min-w-0">
                             <Link to={`/demos/${d.slug}`} className="group block">
                                 <div className="aspect-[4/3] overflow-hidden rounded-[1.25rem] bg-[var(--panel-2)]">
                                     <img src={d.image} alt={`${d.name}, ${d.kind}`} loading="lazy" decoding="async" className="h-full w-full object-cover object-top transition-transform duration-700 ease-out group-hover:scale-[1.03]" />
@@ -44,6 +44,15 @@ export default function DemosPage() {
                                     </span>
                                 </div>
                             </Link>
+                            {d.skill && (
+                                <div className="mt-4 rounded-[1rem] border border-[var(--line)] bg-[var(--panel)] p-4">
+                                    <p className="text-sm text-[var(--ink-2)]">Build one like this for any brand. Install the skill, then run it in Claude Code:</p>
+                                    <div className="mt-3 grid gap-2">
+                                        <CommandLine command={d.skill.install} />
+                                        <CommandLine command={d.skill.run} />
+                                    </div>
+                                </div>
+                            )}
                         </li>
                     ))}
                 </ul>

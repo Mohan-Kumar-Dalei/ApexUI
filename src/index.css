@@ -4,6 +4,20 @@
 /* Theme classes are applied on <html>; dark is the default. */
 @custom-variant dark (&:where(.theme-dark, .theme-dark *));
 
+/* Taana demo (/demos/taana): its colours and fonts, prefixed so they never touch the site's own.
+   The --tn-* values are set on the demo's root element. */
+@theme inline {
+  --color-tn-bg: var(--tn-bg); --color-tn-surface: var(--tn-surface); --color-tn-card: var(--tn-card); --color-tn-ink: var(--tn-ink);
+  --color-tn-muted: var(--tn-muted); --color-tn-line: var(--tn-line); --color-tn-accent: var(--tn-accent); --color-tn-on-accent: var(--tn-on-accent);
+  --color-tn-band: var(--tn-band); --color-tn-on-band: var(--tn-on-band); --color-tn-band-muted: var(--tn-band-muted); --color-tn-veg: var(--tn-veg);
+  --font-tn-display: "Gloock", Georgia, serif;
+  --font-tn-text: "Instrument Sans", system-ui, sans-serif;
+  --animate-tn-marquee: tn-marquee var(--duration) infinite linear;
+  --animate-tn-marquee-vertical: tn-marquee-vertical var(--duration) linear infinite;
+  @keyframes tn-marquee { from { transform: translateX(0); } to { transform: translateX(calc(-100% - var(--gap))); } }
+  @keyframes tn-marquee-vertical { from { transform: translateY(0); } to { transform: translateY(calc(-100% - var(--gap))); } }
+}
+
 /* Used by the BeamBar component. */
 @keyframes glow {
   0% {

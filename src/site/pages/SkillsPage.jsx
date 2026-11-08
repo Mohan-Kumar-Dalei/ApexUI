@@ -176,7 +176,7 @@ export default function SkillsPage() {
 
             {/* Style skills, called by name */}
             <section className="px-[clamp(1rem,2.2vw,2rem)] pt-[clamp(4rem,8vw,6rem)]">
-                <h2 className="font-display text-[clamp(1.8rem,3.4vw,2.8rem)] font-semibold tracking-[-0.02em] text-[var(--ink)]">Two styles, when you ask for them</h2>
+                <h2 className="font-display text-[clamp(1.8rem,3.4vw,2.8rem)] font-semibold tracking-[-0.02em] text-[var(--ink)]">Three styles, when you ask for them</h2>
                 <p className="mt-3 max-w-2xl text-[var(--ink-2)]">
                     They only run when you call them, so they never get mixed up with the main skill. In Claude Code each one is a slash command; in Cursor type <code className="font-mono text-[0.85em] text-[var(--ink)]">@simplepremium</code>.
                 </p>
@@ -184,6 +184,7 @@ export default function SkillsPage() {
                     {[
                         ['/simplepremium', 'Calm product UI', 'Apps, dashboards, admin panels and internal tools. Light neutrals, one blue accent, one sans font, motion only on dialogs and menus. No hero, no scroll animations.', '/simplepremium leave tracker dashboard', 'npx apex-ui-kit skill simplepremium'],
                         ['/luxurypremium', 'Luxury websites', 'Fashion, hotels, jewellery, restaurants. Ivory and charcoal, a serif display face, generous space, big type and slow, considered motion.', '/luxurypremium website for a boutique hotel in Udaipur', 'npx apex-ui-kit skill luxurypremium'],
+                        ['/premiumbrand', 'Brand stores with 3D', 'A full store for any label: photo hero with a glass nav, a 3D product rail, styled looks with bundle pricing and a Node, Express and MongoDB backend. Ships with README, prompts and screenshots. See the Taana demo.', '/premiumbrand a store for my handmade leather bags', 'npx apex-ui-kit skill premiumbrand'],
                     ].map(([cmd, title, body, example, install]) => (
                         <article key={cmd} className="flex flex-col rounded-[1.4rem] border border-[var(--line)] bg-[var(--panel)] p-[clamp(1.25rem,3vw,2rem)]">
                             <p className="font-mono text-sm text-[var(--ink-3)]">{cmd}</p>

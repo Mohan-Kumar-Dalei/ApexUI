@@ -61,4 +61,16 @@ export const DEMOS = [
         poster: '/demos/chowk-phone.jpg',
         Component: lazy(() => import('./chowk/Chowk.jsx')),
     },
+    {
+        slug: 'taana',
+        name: 'Taana',
+        kind: 'Saree house',
+        direction: 'Minimal luxury',
+        brief: 'Handwoven sarees from nine weaving towns. A 3D rail of sarees on wooden hangers, styled looks with a bundle price, and a loom room you scroll through.',
+        build: 'Warp and weft loader, 3D rail and loom room, lifted saree with sizes, server-checked look discount',
+        image: '/demos/taana.jpg',
+        poster: '/demos/taana-phone.jpg',
+        skill: { install: 'npx apex-ui-kit skill premiumbrand', run: '/premiumbrand a store for my handmade leather bags' },
+        Component: lazy(() => import('./taana/Taana.jsx')),
+    },
 ];
