@@ -50,4 +50,15 @@ export const DEMOS = [
         poster: '/demos/volta-phone.jpg',
         Component: lazy(() => import('./volta/Volta.jsx')),
     },
+    {
+        slug: 'chowk',
+        name: 'Chowk',
+        kind: 'Food delivery app',
+        direction: 'Steel tiffin',
+        brief: 'Kitchens around Indiranagar, from dum biryani to filter coffee. Working menus, a one-kitchen cart, coupons, checkout and a live tracking map.',
+        build: 'Rider crossing loader, restaurant card skeleton, live order card',
+        image: '/demos/chowk.jpg',
+        poster: '/demos/chowk-phone.jpg',
+        Component: lazy(() => import('./chowk/Chowk.jsx')),
+    },
 ];

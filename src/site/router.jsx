@@ -44,10 +44,11 @@ export const router = createBrowserRouter([
                     {
                         path: 'demos',
                         ...lazyRoute(() => import('./pages/DemosPage.jsx')),
-                        handle: { title: 'Demos built with the ApexUI skill | ApexUI', description: 'Full websites and a mobile app built with the ApexUI agent skill: a clothing store, a photography portfolio, a restaurant and a meditation app.' },
+                        handle: { title: 'Demos built with the ApexUI skill | ApexUI', description: 'Full websites and a mobile app built with the ApexUI agent skill: a streetwear store, a developer portfolio, an omakase restaurant, a fintech product and a food delivery app.' },
                     },
                     {
-                        path: 'demos/:slug',
+                        // The trailing * lets a demo keep its own pages, e.g. /demos/chowk/checkout.
+                        path: 'demos/:slug/*',
                         ...lazyRoute(() => import('./pages/DemoView.jsx')),
                         handle: { bare: true, title: 'Demo | ApexUI', description: 'A full site built with the ApexUI agent skill.' },
                     },

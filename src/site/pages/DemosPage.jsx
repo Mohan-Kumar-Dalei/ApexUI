@@ -13,7 +13,7 @@ export default function DemosPage() {
                     <div className="lg:col-span-8">
                         <h1 className="font-display text-[clamp(2.4rem,5.5vw,4.5rem)] font-semibold leading-[1] tracking-[-0.03em] text-[var(--ink)]">Built with the skill</h1>
                         <p className="mt-5 max-w-xl text-[1.02rem] text-[var(--ink-2)]">
-                            Four complete sites made by following the ApexUI skill. Each has its own layout, page loader, skeleton state and motion, so no two feel alike. Open one on your phone too.
+                            Five complete sites made by following the ApexUI skill. Each has its own layout, page loader, skeleton state and motion, so no two feel alike. Open one on your phone too.
                         </p>
                     </div>
                     <div className="lg:col-span-4">
