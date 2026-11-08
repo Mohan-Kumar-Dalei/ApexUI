@@ -4,6 +4,7 @@ import { lazy } from 'react';
  * Demo sites built with the ApexUI skill. Each one is a full page, nav to footer,
  * with its own layout, code structure, page loader, skeleton state and motion.
  * image and poster are real screenshots of the demo (desktop 4:3, phone 4:5) in public/demos.
+ * pro: built with the ApexUI Pro brand playbooks, which are not public yet. Shown with a Pro badge.
  */
 export const DEMOS = [
     {
@@ -70,7 +71,19 @@ export const DEMOS = [
         build: 'Warp and weft loader, 3D rail and loom room, lifted saree with sizes, server-checked look discount',
         image: '/demos/taana.jpg',
         poster: '/demos/taana-phone.jpg',
-        skill: { install: 'npx apex-ui-kit skill premiumbrand', run: '/premiumbrand a store for my handmade leather bags' },
+        pro: true,
         Component: lazy(() => import('./taana/Taana.jsx')),
+    },
+    {
+        slug: 'lays',
+        name: "Lay's Crunch Lab",
+        kind: 'Snack brand store',
+        direction: 'Flavour pop',
+        brief: 'Nine flavours as real 3D bags on an arc. The whole page takes the colour of the flavour on show, a pinned story opens the bag, and the rack swings when you brush it.',
+        build: 'Chip storm loader, 3D bag arc and rack, build-your-3-pack tray, server-priced basket',
+        image: '/demos/lays.jpg',
+        poster: '/demos/lays-phone.jpg',
+        pro: true,
+        Component: lazy(() => import('./lays/Lays.jsx')),
     },
 ];

@@ -4,7 +4,7 @@ import { JEWELLERY, LOOKS, SAREES } from './catalogue.js';
  * The Taana demo runs on a static host, so its Express + MongoDB API is replaced here by
  * the same routes running in the browser: same prices, bundle rule, stock checks,
  * validation messages and booking rules. Data is kept in localStorage for this visitor.
- * The real server lives in the premiumbrand skill (references/backend.md).
+ * The real server is part of the ApexUI Pro brand playbook.
  */
 
 const KEY = 'taana-demo-db';

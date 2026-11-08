@@ -2,7 +2,7 @@ import { BackPill, useFonts } from '../shared.jsx';
 import App from './App.jsx';
 
 /*
- * Taana, a handwoven saree house, built with the premiumbrand skill.
+ * Taana, a handwoven saree house, built with the ApexUI Pro brand playbook.
  * Direction: minimal luxury. Unbleached ivory, ink, one kumkum red, zari gold for small marks; Gloock with Instrument Sans.
  * Layout: full-bleed photo hero with a glass pill nav, a pinned 3D loom room, a 3D rail of sarees on wooden hangers.
  * Architecture: pages and sections as in the full React + Express project; the API runs in the browser here (mock.js).

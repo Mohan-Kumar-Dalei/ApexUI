@@ -1,5 +1,6 @@
 {
     "rewrites": [
+        { "source": "/demos/lays/app/(.*)", "destination": "/demos/lays/app/index.html" },
         { "source": "/(.*)", "destination": "/" }
     ]
 }
