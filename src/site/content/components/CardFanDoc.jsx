@@ -6,10 +6,11 @@ import CardFan from '../../../components/MainUI/ApexUI-Kit/CardFan/CardFan.jsx';
 const props = [
     { prop: 'items', type: '{ title, image, price?, color, textColor?, alt?, id? }[]', def: 'seven Avengers', desc: 'One card per item, in its own colour. Text turns light or dark to suit the colour unless you set textColor.' },
     { prop: 'cardWidth', type: 'number', def: '16.9', desc: 'Largest card width in rem. Cards shrink to fit the container.' },
-    { prop: 'minCardWidth', type: 'number', def: '8.5', desc: 'Below this width (rem) the fan becomes a straight row you swipe.' },
-    { prop: 'spread', type: 'number', def: '5', desc: 'Degrees each card turns away from the middle.' },
+    { prop: 'minCardWidth', type: 'number', def: '8.5', desc: 'Smallest card width in rem. In a tight space the cards overlap more first; below this the fan becomes a straight row you swipe.' },
+    { prop: 'fan', type: 'number', def: '5', desc: 'Degrees each card turns away from the middle. 0 keeps them upright.' },
+    { prop: 'spread', type: 'number', def: '0.88', desc: 'How far apart the cards sit, as a share of a card width: 1 is edge to edge, lower overlaps, higher leaves a gap.' },
     { prop: 'curve', type: 'number', def: '0.44', desc: 'How far the outer cards drop, in rem per step squared.' },
-    { prop: 'tilt', type: 'number', def: '14', desc: 'Degrees a card tilts toward the pointer.' },
+    { prop: 'tilt', type: 'number', def: '16', desc: 'Degrees a card leans toward the mouse when you hover it. 0 turns it off.' },
     { prop: 'onAdd', type: '(item, index) => void', def: 'none', desc: 'Shows the plus button; called when it is pressed. The plus turns into a tick for a moment.' },
     { prop: 'onLike', type: '(item, index) => void', def: 'none', desc: 'Shows the heart button; called when it is pressed.' },
     { prop: 'liked', type: '(string)[]', def: '[]', desc: 'ids (or titles) of the cards whose heart is filled.' },
@@ -25,9 +26,10 @@ const dependencies = [
 ];
 
 export default function CardFanDoc() {
-    const [spread, setSpread] = useState(5);
+    const [fan, setFan] = useState(5);
+    const [spread, setSpread] = useState(0.88);
     const [curve, setCurve] = useState(0.44);
-    const [tilt, setTilt] = useState(14);
+    const [tilt, setTilt] = useState(16);
     const [liked, setLiked] = useState(['Spider-Man']);
 
     const code = `import { useState } from 'react';
@@ -45,6 +47,7 @@ const App = () => {
   return (
     <CardFan
       items={heroes}
+      fan={${fan}}
       spread={${spread}}
       curve={${curve}}
       tilt={${tilt}}
@@ -60,11 +63,12 @@ export default App;`;
     return (
         <ComponentDoc
             title="Card Fan"
-            description="A hand of tall product cards in their own colours, fanned on a curve. Each card tilts toward the pointer and presses in, with a heart and a plus. It shrinks to fit, and turns into a swipe row on phones."
+            description="A hand of tall product cards in their own colours, fanned on a curve. Hover a card and it lifts and leans toward the mouse; press it and it sinks in. Each has a heart and a plus. It shrinks to fit, and turns into a swipe row on phones."
             previewClassName="!px-0"
             preview={
                 <div className="w-full" style={{ fontFamily: 'Georgia, serif' }}>
                     <CardFan
+                        fan={fan}
                         spread={spread}
                         curve={curve}
                         tilt={tilt}
@@ -76,9 +80,10 @@ export default App;`;
             }
             controls={
                 <ControlGrid>
-                    <RangeControl label="Spread" value={spread} onChange={setSpread} min={0} max={10} step={0.5} format={(v) => `${v}°`} />
+                    <RangeControl label="Fan" value={fan} onChange={setFan} min={0} max={12} step={0.5} format={(v) => `${v}°`} />
+                    <RangeControl label="Spread" value={spread} onChange={setSpread} min={0.55} max={1.15} step={0.01} format={(v) => v.toFixed(2)} />
                     <RangeControl label="Curve" value={curve} onChange={setCurve} min={0} max={1.2} step={0.04} format={(v) => `${v.toFixed(2)}rem`} />
-                    <RangeControl label="Tilt" value={tilt} onChange={setTilt} min={0} max={24} format={(v) => `${v}°`} />
+                    <RangeControl label="Hover tilt" value={tilt} onChange={setTilt} min={0} max={30} format={(v) => `${v}°`} />
                 </ControlGrid>
             }
             code={code}

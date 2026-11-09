@@ -4,9 +4,11 @@ import { Check, Heart, Plus } from "lucide-react";
 
 /*
  * Card Fan: a hand of tall product cards in their own colours, fanned out on a curve.
- * Each card tilts toward the pointer, presses in on click, and has a heart and a plus.
- * The fan shrinks to fit its container; when it would get too small (phones) it turns
- * into a straight row you swipe.
+ *  - fan: how many degrees each card turns away from the middle
+ *  - spread: how far apart the cards sit (1 = edge to edge, lower overlaps them)
+ *  - tilt: how far a card leans toward the mouse when you hover it
+ * Each card lifts on hover, presses in on click, and has a heart and a plus. The fan
+ * shrinks to fit (overlapping more in tight spaces); on phones it becomes a swipe row.
  */
 
 const IK = "https://ik.imagekit.io/ny6yinyut/apexui/assets";
@@ -27,8 +29,9 @@ const isDark = (hex = "#000000") => {
     return 0.2126 * ((n >> 16) & 255) + 0.7152 * ((n >> 8) & 255) + 0.0722 * (n & 255) < 150;
 };
 
-function Card({ item, index, offset, fanned, width, tilt, onAdd, liked, onLike, likeLabel }) {
+function Card({ item, index, offset, fanned, width, spread, tilt, onAdd, liked, onLike, likeLabel }) {
     const [rot, setRot] = useState({ x: 0, y: 0 });
+    const [hover, setHover] = useState(false);
     const [done, setDone] = useState(false);
     const timer = useRef(0);
     useEffect(() => () => clearTimeout(timer.current), []);
@@ -39,16 +42,20 @@ function Card({ item, index, offset, fanned, width, tilt, onAdd, liked, onLike, 
 
     return (
         <div
-            className="shrink-0 snap-center [perspective:56rem]"
-            style={fanned ? { transform: `rotate(${offset.r}deg) translateY(${offset.y}rem)`, margin: `0 -${width * 0.06}rem` } : undefined}
+            className="relative shrink-0 snap-center [perspective:40rem]"
+            style={fanned ? { transform: `rotate(${offset.r}deg) translateY(${offset.y}rem)`, margin: `0 ${(width * (spread - 1)) / 2}rem`, zIndex: hover ? 30 : undefined } : undefined}
         >
             <motion.div
                 onPointerMove={(e) => {
                     if (e.pointerType !== "mouse") return;
                     const r = e.currentTarget.getBoundingClientRect();
-                    setRot({ x: ((e.clientY - r.top) / r.height - 0.5) * -tilt, y: ((e.clientX - r.left) / r.width - 0.5) * tilt });
+                    // -1 at one edge, 1 at the other: the card leans the full tilt at its edges
+                    const px = ((e.clientX - r.left) / r.width) * 2 - 1;
+                    const py = ((e.clientY - r.top) / r.height) * 2 - 1;
+                    setRot({ x: -py * tilt, y: px * tilt });
                 }}
-                onPointerLeave={() => setRot({ x: 0, y: 0 })}
+                onPointerEnter={() => setHover(true)}
+                onPointerLeave={() => (setRot({ x: 0, y: 0 }), setHover(false))}
                 whileHover={fanned ? { y: "-1rem" } : undefined}
                 whileTap={{ scale: 0.97 }}
                 animate={{ rotateX: rot.x, rotateY: rot.y }}
@@ -105,9 +112,10 @@ const CardFan = ({
     items = DEFAULT_ITEMS,
     cardWidth = 16.9,
     minCardWidth = 8.5,
-    spread = 5,
+    fan = 5,
+    spread = 0.88,
     curve = 0.44,
-    tilt = 14,
+    tilt = 16,
     onAdd,
     onLike,
     liked = [],
@@ -117,25 +125,36 @@ const CardFan = ({
     const root = useRef(null);
     const [width, setWidth] = useState(cardWidth);
     const [fanned, setFanned] = useState(true);
+    const [gap, setGap] = useState(spread);
     const mid = (items.length - 1) / 2;
 
-    // Fit the fan to the container; below minCardWidth it becomes a swipe row.
+    // Fit the fan to the container: shrink the cards first, then overlap them more,
+    // and only when that is not enough (phones) turn it into a swipe row.
     useEffect(() => {
         const el = root.current;
         if (!el) return undefined;
+        const n = Math.max(1, items.length);
         const fit = () => {
             const rem = parseFloat(getComputedStyle(document.documentElement).fontSize) || 16;
             const avail = el.clientWidth / rem - 2;
-            // each card takes 0.88 of its width (they overlap), plus room for the outer tilt
-            const w = Math.min(cardWidth, avail / (items.length * 0.88 + 0.4));
-            setFanned(w >= minCardWidth);
-            setWidth(w >= minCardWidth ? w : Math.min(cardWidth, 13));
+            // a fan of n cards is (n - 1) * spread + 1 cards wide, plus room for the outer ones to turn
+            const span = (s) => (n - 1) * s + 1.4;
+            let w = Math.min(cardWidth, avail / span(spread));
+            let s = spread;
+            if (w < minCardWidth && n > 1) {
+                s = Math.max(0.55, (avail / minCardWidth - 1.4) / (n - 1));
+                w = Math.min(cardWidth, avail / span(s));
+            }
+            const ok = w >= minCardWidth;
+            setFanned(ok);
+            setGap(s);
+            setWidth(ok ? w : Math.min(cardWidth, 13));
         };
         const ro = new ResizeObserver(fit);
         ro.observe(el);
         fit();
         return () => ro.disconnect();
-    }, [cardWidth, minCardWidth, items.length]);
+    }, [cardWidth, minCardWidth, spread, items.length]);
 
     return (
         <div ref={root} className={`w-full ${className}`}>
@@ -150,9 +169,10 @@ const CardFan = ({
                             key={item.id ?? item.title ?? i}
                             item={item}
                             index={i}
-                            offset={{ r: o * spread, y: o * o * curve * (width / cardWidth) }}
+                            offset={{ r: o * fan, y: o * o * curve * (width / cardWidth) }}
                             fanned={fanned}
                             width={width}
+                            spread={gap}
                             tilt={tilt}
                             onAdd={onAdd}
                             onLike={onLike}
