@@ -1,8 +1,9 @@
 import { useEffect, useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { AnimatePresence, motion } from 'framer-motion';
-import { ArrowLeft, ArrowRight, Heart, Pause, Play } from 'lucide-react';
+import { ArrowRight, Heart, Pause, Play } from 'lucide-react';
 import { BlurFade } from '../components/ui/blur-fade.jsx';
+import PortalCarousel from '../../../../components/MainUI/ApexUI-Kit/PortalCarousel/PortalCarousel.jsx';
 import { Marquee } from '../components/ui/marquee.jsx';
 import { img, inr, reduced, useBag, useWish } from '../lib.jsx';
 import { u } from '../base.js';
@@ -102,14 +103,23 @@ const BRIDAL = ['ruby-kadhwa-banarasi', 'temple-red-kanjivaram', 'gulabi-bridal-
 
 export function Bridal({ bySlug }) {
     const list = useMemo(() => BRIDAL.map((s) => bySlug[s]).filter(Boolean), [bySlug]);
-    const [at, setAt] = useState(1);
     const [added, setAdded] = useState('');
     const bag = useBag();
     const wish = useWish();
+    const items = useMemo(
+        () =>
+            list.map((b) => ({
+                id: b.slug,
+                image: img(b.images[0], 640, 1100),
+                title: b.name,
+                subtitle: [b.fabric, b.loomDays && `${b.loomDays} days on the loom`].filter(Boolean).join('. ') + '.',
+                meta: inr(b.price),
+                badge: b.stock > 0 && b.stock <= 2 ? `Only ${b.stock} left` : b.stock === 0 ? 'Sold out' : null,
+                product: b,
+            })),
+        [list],
+    );
     if (!list.length) return null;
-    const n = list.length;
-    const p = list[at];
-    const go = (d) => setAt((a) => (a + d + n) % n);
 
     return (
         <section id="bridal" className="overflow-hidden bg-tn-band py-24 text-tn-on-band sm:py-32">
@@ -117,60 +127,32 @@ export function Bridal({ bySlug }) {
                 <p className="text-[12px] font-semibold uppercase tracking-[0.14em] text-tn-band-muted">For the muhurtham, and every year after</p>
                 <h2 className="mt-3 text-[clamp(2.4rem,5.5vw,4.6rem)]">The bridal edit.</h2>
             </BlurFade>
-            <div className="relative mx-auto mt-14 h-[460px] max-w-[1200px] [perspective:1400px] sm:h-[540px]" aria-roledescription="carousel" aria-label="Bridal sarees">
-                {list.map((b, i) => {
-                    let o = i - at;
-                    if (o > n / 2) o -= n;
-                    if (o < -n / 2) o += n;
-                    const a = Math.abs(o);
+            <PortalCarousel
+                className="mx-auto mt-12 max-w-[1200px]"
+                items={items}
+                variant="curve"
+                theme="dark"
+                frameColor="#C9A253"
+                startIndex={1}
+                height="clamp(19rem, min(54svh, 112vw), 34rem)"
+                label="Bridal sarees"
+                renderActions={(it) => {
+                    const p = it.product;
                     return (
-                        <motion.button
-                            key={b.slug}
-                            type="button"
-                            onClick={() => o !== 0 && go(o)}
-                            aria-label={`${b.name}${o === 0 ? ', selected' : ''}`}
-                            initial={false}
-                            animate={{ x: `calc(-50% + ${o * 78}%)`, rotateY: o * -24, z: -a * 140, opacity: a > 2 ? 0 : 1 - a * 0.28, zIndex: 10 - a }}
-                            transition={{ duration: 0.9, ease: EASE }}
-                            className="absolute left-1/2 top-0 h-full w-[min(64vw,300px)] sm:w-[320px]"
-                            style={{ pointerEvents: a > 2 ? 'none' : 'auto', transformStyle: 'preserve-3d' }}
-                        >
-                            <div className={`h-full rounded-t-full p-2 transition-colors duration-700 ${o === 0 ? 'bg-[#C9A253]' : 'bg-tn-on-band/10'}`}>
-                                <div className="relative h-full overflow-hidden rounded-t-full">
-                                    <img src={img(b.images[0], 640, 1100)} alt="" draggable={false} className="h-full w-full object-cover" />
-                                    {b.stock <= 2 && <span className="absolute left-1/2 top-[22%] -translate-x-1/2 rounded-full bg-tn-bg px-3 py-1 text-[12px] font-semibold text-tn-ink">Only {b.stock} left</span>}
-                                </div>
-                            </div>
-                        </motion.button>
+                        <>
+                            <button type="button" disabled={p.stock === 0} onClick={() => (bag.add(p, { blouse: 'unstitched', fallPico: true }), setAdded(p.slug))} className="h-11 rounded-full bg-tn-on-band px-6 font-medium text-tn-band disabled:opacity-40">
+                                {added === p.slug ? 'In your bag' : 'Add to bag'}
+                            </button>
+                            <button type="button" aria-label={wish.has(p.slug) ? 'Remove from wishlist' : 'Save to wishlist'} aria-pressed={wish.has(p.slug)} onClick={() => wish.toggle(p.slug)} className="grid h-11 w-11 place-items-center rounded-full border border-tn-on-band/25 hover:border-tn-on-band">
+                                <Heart className={`h-5 w-5 ${wish.has(p.slug) ? 'fill-[#E2C47E] text-[#E2C47E]' : ''}`} />
+                            </button>
+                        </>
                     );
-                })}
-            </div>
-            <div className="mx-auto mt-10 max-w-xl px-5 text-center">
-                <AnimatePresence mode="wait">
-                    <motion.div key={p.slug} initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -12 }} transition={{ duration: 0.45, ease: EASE }}>
-                        <h3 className="text-[2.2rem] leading-none">{p.name}</h3>
-                        <p className="mt-2 text-[15px] text-tn-band-muted">
-                            {p.fabric}. {p.loomDays} days on the loom.
-                        </p>
-                        <p className="mt-3 text-2xl text-[#E2C47E] tnum">{inr(p.price)}</p>
-                    </motion.div>
-                </AnimatePresence>
-                <div className="mt-7 flex items-center justify-center gap-3">
-                    <button type="button" onClick={() => go(-1)} aria-label="Previous bridal saree" className="grid h-12 w-12 place-items-center rounded-full border border-tn-on-band/25 hover:border-tn-on-band">
-                        <ArrowLeft className="h-5 w-5" />
-                    </button>
-                    <button type="button" disabled={p.stock === 0} onClick={() => (bag.add(p, { blouse: 'unstitched', fallPico: true }), setAdded(p.slug))} className="h-12 rounded-full bg-tn-on-band px-7 font-medium text-tn-band disabled:opacity-40">
-                        {added === p.slug ? 'In your bag' : 'Add to bag'}
-                    </button>
-                    <button type="button" aria-label={wish.has(p.slug) ? 'Remove from wishlist' : 'Save to wishlist'} aria-pressed={wish.has(p.slug)} onClick={() => wish.toggle(p.slug)} className="grid h-12 w-12 place-items-center rounded-full border border-tn-on-band/25 hover:border-tn-on-band">
-                        <Heart className={`h-5 w-5 ${wish.has(p.slug) ? 'fill-[#E2C47E] text-[#E2C47E]' : ''}`} />
-                    </button>
-                    <button type="button" onClick={() => go(1)} aria-label="Next bridal saree" className="grid h-12 w-12 place-items-center rounded-full border border-tn-on-band/25 hover:border-tn-on-band">
-                        <ArrowRight className="h-5 w-5" />
-                    </button>
-                </div>
-                <p className="mt-4 text-[13px] text-tn-band-muted">Bridal sarees come with a blouse piece and fall and pico done; pick a size on the saree page to have it stitched. Want to see it first? <Link to={u('/video-call')} className="underline underline-offset-4">Book a video call</Link>.</p>
-            </div>
+                }}
+            />
+            <p className="mx-auto mt-4 max-w-xl px-5 text-center text-[13px] text-tn-band-muted">
+                Bridal sarees come with a blouse piece and fall and pico done; pick a size on the saree page to have it stitched. Want to see it first? <Link to={u('/video-call')} className="underline underline-offset-4">Book a video call</Link>.
+            </p>
         </section>
     );
 }

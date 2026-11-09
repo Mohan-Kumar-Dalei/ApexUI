@@ -4,7 +4,7 @@
 
 # ApexUI
 
-### 116 free, animated UI components for React
+### 118 free, animated UI components for React
 
 Copy-paste or one-command install. Styled with Tailwind CSS, animated with Framer Motion, GSAP and Three.js.<br/>
 You get the source, so you can read it and change anything.
@@ -48,7 +48,7 @@ You get the source, so you can read it and change anything.
 
 ## Why ApexUI
 
-- **116 components** across backgrounds, cards, text effects, navigation, buttons, interactive UI, AI interfaces, loaders and maps, with new ones added regularly.
+- **118 components** across backgrounds, cards, text effects, navigation, buttons, interactive UI, AI interfaces, loaders and maps, with new ones added regularly.
 - **Real 3D, still light.** Three.js and WebGL components (Galaxy 3D, Warp Tunnel, Distortion Image, Liquid Blob 3D, Particle Morph, Retro Grid 3D, Gooey Nav) use one small shader each, cap the pixel ratio, pause when off screen and free the GPU on unmount.
 - **AI-ready UI.** Chat, prompt box with model picker, thinking state, streaming response and five voice assistant visuals.
 - **You own the code.** The CLI copies plain `.jsx` files into your project. No runtime package, no lock-in.
@@ -125,11 +125,12 @@ Install just one with `npx apex-ui-kit skill simplepremium` (or `luxurypremium`)
 </details>
 
 <details>
-<summary><b>Cards</b> (20)</summary>
+<summary><b>Cards</b> (21)</summary>
 
 | Component | Install |
 | --- | --- |
 | [Bounce Cards](https://apex-ui.in/components/bounce-cards) | `npx apex-ui-kit add bounce-cards` |
+| [Card Fan](https://apex-ui.in/components/card-fan) | `npx apex-ui-kit add card-fan` |
 | [Card Stack](https://apex-ui.in/components/card-stack) | `npx apex-ui-kit add card-stack` |
 | [Cards](https://apex-ui.in/components/cards) | `npx apex-ui-kit add basic-card` (+ `meteor-card`) |
 | [Distortion Image](https://apex-ui.in/components/distortion-image) | `npx apex-ui-kit add distortion-image` |
@@ -210,7 +211,7 @@ Install just one with `npx apex-ui-kit skill simplepremium` (or `luxurypremium`)
 </details>
 
 <details open>
-<summary><b>Interactive</b> (33)</summary>
+<summary><b>Interactive</b> (34)</summary>
 
 | Component | Install |
 | --- | --- |
@@ -241,6 +242,7 @@ Install just one with `npx apex-ui-kit skill simplepremium` (or `luxurypremium`)
 | [Orbit Icons](https://apex-ui.in/components/orbit-icons) | `npx apex-ui-kit add orbit-icons` |
 | [Particle Morph](https://apex-ui.in/components/particle-morph) | `npx apex-ui-kit add particle-morph` |
 | [Pointer Follower](https://apex-ui.in/components/pointer-follower) | `npx apex-ui-kit add pointer-follower` |
+| [Portal Carousel](https://apex-ui.in/components/portal-carousel) | `npx apex-ui-kit add portal-carousel` |
 | [Receipt Printer](https://apex-ui.in/components/receipt-printer) | `npx apex-ui-kit add receipt-printer` |
 | [Sketch Reveal](https://apex-ui.in/components/sketch-reveal) | `npx apex-ui-kit add sketch-reveal` |
 | [Stepper](https://apex-ui.in/components/stepper) | `npx apex-ui-kit add stepper` |

@@ -974,7 +974,6 @@ export const componentPages = [
         category: 'Interactive',
         image: shot('fluid-cursor.png'),
         summary: 'A real-time WebGL fluid simulation that trails the cursor with swirling ink.',
-        isNew: true,
     },
     {
         name: 'Sketch Reveal',
@@ -983,7 +982,22 @@ export const componentPages = [
         category: 'Interactive',
         image: shot('sketch-reveal.png'),
         summary: 'A photo turns into a glowing sketch, then burns away into the next one as you scroll.',
-        isNew: true,
+    },
+    {
+        name: 'Portal Carousel',
+        path: '/components/portal-carousel',
+        load: () => import('../content/components/PortalCarouselDoc.jsx'),
+        category: 'Interactive',
+        image: shot('portal-carousel.png'),
+        summary: 'Photos in arch frames on a 3D curve or a blurred stage, with a caption, drag and swipe.',
+    },
+    {
+        name: 'Card Fan',
+        path: '/components/card-fan',
+        load: () => import('../content/components/CardFanDoc.jsx'),
+        category: 'Cards',
+        image: shot('card-fan.png'),
+        summary: 'A fanned hand of coloured product cards that tilt to the pointer, with a heart and a plus.',
     },
 ];
 

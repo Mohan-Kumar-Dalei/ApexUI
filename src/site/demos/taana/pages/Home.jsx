@@ -70,17 +70,17 @@ function Hero({ ready }) {
         return () => ctx.revert();
     }, [ready]);
     return (
-        <section ref={root} className="relative flex h-[100svh] min-h-[600px] flex-col overflow-hidden bg-tn-ink text-white">
+        <section ref={root} className="relative flex min-h-[100svh] flex-col overflow-hidden bg-tn-ink text-white">
             <img data-hero-img src={img('photo-1618901185975-d59f7091bcfe', 2400)} alt="A woman in a red Kanjivaram silk saree seated on the steps of a carved temple" className="absolute inset-0 h-full w-full object-cover object-[62%_center]" />
             <div aria-hidden="true" className="absolute inset-0 bg-black/35" />
             <div aria-hidden="true" className="absolute inset-y-0 left-0 w-full bg-black/20 lg:w-[55%]" />
-            <div className="relative mx-auto flex w-full max-w-[1400px] flex-1 flex-col justify-end px-5 pb-10 sm:px-8 sm:pb-14">
+            <div className="relative mx-auto flex w-full max-w-[1400px] flex-1 flex-col justify-end px-5 pb-10 pt-28 sm:px-8 sm:pb-[clamp(2rem,5svh,3.5rem)] sm:pt-32">
                 <p data-hero-in className="inline-flex w-fit items-center gap-2 rounded-full border border-white/30 bg-black/30 px-4 py-2 text-[12px] font-semibold uppercase tracking-[0.16em] backdrop-blur-md">
                     <span className="h-1.5 w-1.5 rounded-full bg-[#E2C47E]" /> <span className="hidden sm:inline">Varanasi · </span>Pure zari · Handwoven silk
                 </p>
-                {ready ? <Lines as="h1" onLoad delay={0.25} text="Woven for the wedding, and every day after." className="mt-6 max-w-[15ch] text-[clamp(3rem,8vw,7.2rem)] leading-[0.95] text-white" /> : <h1 className="mt-6 max-w-[15ch] text-[clamp(3rem,8vw,7.2rem)] leading-[0.95] opacity-0">Woven for the wedding, and every day after.</h1>}
-                <p data-hero-in className="mt-6 max-w-xl text-[1.08rem] leading-relaxed text-white/85">Taana brings the looms of nine weaving towns home: Banarasi, Kanjivaram and Paithani silks bought straight from the weavers, bordered in real zari and finished by hand.</p>
-                <div data-hero-in className="mt-8 flex flex-wrap gap-3">
+                {ready ? <Lines as="h1" onLoad delay={0.25} text="Woven for the wedding, and every day after." className="mt-[clamp(1rem,3svh,1.5rem)] max-w-[12ch] text-[clamp(2.8rem,min(7vw,11.5svh),7.2rem)] leading-[0.95] 2xl:max-w-[15ch] text-white" /> : <h1 className="mt-[clamp(1rem,3svh,1.5rem)] max-w-[12ch] text-[clamp(2.8rem,min(7vw,11.5svh),7.2rem)] leading-[0.95] 2xl:max-w-[15ch] opacity-0">Woven for the wedding, and every day after.</h1>}
+                <p data-hero-in className="mt-[clamp(1rem,3svh,1.5rem)] max-w-xl text-[1.08rem] leading-relaxed text-white/85">Taana brings the looms of nine weaving towns home: Banarasi, Kanjivaram and Paithani silks bought straight from the weavers, bordered in real zari and finished by hand.</p>
+                <div data-hero-in className="mt-[clamp(1.25rem,4svh,2rem)] flex flex-wrap gap-3">
                     <a href="#look" onClick={(e) => (e.preventDefault(), jump('look'))} className="group inline-flex h-14 items-center gap-4 rounded-full bg-tn-accent pl-7 pr-2 text-[16px] font-medium text-tn-on-accent">
                         Try the look
                         <span className="grid h-10 w-10 place-items-center rounded-full bg-white text-tn-accent transition-transform duration-500 group-hover:rotate-45">

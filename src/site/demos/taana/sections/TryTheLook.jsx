@@ -1,7 +1,8 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { AnimatePresence, motion } from 'framer-motion';
-import { ArrowLeft, ArrowRight, Check, Heart, Plus, ShoppingBag } from 'lucide-react';
+import { Check, Heart, Plus, ShoppingBag } from 'lucide-react';
+import PortalCarousel from '../../../../components/MainUI/ApexUI-Kit/PortalCarousel/PortalCarousel.jsx';
 import { BlurFade } from '../components/ui/blur-fade.jsx';
 import { img, inr, useApi, useBag, useWish } from '../lib.jsx';
 import { u } from '../base.js';
@@ -63,7 +64,6 @@ export default function TryTheLook() {
     const [added, setAdded] = useState({});
     const bag = useBag();
     const wish = useWish();
-    const drag = useRef(null);
     const n = looks.length;
     useEffect(() => {
         setAdded({});
@@ -71,7 +71,6 @@ export default function TryTheLook() {
     }, [at]);
     if (!n) return <section id="look" className="h-[90svh] bg-tn-card" aria-label="Loading the looks" />;
 
-    const go = (d) => setAt((a) => (a + d + n) % n);
     const look = looks[at];
     const s = look.saree;
     const full = s.price + BLOUSE + FINISH + look.pieces.reduce((t, p) => t + p.price, 0);
@@ -87,7 +86,7 @@ export default function TryTheLook() {
     return (
         <section id="look" className="border-y border-tn-line bg-tn-card">
             <div className="mx-auto grid max-w-[1600px] lg:grid-cols-[minmax(0,1fr)_420px]">
-                <div className="flex min-w-0 flex-col overflow-hidden px-5 pb-8 pt-20 sm:px-10 sm:pt-24">
+                <div className="flex min-w-0 flex-col overflow-hidden px-5 pb-8 pt-[clamp(3.5rem,9svh,6rem)] sm:px-10">
                     <BlurFade inView>
                         <p className="flex items-center gap-3 text-[13px] font-semibold uppercase tracking-[0.18em] text-tn-muted">
                             <span className="h-px w-8 bg-tn-accent" /> Styled head to toe
@@ -98,71 +97,16 @@ export default function TryTheLook() {
                         <p className="mt-4 max-w-lg text-[1.05rem] text-tn-muted">Eight looks, styled head to toe. Tap a look to see every piece in it.</p>
                     </BlurFade>
 
-                    {/* the stage */}
-                    <div
-                        className="relative mt-6 h-[min(64svh,600px)] min-h-[380px] touch-pan-y select-none"
-                        onPointerDown={(e) => (drag.current = e.clientX)}
-                        onPointerUp={(e) => {
-                            if (drag.current == null) return;
-                            const dx = e.clientX - drag.current;
-                            drag.current = null;
-                            if (Math.abs(dx) > 40) go(dx < 0 ? 1 : -1);
-                        }}
-                        onWheel={(e) => {
-                            if (Math.abs(e.deltaX) > 30 && Math.abs(e.deltaX) > Math.abs(e.deltaY)) go(e.deltaX > 0 ? 1 : -1);
-                        }}
-                        aria-roledescription="carousel"
-                        aria-label="Looks"
-                    >
-                        {looks.map((l, i) => {
-                            let o = i - at;
-                            if (o > n / 2) o -= n;
-                            if (o < -n / 2) o += n;
-                            const a = Math.abs(o);
-                            return (
-                                <motion.button
-                                    type="button"
-                                    key={l.id}
-                                    aria-label={`Look ${i + 1}, ${l.saree.name}`}
-                                    aria-current={o === 0}
-                                    onClick={() => o !== 0 && go(o)}
-                                    initial={false}
-                                    animate={{ x: `calc(-50% + ${o * 78}%)`, y: a * 18, scale: 1 - Math.min(a, 3) * 0.17, opacity: a > 2 ? 0 : 1 - a * 0.22, filter: `blur(${Math.min(a, 2) * 2.5}px)`, zIndex: 10 - a }}
-                                    transition={{ duration: 0.85, ease: EASE }}
-                                    className="absolute bottom-0 left-1/2 h-full w-[min(56%,300px)] origin-bottom"
-                                    style={{ pointerEvents: a > 2 ? 'none' : 'auto' }}
-                                >
-                                    <img src={img(l.photo, 620, 1000)} alt="" draggable={false} className="h-full w-full rounded-[26px] object-cover shadow-[0_40px_50px_-38px_rgba(28,23,20,0.7)]" />
-                                </motion.button>
-                            );
-                        })}
-                    </div>
-
-                    {/* counter and arrows */}
-                    <div className="mt-8 flex items-center gap-4">
-                        <button type="button" onClick={() => go(-1)} aria-label="Previous look" className="grid h-11 w-11 shrink-0 place-items-center rounded-full hover:bg-tn-surface">
-                            <ArrowLeft className="h-5 w-5" />
-                        </button>
-                        <div className="min-w-0 flex-1">
-                            <div className="relative h-px bg-tn-line">
-                                <motion.span className="absolute top-[-1px] h-[3px] rounded-full bg-tn-ink" animate={{ left: `${(at / n) * 100}%` }} style={{ width: `${100 / n}%` }} transition={{ duration: 0.6, ease: EASE }} />
-                            </div>
-                            <p className="mt-3 flex justify-between gap-4 text-[13px] text-tn-muted" aria-live="polite">
-                                <span className="truncate">
-                                    <span className="text-tn-ink tnum">
-                                        {at + 1} of {n}
-                                    </span>{' '}
-                                    · {s.name}
-                                </span>
-                                <span className="hidden shrink-0 items-center gap-2 sm:flex">
-                                    <span className="h-1.5 w-1.5 rounded-full bg-tn-accent" /> Swipe or drag
-                                </span>
-                            </p>
-                        </div>
-                        <button type="button" onClick={() => go(1)} aria-label="Next look" className="grid h-11 w-11 shrink-0 place-items-center rounded-full hover:bg-tn-surface">
-                            <ArrowRight className="h-5 w-5" />
-                        </button>
-                    </div>
+                    {/* the stage: the ApexUI Portal Carousel */}
+                    <PortalCarousel
+                        className="mt-6"
+                        items={looks.map((l, i) => ({ id: l.id, image: img(l.photo, 620, 1000), title: l.saree.name, alt: `Look ${i + 1}, ${l.saree.name}` }))}
+                        variant="stage"
+                        theme="light"
+                        height="clamp(20rem, min(52svh, 110vw), 37.5rem)"
+                        label="Looks"
+                        onChange={(i) => setAt(i)}
+                    />
                 </div>
 
                 {/* in this look */}
